@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "eatSafe",
+    "slug": "eatSafe",
+    "scheme": "eatsafe",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A1F1F"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eatsafe.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A1F1F"
+      },
+      "package": "com.eatsafe.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Nous avons besoin d'accéder à votre appareil photo pour scanner les emballages."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "mode": "production"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

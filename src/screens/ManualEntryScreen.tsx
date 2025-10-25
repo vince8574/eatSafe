@@ -1,0 +1,132 @@
+import { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useScannedProducts } from '../hooks/useScannedProducts';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
+import { useTheme } from '../theme/themeContext';
+import { fetchRecallsByCountry } from '../services/apiService';
+
+export function ManualEntryScreen() {
+  const { colors } = useTheme();
+  const router = useRouter();
+  const { addProduct, updateRecall } = useScannedProducts();
+  const country = usePreferencesStore((state) => state.country);
+  const [brand, setBrand] = useState('');
+  const [lotNumber, setLotNumber] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSave = async () => {
+    if (!lotNumber.trim()) {
+      Alert.alert('Numéro de lot requis', 'Veuillez renseigner un numéro de lot pour continuer.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const product = await addProduct({
+        brand: brand.trim() || 'Produit scanné',
+        lotNumber: lotNumber.trim(),
+        country
+      });
+
+      const recalls = await fetchRecallsByCountry(country);
+      await updateRecall(product, recalls);
+
+      router.replace({ pathname: '/details/[id]', params: { id: product.id } });
+    } catch (error) {
+      Alert.alert(
+        'Enregistrement échoué',
+        error instanceof Error ? error.message : 'Impossible de vérifier les rappels pour le moment.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>Saisie manuelle</Text>
+      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+        Ajoutez un produit en renseignant son numéro de lot et sa marque.
+      </Text>
+
+      <View style={[styles.field, { backgroundColor: colors.surface }]}>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>Marque / Produit</Text>
+        <TextInput
+          style={[styles.input, { color: colors.textPrimary }]}
+          placeholder="Ex: Marque X"
+          placeholderTextColor={colors.textSecondary}
+          value={brand}
+          onChangeText={setBrand}
+          autoCapitalize="words"
+        />
+      </View>
+
+      <View style={[styles.field, { backgroundColor: colors.surface }]}>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>
+        <TextInput
+          style={[styles.input, { color: colors.textPrimary, letterSpacing: 1.2 }]}
+          placeholder="Ex: L12345"
+          placeholderTextColor={colors.textSecondary}
+          value={lotNumber}
+          onChangeText={setLotNumber}
+          autoCapitalize="characters"
+        />
+      </View>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: colors.accent, opacity: isSubmitting ? 0.5 : 1 }]}
+        onPress={handleSave}
+        disabled={isSubmitting}
+      >
+        <Text style={[styles.buttonText, { color: colors.background }]}>
+          {isSubmitting ? 'Vérification…' : 'Enregistrer'}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700'
+  },
+  subtitle: {
+    fontSize: 15,
+    marginVertical: 12,
+    lineHeight: 22
+  },
+  field: {
+    padding: 16,
+    borderRadius: 18,
+    marginTop: 20
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1
+  },
+  input: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '600'
+  },
+  button: {
+    marginTop: 32,
+    paddingVertical: 16,
+    borderRadius: 18,
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase'
+  }
+});

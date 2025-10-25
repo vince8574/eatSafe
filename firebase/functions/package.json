@@ -1,0 +1,22 @@
+{
+  "name": "eatsafe-functions",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "firebase deploy --only functions",
+    "lint": "eslint \"src/**/*.ts\"",
+    "emulate": "npm run build && firebase emulators:start --only functions"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.5.0",
+    "firebase-functions": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}

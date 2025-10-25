@@ -1,0 +1,154 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { useTheme } from '../theme/themeContext';
+
+type ScannerProps = {
+  onCapture: (uri: string) => Promise<void> | void;
+  isProcessing?: boolean;
+};
+
+export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
+  const { colors } = useTheme();
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef<CameraView>(null);
+  const [cameraReady, setCameraReady] = useState(false);
+
+  useEffect(() => {
+    if (!permission) {
+      requestPermission();
+    }
+  }, [permission, requestPermission]);
+
+  const handleCapture = useCallback(async () => {
+    if (!cameraRef.current || isProcessing) {
+      return;
+    }
+
+    try {
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.8,
+        base64: false,
+        skipProcessing: true
+      });
+
+      if (photo?.uri) {
+        await onCapture(photo.uri);
+      }
+    } catch (error) {
+      console.warn('Capture failed', error);
+    }
+  }, [isProcessing, onCapture]);
+
+  if (!permission) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={[styles.permissionText, { color: colors.textPrimary }]}>
+          Chargement des autorisations caméra...
+        </Text>
+      </View>
+    );
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={[styles.permissionText, { color: colors.textPrimary }]}>
+          Nous avons besoin d'accéder à votre appareil photo pour scanner les emballages.
+        </Text>
+        <TouchableOpacity style={[styles.permissionButton, { backgroundColor: colors.accent }]} onPress={requestPermission}>
+          <Text style={[styles.permissionButtonText, { color: colors.background }]}>Autoriser</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <CameraView
+        ref={cameraRef}
+        style={styles.camera}
+        facing={CameraType.back}
+        onCameraReady={() => setCameraReady(true)}
+      >
+        <View style={styles.overlay}>
+          <View style={[styles.frame, { borderColor: colors.accent }]} />
+        </View>
+      </CameraView>
+
+      <View style={styles.controls}>
+        <TouchableOpacity
+          style={[styles.captureButton, { borderColor: colors.textPrimary }]}
+          onPress={handleCapture}
+          disabled={!cameraReady || isProcessing}
+        >
+          {isProcessing ? (
+            <ActivityIndicator color={colors.accent} />
+          ) : (
+            <View style={[styles.captureInner, { backgroundColor: colors.accent }]} />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  camera: {
+    flex: 1
+  },
+  overlay: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  frame: {
+    width: '75%',
+    aspectRatio: 1,
+    borderWidth: 3,
+    borderRadius: 24
+  },
+  controls: {
+    position: 'absolute',
+    bottom: 40,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  captureButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    borderWidth: 4,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  captureInner: {
+    width: 48,
+    height: 48,
+    borderRadius: 24
+  },
+  permissionContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24
+  },
+  permissionText: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 16
+  },
+  permissionButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 999
+  },
+  permissionButtonText: {
+    fontSize: 16,
+    fontWeight: '600'
+  }
+});
