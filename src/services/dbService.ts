@@ -1,4 +1,4 @@
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite/legacy';
 import { useEffect } from 'react';
 import { ScannedProduct } from '../types';
 
