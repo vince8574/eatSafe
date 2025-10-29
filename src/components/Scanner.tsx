@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useTheme } from '../theme/themeContext';
 
 type ScannerProps = {
@@ -65,17 +65,17 @@ export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
 
   return (
     <View style={styles.container}>
-      <CameraView
-        ref={cameraRef}
-        style={styles.camera}
-        facing={CameraType.back}
-        onCameraReady={() => setCameraReady(true)}
-      >
-        <View style={styles.overlay}>
+      <View style={styles.cameraWrapper}>
+        <CameraView
+          ref={cameraRef}
+          style={styles.camera}
+          facing="back"
+          onCameraReady={() => setCameraReady(true)}
+        />
+        <View pointerEvents="none" style={styles.overlay}>
           <View style={[styles.frame, { borderColor: colors.accent }]} />
         </View>
-      </CameraView>
-
+      </View>
       <View style={styles.controls}>
         <TouchableOpacity
           style={[styles.captureButton, { borderColor: colors.textPrimary }]}
@@ -97,11 +97,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  camera: {
+  cameraWrapper: {
     flex: 1
   },
+  camera: {
+    ...StyleSheet.absoluteFillObject
+  },
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center'
   },

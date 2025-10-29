@@ -1,18 +1,14 @@
-import * as SQLite from 'expo-sqlite/legacy';
+import { openDatabaseSync } from 'expo-sqlite';
 import { useEffect } from 'react';
 import { ScannedProduct } from '../types';
 
 const DB_NAME = 'eatsafe.db';
 const TABLE = 'scans';
 
-function openDatabase() {
-  return SQLite.openDatabase(DB_NAME);
-}
+const database = openDatabaseSync(DB_NAME);
 
-const database = openDatabase();
-
-database.transaction((tx) => {
-  tx.executeSql(
+try {
+  database.execSync(
     `CREATE TABLE IF NOT EXISTS ${TABLE} (
       id TEXT PRIMARY KEY NOT NULL,
       brand TEXT,
@@ -25,49 +21,64 @@ database.transaction((tx) => {
       recallStatus TEXT,
       recallReference TEXT,
       lastCheckedAt INTEGER
-    );`,
-    [],
-    () => undefined,
-    (_, error) => {
-      console.warn('Failed to create database table', error);
-      return false;
-    }
+    );`
   );
-});
+} catch (error) {
+  console.warn('Failed to create database table', error);
+}
 
-function runQuery<T = SQLite.SQLResultSet>(query: string, params: unknown[] = []) {
-  return new Promise<T>((resolve, reject) => {
-    database.transaction((tx) => {
-      tx.executeSql(
-        query,
-        params,
-        (_, result) => resolve(result as T),
-        (_, error) => {
-          reject(error);
-          return false;
-        }
-      );
-    });
-  });
+type NullableScannedProduct = Omit<
+  ScannedProduct,
+  'productName' | 'barcode' | 'photoUri' | 'recallReference' | 'lastCheckedAt'
+> & {
+  productName: string | null;
+  barcode: string | null;
+  photoUri: string | null;
+  recallReference: string | null;
+  lastCheckedAt: number | null;
+};
+
+function normalizeProduct(row: NullableScannedProduct): ScannedProduct {
+  return {
+    ...row,
+    productName: row.productName ?? undefined,
+    barcode: row.barcode ?? undefined,
+    photoUri: row.photoUri ?? undefined,
+    recallReference: row.recallReference ?? undefined,
+    lastCheckedAt: row.lastCheckedAt ?? undefined
+  };
 }
 
 async function getAll(): Promise<ScannedProduct[]> {
-  const result = await runQuery<SQLite.SQLResultSet>(`SELECT * FROM ${TABLE} ORDER BY scannedAt DESC`);
-  return result.rows._array as ScannedProduct[];
+  const rows = database.getAllSync<NullableScannedProduct>(
+    `SELECT * FROM ${TABLE} ORDER BY scannedAt DESC`
+  );
+  return rows.map(normalizeProduct);
 }
 
 async function getById(id: string): Promise<ScannedProduct | null> {
-  const result = await runQuery<SQLite.SQLResultSet>(`SELECT * FROM ${TABLE} WHERE id = ? LIMIT 1`, [id]);
-  if (result.rows.length === 0) {
-    return null;
-  }
-  return result.rows.item(0) as ScannedProduct;
+  const row = database.getFirstSync<NullableScannedProduct>(
+    `SELECT * FROM ${TABLE} WHERE id = ? LIMIT 1`,
+    [id]
+  );
+  return row ? normalizeProduct(row) : null;
 }
 
 async function insert(product: ScannedProduct) {
-  await runQuery(
-    `INSERT OR REPLACE INTO ${TABLE} (id, brand, productName, lotNumber, barcode, country, scannedAt, photoUri, recallStatus, recallReference, lastCheckedAt)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  database.runSync(
+    `INSERT OR REPLACE INTO ${TABLE} (
+      id,
+      brand,
+      productName,
+      lotNumber,
+      barcode,
+      country,
+      scannedAt,
+      photoUri,
+      recallStatus,
+      recallReference,
+      lastCheckedAt
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       product.id,
       product.brand,
@@ -89,17 +100,20 @@ async function update(id: string, payload: Partial<ScannedProduct>) {
   if (!current) {
     throw new Error('Cannot update missing product');
   }
-  const merged = { ...current, ...payload };
+  const merged: ScannedProduct = { ...current, ...payload };
   await insert(merged);
 }
 
 async function remove(id: string) {
-  await runQuery(`DELETE FROM ${TABLE} WHERE id = ?`, [id]);
+  database.runSync(`DELETE FROM ${TABLE} WHERE id = ?`, [id]);
 }
 
 async function removeMany(ids: string[]) {
+  if (ids.length === 0) {
+    return;
+  }
   const placeholders = ids.map(() => '?').join(',');
-  await runQuery(`DELETE FROM ${TABLE} WHERE id IN (${placeholders})`, ids);
+  database.runSync(`DELETE FROM ${TABLE} WHERE id IN (${placeholders})`, ids);
 }
 
 export const db = {
@@ -113,8 +127,10 @@ export const db = {
 
 export function useDatabaseWarmup() {
   useEffect(() => {
-    database.transaction((tx) => {
-      tx.executeSql('PRAGMA journal_mode = WAL;');
-    });
+    try {
+      database.execSync('PRAGMA journal_mode = WAL;');
+    } catch (error) {
+      console.warn('Failed to configure database', error);
+    }
   }, []);
 }

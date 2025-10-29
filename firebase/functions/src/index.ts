@@ -14,7 +14,7 @@ export const purgeOldScans = functions
     const batch = firestore.batch();
     let deleted = 0;
 
-    snapshot.forEach((doc) => {
+    snapshot.forEach((doc: FirebaseFirestore.QueryDocumentSnapshot) => {
       const data = doc.data();
       const scannedAt = data.scannedAt ? new Date(data.scannedAt) : null;
 

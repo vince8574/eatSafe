@@ -21,6 +21,7 @@ export function DetailScreen() {
     () => recalls?.find((item) => item.id === product?.recallReference),
     [product?.recallReference, recalls]
   );
+  const recallLink = recall?.link ?? null;
 
   if (!product) {
     return (
@@ -54,8 +55,8 @@ export function DetailScreen() {
           <Text style={[styles.value, { color: colors.textPrimary }]}>{recall.title}</Text>
           <Text style={[styles.description, { color: colors.textSecondary }]}>{recall.description}</Text>
 
-          {recall.link ? (
-            <TouchableOpacity onPress={() => Linking.openURL(recall.link)}>
+          {recallLink ? (
+            <TouchableOpacity onPress={() => Linking.openURL(recallLink)}>
               <Text style={[styles.link, { color: colors.accent }]}>Ouvrir la fiche officielle</Text>
             </TouchableOpacity>
           ) : null}

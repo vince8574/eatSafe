@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
@@ -48,10 +48,17 @@ export function ScanScreen() {
     }
   });
 
+  const handleCapture = useCallback(
+    async (uri: string) => {
+      await mutation.mutateAsync(uri);
+    },
+    [mutation]
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Scanner
-        onCapture={(uri) => mutation.mutateAsync(uri)}
+        onCapture={handleCapture}
         isProcessing={mutation.isPending}
       />
 

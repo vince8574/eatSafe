@@ -10,7 +10,7 @@ export default function NotFound() {
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         Cette page n'existe pas. Revenez à l'accueil pour continuer.
       </Text>
-      <Link href="/" style={[styles.link, { color: colors.accent }]}>
+      <Link href="/(tabs)/home" style={[styles.link, { color: colors.accent }]}>
         Retour à l'accueil
       </Link>
     </View>

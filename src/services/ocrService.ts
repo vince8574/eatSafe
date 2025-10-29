@@ -1,6 +1,8 @@
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-import Tesseract, { ImageLike } from 'tesseract.js';
 import { OCRResult } from '../types';
+
+type ImageLike = import('tesseract.js').ImageLike;
+type TesseractLine = import('tesseract.js').Line;
 
 const preprocessConfig = {
   resize: { width: 1280 },
@@ -18,9 +20,12 @@ export async function preprocessImage(uri: string) {
 }
 
 export async function runTesseract(uri: string): Promise<OCRResult> {
-  const worker = await Tesseract.createWorker({ logger: () => undefined });
-  await worker.loadLanguage('eng+fra');
-  await worker.initialize('eng+fra');
+  if (typeof globalThis.Worker !== 'function') {
+    throw new Error('OCR indisponible dans Expo Go. Exécutez l’application dans un build de développement pour activer la reconnaissance.');
+  }
+
+  const Tesseract = await import('tesseract.js');
+  const worker = await Tesseract.createWorker('eng+fra', undefined, { logger: () => undefined });
 
   const result = await worker.recognize(uri as ImageLike);
 
@@ -30,7 +35,7 @@ export async function runTesseract(uri: string): Promise<OCRResult> {
     text: result.data.text,
     confidence: result.data.confidence,
     lines:
-      result.data.lines?.map((line) => ({
+      result.data.lines?.map((line: TesseractLine) => ({
         content: line.text,
         confidence: line.confidence
       })) ?? []
@@ -58,6 +63,10 @@ export async function extractLotNumber(rawText: string) {
 }
 
 export async function performOcr(uri: string) {
+  if (typeof globalThis.Worker !== 'function') {
+    throw new Error('OCR indisponible dans Expo Go. Exécutez un build de développement pour utiliser cette fonctionnalité.');
+  }
+
   const processed = await preprocessImage(uri);
   const result = await runTesseract(processed);
   const lot = await extractLotNumber(result.text);
