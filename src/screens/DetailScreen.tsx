@@ -35,6 +35,13 @@ export function DetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
+        <Text style={[styles.infoText, { color: colors.textSecondary }]}>
+          Les photos prises pendant le scan sont traitees localement puis supprimees immediatement. Seuls la marque et
+          le numero de lot sont conserves sur cet appareil.
+        </Text>
+      </View>
+
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
         <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>
@@ -85,6 +92,14 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 24,
     padding: 24
+  },
+  infoBox: {
+    borderRadius: 20,
+    padding: 18
+  },
+  infoText: {
+    fontSize: 14,
+    lineHeight: 22
   },
   brand: {
     fontSize: 24,

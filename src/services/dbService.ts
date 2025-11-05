@@ -7,33 +7,88 @@ const TABLE = 'scans';
 
 const database = openDatabaseSync(DB_NAME);
 
-try {
-  database.execSync(
-    `CREATE TABLE IF NOT EXISTS ${TABLE} (
-      id TEXT PRIMARY KEY NOT NULL,
-      brand TEXT,
-      productName TEXT,
-      lotNumber TEXT NOT NULL,
-      barcode TEXT,
-      country TEXT NOT NULL,
-      scannedAt INTEGER NOT NULL,
-      photoUri TEXT,
-      recallStatus TEXT,
-      recallReference TEXT,
-      lastCheckedAt INTEGER
-    );`
-  );
-} catch (error) {
-  console.warn('Failed to create database table', error);
+function ensureSchema() {
+  try {
+    database.execSync(
+      `CREATE TABLE IF NOT EXISTS ${TABLE} (
+        id TEXT PRIMARY KEY NOT NULL,
+        brand TEXT NOT NULL,
+        lotNumber TEXT NOT NULL,
+        scannedAt INTEGER NOT NULL,
+        recallStatus TEXT NOT NULL,
+        recallReference TEXT,
+        lastCheckedAt INTEGER
+      );`
+    );
+  } catch (error) {
+    console.warn('Failed to create database table', error);
+  }
 }
+
+function migrateLegacySchema() {
+  try {
+    const legacyColumns = ['photoUri', 'lotPhotoUri', 'productName', 'barcode', 'country'];
+    const columns =
+      database.getAllSync<{ name: string }>(`PRAGMA table_info(${TABLE});`) ?? [];
+    const hasLegacyColumns = columns.some((column) => legacyColumns.includes(column.name));
+
+    if (!hasLegacyColumns) {
+      return;
+    }
+
+    const tempTable = `${TABLE}_v2`;
+
+    database.execSync(
+      `CREATE TABLE IF NOT EXISTS ${tempTable} (
+        id TEXT PRIMARY KEY NOT NULL,
+        brand TEXT NOT NULL,
+        lotNumber TEXT NOT NULL,
+        scannedAt INTEGER NOT NULL,
+        recallStatus TEXT NOT NULL,
+        recallReference TEXT,
+        lastCheckedAt INTEGER
+      );`
+    );
+
+    database.execSync(
+      `INSERT INTO ${tempTable} (
+        id,
+        brand,
+        lotNumber,
+        scannedAt,
+        recallStatus,
+        recallReference,
+        lastCheckedAt
+      )
+      SELECT
+        id,
+        COALESCE(NULLIF(TRIM(brand), ''), 'Produit scanne'),
+        lotNumber,
+        COALESCE(scannedAt, strftime('%s','now') * 1000),
+        COALESCE(recallStatus, 'unknown'),
+        recallReference,
+        lastCheckedAt
+      FROM ${TABLE};`
+    );
+
+    database.execSync(`DROP TABLE ${TABLE};`);
+    database.execSync(`ALTER TABLE ${tempTable} RENAME TO ${TABLE};`);
+  } catch (error) {
+    console.warn('Failed to migrate database schema', error);
+  }
+}
+
+ensureSchema();
+migrateLegacySchema();
 
 type NullableScannedProduct = Omit<
   ScannedProduct,
-  'productName' | 'barcode' | 'photoUri' | 'recallReference' | 'lastCheckedAt'
+  'brand' | 'lotNumber' | 'scannedAt' | 'recallStatus'
 > & {
-  productName: string | null;
-  barcode: string | null;
-  photoUri: string | null;
+  brand: string | null;
+  lotNumber: string | null;
+  scannedAt: number | null;
+  recallStatus: ScannedProduct['recallStatus'] | null;
   recallReference: string | null;
   lastCheckedAt: number | null;
 };
@@ -41,9 +96,10 @@ type NullableScannedProduct = Omit<
 function normalizeProduct(row: NullableScannedProduct): ScannedProduct {
   return {
     ...row,
-    productName: row.productName ?? undefined,
-    barcode: row.barcode ?? undefined,
-    photoUri: row.photoUri ?? undefined,
+    brand: row.brand ?? 'Produit scanne',
+    lotNumber: row.lotNumber ?? '',
+    scannedAt: row.scannedAt ?? Date.now(),
+    recallStatus: row.recallStatus ?? 'unknown',
     recallReference: row.recallReference ?? undefined,
     lastCheckedAt: row.lastCheckedAt ?? undefined
   };
@@ -69,25 +125,17 @@ async function insert(product: ScannedProduct) {
     `INSERT OR REPLACE INTO ${TABLE} (
       id,
       brand,
-      productName,
       lotNumber,
-      barcode,
-      country,
       scannedAt,
-      photoUri,
       recallStatus,
       recallReference,
       lastCheckedAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
       product.id,
       product.brand,
-      product.productName ?? null,
       product.lotNumber,
-      product.barcode ?? null,
-      product.country,
       product.scannedAt,
-      product.photoUri ?? null,
       product.recallStatus,
       product.recallReference ?? null,
       product.lastCheckedAt ?? null

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ScannedProduct } from '../types';
 import { useTheme } from '../theme/themeContext';
 
@@ -44,13 +44,11 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
         Scanné le {new Date(product.scannedAt).toLocaleDateString()}
       </Text>
 
-      {product.photoUri ? (
-        <Image source={{ uri: product.photoUri }} style={styles.photo} />
-      ) : (
-        <View style={[styles.placeholder, { backgroundColor: colors.surfaceAlt }]}>
-          <Text style={[styles.placeholderText, { color: colors.textSecondary }]}>Photo non disponible</Text>
-        </View>
-      )}
+      <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
+        <Text style={[styles.infoText, { color: colors.textSecondary }]}>
+          Aucune photo n'est stockee; seuls la marque et le numero de lot sont conserves.
+        </Text>
+      </View>
 
       {onRemove && (
         <TouchableOpacity
@@ -99,21 +97,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 16
   },
-  photo: {
-    width: '100%',
-    height: 160,
+  infoBox: {
     borderRadius: 16,
+    padding: 12,
     marginBottom: 16
   },
-  placeholder: {
-    height: 160,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16
-  },
-  placeholderText: {
-    fontSize: 13
+  infoText: {
+    fontSize: 13,
+    lineHeight: 20
   },
   removeButton: {
     paddingVertical: 10,

@@ -5,12 +5,8 @@ export type CountryCode = 'FR' | 'US' | 'CH';
 export type ScannedProduct = {
   id: string;
   brand: string;
-  productName?: string;
   lotNumber: string;
-  barcode?: string;
-  country: CountryCode;
   scannedAt: number;
-  photoUri?: string;
   recallStatus: RecallStatus;
   recallReference?: string;
   lastCheckedAt?: number;

@@ -24,9 +24,8 @@ export function ManualEntryScreen() {
     try {
       setIsSubmitting(true);
       const product = await addProduct({
-        brand: brand.trim() || 'Produit scanné',
-        lotNumber: lotNumber.trim(),
-        country
+        brand: brand.trim() || 'Produit scanne',
+        lotNumber: lotNumber.trim()
       });
 
       const recalls = await fetchRecallsByCountry(country);

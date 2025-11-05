@@ -1,3 +1,4 @@
+import * as FileSystem from 'expo-file-system';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { OCRResult } from '../types';
 
@@ -10,6 +11,9 @@ const preprocessConfig = {
   compress: 1
 } as const;
 
+const WORKER_UNAVAILABLE_MESSAGE =
+  'OCR is not available in Expo Go. Use a development build to enable recognition.';
+
 export async function preprocessImage(uri: string) {
   const manipulated = await manipulateAsync(uri, [{ resize: preprocessConfig.resize }], {
     compress: preprocessConfig.compress,
@@ -21,7 +25,7 @@ export async function preprocessImage(uri: string) {
 
 export async function runTesseract(uri: string): Promise<OCRResult> {
   if (typeof globalThis.Worker !== 'function') {
-    throw new Error('OCR indisponible dans Expo Go. Exécutez l’application dans un build de développement pour activer la reconnaissance.');
+    throw new Error(WORKER_UNAVAILABLE_MESSAGE);
   }
 
   const Tesseract = await import('tesseract.js');
@@ -46,7 +50,7 @@ export async function extractLotNumber(rawText: string) {
   const patterns = [
     /\bL(?:OT)?[:\s-]*([A-Z0-9\-]+)/i,
     /\bGTIN[:\s-]*([0-9]{8,14})\b/i,
-    /\bN°[:\s-]*([A-Z0-9\-]+)\b/i
+    /\bN[O0][:\s-]*([A-Z0-9\-]+)\b/i
   ];
 
   const cleaned = rawText.replace(/\s+/g, ' ').trim();
@@ -64,15 +68,23 @@ export async function extractLotNumber(rawText: string) {
 
 export async function performOcr(uri: string) {
   if (typeof globalThis.Worker !== 'function') {
-    throw new Error('OCR indisponible dans Expo Go. Exécutez un build de développement pour utiliser cette fonctionnalité.');
+    throw new Error(WORKER_UNAVAILABLE_MESSAGE);
   }
 
   const processed = await preprocessImage(uri);
-  const result = await runTesseract(processed);
-  const lot = await extractLotNumber(result.text);
+  try {
+    const result = await runTesseract(processed);
+    const lot = await extractLotNumber(result.text);
 
-  return {
-    lot,
-    result
-  };
+    return {
+      lot,
+      result
+    };
+  } finally {
+    try {
+      await FileSystem.deleteAsync(processed, { idempotent: true });
+    } catch (error) {
+      console.warn('Failed to delete processed image', error);
+    }
+  }
 }

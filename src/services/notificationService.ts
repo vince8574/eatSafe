@@ -57,7 +57,7 @@ export async function requestNotificationPermissions() {
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync(channelId, {
-      name: 'Alertes Rappels',
+      name: 'Alertes rappels',
       importance: Notifications.AndroidImportance.MAX,
       sound: 'default',
       vibrationPattern: [0, 250, 250, 250]
@@ -79,8 +79,8 @@ export async function scheduleRecallNotification(product: ScannedProduct, recall
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Rappel détecté',
-      body: `${product.brand} - lot ${product.lotNumber} est concerné.`,
+      title: 'Rappel detecte',
+      body: `${product.brand} - lot ${product.lotNumber} est concerne.`,
       data: { productId: product.id, recallId: recall.id },
       sound: 'default'
     },
@@ -97,8 +97,8 @@ export async function scheduleDailyCheck() {
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Vérification EatSafe',
-      body: 'Mise à jour quotidienne des rappels en cours.',
+      title: 'Verification EatSafe',
+      body: 'Mise a jour quotidienne des rappels en cours.',
       data: { type: 'daily-check' }
     },
     trigger: {
