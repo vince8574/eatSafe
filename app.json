@@ -21,7 +21,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A1F1F"
       },
-      "package": "com.eatsafe.app"
+      "package": "com.eatsafe.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +48,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "13561448-e971-4d9b-ba0d-a05c8b685a42"
+      }
     }
   }
 }
