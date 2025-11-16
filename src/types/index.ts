@@ -27,8 +27,8 @@ export type RecallRecord = {
 
 export type OCRResult = {
   text: string;
-  confidence: number;
-  lines: Array<{ content: string; confidence: number }>;
+  confidence?: number;
+  lines: Array<{ content: string; confidence?: number }>;
 };
 
 export type ApiError = {

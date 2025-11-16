@@ -1,9 +1,7 @@
 import * as FileSystem from 'expo-file-system';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import MlkitOcr from 'react-native-mlkit-ocr';
 import { OCRResult } from '../types';
-
-type ImageLike = import('tesseract.js').ImageLike;
-type TesseractLine = import('tesseract.js').Line;
 
 const preprocessConfig = {
   resize: { width: 1280 },
@@ -11,8 +9,14 @@ const preprocessConfig = {
   compress: 1
 } as const;
 
-const WORKER_UNAVAILABLE_MESSAGE =
-  'OCR is not available in Expo Go. Use a development build to enable recognition.';
+const MLKIT_UNAVAILABLE_MESSAGE =
+  'OCR necessita une build native (development ou production). Installez EatSafe via EAS Build pour activer la reconnaissance.';
+
+function ensureMlkitAvailable() {
+  if (!MlkitOcr || typeof MlkitOcr.detectFromUri !== 'function') {
+    throw new Error(MLKIT_UNAVAILABLE_MESSAGE);
+  }
+}
 
 export async function preprocessImage(uri: string) {
   const manipulated = await manipulateAsync(uri, [{ resize: preprocessConfig.resize }], {
@@ -23,26 +27,20 @@ export async function preprocessImage(uri: string) {
   return manipulated.uri;
 }
 
-export async function runTesseract(uri: string): Promise<OCRResult> {
-  if (typeof globalThis.Worker !== 'function') {
-    throw new Error(WORKER_UNAVAILABLE_MESSAGE);
-  }
+export async function runMlkit(uri: string): Promise<OCRResult> {
+  ensureMlkitAvailable();
+  const blocks = await MlkitOcr.detectFromUri(uri);
 
-  const Tesseract = await import('tesseract.js');
-  const worker = await Tesseract.createWorker('eng+fra', undefined, { logger: () => undefined });
-
-  const result = await worker.recognize(uri as ImageLike);
-
-  await worker.terminate();
+  const text = blocks.map((block) => block.text).join('\n');
+  const lines = blocks.flatMap((block) =>
+    block.lines.map((line) => ({
+      content: line.text
+    }))
+  );
 
   return {
-    text: result.data.text,
-    confidence: result.data.confidence,
-    lines:
-      result.data.lines?.map((line: TesseractLine) => ({
-        content: line.text,
-        confidence: line.confidence
-      })) ?? []
+    text,
+    lines
   };
 }
 
@@ -67,13 +65,10 @@ export async function extractLotNumber(rawText: string) {
 }
 
 export async function performOcr(uri: string) {
-  if (typeof globalThis.Worker !== 'function') {
-    throw new Error(WORKER_UNAVAILABLE_MESSAGE);
-  }
-
+  ensureMlkitAvailable();
   const processed = await preprocessImage(uri);
   try {
-    const result = await runTesseract(processed);
+    const result = await runMlkit(processed);
     const lot = await extractLotNumber(result.text);
 
     return {
