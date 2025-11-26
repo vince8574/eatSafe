@@ -4,7 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { Scanner } from '../components/Scanner';
-import { performOcr } from '../services/ocrService';
+import { performOcr, performOcrForBrand } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -19,11 +19,29 @@ export function ScanScreen() {
   const country = usePreferencesStore((state) => state.country);
   const [step, setStep] = useState<Step>('brand');
   const [brandCaptured, setBrandCaptured] = useState(false);
+  const [brandText, setBrandText] = useState('');
   const [ocrText, setOcrText] = useState('');
   const [lotNumber, setLotNumber] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const mutation = useMutation({
+  const brandMutation = useMutation({
+    mutationFn: async (brandPhoto: string) => {
+      setErrorMessage('');
+      const { brand, result } = await performOcrForBrand(brandPhoto);
+      setBrandText(brand || 'Marque inconnue');
+      return { brand, ocrText: result.text };
+    },
+    onError: (error: unknown) => {
+      setErrorMessage(error instanceof Error ? error.message : 'La capture de la marque a échoué.');
+      setBrandText('Marque inconnue');
+    },
+    onSuccess: () => {
+      setBrandCaptured(true);
+      setStep('lot');
+    }
+  });
+
+  const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
       setErrorMessage('');
       const { lot, result } = await performOcr(lotPhoto);
@@ -31,12 +49,12 @@ export function ScanScreen() {
       setLotNumber(lot);
 
       if (!lot) {
-        throw new Error("Impossible d'extraire le numero de lot automatiquement.");
+        throw new Error("Impossible d'extraire le numéro de lot automatiquement.");
       }
 
       const recalls = await fetchRecallsByCountry(country);
       const product = await addProduct({
-        brand: 'Produit scanne',
+        brand: brandText || 'Produit scanné',
         lotNumber: lot
       });
 
@@ -44,14 +62,15 @@ export function ScanScreen() {
       return { productId: product.id, status };
     },
     onError: (error: unknown) => {
-      setErrorMessage(error instanceof Error ? error.message : 'Le scan a echoue.');
-      setStep('lot');
+      setErrorMessage(error instanceof Error ? error.message : 'Le scan a échoué.');
     },
     onSuccess: ({ productId }) => {
+      // Reset complet après succès
       setOcrText('');
       setLotNumber('');
       setErrorMessage('');
       setBrandCaptured(false);
+      setBrandText('');
       setStep('brand');
       router.push({ pathname: '/details/[id]', params: { id: productId } });
     }
@@ -59,6 +78,7 @@ export function ScanScreen() {
 
   const resetFlow = useCallback(() => {
     setBrandCaptured(false);
+    setBrandText('');
     setOcrText('');
     setLotNumber('');
     setErrorMessage('');
@@ -67,59 +87,62 @@ export function ScanScreen() {
 
   const handleCapture = useCallback(
     async (uri: string) => {
+      // Étape 1 : Capture de la marque
       if (step === 'brand') {
-        setBrandCaptured(true);
-        setOcrText('');
-        setLotNumber('');
-        setErrorMessage('');
-        setStep('lot');
-
         try {
-          await FileSystem.deleteAsync(uri, { idempotent: true });
-        } catch (error) {
-          console.warn('Failed to delete brand capture', error);
-        }
-
-        return;
-      }
-
-      if (!brandCaptured) {
-        setErrorMessage("Capturez d'abord la marque avant le numero de lot.");
-        setStep('brand');
-        try {
-          await FileSystem.deleteAsync(uri, { idempotent: true });
-        } catch (error) {
-          console.warn('Failed to delete unexpected capture', error);
+          await brandMutation.mutateAsync(uri);
+        } finally {
+          try {
+            await FileSystem.deleteAsync(uri, { idempotent: true });
+          } catch (error) {
+            console.warn('Failed to delete brand capture', error);
+          }
         }
         return;
       }
 
-      try {
-        await mutation.mutateAsync(uri);
-      } finally {
+      // Étape 2 : Capture du numéro de lot
+      if (step === 'lot') {
+        if (!brandCaptured) {
+          setErrorMessage("Capturez d'abord la marque avant le numéro de lot.");
+          setStep('brand');
+          try {
+            await FileSystem.deleteAsync(uri, { idempotent: true });
+          } catch (error) {
+            console.warn('Failed to delete unexpected capture', error);
+          }
+          return;
+        }
+
         try {
-          await FileSystem.deleteAsync(uri, { idempotent: true });
-        } catch (error) {
-          console.warn('Failed to delete lot capture', error);
+          await lotMutation.mutateAsync(uri);
+        } finally {
+          try {
+            await FileSystem.deleteAsync(uri, { idempotent: true });
+          } catch (error) {
+            console.warn('Failed to delete lot capture', error);
+          }
         }
       }
     },
-    [brandCaptured, mutation, step]
+    [brandCaptured, brandMutation, lotMutation, step]
   );
 
-  const stepLabel = step === 'brand' ? 'Etape 1/2' : 'Etape 2/2';
-  const stepInstruction =
-    mutation.isPending
-      ? 'Analyse du numero de lot en cours...'
-      : step === 'brand'
-        ? 'Cadrez la marque du produit (photo supprimee apres capture).'
-        : 'Cadrez clairement le numero de lot et capturez la photo.';
+  const isProcessing = brandMutation.isPending || lotMutation.isPending;
+  const stepLabel = step === 'brand' ? 'Étape 1/2' : 'Étape 2/2';
+  const stepInstruction = isProcessing
+    ? step === 'brand'
+      ? 'Analyse de la marque en cours...'
+      : 'Analyse du numéro de lot en cours...'
+    : step === 'brand'
+      ? 'Cadrez la marque du produit (photo supprimée après capture).'
+      : 'Cadrez clairement le numéro de lot et capturez la photo.';
 
-  const resetDisabled = mutation.isPending && step === 'lot';
+  const resetDisabled = isProcessing;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Scanner onCapture={handleCapture} isProcessing={mutation.isPending} />
+      <Scanner onCapture={handleCapture} isProcessing={isProcessing} />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
         <View style={styles.instructions}>
@@ -129,7 +152,7 @@ export function ScanScreen() {
 
         <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            Les photos sont traitee uniquement en local puis supprimees immediatement. Aucune image n'est stockee sur
+            Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée sur
             l'appareil.
           </Text>
         </View>
@@ -146,7 +169,7 @@ export function ScanScreen() {
           >
             <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>Marque</Text>
             <Text style={[styles.statusValue, { color: colors.textPrimary }]}>
-              {brandCaptured ? 'Capture realisee' : 'En attente'}
+              {brandText || (brandMutation.isPending ? 'Analyse...' : 'En attente')}
             </Text>
           </View>
 
@@ -161,18 +184,22 @@ export function ScanScreen() {
           >
             <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>Lot</Text>
             <Text style={[styles.statusValue, { color: colors.textPrimary }]}>
-              {lotNumber ? 'Numero detecte' : mutation.isPending ? 'Analyse...' : 'En attente'}
+              {lotNumber || (lotMutation.isPending ? 'Analyse...' : 'En attente')}
             </Text>
           </View>
         </View>
 
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Extraction OCR</Text>
-        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          {ocrText || 'En attente de capture...'}
-        </Text>
+        {step === 'lot' && (
+          <>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Extraction OCR</Text>
+            <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
+              {ocrText || 'En attente de capture...'}
+            </Text>
 
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Numero de lot detecte</Text>
-        <Text style={[styles.lotText, { color: colors.accent }]}>{lotNumber || '--'}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Numéro de lot détecté</Text>
+            <Text style={[styles.lotText, { color: colors.accent }]}>{lotNumber || '--'}</Text>
+          </>
+        )}
 
         {errorMessage ? (
           <Text style={[styles.errorText, { color: colors.danger }]}>{errorMessage}</Text>
