@@ -4,13 +4,14 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
-    "lint": "eslint . --ext .ts,.tsx",
-    "test": "jest"
-  },
+  "start": "expo start",
+  "android": "expo run:android",
+  "ios": "expo run:ios",
+  "web": "expo start --web",
+  "lint": "eslint . --ext .ts,.tsx",
+  "test": "jest",
+  "download-brands": "node scripts/downloadBrands.js"
+},
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-firebase/app": "^20.0.0",

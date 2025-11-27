@@ -20,6 +20,8 @@ export function ScanScreen() {
   const [step, setStep] = useState<Step>('brand');
   const [brandCaptured, setBrandCaptured] = useState(false);
   const [brandText, setBrandText] = useState('');
+  const [brandConfidence, setBrandConfidence] = useState(0);
+  const [brandSuggestions, setBrandSuggestions] = useState<string[]>([]);
   const [ocrText, setOcrText] = useState('');
   const [lotNumber, setLotNumber] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -27,9 +29,16 @@ export function ScanScreen() {
   const brandMutation = useMutation({
     mutationFn: async (brandPhoto: string) => {
       setErrorMessage('');
-      const { brand, result } = await performOcrForBrand(brandPhoto);
-      setBrandText(brand || 'Marque inconnue');
-      return { brand, ocrText: result.text };
+      const { brand, confidence, isKnownBrand, suggestions } = await performOcrForBrand(brandPhoto);
+      setBrandText(brand);
+      setBrandConfidence(confidence);
+      setBrandSuggestions(suggestions || []);
+      
+      if (!isKnownBrand && suggestions && suggestions.length > 0) {
+        console.log(`⚠️ Brand not recognized with high confidence. Suggestions: ${suggestions.join(', ')}`);
+      }
+      
+      return { brand };
     },
     onError: (error: unknown) => {
       setErrorMessage(error instanceof Error ? error.message : 'La capture de la marque a échoué.');
@@ -65,12 +74,13 @@ export function ScanScreen() {
       setErrorMessage(error instanceof Error ? error.message : 'Le scan a échoué.');
     },
     onSuccess: ({ productId }) => {
-      // Reset complet après succès
       setOcrText('');
       setLotNumber('');
       setErrorMessage('');
       setBrandCaptured(false);
       setBrandText('');
+      setBrandConfidence(0);
+      setBrandSuggestions([]);
       setStep('brand');
       router.push({ pathname: '/details/[id]', params: { id: productId } });
     }
@@ -79,15 +89,22 @@ export function ScanScreen() {
   const resetFlow = useCallback(() => {
     setBrandCaptured(false);
     setBrandText('');
+    setBrandConfidence(0);
+    setBrandSuggestions([]);
     setOcrText('');
     setLotNumber('');
     setErrorMessage('');
     setStep('brand');
   }, []);
 
+  const selectSuggestion = useCallback((suggestion: string) => {
+    setBrandText(suggestion);
+    setBrandConfidence(0.95);
+    setBrandSuggestions([]);
+  }, []);
+
   const handleCapture = useCallback(
     async (uri: string) => {
-      // Étape 1 : Capture de la marque
       if (step === 'brand') {
         try {
           await brandMutation.mutateAsync(uri);
@@ -101,7 +118,6 @@ export function ScanScreen() {
         return;
       }
 
-      // Étape 2 : Capture du numéro de lot
       if (step === 'lot') {
         if (!brandCaptured) {
           setErrorMessage("Capturez d'abord la marque avant le numéro de lot.");
@@ -140,6 +156,13 @@ export function ScanScreen() {
 
   const resetDisabled = isProcessing;
 
+  const getBrandStatusColor = () => {
+    if (!brandText) return colors.textSecondary;
+    if (brandConfidence >= 0.85) return colors.success;
+    if (brandConfidence >= 0.7) return colors.warning;
+    return colors.textSecondary;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Scanner onCapture={handleCapture} isProcessing={isProcessing} />
@@ -152,8 +175,7 @@ export function ScanScreen() {
 
         <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée sur
-            l'appareil.
+            Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée.
           </Text>
         </View>
 
@@ -168,9 +190,14 @@ export function ScanScreen() {
             ]}
           >
             <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>Marque</Text>
-            <Text style={[styles.statusValue, { color: colors.textPrimary }]}>
+            <Text style={[styles.statusValue, { color: getBrandStatusColor() }]}>
               {brandText || (brandMutation.isPending ? 'Analyse...' : 'En attente')}
             </Text>
+            {brandConfidence > 0 && brandConfidence < 0.85 && (
+              <Text style={[styles.confidenceText, { color: colors.warning }]}>
+                Confiance: {(brandConfidence * 100).toFixed(0)}%
+              </Text>
+            )}
           </View>
 
           <View
@@ -188,6 +215,25 @@ export function ScanScreen() {
             </Text>
           </View>
         </View>
+
+        {brandSuggestions.length > 0 && (
+          <View style={styles.suggestionsContainer}>
+            <Text style={[styles.suggestionsTitle, { color: colors.textSecondary }]}>
+              Vouliez-vous dire ?
+            </Text>
+            <View style={styles.suggestionsRow}>
+              {brandSuggestions.map((suggestion, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.suggestionChip, { backgroundColor: colors.surface, borderColor: colors.accent }]}
+                  onPress={() => selectSuggestion(suggestion)}
+                >
+                  <Text style={[styles.suggestionText, { color: colors.accent }]}>{suggestion}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
 
         {step === 'lot' && (
           <>
@@ -217,7 +263,7 @@ export function ScanScreen() {
           style={[styles.manualButton, { backgroundColor: colors.surface }]}
           onPress={() => router.push('/manual-entry')}
         >
-          <Text style={[styles.manualButtonText, { color: colors.textPrimary }]}>Saisie manuelle du lot</Text>
+          <Text style={[styles.manualButtonText, { color: colors.textPrimary }]}>Saisie manuelle</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -229,7 +275,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   feedback: {
-    maxHeight: 320,
+    maxHeight: 380,
     paddingHorizontal: 24
   },
   feedbackContent: {
@@ -275,6 +321,33 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 16,
     fontWeight: '700'
+  },
+  confidenceText: {
+    marginTop: 4,
+    fontSize: 12,
+    fontWeight: '600'
+  },
+  suggestionsContainer: {
+    gap: 8
+  },
+  suggestionsTitle: {
+    fontSize: 14,
+    fontWeight: '600'
+  },
+  suggestionsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8
+  },
+  suggestionChip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1
+  },
+  suggestionText: {
+    fontSize: 14,
+    fontWeight: '600'
   },
   sectionTitle: {
     fontSize: 18,
