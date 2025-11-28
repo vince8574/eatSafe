@@ -5,6 +5,8 @@ import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
 import { fetchRecallsByCountry } from '../services/apiService';
+import { BrandAutocomplete } from '../components/BrandAutocomplete';
+import { incrementBrandUsage } from '../services/customBrandsService';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
@@ -23,10 +25,17 @@ export function ManualEntryScreen() {
 
     try {
       setIsSubmitting(true);
+      const finalBrand = brand.trim() || 'Marque inconnue';
+
       const product = await addProduct({
-        brand: brand.trim() || 'Produit scanne',
+        brand: finalBrand,
         lotNumber: lotNumber.trim()
       });
+
+      // Incrémenter le compteur d'utilisation si c'est une marque personnalisée
+      if (brand.trim()) {
+        await incrementBrandUsage(brand.trim());
+      }
 
       const recalls = await fetchRecallsByCountry(country);
       await updateRecall(product, recalls);
@@ -49,17 +58,12 @@ export function ManualEntryScreen() {
         Ajoutez un produit en renseignant son numéro de lot et sa marque.
       </Text>
 
-      <View style={[styles.field, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.label, { color: colors.textSecondary }]}>Marque / Produit</Text>
-        <TextInput
-          style={[styles.input, { color: colors.textPrimary }]}
-          placeholder="Ex: Marque X"
-          placeholderTextColor={colors.textSecondary}
-          value={brand}
-          onChangeText={setBrand}
-          autoCapitalize="words"
-        />
-      </View>
+      <BrandAutocomplete
+        value={brand}
+        onChangeText={setBrand}
+        placeholder="Ex: Marque X"
+        autoCapitalize="words"
+      />
 
       <View style={[styles.field, { backgroundColor: colors.surface }]}>
         <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>

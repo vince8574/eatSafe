@@ -5,7 +5,6 @@ const product: ScannedProduct = {
   id: '1',
   brand: 'Test',
   lotNumber: 'L12345',
-  country: 'FR',
   scannedAt: Date.now(),
   recallStatus: 'unknown'
 };

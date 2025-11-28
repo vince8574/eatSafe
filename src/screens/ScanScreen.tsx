@@ -9,6 +9,7 @@ import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
+import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 
 type Step = 'brand' | 'lot';
 
@@ -63,7 +64,7 @@ export function ScanScreen() {
 
       const recalls = await fetchRecallsByCountry(country);
       const product = await addProduct({
-        brand: brandText || 'Produit scanné',
+        brand: brandText || DEFAULT_BRAND_NAME,
         lotNumber: lot
       });
 

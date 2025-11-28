@@ -7,7 +7,9 @@ export const palette = {
   textPrimary: '#F7FBFA',
   textSecondary: '#A5C9C7',
   danger: '#FF647C',
-  warning: '#FFC857'
+  warning: '#FFC857',
+  success: '#10B981',
+  border: '#1E4948'
 };
 
 export const lightPalette = {
@@ -19,5 +21,7 @@ export const lightPalette = {
   textPrimary: '#1A2D2B',
   textSecondary: '#476562',
   danger: '#D84961',
-  warning: '#E5A700'
+  warning: '#E5A700',
+  success: '#059669',
+  border: '#D1E3E0'
 };

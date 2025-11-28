@@ -4,6 +4,7 @@ import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { OCRResult } from '../types';
 import { getBrandMatcher } from './brandMatcher';
+import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 
 const preprocessConfig = {
   resize: { width: 1280 },
@@ -49,11 +50,11 @@ export async function runMlkit(uri: string): Promise<OCRResult> {
 }
 
 export async function extractBrand(rawText: string): Promise<string> {
-  const matcher = getBrandMatcher();
-  
+  const matcher = await getBrandMatcher();
+
   // 1. Essayer de trouver une marque connue dans le texte
   const brandMatches = matcher.extractBrandsFromText(rawText, 0.75);
-  
+
   if (brandMatches.length > 0 && brandMatches[0].confidence >= 0.85) {
     console.log(`✅ Brand matched: ${brandMatches[0].brand} (confidence: ${brandMatches[0].confidence.toFixed(2)})`);
     return brandMatches[0].brand;
@@ -61,7 +62,7 @@ export async function extractBrand(rawText: string): Promise<string> {
 
   // 2. Fallback: extraction basique
   const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
-  
+
   const brandCandidates = lines
     .filter(line => line.length >= 3 && line.length <= 30)
     .filter(line => /^[A-ZÀ-ÿ]/.test(line))
@@ -69,7 +70,7 @@ export async function extractBrand(rawText: string): Promise<string> {
       const digitCount = (line.match(/\d/g) || []).length;
       return digitCount < line.length / 2;
     });
-  
+
   if (brandCandidates.length === 0) {
     return '';
   }
@@ -126,10 +127,10 @@ export async function performOcrForBrand(uri: string): Promise<BrandExtractionRe
   try {
     const result = await runMlkit(processed);
     const brand = await extractBrand(result.text);
-    
-    const matcher = getBrandMatcher();
+
+    const matcher = await getBrandMatcher();
     const match = matcher.findBestMatch(brand, 0.6);
-    
+
     // Proposer des suggestions si confiance faible
     let suggestions: string[] | undefined;
     if (!match || match.confidence < 0.85) {
@@ -138,7 +139,7 @@ export async function performOcrForBrand(uri: string): Promise<BrandExtractionRe
     }
 
     return {
-      brand: match?.brand || brand || 'Marque inconnue',
+      brand: match?.brand || brand || DEFAULT_BRAND_NAME,
       confidence: match?.confidence || 0,
       isKnownBrand: !!match && match.confidence >= 0.85,
       suggestions: suggestions && suggestions.length > 0 ? suggestions : undefined,

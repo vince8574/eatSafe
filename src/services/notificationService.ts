@@ -2,6 +2,7 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { ScannedProduct, RecallRecord } from '../types';
+import { extractRecallReason } from '../utils/recallUtils';
 
 type NotificationsModule = typeof import('expo-notifications');
 
@@ -77,12 +78,26 @@ export async function scheduleRecallNotification(product: ScannedProduct, recall
     return;
   }
 
+  const reason = extractRecallReason(recall);
+  const reasonText = reason || recall.title;
+  const notificationBody = `⚠️ ${product.brand} - Lot ${product.lotNumber}\n` +
+    `Raison: ${reasonText}\n\n` +
+    `🚫 NE PAS CONSOMMER\n` +
+    `En cas de consommation, contactez les urgences (15 ou 112)`;
+
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Rappel detecte',
-      body: `${product.brand} - lot ${product.lotNumber} est concerne.`,
-      data: { productId: product.id, recallId: recall.id },
-      sound: 'default'
+      title: '🚨 ALERTE PRODUIT CONTAMINÉ',
+      body: notificationBody,
+      data: {
+        productId: product.id,
+        recallId: recall.id,
+        reason,
+        isUrgent: true
+      },
+      sound: 'default',
+      priority: Notifications.AndroidNotificationPriority.MAX,
+      categoryIdentifier: 'recall-urgent'
     },
     trigger: null
   });

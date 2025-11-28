@@ -1,5 +1,6 @@
 // src/services/brandMatcher.ts
 import * as brandsDataModule from '../data/brands.json';
+import { getAllCustomBrands } from './customBrandsService';
 
 const brandsData = brandsDataModule as unknown as string[];
 
@@ -178,13 +179,33 @@ export class BrandMatcher {
 // Instance singleton
 let brandMatcherInstance: BrandMatcher | null = null;
 
-export function getBrandMatcher(): BrandMatcher {
+/**
+ * Récupère l'instance du BrandMatcher
+ * Charge automatiquement les marques de base + marques personnalisées
+ */
+export async function getBrandMatcher(): Promise<BrandMatcher> {
   if (!brandMatcherInstance) {
-    brandMatcherInstance = new BrandMatcher(brandsData);
+    await reloadBrandMatcher();
   }
-  return brandMatcherInstance;
+  return brandMatcherInstance!;
 }
 
+/**
+ * Recharge le BrandMatcher avec les marques de base + marques personnalisées
+ * À appeler après l'ajout d'une nouvelle marque personnalisée
+ */
+export async function reloadBrandMatcher(): Promise<void> {
+  const customBrands = await getAllCustomBrands();
+  const customBrandNames = customBrands.map(cb => cb.name);
+
+  brandMatcherInstance = new BrandMatcher([...brandsData, ...customBrandNames]);
+
+  console.log(`✓ BrandMatcher initialized with ${brandsData.length} base brands + ${customBrandNames.length} custom brands`);
+}
+
+/**
+ * @deprecated Utiliser reloadBrandMatcher() à la place
+ */
 export function initializeBrandMatcher(customBrands: string[]): void {
   brandMatcherInstance = new BrandMatcher([...brandsData, ...customBrands]);
 }

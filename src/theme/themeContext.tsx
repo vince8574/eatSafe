@@ -10,7 +10,8 @@ type Palette = {
   textSecondary: string;
   danger: string;
   warning: string;
-  success: string;  // ← Ajouter cette ligne
+  success: string;
+  border: string;
 };
 
 type Typography = {
@@ -38,7 +39,8 @@ const defaultTheme: ThemeType = {
     textSecondary: '#A5C9C7',
     danger: '#FF647C',
     warning: '#FFC857',
-    success: '#10B981'  // ← Ajouter cette ligne (vert)
+    success: '#10B981',
+    border: '#1E4948'
   },
   typography: {
     title: 28,

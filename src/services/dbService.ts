@@ -1,6 +1,7 @@
 import { openDatabaseSync } from 'expo-sqlite';
 import { useEffect } from 'react';
 import { ScannedProduct } from '../types';
+import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 
 const DB_NAME = 'eatsafe.db';
 const TABLE = 'scans';
@@ -62,7 +63,7 @@ function migrateLegacySchema() {
       )
       SELECT
         id,
-        COALESCE(NULLIF(TRIM(brand), ''), 'Produit scanne'),
+        COALESCE(NULLIF(TRIM(brand), ''), '${DEFAULT_BRAND_NAME}'),
         lotNumber,
         COALESCE(scannedAt, strftime('%s','now') * 1000),
         COALESCE(recallStatus, 'unknown'),
@@ -96,7 +97,7 @@ type NullableScannedProduct = Omit<
 function normalizeProduct(row: NullableScannedProduct): ScannedProduct {
   return {
     ...row,
-    brand: row.brand ?? 'Produit scanne',
+    brand: row.brand ?? DEFAULT_BRAND_NAME,
     lotNumber: row.lotNumber ?? '',
     scannedAt: row.scannedAt ?? Date.now(),
     recallStatus: row.recallStatus ?? 'unknown',

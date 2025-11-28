@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllRecalls } from '../services/apiService';
+import { RecallAlert } from '../components/RecallAlert';
+import { extractRecallReason } from '../utils/recallUtils';
 
 export function DetailScreen() {
   const { colors } = useTheme();
@@ -21,7 +23,8 @@ export function DetailScreen() {
     () => recalls?.find((item) => item.id === product?.recallReference),
     [product?.recallReference, recalls]
   );
-  const recallLink = recall?.link ?? null;
+  const recallReason = useMemo(() => recall ? extractRecallReason(recall) : undefined, [recall]);
+  const isRecalled = product?.recallStatus === 'recalled';
 
   if (!product) {
     return (
@@ -34,58 +37,82 @@ export function DetailScreen() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
-        <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-          Les photos prises pendant le scan sont traitees localement puis supprimees immediatement. Seuls la marque et
-          le numero de lot sont conserves sur cet appareil.
-        </Text>
-      </View>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.content}>
+        {/* Alerte de rappel en haut si le produit est contaminé */}
+        {isRecalled && recall && (
+          <RecallAlert recall={recall} reason={recallReason} />
+        )}
 
-      <View style={[styles.card, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
-        <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>
-        <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
-        <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>Statut rappel</Text>
-        <Text style={[styles.status, { color: colors.textPrimary }]}>{product.recallStatus.toUpperCase()}</Text>
-        <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>Dernière vérification</Text>
-        <Text style={[styles.value, { color: colors.textPrimary }]}>
-          {product.lastCheckedAt
-            ? new Date(product.lastCheckedAt).toLocaleString()
-            : 'Jamais'}
-        </Text>
-      </View>
-
-      {recall ? (
-        <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Détails rappel</Text>
-          <Text style={[styles.value, { color: colors.textPrimary }]}>{recall.title}</Text>
-          <Text style={[styles.description, { color: colors.textSecondary }]}>{recall.description}</Text>
-
-          {recallLink ? (
-            <TouchableOpacity onPress={() => Linking.openURL(recallLink)}>
-              <Text style={[styles.link, { color: colors.accent }]}>Ouvrir la fiche officielle</Text>
-            </TouchableOpacity>
-          ) : null}
+        <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>
+            Les photos prises pendant le scan sont traitées localement puis supprimées immédiatement. Seuls la marque et
+            le numéro de lot sont conservés sur cet appareil.
+          </Text>
         </View>
-      ) : null}
 
-      <TouchableOpacity
-        style={[styles.deleteButton, { backgroundColor: colors.danger }]}
-        onPress={async () => {
-          await removeProduct(product.id);
-          router.back();
-        }}
-      >
-        <Text style={styles.deleteText}>Supprimer le scan</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>
+          <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>Statut rappel</Text>
+          <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
+            {getStatusLabel(product.recallStatus)}
+          </Text>
+          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>Dernière vérification</Text>
+          <Text style={[styles.value, { color: colors.textPrimary }]}>
+            {product.lastCheckedAt
+              ? new Date(product.lastCheckedAt).toLocaleString('fr-FR')
+              : 'Jamais'}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.deleteButton, { backgroundColor: colors.danger }]}
+          onPress={async () => {
+            await removeProduct(product.id);
+            router.back();
+          }}
+        >
+          <Text style={styles.deleteText}>Supprimer le scan</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
+}
+
+function getStatusLabel(status: string): string {
+  switch (status) {
+    case 'recalled':
+      return '🚨 RAPPELÉ - NE PAS CONSOMMER';
+    case 'safe':
+      return '✅ SÉCURITAIRE';
+    case 'warning':
+      return '⚠️ AVERTISSEMENT';
+    default:
+      return '❓ INCONNU';
+  }
+}
+
+function getStatusColor(status: string, colors: any) {
+  switch (status) {
+    case 'recalled':
+      return { color: colors.danger };
+    case 'safe':
+      return { color: colors.success };
+    case 'warning':
+      return { color: colors.warning };
+    default:
+      return { color: colors.textSecondary };
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent'
+  },
+  content: {
     padding: 24,
     gap: 24
   },
