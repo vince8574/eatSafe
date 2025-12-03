@@ -1,0 +1,119 @@
+{
+  "common": {
+    "appName": "EatSafe",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "refresh": "Refresh",
+    "unknown": "Unknown"
+  },
+  "home": {
+    "title": "EatSafe",
+    "subtitle": "Monitor your scanned products and receive real-time recall alerts.",
+    "stats": {
+      "scanned": "Scanned products",
+      "recalled": "Recalled products",
+      "pending": "Under analysis"
+    },
+    "historyTitle": "Scan history",
+    "emptyState": "Scan your first product to track its recall status."
+  },
+  "scan": {
+    "step": "Step {{current}}/{{total}}",
+    "brandStep": "Step 1/2",
+    "lotStep": "Step 2/2",
+    "brandInstruction": "Frame the product brand (photo deleted after capture).",
+    "lotInstruction": "Clearly frame the lot number and capture the photo.",
+    "brandAnalyzing": "Analyzing brand...",
+    "lotAnalyzing": "Analyzing lot number...",
+    "privacyInfo": "Photos are processed locally only and deleted immediately. No images are stored.",
+    "brandLabel": "Brand",
+    "lotLabel": "Lot",
+    "analyzing": "Analyzing...",
+    "waiting": "Waiting",
+    "confidence": "Confidence: {{value}}%",
+    "suggestions": "Did you mean?",
+    "ocrExtraction": "OCR Extraction",
+    "detectedLot": "Detected lot number",
+    "restart": "Restart",
+    "manualEntry": "Manual entry",
+    "waitingForCapture": "Waiting for capture...",
+    "errors": {
+      "brandCaptureFailed": "Brand capture failed.",
+      "scanFailed": "Scan failed.",
+      "lotExtractFailed": "Unable to extract lot number automatically.",
+      "brandFirst": "Capture the brand before the lot number."
+    }
+  },
+  "manualEntry": {
+    "title": "Manual entry",
+    "subtitle": "Add a product by entering its lot number and brand.",
+    "brandLabel": "Brand",
+    "brandPlaceholder": "Ex: Brand X",
+    "lotLabel": "Lot number",
+    "lotPlaceholder": "Ex: L12345",
+    "save": "Save",
+    "verifying": "Verifying…",
+    "errors": {
+      "lotRequired": "Lot number required",
+      "lotRequiredMessage": "Please enter a lot number to continue.",
+      "saveFailed": "Save failed",
+      "checkFailed": "Unable to check recalls at the moment."
+    }
+  },
+  "details": {
+    "title": "Product details",
+    "brand": "Brand",
+    "lot": "Lot",
+    "scannedAt": "Scanned on",
+    "status": {
+      "safe": "Safe",
+      "recalled": "Recalled",
+      "unknown": "Unknown status"
+    },
+    "recallInfo": "Recall information",
+    "actions": {
+      "delete": "Delete",
+      "viewRecall": "View recall"
+    }
+  },
+  "history": {
+    "title": "History",
+    "emptyState": "No scanned products yet."
+  },
+  "notifications": {
+    "alert": {
+      "title": "🚨 CONTAMINATED PRODUCT ALERT",
+      "body": "⚠️ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\n🚫 DO NOT CONSUME\nIf consumed, contact emergency services (911)"
+    },
+    "dailyCheck": {
+      "title": "EatSafe Verification",
+      "body": "Daily recall update in progress."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "country": "Country",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "about": "About"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
+    "nl": "Nederlands",
+    "pt": "Português",
+    "ru": "Русский"
+  }
+}

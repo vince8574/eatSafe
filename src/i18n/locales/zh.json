@@ -1,0 +1,119 @@
+{
+  "common": {
+    "appName": "EatSafe",
+    "loading": "加载中...",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回",
+    "refresh": "刷新",
+    "unknown": "未知"
+  },
+  "home": {
+    "title": "EatSafe",
+    "subtitle": "监控您扫描的产品并实时接收召回警报。",
+    "stats": {
+      "scanned": "已扫描产品",
+      "recalled": "召回产品",
+      "pending": "分析中"
+    },
+    "historyTitle": "扫描历史",
+    "emptyState": "扫描您的第一个产品以跟踪其召回状态。"
+  },
+  "scan": {
+    "step": "步骤 {{current}}/{{total}}",
+    "brandStep": "步骤 1/2",
+    "lotStep": "步骤 2/2",
+    "brandInstruction": "对准产品品牌(拍摄后照片将被删除)。",
+    "lotInstruction": "清晰对准批号并拍摄照片。",
+    "brandAnalyzing": "正在分析品牌...",
+    "lotAnalyzing": "正在分析批号...",
+    "privacyInfo": "照片仅在本地处理并立即删除。不存储任何图像。",
+    "brandLabel": "品牌",
+    "lotLabel": "批次",
+    "analyzing": "分析中...",
+    "waiting": "等待中",
+    "confidence": "置信度: {{value}}%",
+    "suggestions": "您是否要找?",
+    "ocrExtraction": "OCR 提取",
+    "detectedLot": "检测到的批号",
+    "restart": "重新开始",
+    "manualEntry": "手动输入",
+    "waitingForCapture": "等待拍摄...",
+    "errors": {
+      "brandCaptureFailed": "品牌拍摄失败。",
+      "scanFailed": "扫描失败。",
+      "lotExtractFailed": "无法自动提取批号。",
+      "brandFirst": "请先拍摄品牌再拍摄批号。"
+    }
+  },
+  "manualEntry": {
+    "title": "手动输入",
+    "subtitle": "通过输入批号和品牌添加产品。",
+    "brandLabel": "品牌",
+    "brandPlaceholder": "例如：品牌 X",
+    "lotLabel": "批号",
+    "lotPlaceholder": "例如：L12345",
+    "save": "保存",
+    "verifying": "验证中…",
+    "errors": {
+      "lotRequired": "需要批号",
+      "lotRequiredMessage": "请输入批号以继续。",
+      "saveFailed": "保存失败",
+      "checkFailed": "目前无法检查召回信息。"
+    }
+  },
+  "details": {
+    "title": "产品详情",
+    "brand": "品牌",
+    "lot": "批次",
+    "scannedAt": "扫描于",
+    "status": {
+      "safe": "安全",
+      "recalled": "已召回",
+      "unknown": "状态未知"
+    },
+    "recallInfo": "召回信息",
+    "actions": {
+      "delete": "删除",
+      "viewRecall": "查看召回"
+    }
+  },
+  "history": {
+    "title": "历史记录",
+    "emptyState": "尚无扫描的产品。"
+  },
+  "notifications": {
+    "alert": {
+      "title": "🚨 污染产品警报",
+      "body": "⚠️ {{brand}} - 批次 {{lot}}\n原因: {{reason}}\n\n🚫 请勿食用\n如已食用，请联系急救服务"
+    },
+    "dailyCheck": {
+      "title": "EatSafe 验证",
+      "body": "每日召回更新正在进行中。"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "country": "国家",
+    "theme": "主题",
+    "notifications": "通知",
+    "about": "关于"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
+    "nl": "Nederlands",
+    "pt": "Português",
+    "ru": "Русский"
+  }
+}

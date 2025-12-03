@@ -1,5 +1,5 @@
 // src/services/ocrService.ts
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { OCRResult } from '../types';
@@ -32,15 +32,24 @@ export async function preprocessImage(uri: string) {
 
 export async function runMlkit(uri: string): Promise<OCRResult> {
   ensureMlkitAvailable();
-  
+
+  console.log('[OCR] Starting TextRecognition.recognize for:', uri);
   const result = await TextRecognition.recognize(uri);
+  console.log('[OCR] Recognition complete. Result:', JSON.stringify(result, null, 2).substring(0, 500));
 
   const text = result.text;
-  
-  const lines = result.blocks.flatMap((block) =>
-    block.lines.map((line) => ({
+  console.log('[OCR] ===== TEXT RECOGNIZED =====');
+  console.log('[OCR] Full text:', text);
+  console.log('[OCR] ============================');
+
+  // Ensure blocks is an array
+  const blocks = Array.isArray(result.blocks) ? result.blocks : [];
+  console.log('[OCR] Blocks count:', blocks.length);
+
+  const lines = blocks.flatMap((block) =>
+    Array.isArray(block.lines) ? block.lines.map((line) => ({
       content: line.text
-    }))
+    })) : []
   );
 
   return {
@@ -50,10 +59,13 @@ export async function runMlkit(uri: string): Promise<OCRResult> {
 }
 
 export async function extractBrand(rawText: string): Promise<string> {
+  console.log('[extractBrand] Getting matcher');
   const matcher = await getBrandMatcher();
+  console.log('[extractBrand] Matcher obtained, extracting brands from text');
 
   // 1. Essayer de trouver une marque connue dans le texte
   const brandMatches = matcher.extractBrandsFromText(rawText, 0.75);
+  console.log('[extractBrand] Brand matches found:', brandMatches.length);
 
   if (brandMatches.length > 0 && brandMatches[0].confidence >= 0.85) {
     console.log(`✅ Brand matched: ${brandMatches[0].brand} (confidence: ${brandMatches[0].confidence.toFixed(2)})`);
@@ -61,8 +73,11 @@ export async function extractBrand(rawText: string): Promise<string> {
   }
 
   // 2. Fallback: extraction basique
+  console.log('[extractBrand] Fallback: splitting text into lines');
   const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+  console.log('[extractBrand] Lines count:', lines.length);
 
+  console.log('[extractBrand] Filtering brand candidates');
   const brandCandidates = lines
     .filter(line => line.length >= 3 && line.length <= 30)
     .filter(line => /^[A-ZÀ-ÿ]/.test(line))
@@ -70,14 +85,19 @@ export async function extractBrand(rawText: string): Promise<string> {
       const digitCount = (line.match(/\d/g) || []).length;
       return digitCount < line.length / 2;
     });
+  console.log('[extractBrand] Brand candidates count:', brandCandidates.length);
 
   if (brandCandidates.length === 0) {
+    console.log('[extractBrand] No candidates found, returning empty');
     return '';
   }
 
   const bestCandidate = brandCandidates[0];
+  console.log('[extractBrand] Best candidate:', bestCandidate);
+  console.log('[extractBrand] Finding best match for candidate');
   const match = matcher.findBestMatch(bestCandidate, 0.7);
-  
+  console.log('[extractBrand] Match result:', match);
+
   if (match && match.confidence >= 0.7) {
     console.log(`✅ Brand matched (candidate): ${match.brand} (confidence: ${match.confidence.toFixed(2)})`);
     return match.brand;
@@ -122,29 +142,47 @@ export interface BrandExtractionResult {
 
 export async function performOcrForBrand(uri: string): Promise<BrandExtractionResult> {
   ensureMlkitAvailable();
+  console.log('[Brand OCR] Step 1: Starting preprocessing');
   const processed = await preprocessImage(uri);
-  
-  try {
-    const result = await runMlkit(processed);
-    const brand = await extractBrand(result.text);
+  console.log('[Brand OCR] Step 2: Preprocessing complete');
 
+  try {
+    console.log('[Brand OCR] Step 3: Starting runMlkit');
+    const result = await runMlkit(processed);
+    console.log('[Brand OCR] Step 4: runMlkit complete, extracting brand from text');
+
+    const brand = await extractBrand(result.text);
+    console.log('[Brand OCR] Step 5: Brand extracted:', brand);
+
+    console.log('[Brand OCR] Step 6: Getting brand matcher');
     const matcher = await getBrandMatcher();
+    console.log('[Brand OCR] Step 7: Finding best match for:', brand);
+
     const match = matcher.findBestMatch(brand, 0.6);
+    console.log('[Brand OCR] Step 8: Best match result:', match);
 
     // Proposer des suggestions si confiance faible
     let suggestions: string[] | undefined;
     if (!match || match.confidence < 0.85) {
+      console.log('[Brand OCR] Step 9: Finding top matches for suggestions');
       const topMatches = matcher.findTopMatches(brand, 3, 0.6);
-      suggestions = topMatches.map((m: { brand: string }) => m.brand);
+      console.log('[Brand OCR] Step 10: Top matches:', topMatches);
+      console.log('[Brand OCR] Step 11: Mapping suggestions, topMatches type:', typeof topMatches, 'isArray:', Array.isArray(topMatches));
+
+      suggestions = Array.isArray(topMatches) ? topMatches.map((m: { brand: string }) => m.brand) : [];
+      console.log('[Brand OCR] Step 12: Suggestions mapped:', suggestions);
     }
 
-    return {
+    console.log('[Brand OCR] Step 13: Building result object');
+    const finalResult = {
       brand: match?.brand || brand || DEFAULT_BRAND_NAME,
       confidence: match?.confidence || 0,
       isKnownBrand: !!match && match.confidence >= 0.85,
       suggestions: suggestions && suggestions.length > 0 ? suggestions : undefined,
       result
     };
+    console.log('[Brand OCR] Step 14: Returning result');
+    return finalResult;
   } finally {
     try {
       await FileSystem.deleteAsync(processed, { idempotent: true });

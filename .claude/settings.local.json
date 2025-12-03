@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(adb -s c635771b0521 install:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm install:*)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(npx expo start:*)",
+      "Bash(npx expo install expo-localization)",
+      "Bash(npx expo prebuild:*)",
+      "Bash(./gradlew assembleRelease:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

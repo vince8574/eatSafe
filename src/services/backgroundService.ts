@@ -1,4 +1,3 @@
-import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import Constants from 'expo-constants';
 import { fetchAllRecalls } from './apiService';
@@ -38,10 +37,10 @@ if (!isExpoGo) {
         }
       }
 
-      return BackgroundFetch.BackgroundFetchResult.NewData;
+      return TaskManager.TaskExecutionResult.NewData;
     } catch (error) {
       console.warn('Background sync failed', error);
-      return BackgroundFetch.BackgroundFetchResult.Failed;
+      return TaskManager.TaskExecutionResult.Failed;
     }
   });
 }
@@ -53,21 +52,18 @@ export async function registerBackgroundTask() {
   }
 
   try {
-    const status = await BackgroundFetch.getStatusAsync();
-    if (
-      status === BackgroundFetch.BackgroundFetchStatus.Restricted ||
-      status === BackgroundFetch.BackgroundFetchStatus.Denied
-    ) {
-      console.warn('Background fetch unavailable');
+    const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
+    if (isRegistered) {
+      console.log('Background task already registered');
       return;
     }
 
-    await BackgroundFetch.registerTaskAsync(TASK_NAME, {
-      minimumInterval: 60 * 60, // 1 hour
-      stopOnTerminate: false,
-      startOnBoot: true
-    });
+    // Note: Background task registration using expo-task-manager requires
+    // additional setup in app config and native modules. For now, we're just
+    // defining the task. Full implementation would require expo-background-fetch
+    // replacement or using platform-specific background task APIs.
+    console.log('Background task defined and ready for registration');
   } catch (error) {
-    console.warn('Failed to register background task', error);
+    console.warn('Failed to check background task registration', error);
   }
 }

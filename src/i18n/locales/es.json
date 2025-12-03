@@ -1,0 +1,119 @@
+{
+  "common": {
+    "appName": "EatSafe",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "refresh": "Actualizar",
+    "unknown": "Desconocido"
+  },
+  "home": {
+    "title": "EatSafe",
+    "subtitle": "Monitoree sus productos escaneados y reciba alertas de retiro en tiempo real.",
+    "stats": {
+      "scanned": "Productos escaneados",
+      "recalled": "Productos retirados",
+      "pending": "En análisis"
+    },
+    "historyTitle": "Historial de escaneos",
+    "emptyState": "Escanee su primer producto para rastrear su estado de retiro."
+  },
+  "scan": {
+    "step": "Paso {{current}}/{{total}}",
+    "brandStep": "Paso 1/2",
+    "lotStep": "Paso 2/2",
+    "brandInstruction": "Encuadre la marca del producto (foto eliminada después de capturar).",
+    "lotInstruction": "Encuadre claramente el número de lote y capture la foto.",
+    "brandAnalyzing": "Analizando marca...",
+    "lotAnalyzing": "Analizando número de lote...",
+    "privacyInfo": "Las fotos se procesan solo localmente y se eliminan inmediatamente. No se almacenan imágenes.",
+    "brandLabel": "Marca",
+    "lotLabel": "Lote",
+    "analyzing": "Analizando...",
+    "waiting": "Esperando",
+    "confidence": "Confianza: {{value}}%",
+    "suggestions": "¿Quiso decir?",
+    "ocrExtraction": "Extracción OCR",
+    "detectedLot": "Número de lote detectado",
+    "restart": "Reiniciar",
+    "manualEntry": "Entrada manual",
+    "waitingForCapture": "Esperando captura...",
+    "errors": {
+      "brandCaptureFailed": "Fallo en la captura de marca.",
+      "scanFailed": "Escaneo fallido.",
+      "lotExtractFailed": "No se puede extraer el número de lote automáticamente.",
+      "brandFirst": "Capture la marca antes del número de lote."
+    }
+  },
+  "manualEntry": {
+    "title": "Entrada manual",
+    "subtitle": "Agregue un producto ingresando su número de lote y marca.",
+    "brandLabel": "Marca",
+    "brandPlaceholder": "Ej: Marca X",
+    "lotLabel": "Número de lote",
+    "lotPlaceholder": "Ej: L12345",
+    "save": "Guardar",
+    "verifying": "Verificando…",
+    "errors": {
+      "lotRequired": "Número de lote requerido",
+      "lotRequiredMessage": "Por favor ingrese un número de lote para continuar.",
+      "saveFailed": "Fallo al guardar",
+      "checkFailed": "No se pueden verificar los retiros en este momento."
+    }
+  },
+  "details": {
+    "title": "Detalles del producto",
+    "brand": "Marca",
+    "lot": "Lote",
+    "scannedAt": "Escaneado el",
+    "status": {
+      "safe": "Seguro",
+      "recalled": "Retirado",
+      "unknown": "Estado desconocido"
+    },
+    "recallInfo": "Información del retiro",
+    "actions": {
+      "delete": "Eliminar",
+      "viewRecall": "Ver retiro"
+    }
+  },
+  "history": {
+    "title": "Historial",
+    "emptyState": "Aún no hay productos escaneados."
+  },
+  "notifications": {
+    "alert": {
+      "title": "🚨 ALERTA PRODUCTO CONTAMINADO",
+      "body": "⚠️ {{brand}} - Lote {{lot}}\nRazón: {{reason}}\n\n🚫 NO CONSUMIR\nSi se consume, contacte servicios de emergencia (112)"
+    },
+    "dailyCheck": {
+      "title": "Verificación EatSafe",
+      "body": "Actualización diaria de retiros en curso."
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "country": "País",
+    "theme": "Tema",
+    "notifications": "Notificaciones",
+    "about": "Acerca de"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
+    "nl": "Nederlands",
+    "pt": "Português",
+    "ru": "Русский"
+  }
+}

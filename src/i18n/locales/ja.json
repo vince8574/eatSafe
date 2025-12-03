@@ -1,0 +1,119 @@
+{
+  "common": {
+    "appName": "EatSafe",
+    "loading": "読み込み中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "back": "戻る",
+    "refresh": "更新",
+    "unknown": "不明"
+  },
+  "home": {
+    "title": "EatSafe",
+    "subtitle": "スキャンした製品を監視し、リアルタイムでリコールアラートを受信します。",
+    "stats": {
+      "scanned": "スキャン済み製品",
+      "recalled": "リコール製品",
+      "pending": "分析中"
+    },
+    "historyTitle": "スキャン履歴",
+    "emptyState": "最初の製品をスキャンして、リコール状態を追跡してください。"
+  },
+  "scan": {
+    "step": "ステップ {{current}}/{{total}}",
+    "brandStep": "ステップ 1/2",
+    "lotStep": "ステップ 2/2",
+    "brandInstruction": "製品ブランドをフレームに収めてください(撮影後に写真は削除されます)。",
+    "lotInstruction": "ロット番号を明確にフレームに収めて写真を撮影してください。",
+    "brandAnalyzing": "ブランドを分析中...",
+    "lotAnalyzing": "ロット番号を分析中...",
+    "privacyInfo": "写真はローカルでのみ処理され、即座に削除されます。画像は保存されません。",
+    "brandLabel": "ブランド",
+    "lotLabel": "ロット",
+    "analyzing": "分析中...",
+    "waiting": "待機中",
+    "confidence": "信頼度: {{value}}%",
+    "suggestions": "もしかして?",
+    "ocrExtraction": "OCR抽出",
+    "detectedLot": "検出されたロット番号",
+    "restart": "再開",
+    "manualEntry": "手動入力",
+    "waitingForCapture": "撮影待機中...",
+    "errors": {
+      "brandCaptureFailed": "ブランドの撮影に失敗しました。",
+      "scanFailed": "スキャンに失敗しました。",
+      "lotExtractFailed": "ロット番号を自動抽出できませんでした。",
+      "brandFirst": "ロット番号の前にブランドを撮影してください。"
+    }
+  },
+  "manualEntry": {
+    "title": "手動入力",
+    "subtitle": "ロット番号とブランドを入力して製品を追加します。",
+    "brandLabel": "ブランド",
+    "brandPlaceholder": "例: ブランド X",
+    "lotLabel": "ロット番号",
+    "lotPlaceholder": "例: L12345",
+    "save": "保存",
+    "verifying": "検証中…",
+    "errors": {
+      "lotRequired": "ロット番号が必要です",
+      "lotRequiredMessage": "続行するにはロット番号を入力してください。",
+      "saveFailed": "保存に失敗しました",
+      "checkFailed": "現在リコールを確認できません。"
+    }
+  },
+  "details": {
+    "title": "製品詳細",
+    "brand": "ブランド",
+    "lot": "ロット",
+    "scannedAt": "スキャン日時",
+    "status": {
+      "safe": "安全",
+      "recalled": "リコール済み",
+      "unknown": "状態不明"
+    },
+    "recallInfo": "リコール情報",
+    "actions": {
+      "delete": "削除",
+      "viewRecall": "リコールを表示"
+    }
+  },
+  "history": {
+    "title": "履歴",
+    "emptyState": "まだスキャンされた製品はありません。"
+  },
+  "notifications": {
+    "alert": {
+      "title": "🚨 汚染製品警報",
+      "body": "⚠️ {{brand}} - ロット {{lot}}\n理由: {{reason}}\n\n🚫 摂取しないでください\n摂取した場合は、救急サービスに連絡してください"
+    },
+    "dailyCheck": {
+      "title": "EatSafe 確認",
+      "body": "毎日のリコール更新が進行中です。"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "country": "国",
+    "theme": "テーマ",
+    "notifications": "通知",
+    "about": "について"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
+    "nl": "Nederlands",
+    "pt": "Português",
+    "ru": "Русский"
+  }
+}

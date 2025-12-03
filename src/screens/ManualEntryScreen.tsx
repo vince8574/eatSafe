@@ -4,12 +4,14 @@ import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { incrementBrandUsage } from '../services/customBrandsService';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const { addProduct, updateRecall } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
@@ -19,13 +21,13 @@ export function ManualEntryScreen() {
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
-      Alert.alert('Numéro de lot requis', 'Veuillez renseigner un numéro de lot pour continuer.');
+      Alert.alert(t('manualEntry.errors.lotRequired'), t('manualEntry.errors.lotRequiredMessage'));
       return;
     }
 
     try {
       setIsSubmitting(true);
-      const finalBrand = brand.trim() || 'Marque inconnue';
+      const finalBrand = brand.trim() || t('common.unknown');
 
       const product = await addProduct({
         brand: finalBrand,
@@ -43,8 +45,8 @@ export function ManualEntryScreen() {
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {
       Alert.alert(
-        'Enregistrement échoué',
-        error instanceof Error ? error.message : 'Impossible de vérifier les rappels pour le moment.'
+        t('manualEntry.errors.saveFailed'),
+        error instanceof Error ? error.message : t('manualEntry.errors.checkFailed')
       );
     } finally {
       setIsSubmitting(false);
@@ -53,23 +55,23 @@ export function ManualEntryScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.textPrimary }]}>Saisie manuelle</Text>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-        Ajoutez un produit en renseignant son numéro de lot et sa marque.
+        {t('manualEntry.subtitle')}
       </Text>
 
       <BrandAutocomplete
         value={brand}
         onChangeText={setBrand}
-        placeholder="Ex: Marque X"
+        placeholder={t('manualEntry.brandPlaceholder')}
         autoCapitalize="words"
       />
 
       <View style={[styles.field, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>{t('manualEntry.lotLabel')}</Text>
         <TextInput
           style={[styles.input, { color: colors.textPrimary, letterSpacing: 1.2 }]}
-          placeholder="Ex: L12345"
+          placeholder={t('manualEntry.lotPlaceholder')}
           placeholderTextColor={colors.textSecondary}
           value={lotNumber}
           onChangeText={setLotNumber}
@@ -83,7 +85,7 @@ export function ManualEntryScreen() {
         disabled={isSubmitting}
       >
         <Text style={[styles.buttonText, { color: colors.background }]}>
-          {isSubmitting ? 'Vérification…' : 'Enregistrer'}
+          {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
         </Text>
       </TouchableOpacity>
     </View>

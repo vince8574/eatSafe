@@ -4,9 +4,12 @@ import { useRouter } from 'expo-router';
 import { ProductCard } from '../components/ProductCard';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 export function HomeScreen() {
   const { colors, typography } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const { products, isLoading, refetch } = useScannedProducts();
 
@@ -26,27 +29,30 @@ export function HomeScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View>
-            <Text style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}>EatSafe</Text>
+            <View style={styles.headerRow}>
+              <Text style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}>{t('home.title')}</Text>
+              <LanguageSelector />
+            </View>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-              Surveillez vos produits scannés et recevez des alertes rappel en temps réel.
+              {t('home.subtitle')}
             </Text>
 
             <View style={styles.statsContainer}>
               <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.total}</Text>
-                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Produits scannés</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('home.stats.scanned')}</Text>
               </View>
               <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.recalled}</Text>
-                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Produits rappelés</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('home.stats.recalled')}</Text>
               </View>
               <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.pending}</Text>
-                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>En analyse</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('home.stats.pending')}</Text>
               </View>
             </View>
 
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Historique des scans</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('home.historyTitle')}</Text>
           </View>
         }
         renderItem={({ item }) => (
@@ -58,7 +64,7 @@ export function HomeScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              Scannez votre premier produit pour suivre son statut rappel.
+              {t('home.emptyState')}
             </Text>
           </View>
         }
@@ -77,9 +83,16 @@ const styles = StyleSheet.create({
   list: {
     padding: 24
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8
+  },
   title: {
     fontWeight: '700',
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
+    flex: 1
   },
   subtitle: {
     fontSize: 16,

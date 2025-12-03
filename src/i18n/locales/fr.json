@@ -1,0 +1,119 @@
+{
+  "common": {
+    "appName": "EatSafe",
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "refresh": "Actualiser",
+    "unknown": "Inconnu"
+  },
+  "home": {
+    "title": "EatSafe",
+    "subtitle": "Surveillez vos produits scannés et recevez des alertes rappel en temps réel.",
+    "stats": {
+      "scanned": "Produits scannés",
+      "recalled": "Produits rappelés",
+      "pending": "En analyse"
+    },
+    "historyTitle": "Historique des scans",
+    "emptyState": "Scannez votre premier produit pour suivre son statut rappel."
+  },
+  "scan": {
+    "step": "Étape {{current}}/{{total}}",
+    "brandStep": "Étape 1/2",
+    "lotStep": "Étape 2/2",
+    "brandInstruction": "Cadrez la marque du produit (photo supprimée après capture).",
+    "lotInstruction": "Cadrez clairement le numéro de lot et capturez la photo.",
+    "brandAnalyzing": "Analyse de la marque en cours...",
+    "lotAnalyzing": "Analyse du numéro de lot en cours...",
+    "privacyInfo": "Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée.",
+    "brandLabel": "Marque",
+    "lotLabel": "Lot",
+    "analyzing": "Analyse...",
+    "waiting": "En attente",
+    "confidence": "Confiance: {{value}}%",
+    "suggestions": "Vouliez-vous dire ?",
+    "ocrExtraction": "Extraction OCR",
+    "detectedLot": "Numéro de lot détecté",
+    "restart": "Recommencer",
+    "manualEntry": "Saisie manuelle",
+    "waitingForCapture": "En attente de capture...",
+    "errors": {
+      "brandCaptureFailed": "La capture de la marque a échoué.",
+      "scanFailed": "Le scan a échoué.",
+      "lotExtractFailed": "Impossible d'extraire le numéro de lot automatiquement.",
+      "brandFirst": "Capturez d'abord la marque avant le numéro de lot."
+    }
+  },
+  "manualEntry": {
+    "title": "Saisie manuelle",
+    "subtitle": "Ajoutez un produit en renseignant son numéro de lot et sa marque.",
+    "brandLabel": "Marque",
+    "brandPlaceholder": "Ex: Marque X",
+    "lotLabel": "Numéro de lot",
+    "lotPlaceholder": "Ex: L12345",
+    "save": "Enregistrer",
+    "verifying": "Vérification…",
+    "errors": {
+      "lotRequired": "Numéro de lot requis",
+      "lotRequiredMessage": "Veuillez renseigner un numéro de lot pour continuer.",
+      "saveFailed": "Enregistrement échoué",
+      "checkFailed": "Impossible de vérifier les rappels pour le moment."
+    }
+  },
+  "details": {
+    "title": "Détails du produit",
+    "brand": "Marque",
+    "lot": "Lot",
+    "scannedAt": "Scanné le",
+    "status": {
+      "safe": "Sûr",
+      "recalled": "Rappelé",
+      "unknown": "Statut inconnu"
+    },
+    "recallInfo": "Informations du rappel",
+    "actions": {
+      "delete": "Supprimer",
+      "viewRecall": "Voir le rappel"
+    }
+  },
+  "history": {
+    "title": "Historique",
+    "emptyState": "Aucun produit scanné pour le moment."
+  },
+  "notifications": {
+    "alert": {
+      "title": "🚨 ALERTE PRODUIT CONTAMINÉ",
+      "body": "⚠️ {{brand}} - Lot {{lot}}\nRaison: {{reason}}\n\n🚫 NE PAS CONSOMMER\nEn cas de consommation, contactez les urgences (15 ou 112)"
+    },
+    "dailyCheck": {
+      "title": "Verification EatSafe",
+      "body": "Mise a jour quotidienne des rappels en cours."
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "country": "Pays",
+    "theme": "Thème",
+    "notifications": "Notifications",
+    "about": "À propos"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
+    "nl": "Nederlands",
+    "pt": "Português",
+    "ru": "Русский"
+  }
+}

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { Scanner } from '../components/Scanner';
@@ -9,12 +9,14 @@ import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 
 type Step = 'brand' | 'lot';
 
 export function ScanScreen() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const { addProduct, updateRecall } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
@@ -29,21 +31,27 @@ export function ScanScreen() {
 
   const brandMutation = useMutation({
     mutationFn: async (brandPhoto: string) => {
+      console.log('[Brand] Starting OCR for brand photo:', brandPhoto);
       setErrorMessage('');
-      const { brand, confidence, isKnownBrand, suggestions } = await performOcrForBrand(brandPhoto);
+
+      console.log('[Brand] Calling performOcrForBrand...');
+      const result = await performOcrForBrand(brandPhoto);
+      console.log('[Brand] OCR result:', result);
+
+      const { brand, confidence, isKnownBrand, suggestions } = result;
       setBrandText(brand);
       setBrandConfidence(confidence);
       setBrandSuggestions(suggestions || []);
-      
+
       if (!isKnownBrand && suggestions && suggestions.length > 0) {
         console.log(`⚠️ Brand not recognized with high confidence. Suggestions: ${suggestions.join(', ')}`);
       }
-      
+
       return { brand };
     },
     onError: (error: unknown) => {
-      setErrorMessage(error instanceof Error ? error.message : 'La capture de la marque a échoué.');
-      setBrandText('Marque inconnue');
+      setErrorMessage(error instanceof Error ? error.message : t('scan.errors.brandCaptureFailed'));
+      setBrandText(t('common.unknown'));
     },
     onSuccess: () => {
       setBrandCaptured(true);
@@ -59,7 +67,7 @@ export function ScanScreen() {
       setLotNumber(lot);
 
       if (!lot) {
-        throw new Error("Impossible d'extraire le numéro de lot automatiquement.");
+        throw new Error(t('scan.errors.lotExtractFailed'));
       }
 
       const recalls = await fetchRecallsByCountry(country);
@@ -72,7 +80,7 @@ export function ScanScreen() {
       return { productId: product.id, status };
     },
     onError: (error: unknown) => {
-      setErrorMessage(error instanceof Error ? error.message : 'Le scan a échoué.');
+      setErrorMessage(error instanceof Error ? error.message : t('scan.errors.scanFailed'));
     },
     onSuccess: ({ productId }) => {
       setOcrText('');
@@ -121,7 +129,7 @@ export function ScanScreen() {
 
       if (step === 'lot') {
         if (!brandCaptured) {
-          setErrorMessage("Capturez d'abord la marque avant le numéro de lot.");
+          setErrorMessage(t('scan.errors.brandFirst'));
           setStep('brand');
           try {
             await FileSystem.deleteAsync(uri, { idempotent: true });
@@ -146,14 +154,14 @@ export function ScanScreen() {
   );
 
   const isProcessing = brandMutation.isPending || lotMutation.isPending;
-  const stepLabel = step === 'brand' ? 'Étape 1/2' : 'Étape 2/2';
+  const stepLabel = step === 'brand' ? t('scan.brandStep') : t('scan.lotStep');
   const stepInstruction = isProcessing
     ? step === 'brand'
-      ? 'Analyse de la marque en cours...'
-      : 'Analyse du numéro de lot en cours...'
+      ? t('scan.brandAnalyzing')
+      : t('scan.lotAnalyzing')
     : step === 'brand'
-      ? 'Cadrez la marque du produit (photo supprimée après capture).'
-      : 'Cadrez clairement le numéro de lot et capturez la photo.';
+      ? t('scan.brandInstruction')
+      : t('scan.lotInstruction');
 
   const resetDisabled = isProcessing;
 
@@ -176,7 +184,7 @@ export function ScanScreen() {
 
         <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée.
+            {t('scan.privacyInfo')}
           </Text>
         </View>
 
@@ -190,13 +198,13 @@ export function ScanScreen() {
               }
             ]}
           >
-            <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>Marque</Text>
+            <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>{t('scan.brandLabel')}</Text>
             <Text style={[styles.statusValue, { color: getBrandStatusColor() }]}>
-              {brandText || (brandMutation.isPending ? 'Analyse...' : 'En attente')}
+              {brandText || (brandMutation.isPending ? t('scan.analyzing') : t('scan.waiting'))}
             </Text>
             {brandConfidence > 0 && brandConfidence < 0.85 && (
               <Text style={[styles.confidenceText, { color: colors.warning }]}>
-                Confiance: {(brandConfidence * 100).toFixed(0)}%
+                {t('scan.confidence', { value: (brandConfidence * 100).toFixed(0) })}
               </Text>
             )}
           </View>
@@ -210,9 +218,9 @@ export function ScanScreen() {
               }
             ]}
           >
-            <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>Lot</Text>
+            <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>{t('scan.lotLabel')}</Text>
             <Text style={[styles.statusValue, { color: colors.textPrimary }]}>
-              {lotNumber || (lotMutation.isPending ? 'Analyse...' : 'En attente')}
+              {lotNumber || (lotMutation.isPending ? t('scan.analyzing') : t('scan.waiting'))}
             </Text>
           </View>
         </View>
@@ -220,7 +228,7 @@ export function ScanScreen() {
         {brandSuggestions.length > 0 && (
           <View style={styles.suggestionsContainer}>
             <Text style={[styles.suggestionsTitle, { color: colors.textSecondary }]}>
-              Vouliez-vous dire ?
+              {t('scan.suggestions')}
             </Text>
             <View style={styles.suggestionsRow}>
               {brandSuggestions.map((suggestion, index) => (
@@ -238,12 +246,12 @@ export function ScanScreen() {
 
         {step === 'lot' && (
           <>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Extraction OCR</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('scan.ocrExtraction')}</Text>
             <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-              {ocrText || 'En attente de capture...'}
+              {ocrText || t('scan.waitingForCapture')}
             </Text>
 
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Numéro de lot détecté</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('scan.detectedLot')}</Text>
             <Text style={[styles.lotText, { color: colors.accent }]}>{lotNumber || '--'}</Text>
           </>
         )}
@@ -257,14 +265,14 @@ export function ScanScreen() {
           onPress={resetFlow}
           disabled={resetDisabled}
         >
-          <Text style={[styles.resetText, { color: colors.textPrimary }]}>Recommencer</Text>
+          <Text style={[styles.resetText, { color: colors.textPrimary }]}>{t('scan.restart')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.manualButton, { backgroundColor: colors.surface }]}
           onPress={() => router.push('/manual-entry')}
         >
-          <Text style={[styles.manualButtonText, { color: colors.textPrimary }]}>Saisie manuelle</Text>
+          <Text style={[styles.manualButtonText, { color: colors.textPrimary }]}>{t('scan.manualEntry')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

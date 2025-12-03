@@ -1,0 +1,119 @@
+{
+  "common": {
+    "appName": "EatSafe",
+    "loading": "Laden...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "back": "Terug",
+    "refresh": "Vernieuwen",
+    "unknown": "Onbekend"
+  },
+  "home": {
+    "title": "EatSafe",
+    "subtitle": "Monitor uw gescande producten en ontvang realtime waarschuwingen over terugroepacties.",
+    "stats": {
+      "scanned": "Gescande producten",
+      "recalled": "Teruggeroepen producten",
+      "pending": "In analyse"
+    },
+    "historyTitle": "Scangeschiedenis",
+    "emptyState": "Scan uw eerste product om de terugroepstatus te volgen."
+  },
+  "scan": {
+    "step": "Stap {{current}}/{{total}}",
+    "brandStep": "Stap 1/2",
+    "lotStep": "Stap 2/2",
+    "brandInstruction": "Kader het productmerk in (foto wordt na opname verwijderd).",
+    "lotInstruction": "Kader het lotnummer duidelijk in en maak de foto.",
+    "brandAnalyzing": "Merk wordt geanalyseerd...",
+    "lotAnalyzing": "Lotnummer wordt geanalyseerd...",
+    "privacyInfo": "Foto's worden alleen lokaal verwerkt en onmiddellijk verwijderd. Er worden geen afbeeldingen opgeslagen.",
+    "brandLabel": "Merk",
+    "lotLabel": "Lot",
+    "analyzing": "Analyseren...",
+    "waiting": "Wachten",
+    "confidence": "Vertrouwen: {{value}}%",
+    "suggestions": "Bedoelde u?",
+    "ocrExtraction": "OCR-extractie",
+    "detectedLot": "Gedetecteerd lotnummer",
+    "restart": "Opnieuw beginnen",
+    "manualEntry": "Handmatige invoer",
+    "waitingForCapture": "Wachten op opname...",
+    "errors": {
+      "brandCaptureFailed": "Merkopname mislukt.",
+      "scanFailed": "Scan mislukt.",
+      "lotExtractFailed": "Kan lotnummer niet automatisch extraheren.",
+      "brandFirst": "Leg eerst het merk vast voordat u het lotnummer opneemt."
+    }
+  },
+  "manualEntry": {
+    "title": "Handmatige invoer",
+    "subtitle": "Voeg een product toe door het lotnummer en merk in te voeren.",
+    "brandLabel": "Merk",
+    "brandPlaceholder": "Bijv: Merk X",
+    "lotLabel": "Lotnummer",
+    "lotPlaceholder": "Bijv: L12345",
+    "save": "Opslaan",
+    "verifying": "Verifiëren…",
+    "errors": {
+      "lotRequired": "Lotnummer vereist",
+      "lotRequiredMessage": "Voer een lotnummer in om door te gaan.",
+      "saveFailed": "Opslaan mislukt",
+      "checkFailed": "Kan terugroepacties momenteel niet controleren."
+    }
+  },
+  "details": {
+    "title": "Productdetails",
+    "brand": "Merk",
+    "lot": "Lot",
+    "scannedAt": "Gescand op",
+    "status": {
+      "safe": "Veilig",
+      "recalled": "Teruggeroepen",
+      "unknown": "Status onbekend"
+    },
+    "recallInfo": "Terugroepin formatie",
+    "actions": {
+      "delete": "Verwijderen",
+      "viewRecall": "Terugroepactie bekijken"
+    }
+  },
+  "history": {
+    "title": "Geschiedenis",
+    "emptyState": "Nog geen gescande producten."
+  },
+  "notifications": {
+    "alert": {
+      "title": "🚨 WAARSCHUWING BESMET PRODUCT",
+      "body": "⚠️ {{brand}} - Lot {{lot}}\nReden: {{reason}}\n\n🚫 NIET CONSUMEREN\nIndien geconsumeerd, neem contact op met hulpdiensten (112)"
+    },
+    "dailyCheck": {
+      "title": "EatSafe Verificatie",
+      "body": "Dagelijkse update van terugroepacties is bezig."
+    }
+  },
+  "settings": {
+    "title": "Instellingen",
+    "language": "Taal",
+    "country": "Land",
+    "theme": "Thema",
+    "notifications": "Meldingen",
+    "about": "Over"
+  },
+  "languages": {
+    "fr": "Français",
+    "en": "English",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
+    "nl": "Nederlands",
+    "pt": "Português",
+    "ru": "Русский"
+  }
+}

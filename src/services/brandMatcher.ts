@@ -1,8 +1,7 @@
 // src/services/brandMatcher.ts
-import * as brandsDataModule from '../data/brands.json';
 import { getAllCustomBrands } from './customBrandsService';
 
-const brandsData = brandsDataModule as unknown as string[];
+const brandsData: string[] = require('../data/brands.json');
 
 function levenshteinDistance(str1: string, str2: string): number {
   const matrix: number[][] = [];
@@ -198,14 +197,20 @@ export async function reloadBrandMatcher(): Promise<void> {
   const customBrands = await getAllCustomBrands();
   const customBrandNames = customBrands.map(cb => cb.name);
 
-  brandMatcherInstance = new BrandMatcher([...brandsData, ...customBrandNames]);
+  // S'assurer que brandsData est un tableau avant de le concaténer
+  const baseBrands = Array.isArray(brandsData) ? brandsData : [];
+  const allBrands = baseBrands.concat(customBrandNames);
 
-  console.log(`✓ BrandMatcher initialized with ${brandsData.length} base brands + ${customBrandNames.length} custom brands`);
+  brandMatcherInstance = new BrandMatcher(allBrands);
+
+  console.log(`✓ BrandMatcher initialized with ${baseBrands.length} base brands + ${customBrandNames.length} custom brands`);
 }
 
 /**
  * @deprecated Utiliser reloadBrandMatcher() à la place
  */
 export function initializeBrandMatcher(customBrands: string[]): void {
-  brandMatcherInstance = new BrandMatcher([...brandsData, ...customBrands]);
+  const baseBrands = Array.isArray(brandsData) ? brandsData : [];
+  const allBrands = baseBrands.concat(customBrands);
+  brandMatcherInstance = new BrandMatcher(allBrands);
 }

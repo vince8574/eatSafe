@@ -11,7 +11,7 @@ type ScannerProps = {
 export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
   const { colors } = useTheme();
   const [permission, requestPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null);
+  const cameraRef = useRef<any>(null);
   const [cameraReady, setCameraReady] = useState(false);
 
   useEffect(() => {
@@ -21,24 +21,25 @@ export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
   }, [permission, requestPermission]);
 
   const handleCapture = useCallback(async () => {
-    if (!cameraRef.current || isProcessing) {
+    if (!cameraRef.current || isProcessing || !cameraReady) {
       return;
     }
 
     try {
+      console.log('Starting capture...');
       const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.8,
-        base64: false,
-        skipProcessing: true
+        quality: 0.8
       });
+      console.log('Photo captured:', photo);
 
       if (photo?.uri) {
         await onCapture(photo.uri);
       }
     } catch (error) {
       console.warn('Capture failed', error);
+      console.error('Full error:', JSON.stringify(error, null, 2));
     }
-  }, [isProcessing, onCapture]);
+  }, [isProcessing, onCapture, cameraReady]);
 
   if (!permission) {
     return (
