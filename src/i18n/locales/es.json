@@ -83,7 +83,38 @@
   },
   "history": {
     "title": "Historial",
-    "emptyState": "Aún no hay productos escaneados."
+    "fullTitle": "Historial completo",
+    "subtitle": "Filtra tus escaneos según su estado de retirada.",
+    "filters": {
+      "all": "Todo",
+      "recalled": "Retirados",
+      "safe": "Seguro",
+      "unknown": "Desconocido"
+    },
+    "emptyState": "Aún no hay productos escaneados.",
+    "emptyStateDetailed": "No hay datos. Escanea un producto para llenar el historial."
+  },
+  "productCard": {
+    "lot": "Lote {{lot}}",
+    "scannedAt": "Escaneado el {{date}}",
+    "privacy": "No se guarda ninguna foto; solo se conservan la marca y el número de lote.",
+    "delete": "Eliminar"
+  },
+  "recallStatus": {
+    "safe": "Sin retirada conocida",
+    "recalled": "Retirado",
+    "unknown": "En revisión",
+    "warning": "A vigilar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "scan": "Escanear",
+    "history": "Historial",
+    "language": "Idioma"
+  },
+  "language": {
+    "title": "Idioma de la app",
+    "subtitle": "Elige tu idioma preferido para la aplicación."
   },
   "notifications": {
     "alert": {

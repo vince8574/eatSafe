@@ -5,7 +5,6 @@ import { ProductCard } from '../components/ProductCard';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
-import { LanguageSelector } from '../components/LanguageSelector';
 
 export function HomeScreen() {
   const { colors, typography } = useTheme();
@@ -29,10 +28,11 @@ export function HomeScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View>
-            <View style={styles.headerRow}>
-              <Text style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}>{t('home.title')}</Text>
-              <LanguageSelector />
-            </View>
+            <Text
+              style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}
+            >
+              {t('home.title')}
+            </Text>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('home.subtitle')}
             </Text>
@@ -82,12 +82,6 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 24
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8
   },
   title: {
     fontWeight: '700',

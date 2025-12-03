@@ -1,17 +1,31 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { ScannedProduct } from '../types';
+import { useI18n } from '../i18n/I18nContext';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
 export function HistoryScreen() {
   const { colors } = useTheme();
+  const { t, locale } = useI18n();
   const router = useRouter();
   const { products } = useScannedProducts();
   const [filter, setFilter] = useState<Filter>('all');
+
+  const formatDate = useCallback(
+    (value: string) => new Date(value).toLocaleString(locale || undefined),
+    [locale]
+  );
+
+  const statusLabels: Record<ScannedProduct['recallStatus'], string> = {
+    safe: t('recallStatus.safe'),
+    recalled: t('recallStatus.recalled'),
+    unknown: t('recallStatus.unknown'),
+    warning: t('recallStatus.warning')
+  };
 
   const filtered = useMemo(() => {
     if (filter === 'all') {
@@ -27,11 +41,15 @@ export function HistoryScreen() {
     >
       <View style={styles.itemHeader}>
         <Text style={[styles.brand, { color: colors.textPrimary }]}>{item.brand}</Text>
-        <Text style={[styles.status, { color: colors.accent }]}>{item.recallStatus.toUpperCase()}</Text>
+        <Text style={[styles.status, { color: colors.accent }]}>
+          {statusLabels[item.recallStatus]}
+        </Text>
       </View>
-      <Text style={[styles.lot, { color: colors.textSecondary }]}>Lot {item.lotNumber}</Text>
+      <Text style={[styles.lot, { color: colors.textSecondary }]}>
+        {t('productCard.lot', { lot: item.lotNumber })}
+      </Text>
       <Text style={[styles.date, { color: colors.textSecondary }]}>
-        {new Date(item.scannedAt).toLocaleString()}
+        {t('productCard.scannedAt', { date: formatDate(item.scannedAt) })}
       </Text>
     </TouchableOpacity>
   );
@@ -44,9 +62,11 @@ export function HistoryScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>Historique complet</Text>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>
+              {t('history.fullTitle')}
+            </Text>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-              Filtrez vos scans selon leur statut rappel.
+              {t('history.subtitle')}
             </Text>
 
             <View style={styles.filters}>
@@ -68,7 +88,7 @@ export function HistoryScreen() {
                       { color: filter === item ? colors.accent : colors.textSecondary }
                     ]}
                   >
-                    {item.toUpperCase()}
+                    {t(`history.filters.${item}`)}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -79,7 +99,7 @@ export function HistoryScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              Aucune donnée disponible. Lancez un scan pour alimenter l'historique.
+              {t('history.emptyStateDetailed')}
             </Text>
           </View>
         }
@@ -118,7 +138,8 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: 12,
-    fontWeight: '700'
+    fontWeight: '700',
+    textTransform: 'uppercase'
   },
   item: {
     padding: 18,

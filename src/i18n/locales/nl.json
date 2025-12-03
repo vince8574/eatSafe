@@ -83,7 +83,38 @@
   },
   "history": {
     "title": "Geschiedenis",
-    "emptyState": "Nog geen gescande producten."
+    "fullTitle": "Volledige geschiedenis",
+    "subtitle": "Filter je scans op terugroepstatus.",
+    "filters": {
+      "all": "Alles",
+      "recalled": "Teruggeroepen",
+      "safe": "Veilig",
+      "unknown": "Onbekend"
+    },
+    "emptyState": "Nog geen gescande producten.",
+    "emptyStateDetailed": "Geen gegevens. Scan een product om de geschiedenis te vullen."
+  },
+  "productCard": {
+    "lot": "Partij {{lot}}",
+    "scannedAt": "Gescand op {{date}}",
+    "privacy": "Er worden geen foto's opgeslagen; alleen merk en partijnummer worden bewaard.",
+    "delete": "Verwijderen"
+  },
+  "recallStatus": {
+    "safe": "Geen bekende terugroepactie",
+    "recalled": "Teruggeroepen",
+    "unknown": "In beoordeling",
+    "warning": "In de gaten houden"
+  },
+  "navigation": {
+    "home": "Start",
+    "scan": "Scannen",
+    "history": "Geschiedenis",
+    "language": "Taal"
+  },
+  "language": {
+    "title": "App-taal",
+    "subtitle": "Kies de gewenste taal voor de app."
   },
   "notifications": {
     "alert": {

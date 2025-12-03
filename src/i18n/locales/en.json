@@ -83,7 +83,38 @@
   },
   "history": {
     "title": "History",
-    "emptyState": "No scanned products yet."
+    "fullTitle": "Full history",
+    "subtitle": "Filter your scans by recall status.",
+    "filters": {
+      "all": "All",
+      "recalled": "Recalled",
+      "safe": "Safe",
+      "unknown": "Unknown"
+    },
+    "emptyState": "No scanned products yet.",
+    "emptyStateDetailed": "No data yet. Start a scan to fill your history."
+  },
+  "productCard": {
+    "lot": "Lot {{lot}}",
+    "scannedAt": "Scanned on {{date}}",
+    "privacy": "No photos are stored; only the brand and lot number are kept.",
+    "delete": "Delete"
+  },
+  "recallStatus": {
+    "safe": "No known recall",
+    "recalled": "Recalled",
+    "unknown": "Under review",
+    "warning": "Monitor"
+  },
+  "navigation": {
+    "home": "Home",
+    "scan": "Scan",
+    "history": "History",
+    "language": "Language"
+  },
+  "language": {
+    "title": "App language",
+    "subtitle": "Choose your preferred language for the app."
   },
   "notifications": {
     "alert": {

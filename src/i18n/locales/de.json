@@ -83,7 +83,38 @@
   },
   "history": {
     "title": "Verlauf",
-    "emptyState": "Noch keine gescannten Produkte."
+    "fullTitle": "Vollständiger Verlauf",
+    "subtitle": "Filtere deine Scans nach Rückrufstatus.",
+    "filters": {
+      "all": "Alle",
+      "recalled": "Zurückgerufen",
+      "safe": "Sicher",
+      "unknown": "Unbekannt"
+    },
+    "emptyState": "Noch keine gescannten Produkte.",
+    "emptyStateDetailed": "Keine Daten vorhanden. Starte einen Scan, um den Verlauf zu füllen."
+  },
+  "productCard": {
+    "lot": "Charge {{lot}}",
+    "scannedAt": "Gescannt am {{date}}",
+    "privacy": "Es werden keine Fotos gespeichert; nur Marke und Chargennummer bleiben erhalten.",
+    "delete": "Löschen"
+  },
+  "recallStatus": {
+    "safe": "Kein bekannter Rückruf",
+    "recalled": "Zurückgerufen",
+    "unknown": "In Prüfung",
+    "warning": "Beobachten"
+  },
+  "navigation": {
+    "home": "Startseite",
+    "scan": "Scannen",
+    "history": "Verlauf",
+    "language": "Sprache"
+  },
+  "language": {
+    "title": "App-Sprache",
+    "subtitle": "Wähle die bevorzugte Sprache der App."
   },
   "notifications": {
     "alert": {

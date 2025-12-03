@@ -57,7 +57,7 @@
     "lotLabel": "Número do lote",
     "lotPlaceholder": "Ex: L12345",
     "save": "Salvar",
-    "verifying": "Verificando…",
+    "verifying": "Verificando...",
     "errors": {
       "lotRequired": "Número do lote obrigatório",
       "lotRequiredMessage": "Por favor, insira um número de lote para continuar.",
@@ -83,12 +83,43 @@
   },
   "history": {
     "title": "Histórico",
-    "emptyState": "Ainda não há produtos escaneados."
+    "fullTitle": "Histórico completo",
+    "subtitle": "Filtre seus scans pelo status de recall.",
+    "filters": {
+      "all": "Todos",
+      "recalled": "Recolhidos",
+      "safe": "Seguro",
+      "unknown": "Desconhecido"
+    },
+    "emptyState": "Ainda não há produtos escaneados.",
+    "emptyStateDetailed": "Nenhum dado. Escaneie um produto para preencher o histórico."
+  },
+  "productCard": {
+    "lot": "Lote {{lot}}",
+    "scannedAt": "Escaneado em {{date}}",
+    "privacy": "Nenhuma foto é armazenada; apenas marca e número do lote são mantidos.",
+    "delete": "Excluir"
+  },
+  "recallStatus": {
+    "safe": "Sem recall conhecido",
+    "recalled": "Recolhido",
+    "unknown": "Em análise",
+    "warning": "Monitorar"
+  },
+  "navigation": {
+    "home": "Início",
+    "scan": "Scanner",
+    "history": "Histórico",
+    "language": "Idioma"
+  },
+  "language": {
+    "title": "Idioma do app",
+    "subtitle": "Escolha o idioma preferido do aplicativo."
   },
   "notifications": {
     "alert": {
-      "title": "🚨 ALERTA PRODUTO CONTAMINADO",
-      "body": "⚠️ {{brand}} - Lote {{lot}}\nMotivo: {{reason}}\n\n🚫 NÃO CONSUMIR\nSe consumido, entre em contato com serviços de emergência (192)"
+      "title": "⚠️ ALERTA PRODUTO CONTAMINADO",
+      "body": "🚫 {{brand}} - Lote {{lot}}\nMotivo: {{reason}}\n\n⚠️ NÃO CONSUMIR\nSe consumido, entre em contato com serviços de emergência (192)"
     },
     "dailyCheck": {
       "title": "Verificação EatSafe",

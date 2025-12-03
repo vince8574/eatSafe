@@ -83,7 +83,38 @@
   },
   "history": {
     "title": "Historique",
-    "emptyState": "Aucun produit scanné pour le moment."
+    "fullTitle": "Historique complet",
+    "subtitle": "Filtrez vos scans selon leur statut rappel.",
+    "filters": {
+      "all": "Tous",
+      "recalled": "Rappelés",
+      "safe": "Sûr",
+      "unknown": "Inconnu"
+    },
+    "emptyState": "Aucun produit scanné pour le moment.",
+    "emptyStateDetailed": "Aucune donnée disponible. Lancez un scan pour alimenter l'historique."
+  },
+  "productCard": {
+    "lot": "Lot {{lot}}",
+    "scannedAt": "Scanné le {{date}}",
+    "privacy": "Aucune photo n'est stockée ; seuls la marque et le numéro de lot sont conservés.",
+    "delete": "Supprimer"
+  },
+  "recallStatus": {
+    "safe": "Aucun rappel connu",
+    "recalled": "Rappelé",
+    "unknown": "Analyse en cours",
+    "warning": "À surveiller"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "scan": "Scanner",
+    "history": "Historique",
+    "language": "Langue"
+  },
+  "language": {
+    "title": "Langue de l'application",
+    "subtitle": "Choisissez la langue d'affichage de l'app."
   },
   "notifications": {
     "alert": {

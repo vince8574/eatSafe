@@ -1,19 +1,13 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ScannedProduct } from '../types';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 
 type ProductCardProps = {
   product: ScannedProduct;
   onPress?: (product: ScannedProduct) => void;
   onRemove?: (product: ScannedProduct) => void;
-};
-
-const statusLabels: Record<ScannedProduct['recallStatus'], string> = {
-  unknown: 'Analyse en cours',
-  safe: 'Aucun rappel connu',
-  recalled: 'Produit rappelé',
-  warning: 'A surveiller'
 };
 
 const statusColors = {
@@ -25,6 +19,17 @@ const statusColors = {
 
 export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProps) => {
   const { colors } = useTheme();
+  const { t, locale } = useI18n();
+
+  const statusLabels = useMemo(
+    () => ({
+      unknown: t('recallStatus.unknown'),
+      safe: t('recallStatus.safe'),
+      recalled: t('recallStatus.recalled'),
+      warning: t('recallStatus.warning')
+    }),
+    [t, locale]
+  );
 
   return (
     <TouchableOpacity
@@ -39,14 +44,18 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
         </View>
       </View>
 
-      <Text style={[styles.lot, { color: colors.textSecondary }]}>Lot {product.lotNumber}</Text>
+      <Text style={[styles.lot, { color: colors.textSecondary }]}>
+        {t('productCard.lot', { lot: product.lotNumber })}
+      </Text>
       <Text style={[styles.date, { color: colors.textSecondary }]}>
-        Scanné le {new Date(product.scannedAt).toLocaleDateString()}
+        {t('productCard.scannedAt', {
+          date: new Date(product.scannedAt).toLocaleDateString(locale || undefined)
+        })}
       </Text>
 
       <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
         <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-          Aucune photo n'est stockee; seuls la marque et le numero de lot sont conserves.
+          {t('productCard.privacy')}
         </Text>
       </View>
 
@@ -55,7 +64,9 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
           onPress={() => onRemove(product)}
           style={[styles.removeButton, { backgroundColor: colors.surfaceAlt }]}
         >
-          <Text style={[styles.removeText, { color: colors.textSecondary }]}>Supprimer</Text>
+          <Text style={[styles.removeText, { color: colors.textSecondary }]}>
+            {t('common.delete')}
+          </Text>
         </TouchableOpacity>
       )}
     </TouchableOpacity>

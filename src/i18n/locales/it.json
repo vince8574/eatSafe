@@ -83,7 +83,38 @@
   },
   "history": {
     "title": "Cronologia",
-    "emptyState": "Nessun prodotto scansionato ancora."
+    "fullTitle": "Cronologia completa",
+    "subtitle": "Filtra le scansioni in base allo stato di richiamo.",
+    "filters": {
+      "all": "Tutto",
+      "recalled": "Richiamati",
+      "safe": "Sicuro",
+      "unknown": "Sconosciuto"
+    },
+    "emptyState": "Nessun prodotto scansionato ancora.",
+    "emptyStateDetailed": "Nessun dato. Esegui una scansione per popolare la cronologia."
+  },
+  "productCard": {
+    "lot": "Lotto {{lot}}",
+    "scannedAt": "Scansionato il {{date}}",
+    "privacy": "Nessuna foto viene salvata; vengono conservati solo marca e numero di lotto.",
+    "delete": "Elimina"
+  },
+  "recallStatus": {
+    "safe": "Nessun richiamo noto",
+    "recalled": "Richiamato",
+    "unknown": "In verifica",
+    "warning": "Da monitorare"
+  },
+  "navigation": {
+    "home": "Home",
+    "scan": "Scanner",
+    "history": "Cronologia",
+    "language": "Lingua"
+  },
+  "language": {
+    "title": "Lingua dell'app",
+    "subtitle": "Scegli la lingua preferita per l'app."
   },
   "notifications": {
     "alert": {
