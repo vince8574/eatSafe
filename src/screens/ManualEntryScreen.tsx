@@ -107,9 +107,9 @@ const styles = StyleSheet.create({
     lineHeight: 22
   },
   field: {
-    padding: 16,
     borderRadius: 18,
-    marginTop: 20
+    marginTop: 20,
+    padding: 16
   },
   label: {
     fontSize: 12,

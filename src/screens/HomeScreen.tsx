@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    padding: 16,
     borderRadius: 20,
-    marginRight: 12
+    marginRight: 12,
+    padding: 16
   },
   statValue: {
     fontSize: 26,

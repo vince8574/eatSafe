@@ -13,12 +13,15 @@ import ja from './locales/ja.json';
 import nl from './locales/nl.json';
 import pt from './locales/pt.json';
 import ru from './locales/ru.json';
+import sq from './locales/sq.json';
+import sr from './locales/sr.json';
+import me from './locales/me.json';
 
 const LANGUAGE_STORAGE_KEY = '@eatsafe_language';
 
-export type SupportedLanguage = 'fr' | 'en' | 'de' | 'es' | 'it' | 'ar' | 'zh' | 'ja' | 'nl' | 'pt' | 'ru';
+export type SupportedLanguage = 'fr' | 'en' | 'de' | 'es' | 'it' | 'ar' | 'zh' | 'ja' | 'nl' | 'pt' | 'ru' | 'sq' | 'sr' | 'me';
 
-export const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'de', 'es', 'it', 'ar', 'zh', 'ja', 'nl', 'pt', 'ru'];
+export const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'de', 'es', 'it', 'ar', 'zh', 'ja', 'nl', 'pt', 'ru', 'sq', 'sr', 'me'];
 
 export const LANGUAGE_FLAGS: Record<SupportedLanguage, string> = {
   fr: '🇫🇷',
@@ -31,7 +34,10 @@ export const LANGUAGE_FLAGS: Record<SupportedLanguage, string> = {
   ja: '🇯🇵',
   nl: '🇳🇱',
   pt: '🇵🇹',
-  ru: '🇷🇺'
+  ru: '🇷🇺',
+  sq: '🇦🇱',
+  sr: '🇷🇸',
+  me: '🇲🇪'
 };
 
 const i18n = new I18n({
@@ -45,7 +51,10 @@ const i18n = new I18n({
   ja,
   nl,
   pt,
-  ru
+  ru,
+  sq,
+  sr,
+  me
 });
 
 i18n.enableFallback = true;

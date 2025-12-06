@@ -28,6 +28,12 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
+        name="index"
+        options={{
+          href: null
+        }}
+      />
+      <Tabs.Screen
         name="home"
         options={{
           title: t('navigation.home'),

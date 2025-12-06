@@ -8,7 +8,8 @@
       "Bash(npx expo start:*)",
       "Bash(npx expo install expo-localization)",
       "Bash(npx expo prebuild:*)",
-      "Bash(./gradlew assembleRelease:*)"
+      "Bash(./gradlew assembleRelease:*)",
+      "Bash(adb devices:*)"
     ],
     "deny": [],
     "ask": []

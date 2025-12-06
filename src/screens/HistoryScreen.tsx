@@ -142,9 +142,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase'
   },
   item: {
-    padding: 18,
-    borderRadius: 18,
-    marginBottom: 16
+    marginBottom: 16,
+    borderRadius: 24,
+    padding: 18
   },
   itemHeader: {
     flexDirection: 'row',

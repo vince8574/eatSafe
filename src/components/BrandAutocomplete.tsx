@@ -203,7 +203,7 @@ export function BrandAutocomplete({
 
       {!showSuggestions && value.trim().length >= 2 && !isLoading && (
         <TouchableOpacity
-          style={[styles.addNewButton, { backgroundColor: colors.surface }]}
+          style={[styles.addNewButton, { backgroundColor: colors.surfaceAlt }]}
           onPress={handleAddNewBrand}
         >
           <Text style={[styles.addNewButtonText, { color: colors.accent }]}>
@@ -221,9 +221,9 @@ const styles = StyleSheet.create({
     zIndex: 10
   },
   inputContainer: {
-    padding: 16,
     borderRadius: 18,
-    marginTop: 20
+    marginTop: 20,
+    padding: 16
   },
   label: {
     fontSize: 12,
@@ -287,8 +287,8 @@ const styles = StyleSheet.create({
   addNewButton: {
     marginTop: 8,
     padding: 12,
-    borderRadius: 12,
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: 16
   },
   addNewButtonText: {
     fontSize: 14,

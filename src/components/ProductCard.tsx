@@ -37,47 +37,52 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
       style={[styles.container, { backgroundColor: colors.surface }]}
       activeOpacity={0.85}
     >
-      <View style={styles.header}>
-        <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
-        <View style={[styles.statusTag, { backgroundColor: statusColors[product.recallStatus] }]}>
-          <Text style={styles.statusText}>{statusLabels[product.recallStatus]}</Text>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
+          <View style={[styles.statusTag, { backgroundColor: statusColors[product.recallStatus] }]}>
+            <Text style={styles.statusText}>{statusLabels[product.recallStatus]}</Text>
+          </View>
         </View>
-      </View>
 
-      <Text style={[styles.lot, { color: colors.textSecondary }]}>
-        {t('productCard.lot', { lot: product.lotNumber })}
-      </Text>
-      <Text style={[styles.date, { color: colors.textSecondary }]}>
-        {t('productCard.scannedAt', {
-          date: new Date(product.scannedAt).toLocaleDateString(locale || undefined)
-        })}
-      </Text>
-
-      <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
-        <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-          {t('productCard.privacy')}
+        <Text style={[styles.lot, { color: colors.textSecondary }]}>
+          {t('productCard.lot', { lot: product.lotNumber })}
         </Text>
-      </View>
+        <Text style={[styles.date, { color: colors.textSecondary }]}>
+          {t('productCard.scannedAt', {
+            date: new Date(product.scannedAt).toLocaleDateString(locale || undefined)
+          })}
+        </Text>
 
-      {onRemove && (
-        <TouchableOpacity
-          onPress={() => onRemove(product)}
-          style={[styles.removeButton, { backgroundColor: colors.surfaceAlt }]}
-        >
-          <Text style={[styles.removeText, { color: colors.textSecondary }]}>
-            {t('common.delete')}
+        <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>
+            {t('productCard.privacy')}
           </Text>
-        </TouchableOpacity>
-      )}
+        </View>
+
+        {onRemove && (
+          <TouchableOpacity
+            onPress={() => onRemove(product)}
+            style={[styles.removeButton, { backgroundColor: colors.surfaceAlt }]}
+          >
+            <Text style={[styles.removeText, { color: colors.textSecondary }]}>
+              {t('common.delete')}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </TouchableOpacity>
   );
 });
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    marginBottom: 18,
     borderRadius: 24,
-    marginBottom: 18
+    padding: 20
+  },
+  content: {
+    flex: 1
   },
   header: {
     flexDirection: 'row',
@@ -110,16 +115,16 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     borderRadius: 16,
-    padding: 12,
-    marginBottom: 16
+    marginBottom: 16,
+    padding: 12
   },
   infoText: {
     fontSize: 13,
     lineHeight: 20
   },
   removeButton: {
-    paddingVertical: 10,
     borderRadius: 16,
+    paddingVertical: 10,
     alignItems: 'center'
   },
   removeText: {
