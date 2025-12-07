@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "EatSafe",
+    "appName": "Eats OK",
     "loading": "Chargement...",
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -12,7 +12,7 @@
     "unknown": "Inconnu"
   },
   "home": {
-    "title": "EatSafe",
+    "title": "Eats OK",
     "subtitle": "Surveillez vos produits scannés et recevez des alertes rappel en temps réel.",
     "stats": {
       "scanned": "Produits scannés",
@@ -69,15 +69,22 @@
     "title": "Détails du produit",
     "brand": "Marque",
     "lot": "Lot",
+    "lotNumber": "Numéro de lot",
     "scannedAt": "Scanné le",
+    "lastChecked": "Dernière vérification",
+    "never": "Jamais",
+    "notFound": "Produit introuvable ou supprimé.",
+    "privacyInfo": "Les photos prises pendant le scan sont traitées localement puis supprimées immédiatement. Seuls la marque et le numéro de lot sont conservés sur cet appareil.",
+    "recallStatusLabel": "Statut rappel",
     "status": {
-      "safe": "Sûr",
-      "recalled": "Rappelé",
-      "unknown": "Statut inconnu"
+      "safe": "✅ SÉCURITAIRE",
+      "recalled": "🚨 RAPPELÉ - NE PAS CONSOMMER",
+      "unknown": "❓ INCONNU",
+      "warning": "⚠️ AVERTISSEMENT"
     },
     "recallInfo": "Informations du rappel",
     "actions": {
-      "delete": "Supprimer",
+      "delete": "Supprimer le scan",
       "viewRecall": "Voir le rappel"
     }
   },

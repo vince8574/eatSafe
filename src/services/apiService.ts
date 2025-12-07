@@ -9,6 +9,27 @@ const FRANCE_ENDPOINT =
 
 const USA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=50';
 
+function extractLotNumbers(identificationText: string | undefined): string[] {
+  if (!identificationText) return [];
+
+  // Split by common separators and extract potential lot numbers
+  const parts = identificationText.split(/[\n,;]/);
+  const lotNumbers: string[] = [];
+
+  // Add the full identification text as one potential lot match
+  lotNumbers.push(identificationText);
+
+  // Also add individual parts
+  parts.forEach(part => {
+    const trimmed = part.trim();
+    if (trimmed.length > 0) {
+      lotNumbers.push(trimmed);
+    }
+  });
+
+  return lotNumbers;
+}
+
 export async function fetchFranceRecalls(): Promise<RecallRecord[]> {
   const response = await fetch(FRANCE_ENDPOINT);
 
@@ -24,15 +45,15 @@ export async function fetchFranceRecalls(): Promise<RecallRecord[]> {
 
   return (data.records ?? []).map((record: any) => ({
     id: record.recordid,
-    title: record.fields?.produit || 'Produit rappelé',
-    description: record.fields?.motif_rappel,
-    lotNumbers: record.fields?.numeros_de_lots ?? [],
-    brand: record.fields?.marque || record.fields?.nom_de_produit,
+    title: record.fields?.noms_des_modeles_ou_references || record.fields?.libelle || 'Produit rappelé',
+    description: record.fields?.motif_du_rappel,
+    lotNumbers: extractLotNumbers(record.fields?.identification_des_produits),
+    brand: record.fields?.nom_de_la_marque_du_produit,
     productCategory: record.fields?.categorie_de_produit,
     country: 'FR' as const,
     publishedAt: record.fields?.date_de_publication,
-    link: record.fields?.lien_vers_la_fiche,
-    imageUrl: record.fields?.photo1 || undefined
+    link: record.fields?.lien_vers_la_fiche_rappel,
+    imageUrl: record.fields?.liens_vers_les_images?.[0] || undefined
   }));
 }
 

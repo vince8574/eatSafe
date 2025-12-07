@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAllRecalls } from '../services/apiService';
@@ -10,6 +11,7 @@ import { extractRecallReason } from '../utils/recallUtils';
 
 export function DetailScreen() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { products, removeProduct } = useScannedProducts();
@@ -30,7 +32,7 @@ export function DetailScreen() {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={[styles.missingText, { color: colors.textSecondary }]}>
-          Produit introuvable ou supprimé.
+          {t('details.notFound')}
         </Text>
       </View>
     );
@@ -46,24 +48,23 @@ export function DetailScreen() {
 
         <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            Les photos prises pendant le scan sont traitées localement puis supprimées immédiatement. Seuls la marque et
-            le numéro de lot sont conservés sur cet appareil.
+            {t('details.privacyInfo')}
           </Text>
         </View>
 
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
           <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
-          <Text style={[styles.label, { color: colors.textSecondary }]}>Numéro de lot</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{t('details.lotNumber')}</Text>
           <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
-          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>Statut rappel</Text>
+          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.recallStatusLabel')}</Text>
           <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
-            {getStatusLabel(product.recallStatus)}
+            {getStatusLabel(product.recallStatus, t)}
           </Text>
-          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>Dernière vérification</Text>
+          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.lastChecked')}</Text>
           <Text style={[styles.value, { color: colors.textPrimary }]}>
             {product.lastCheckedAt
               ? new Date(product.lastCheckedAt).toLocaleString('fr-FR')
-              : 'Jamais'}
+              : t('details.never')}
           </Text>
         </View>
 
@@ -74,23 +75,23 @@ export function DetailScreen() {
             router.back();
           }}
         >
-          <Text style={styles.deleteText}>Supprimer le scan</Text>
+          <Text style={styles.deleteText}>{t('details.actions.delete')}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
 
-function getStatusLabel(status: string): string {
+function getStatusLabel(status: string, t: any): string {
   switch (status) {
     case 'recalled':
-      return '🚨 RAPPELÉ - NE PAS CONSOMMER';
+      return t('details.status.recalled');
     case 'safe':
-      return '✅ SÉCURITAIRE';
+      return t('details.status.safe');
     case 'warning':
-      return '⚠️ AVERTISSEMENT';
+      return t('details.status.warning');
     default:
-      return '❓ INCONNU';
+      return t('details.status.unknown');
   }
 }
 

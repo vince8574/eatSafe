@@ -8,6 +8,7 @@ import { useI18n } from '../i18n/I18nContext';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { incrementBrandUsage } from '../services/customBrandsService';
+import { scheduleRecallNotification } from '../services/notificationService';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
@@ -40,7 +41,15 @@ export function ManualEntryScreen() {
       }
 
       const recalls = await fetchRecallsByCountry(country);
-      await updateRecall(product, recalls);
+      const recallStatus = await updateRecall(product, recalls);
+
+      // Send notification if product is recalled
+      if (recallStatus.status === 'recalled') {
+        const recall = recalls.find(r => r.id === recallStatus.recallReference);
+        if (recall) {
+          await scheduleRecallNotification(product, recall);
+        }
+      }
 
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {

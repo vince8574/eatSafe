@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "eatSafe",
-    "slug": "eatSafe",
+    "name": "Eats OK",
+    "slug": "eatsok",
     "scheme": "eatsafe",
     "version": "0.1.0",
     "orientation": "portrait",

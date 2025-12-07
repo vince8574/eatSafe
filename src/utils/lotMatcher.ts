@@ -7,6 +7,13 @@ function normalizeLot(lot: string) {
     .toUpperCase();
 }
 
+function normalizeBrand(brand: string) {
+  return brand
+    .replace(/\s+/g, '')
+    .replace(/[^a-z0-9]/gi, '')
+    .toUpperCase();
+}
+
 function levenshteinDistance(a: string, b: string) {
   const matrix: number[][] = [];
 
@@ -38,6 +45,29 @@ function levenshteinDistance(a: string, b: string) {
   return matrix[bLen][aLen];
 }
 
+function matchBrands(productBrand: string, recallBrand: string | undefined) {
+  if (!recallBrand || !productBrand) {
+    return true;
+  }
+
+  const normalizedProduct = normalizeBrand(productBrand);
+  const normalizedRecall = normalizeBrand(recallBrand);
+
+  if (normalizedProduct === normalizedRecall) {
+    return true;
+  }
+
+  if (normalizedProduct.includes(normalizedRecall) || normalizedRecall.includes(normalizedProduct)) {
+    return true;
+  }
+
+  const maxLength = Math.max(normalizedProduct.length, normalizedRecall.length);
+  const distance = levenshteinDistance(normalizedProduct, normalizedRecall);
+  const threshold = Math.ceil(maxLength * 0.3);
+
+  return distance <= threshold;
+}
+
 export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   const normalized = normalizeLot(product.lotNumber);
 
@@ -45,6 +75,10 @@ export function matchLots(product: ScannedProduct, recall: RecallRecord) {
     const candidate = normalizeLot(lot);
 
     if (candidate === normalized) {
+      return true;
+    }
+
+    if (candidate.includes(normalized) || normalized.includes(candidate)) {
       return true;
     }
 
@@ -60,7 +94,11 @@ export function matchLots(product: ScannedProduct, recall: RecallRecord) {
 }
 
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {
-  const relevant = recalls.filter((recall) => matchLots(product, recall));
+  const relevant = recalls.filter((recall) => {
+    const brandMatches = matchBrands(product.brand, recall.brand);
+    const lotMatches = matchLots(product, recall);
+    return brandMatches && lotMatches;
+  });
 
   if (relevant.length === 0) {
     return {
