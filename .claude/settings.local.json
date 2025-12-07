@@ -9,7 +9,14 @@
       "Bash(npx expo install expo-localization)",
       "Bash(npx expo prebuild:*)",
       "Bash(./gradlew assembleRelease:*)",
-      "Bash(adb devices:*)"
+      "Bash(adb devices:*)",
+      "Bash(./gradlew:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(adb:*)",
+      "Bash(del:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
