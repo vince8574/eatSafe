@@ -12,7 +12,7 @@
     "unknown": "不明"
   },
   "home": {
-    "title": "EatSafe",
+    "title": "Eats OK",
     "subtitle": "スキャンした商品を監視し、リコール警告をリアルタイムで受け取ります。",
     "stats": {
       "scanned": "スキャン済み商品",
@@ -122,7 +122,7 @@
       "body": "🚫 {{brand}} - ロット {{lot}}\n理由: {{reason}}\n\n⚠️ 摂取しないでください\n摂取した場合は救急に連絡してください"
     },
     "dailyCheck": {
-      "title": "EatSafe チェック",
+      "title": "Eats OK チェック",
       "body": "リコール情報を毎日更新中。"
     }
   },

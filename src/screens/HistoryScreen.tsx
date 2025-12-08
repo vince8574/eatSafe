@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
@@ -34,6 +34,32 @@ export function HistoryScreen() {
     return products.filter((product) => product.recallStatus === filter);
   }, [filter, products]);
 
+  const getStatusColor = (status: ScannedProduct['recallStatus']) => {
+    switch (status) {
+      case 'recalled':
+        return colors.danger;
+      case 'safe':
+        return colors.success;
+      case 'warning':
+        return colors.warning;
+      default:
+        return colors.textSecondary;
+    }
+  };
+
+  const getStatusBackgroundColor = (status: ScannedProduct['recallStatus']) => {
+    switch (status) {
+      case 'recalled':
+        return '#FF647C';
+      case 'safe':
+        return '#35F2A9';
+      case 'warning':
+        return '#FFC857';
+      default:
+        return '#FFC857';
+    }
+  };
+
   const renderItem = ({ item }: { item: ScannedProduct }) => (
     <TouchableOpacity
       style={[styles.item, { backgroundColor: colors.surface }]}
@@ -41,9 +67,9 @@ export function HistoryScreen() {
     >
       <View style={styles.itemHeader}>
         <Text style={[styles.brand, { color: colors.textPrimary }]}>{item.brand}</Text>
-        <Text style={[styles.status, { color: colors.accent }]}>
-          {statusLabels[item.recallStatus]}
-        </Text>
+        <View style={[styles.statusTag, { backgroundColor: getStatusBackgroundColor(item.recallStatus) }]}>
+          <Text style={styles.statusText}>{statusLabels[item.recallStatus]}</Text>
+        </View>
       </View>
       <Text style={[styles.lot, { color: colors.textSecondary }]}>
         {t('productCard.lot', { lot: item.lotNumber })}
@@ -62,9 +88,16 @@ export function HistoryScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>
-              {t('history.fullTitle')}
-            </Text>
+            <View style={styles.titleContainer}>
+              <Image
+                source={require('../../assets/logo_eatsok.png')}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+              <Text style={[styles.title, { color: colors.textPrimary }]}>
+                {t('history.fullTitle')}
+              </Text>
+            </View>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('history.subtitle')}
             </Text>
@@ -115,6 +148,15 @@ const styles = StyleSheet.create({
   list: {
     padding: 24
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12
+  },
+  logo: {
+    width: 36,
+    height: 36
+  },
   title: {
     fontSize: 26,
     fontWeight: '700'
@@ -153,11 +195,20 @@ const styles = StyleSheet.create({
   },
   brand: {
     fontSize: 18,
-    fontWeight: '700'
+    fontWeight: '700',
+    flex: 1,
+    marginRight: 8
   },
-  status: {
+  statusTag: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999
+  },
+  statusText: {
     fontSize: 12,
-    fontWeight: '700'
+    fontWeight: '700',
+    color: '#0C1413',
+    textTransform: 'uppercase'
   },
   lot: {
     fontSize: 16

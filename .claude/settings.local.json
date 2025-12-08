@@ -16,7 +16,9 @@
       "Bash(find:*)",
       "Bash(adb:*)",
       "Bash(del:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(grep:*)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

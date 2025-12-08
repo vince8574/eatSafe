@@ -12,7 +12,7 @@
     "unknown": "Onbekend"
   },
   "home": {
-    "title": "EatSafe",
+    "title": "Eats OK",
     "subtitle": "Monitor uw gescande producten en ontvang realtime waarschuwingen over terugroepacties.",
     "stats": {
       "scanned": "Gescande producten",
@@ -122,7 +122,7 @@
       "body": "⚠️ {{brand}} - Lot {{lot}}\nReden: {{reason}}\n\n🚫 NIET CONSUMEREN\nIndien geconsumeerd, neem contact op met hulpdiensten (112)"
     },
     "dailyCheck": {
-      "title": "EatSafe Verificatie",
+      "title": "Eats OK Verificatie",
       "body": "Dagelijkse update van terugroepacties is bezig."
     }
   },

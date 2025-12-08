@@ -12,7 +12,7 @@
     "unknown": "Unknown"
   },
   "home": {
-    "title": "EatSafe",
+    "title": "Eats OK",
     "subtitle": "Monitor your scanned products and receive real-time recall alerts.",
     "stats": {
       "scanned": "Scanned products",
@@ -69,15 +69,22 @@
     "title": "Product details",
     "brand": "Brand",
     "lot": "Lot",
+    "lotNumber": "Lot number",
     "scannedAt": "Scanned on",
+    "lastChecked": "Last checked",
+    "never": "Never",
+    "notFound": "Product not found or deleted.",
+    "privacyInfo": "Photos taken during scanning are processed locally and immediately deleted. Only the brand and lot number are kept on this device.",
+    "recallStatusLabel": "Recall status",
     "status": {
-      "safe": "Safe",
-      "recalled": "Recalled",
-      "unknown": "Unknown status"
+      "safe": "✅ SAFE",
+      "recalled": "🚨 RECALLED - DO NOT CONSUME",
+      "unknown": "❓ UNKNOWN",
+      "warning": "⚠️ WARNING"
     },
     "recallInfo": "Recall information",
     "actions": {
-      "delete": "Delete",
+      "delete": "Delete scan",
       "viewRecall": "View recall"
     }
   },
@@ -99,6 +106,18 @@
     "scannedAt": "Scanned on {{date}}",
     "privacy": "No photos are stored; only the brand and lot number are kept.",
     "delete": "Delete"
+  },
+  "recallAlert": {
+    "title": "CONTAMINATED PRODUCT",
+    "doNotConsume": "DO NOT CONSUME",
+    "warning": "This product is subject to an official recall and must not be consumed.",
+    "reasonLabel": "Recall reason:",
+    "emergencyTitle": "If consumed",
+    "emergencyText": "If you have consumed this product and experience symptoms, contact emergency services immediately.",
+    "callSamu": "Call 911 (Emergency)",
+    "callEmergency": "Call 112 (Emergency)",
+    "viewOfficialNotice": "View official recall notice",
+    "returnForRefund": "Return the product to the store for a refund"
   },
   "recallStatus": {
     "safe": "No known recall",
@@ -122,7 +141,7 @@
       "body": "⚠️ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\n🚫 DO NOT CONSUME\nIf consumed, contact emergency services (911)"
     },
     "dailyCheck": {
-      "title": "EatSafe Verification",
+      "title": "Eats OK Verification",
       "body": "Daily recall update in progress."
     }
   },

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { FlatList, StyleSheet, Text, View, RefreshControl } from 'react-native';
+import { FlatList, StyleSheet, Text, View, RefreshControl, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ProductCard } from '../components/ProductCard';
 import { useScannedProducts } from '../hooks/useScannedProducts';
@@ -28,28 +28,44 @@ export function HomeScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View>
-            <Text
-              style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}
-            >
-              {t('home.title')}
-            </Text>
+            <View style={styles.titleContainer}>
+              <Image
+                source={require('../../assets/logo_eatsok.png')}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+              <Text
+                style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}
+              >
+                {t('home.title')}
+              </Text>
+            </View>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('home.subtitle')}
             </Text>
 
             <View style={styles.statsContainer}>
-              <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
+              <TouchableOpacity
+                style={[styles.statCard, { backgroundColor: colors.surface }]}
+                onPress={() => router.push('/history')}
+              >
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.total}</Text>
                 <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('home.stats.scanned')}</Text>
-              </View>
-              <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.statCard, { backgroundColor: colors.surface }]}
+                onPress={() => router.push({ pathname: '/history', params: { filter: 'recalled' } })}
+              >
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.recalled}</Text>
                 <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('home.stats.recalled')}</Text>
-              </View>
-              <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.statCard, { backgroundColor: colors.surface }]}
+                onPress={() => router.push({ pathname: '/history', params: { filter: 'unknown' } })}
+              >
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.pending}</Text>
                 <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{t('home.stats.pending')}</Text>
-              </View>
+              </TouchableOpacity>
             </View>
 
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('home.historyTitle')}</Text>
@@ -82,6 +98,15 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 24
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12
+  },
+  logo: {
+    width: 40,
+    height: 40
   },
   title: {
     fontWeight: '700',

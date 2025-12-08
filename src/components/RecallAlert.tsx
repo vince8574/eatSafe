@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { RecallRecord } from '../types';
 
 interface RecallAlertProps {
@@ -9,6 +10,7 @@ interface RecallAlertProps {
 
 export function RecallAlert({ recall, reason }: RecallAlertProps) {
   const { colors } = useTheme();
+  const { t } = useI18n();
 
   const openEmergencyCall = () => {
     Linking.openURL('tel:15');
@@ -18,19 +20,19 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
     <View style={[styles.container, { backgroundColor: colors.danger }]}>
       <View style={styles.header}>
         <Text style={styles.icon}>🚨</Text>
-        <Text style={styles.title}>PRODUIT CONTAMINÉ</Text>
+        <Text style={styles.title}>{t('recallAlert.title')}</Text>
       </View>
 
       <View style={[styles.warningBox, { backgroundColor: 'rgba(0,0,0,0.15)' }]}>
-        <Text style={styles.warningTitle}>🚫 NE PAS CONSOMMER</Text>
+        <Text style={styles.warningTitle}>🚫 {t('recallAlert.doNotConsume')}</Text>
         <Text style={styles.warningText}>
-          Ce produit fait l'objet d'un rappel officiel et ne doit pas être consommé.
+          {t('recallAlert.warning')}
         </Text>
       </View>
 
       {reason && (
         <View style={styles.reasonBox}>
-          <Text style={styles.reasonLabel}>Raison du rappel :</Text>
+          <Text style={styles.reasonLabel}>{t('recallAlert.reasonLabel')}</Text>
           <Text style={styles.reasonText}>{reason}</Text>
         </View>
       )}
@@ -43,9 +45,9 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
       </View>
 
       <View style={[styles.emergencyBox, { backgroundColor: 'rgba(0,0,0,0.2)' }]}>
-        <Text style={styles.emergencyTitle}>⚕️ En cas de consommation</Text>
+        <Text style={styles.emergencyTitle}>⚕️ {t('recallAlert.emergencyTitle')}</Text>
         <Text style={styles.emergencyText}>
-          Si vous avez consommé ce produit et ressentez des symptômes, contactez immédiatement les urgences.
+          {t('recallAlert.emergencyText')}
         </Text>
         <View style={styles.emergencyNumbers}>
           <TouchableOpacity
@@ -53,7 +55,7 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
             onPress={openEmergencyCall}
           >
             <Text style={[styles.emergencyButtonText, { color: colors.danger }]}>
-              📞 Appeler le 15 (SAMU)
+              📞 {t('recallAlert.callSamu')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -61,7 +63,7 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
             onPress={() => Linking.openURL('tel:112')}
           >
             <Text style={[styles.emergencyButtonText, { color: colors.danger }]}>
-              📞 Appeler le 112 (Urgences)
+              📞 {t('recallAlert.callEmergency')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -73,14 +75,14 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
           onPress={() => Linking.openURL(recall.link!)}
         >
           <Text style={[styles.linkText, { color: colors.danger }]}>
-            📋 Consulter la fiche officielle du rappel
+            📋 {t('recallAlert.viewOfficialNotice')}
           </Text>
         </TouchableOpacity>
       )}
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>
-          Rapportez le produit au magasin pour obtenir un remboursement
+          {t('recallAlert.returnForRefund')}
         </Text>
       </View>
     </View>

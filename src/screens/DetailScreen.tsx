@@ -43,40 +43,46 @@ export function DetailScreen() {
       <View style={styles.content}>
         {/* Alerte de rappel en haut si le produit est contaminé */}
         {isRecalled && recall && (
-          <RecallAlert recall={recall} reason={recallReason} />
+          <View style={styles.section}>
+            <RecallAlert recall={recall} reason={recallReason} />
+          </View>
         )}
 
-        <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
-          <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            {t('details.privacyInfo')}
-          </Text>
+        <View style={styles.section}>
+          <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
+            <Text style={[styles.infoText, { color: colors.textSecondary }]}>
+              {t('details.privacyInfo')}
+            </Text>
+          </View>
         </View>
 
-        <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
-          <Text style={[styles.label, { color: colors.textSecondary }]}>{t('details.lotNumber')}</Text>
-          <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
-          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.recallStatusLabel')}</Text>
-          <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
-            {getStatusLabel(product.recallStatus, t)}
-          </Text>
-          <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.lastChecked')}</Text>
-          <Text style={[styles.value, { color: colors.textPrimary }]}>
-            {product.lastCheckedAt
-              ? new Date(product.lastCheckedAt).toLocaleString('fr-FR')
-              : t('details.never')}
-          </Text>
-        </View>
+        <View style={styles.section}>
+          <View style={[styles.card, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('details.lotNumber')}</Text>
+            <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
+            <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.recallStatusLabel')}</Text>
+            <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
+              {getStatusLabel(product.recallStatus, t)}
+            </Text>
+            <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.lastChecked')}</Text>
+            <Text style={[styles.value, { color: colors.textPrimary }]}>
+              {product.lastCheckedAt
+                ? new Date(product.lastCheckedAt).toLocaleString('fr-FR')
+                : t('details.never')}
+            </Text>
+          </View>
 
-        <TouchableOpacity
-          style={[styles.deleteButton, { backgroundColor: colors.danger }]}
-          onPress={async () => {
-            await removeProduct(product.id);
-            router.back();
-          }}
-        >
-          <Text style={styles.deleteText}>{t('details.actions.delete')}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.deleteButton, { backgroundColor: colors.danger }]}
+            onPress={async () => {
+              await removeProduct(product.id);
+              router.back();
+            }}
+          >
+            <Text style={styles.deleteText}>{t('details.actions.delete')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -114,12 +120,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   content: {
-    padding: 24,
-    gap: 24
+    padding: 24
+  },
+  section: {
+    marginBottom: 24
   },
   card: {
     borderRadius: 24,
-    padding: 24
+    padding: 24,
+    marginBottom: 16
   },
   infoBox: {
     borderRadius: 20,
@@ -171,8 +180,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     paddingVertical: 16,
     borderRadius: 16,
-    alignItems: 'center',
-    marginTop: 'auto'
+    alignItems: 'center'
   },
   deleteText: {
     fontSize: 16,

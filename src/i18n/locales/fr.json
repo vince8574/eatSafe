@@ -107,6 +107,18 @@
     "privacy": "Aucune photo n'est stockée ; seuls la marque et le numéro de lot sont conservés.",
     "delete": "Supprimer"
   },
+  "recallAlert": {
+    "title": "PRODUIT CONTAMINÉ",
+    "doNotConsume": "NE PAS CONSOMMER",
+    "warning": "Ce produit fait l'objet d'un rappel officiel et ne doit pas être consommé.",
+    "reasonLabel": "Raison du rappel :",
+    "emergencyTitle": "En cas de consommation",
+    "emergencyText": "Si vous avez consommé ce produit et ressentez des symptômes, contactez immédiatement les urgences.",
+    "callSamu": "Appeler le 15 (SAMU)",
+    "callEmergency": "Appeler le 112 (Urgences)",
+    "viewOfficialNotice": "Consulter la fiche officielle du rappel",
+    "returnForRefund": "Rapportez le produit au magasin pour obtenir un remboursement"
+  },
   "recallStatus": {
     "safe": "Aucun rappel connu",
     "recalled": "Rappelé",
@@ -129,7 +141,7 @@
       "body": "⚠️ {{brand}} - Lot {{lot}}\nRaison: {{reason}}\n\n🚫 NE PAS CONSOMMER\nEn cas de consommation, contactez les urgences (15 ou 112)"
     },
     "dailyCheck": {
-      "title": "Verification EatSafe",
+      "title": "Verification Eats OK",
       "body": "Mise a jour quotidienne des rappels en cours."
     }
   },

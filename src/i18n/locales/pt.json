@@ -12,7 +12,7 @@
     "unknown": "Desconhecido"
   },
   "home": {
-    "title": "EatSafe",
+    "title": "Eats OK",
     "subtitle": "Monitore seus produtos escaneados e receba alertas de recall em tempo real.",
     "stats": {
       "scanned": "Produtos escaneados",
@@ -122,7 +122,7 @@
       "body": "🚫 {{brand}} - Lote {{lot}}\nMotivo: {{reason}}\n\n⚠️ NÃO CONSUMIR\nSe consumido, entre em contato com serviços de emergência (192)"
     },
     "dailyCheck": {
-      "title": "Verificação EatSafe",
+      "title": "Verificação Eats OK",
       "body": "Atualização diária de recalls em andamento."
     }
   },

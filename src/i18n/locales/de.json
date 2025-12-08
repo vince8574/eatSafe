@@ -12,7 +12,7 @@
     "unknown": "Unbekannt"
   },
   "home": {
-    "title": "EatSafe",
+    "title": "Eats OK",
     "subtitle": "Überwachen Sie Ihre gescannten Produkte und erhalten Sie Echtzeit-Rückrufwarnungen.",
     "stats": {
       "scanned": "Gescannte Produkte",
@@ -122,7 +122,7 @@
       "body": "⚠️ {{brand}} - Charge {{lot}}\nGrund: {{reason}}\n\n🚫 NICHT KONSUMIEREN\nBei Verzehr kontaktieren Sie den Notdienst (112)"
     },
     "dailyCheck": {
-      "title": "EatSafe Überprüfung",
+      "title": "Eats OK Überprüfung",
       "body": "Tägliche Rückrufaktualisierung läuft."
     }
   },
