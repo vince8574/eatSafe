@@ -100,6 +100,18 @@
     "privacy": "不会保存照片；只保留品牌和批次号。",
     "delete": "删除"
   },
+  "recallAlert": {
+    "title": "污染产品",
+    "doNotConsume": "请勿食用",
+    "warning": "该产品已被官方召回，不得食用。",
+    "reasonLabel": "召回原因：",
+    "emergencyTitle": "如已食用",
+    "emergencyText": "如果您已食用该产品并出现症状，请立即联系急救服务。",
+    "callSamu": "拨打 112（紧急情况）",
+    "callEmergency": "拨打 112（紧急情况）",
+    "viewOfficialNotice": "查看官方召回通知",
+    "returnForRefund": "将产品退回商店以获得退款"
+  },
   "recallStatus": {
     "safe": "暂无已知召回",
     "recalled": "已召回",

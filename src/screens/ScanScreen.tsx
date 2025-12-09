@@ -182,12 +182,6 @@ export function ScanScreen() {
           <Text style={[styles.instructionText, { color: colors.textPrimary }]}>{stepInstruction}</Text>
         </View>
 
-        <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
-          <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            {t('scan.privacyInfo')}
-          </Text>
-        </View>
-
         <View style={styles.statusRow}>
           <View
             style={[
@@ -301,14 +295,6 @@ const styles = StyleSheet.create({
   instructionText: {
     fontSize: 16,
     lineHeight: 22
-  },
-  infoBox: {
-    borderRadius: 16,
-    padding: 14
-  },
-  infoText: {
-    fontSize: 13,
-    lineHeight: 20
   },
   statusRow: {
     flexDirection: 'row',

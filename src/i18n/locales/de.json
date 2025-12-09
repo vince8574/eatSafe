@@ -100,6 +100,18 @@
     "privacy": "Es werden keine Fotos gespeichert; nur Marke und Chargennummer bleiben erhalten.",
     "delete": "Löschen"
   },
+  "recallAlert": {
+    "title": "KONTAMINIERTES PRODUKT",
+    "doNotConsume": "NICHT KONSUMIEREN",
+    "warning": "Dieses Produkt unterliegt einem offiziellen Rückruf und darf nicht konsumiert werden.",
+    "reasonLabel": "Grund des Rückrufs:",
+    "emergencyTitle": "Bei Verzehr",
+    "emergencyText": "Wenn Sie dieses Produkt konsumiert haben und Symptome verspüren, kontaktieren Sie sofort den Notdienst.",
+    "callSamu": "Notruf 112 anrufen",
+    "callEmergency": "Notruf 112 anrufen",
+    "viewOfficialNotice": "Offizielle Rückrufmeldung ansehen",
+    "returnForRefund": "Bringen Sie das Produkt zur Rückerstattung ins Geschäft zurück"
+  },
   "recallStatus": {
     "safe": "Kein bekannter Rückruf",
     "recalled": "Zurückgerufen",

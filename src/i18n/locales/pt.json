@@ -100,6 +100,18 @@
     "privacy": "Nenhuma foto é armazenada; apenas marca e número do lote são mantidos.",
     "delete": "Excluir"
   },
+  "recallAlert": {
+    "title": "PRODUTO CONTAMINADO",
+    "doNotConsume": "NÃO CONSUMIR",
+    "warning": "Este produto está sujeito a um recall oficial e não deve ser consumido.",
+    "reasonLabel": "Motivo do recall:",
+    "emergencyTitle": "Se consumido",
+    "emergencyText": "Se você consumiu este produto e apresenta sintomas, entre em contato imediatamente com os serviços de emergência.",
+    "callSamu": "Ligar para 112 (Emergência)",
+    "callEmergency": "Ligar para 112 (Emergência)",
+    "viewOfficialNotice": "Ver aviso oficial do recall",
+    "returnForRefund": "Devolva o produto à loja para reembolso"
+  },
   "recallStatus": {
     "safe": "Sem recall conhecido",
     "recalled": "Recolhido",

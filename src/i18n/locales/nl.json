@@ -100,6 +100,18 @@
     "privacy": "Er worden geen foto's opgeslagen; alleen merk en partijnummer worden bewaard.",
     "delete": "Verwijderen"
   },
+  "recallAlert": {
+    "title": "BESMET PRODUCT",
+    "doNotConsume": "NIET CONSUMEREN",
+    "warning": "Dit product is onderworpen aan een officiële terugroepactie en mag niet worden geconsumeerd.",
+    "reasonLabel": "Reden voor terugroepactie:",
+    "emergencyTitle": "Bij consumptie",
+    "emergencyText": "Als u dit product hebt geconsumeerd en symptomen ervaart, neem dan onmiddellijk contact op met de hulpdiensten.",
+    "callSamu": "Bel 112 (Noodgeval)",
+    "callEmergency": "Bel 112 (Noodgeval)",
+    "viewOfficialNotice": "Bekijk officiële terugroepmededeling",
+    "returnForRefund": "Breng het product terug naar de winkel voor een terugbetaling"
+  },
   "recallStatus": {
     "safe": "Geen bekende terugroepactie",
     "recalled": "Teruggeroepen",

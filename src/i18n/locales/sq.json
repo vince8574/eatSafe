@@ -100,6 +100,18 @@
     "privacy": "Asnjë fotografi nuk ruhet; vetëm marka dhe numri i lotit ruhen.",
     "delete": "Fshi"
   },
+  "recallAlert": {
+    "title": "PRODUKT I KONTAMINUAR",
+    "doNotConsume": "MOS KONSUMONI",
+    "warning": "Ky produkt është objekt i një rikujtimi zyrtar dhe nuk duhet të konsumohet.",
+    "reasonLabel": "Arsyeja e rikujtimit:",
+    "emergencyTitle": "Nëse është konsumuar",
+    "emergencyText": "Nëse keni konsumuar këtë produkt dhe keni simptoma, kontaktoni menjëherë shërbimet e emergjencës.",
+    "callSamu": "Telefononi 112 (Emergjenca)",
+    "callEmergency": "Telefononi 112 (Emergjenca)",
+    "viewOfficialNotice": "Shikoni njoftimin zyrtar të rikujtimit",
+    "returnForRefund": "Kthejeni produktin në dyqan për rimbursim"
+  },
   "recallStatus": {
     "safe": "Asnjë rikujtim i njohur",
     "recalled": "I rikthyer",

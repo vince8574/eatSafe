@@ -1,7 +1,10 @@
 // src/services/brandMatcher.ts
 import { getAllCustomBrands } from './customBrandsService';
+import * as FileSystem from 'expo-file-system';
+import { Asset } from 'expo-asset';
 
-const brandsData: string[] = require('../data/brands.json');
+// Empty array initially - brands will be loaded from assets
+const brandsData: string[] = [];
 
 function levenshteinDistance(str1: string, str2: string): number {
   const matrix: number[][] = [];
@@ -177,6 +180,56 @@ export class BrandMatcher {
 
 // Instance singleton
 let brandMatcherInstance: BrandMatcher | null = null;
+let baseBrandsCache: string[] | null = null;
+
+/**
+ * Charge les marques depuis le fichier assets
+ */
+async function loadBrandsFromAssets(): Promise<string[]> {
+  if (baseBrandsCache) {
+    return baseBrandsCache;
+  }
+
+  try {
+    // First try to load from Android assets directory (production build)
+    const androidAssetPath = `${FileSystem.bundleDirectory}brands.json`;
+    console.log(`Attempting to load brands from: ${androidAssetPath}`);
+
+    const content = await FileSystem.readAsStringAsync(androidAssetPath);
+    const brands = JSON.parse(content);
+    baseBrandsCache = Array.isArray(brands) ? brands : [];
+    console.log(`✓ Loaded ${baseBrandsCache.length} brands from Android assets`);
+    return baseBrandsCache;
+  } catch (error) {
+    console.warn('Failed to load from Android assets, trying asset bundle:', error);
+  }
+
+  try {
+    // Try to load from Expo asset bundle
+    const asset = Asset.fromModule(require('../data/brands.json'));
+    await asset.downloadAsync();
+
+    if (asset.localUri) {
+      const content = await FileSystem.readAsStringAsync(asset.localUri);
+      const brands = JSON.parse(content);
+      baseBrandsCache = Array.isArray(brands) ? brands : [];
+      console.log(`✓ Loaded ${baseBrandsCache.length} brands from asset bundle`);
+      return baseBrandsCache;
+    }
+  } catch (error) {
+    console.warn('Failed to load brands from asset bundle, using fallback:', error);
+  }
+
+  // Fallback: try loading from bundled data
+  try {
+    baseBrandsCache = Array.isArray(brandsData) ? brandsData : [];
+    console.log(`✓ Loaded ${baseBrandsCache.length} brands from bundled data`);
+    return baseBrandsCache;
+  } catch (error) {
+    console.error('Failed to load brands:', error);
+    return [];
+  }
+}
 
 /**
  * Récupère l'instance du BrandMatcher
@@ -197,8 +250,8 @@ export async function reloadBrandMatcher(): Promise<void> {
   const customBrands = await getAllCustomBrands();
   const customBrandNames = customBrands.map(cb => cb.name);
 
-  // S'assurer que brandsData est un tableau avant de le concaténer
-  const baseBrands = Array.isArray(brandsData) ? brandsData : [];
+  // Charger les marques de base depuis les assets
+  const baseBrands = await loadBrandsFromAssets();
   const allBrands = baseBrands.concat(customBrandNames);
 
   brandMatcherInstance = new BrandMatcher(allBrands);

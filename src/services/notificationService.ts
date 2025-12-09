@@ -1,41 +1,28 @@
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { ScannedProduct, RecallRecord } from '../types';
 import { extractRecallReason } from '../utils/recallUtils';
-
-type NotificationsModule = typeof import('expo-notifications');
 
 const channelId = 'recall-alerts';
 const isExpoGo = Constants.appOwnership === 'expo';
 
-let notificationsModule: NotificationsModule | null | undefined;
-
-async function loadNotifications(): Promise<NotificationsModule | null> {
-  if (isExpoGo) {
-    return null;
-  }
-
-  if (!notificationsModule) {
-    const mod = await import('expo-notifications');
-    mod.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        shouldShowAlert: true,
-        shouldShowBanner: true,
-        shouldShowList: true
-      })
-    });
-    notificationsModule = mod;
-  }
-
-  return notificationsModule;
+// Configure notification handler directly
+if (!isExpoGo) {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowAlert: true,
+      shouldShowBanner: true,
+      shouldShowList: true
+    })
+  });
 }
 
 export async function requestNotificationPermissions() {
-  const Notifications = await loadNotifications();
-  if (!Notifications) {
+  if (isExpoGo) {
     console.warn('Push notifications are not supported in Expo Go; skipping permission request.');
     return false;
   }
@@ -69,8 +56,7 @@ export async function requestNotificationPermissions() {
 }
 
 export async function scheduleRecallNotification(product: ScannedProduct, recall: RecallRecord) {
-  const Notifications = await loadNotifications();
-  if (!Notifications) {
+  if (isExpoGo) {
     console.warn('Cannot schedule recall notification in Expo Go; this requires a development build.', {
       productId: product.id,
       recallId: recall.id
@@ -104,8 +90,7 @@ export async function scheduleRecallNotification(product: ScannedProduct, recall
 }
 
 export async function scheduleDailyCheck() {
-  const Notifications = await loadNotifications();
-  if (!Notifications) {
+  if (isExpoGo) {
     console.warn('Skipping daily notification scheduling in Expo Go; requires a development build.');
     return;
   }

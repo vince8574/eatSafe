@@ -18,7 +18,16 @@
       "Bash(del:*)",
       "Bash(git add:*)",
       "Bash(grep:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(npx expo export:*)",
+      "Bash(node scripts/generateAllBrands.js:*)",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(tee:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(npx expo export:embed:*)"
     ],
     "deny": [],
     "ask": []

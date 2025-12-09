@@ -27,6 +27,9 @@
         "android.permission.RECORD_AUDIO"
       ]
     },
+    "assetBundlePatterns": [
+      "assets/**"
+    ],
     "web": {
       "bundler": "metro",
       "output": "static"
