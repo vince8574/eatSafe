@@ -1,5 +1,5 @@
 export const palette = {
-  background: '#0A1F1F',
+  background: '#C4DECC',
   surface: '#102D2C',
   surfaceAlt: '#173B3A',
   accent: '#35F2A9',
@@ -13,7 +13,7 @@ export const palette = {
 };
 
 export const lightPalette = {
-  background: '#F5F9F8',
+  background: '#C4DECC',
   surface: '#FFFFFF',
   surfaceAlt: '#EEF6F4',
   accent: '#0BAE86',

@@ -182,53 +182,22 @@ export class BrandMatcher {
 let brandMatcherInstance: BrandMatcher | null = null;
 let baseBrandsCache: string[] | null = null;
 
+// URL where brands.json is hosted (Firebase Storage or CDN)
+const BRANDS_URL = 'https://storage.googleapis.com/YOUR_BUCKET/brands/brands.json';
+const LOCAL_BRANDS_PATH = `${FileSystem.documentDirectory}brands.json`;
+
 /**
- * Charge les marques depuis le fichier assets
+ * Charge les marques depuis Firebase Storage ou cache local
  */
 async function loadBrandsFromAssets(): Promise<string[]> {
+  // Firestore est désormais la source des marques : on ne tente plus de lire les split/apk.
+  // On renvoie un tableau vide pour éviter les accès fichiers réseau superflus.
   if (baseBrandsCache) {
     return baseBrandsCache;
   }
-
-  try {
-    // First try to load from Android assets directory (production build)
-    const androidAssetPath = `${FileSystem.bundleDirectory}brands.json`;
-    console.log(`Attempting to load brands from: ${androidAssetPath}`);
-
-    const content = await FileSystem.readAsStringAsync(androidAssetPath);
-    const brands = JSON.parse(content);
-    baseBrandsCache = Array.isArray(brands) ? brands : [];
-    console.log(`✓ Loaded ${baseBrandsCache.length} brands from Android assets`);
-    return baseBrandsCache;
-  } catch (error) {
-    console.warn('Failed to load from Android assets, trying asset bundle:', error);
-  }
-
-  try {
-    // Try to load from Expo asset bundle
-    const asset = Asset.fromModule(require('../data/brands.json'));
-    await asset.downloadAsync();
-
-    if (asset.localUri) {
-      const content = await FileSystem.readAsStringAsync(asset.localUri);
-      const brands = JSON.parse(content);
-      baseBrandsCache = Array.isArray(brands) ? brands : [];
-      console.log(`✓ Loaded ${baseBrandsCache.length} brands from asset bundle`);
-      return baseBrandsCache;
-    }
-  } catch (error) {
-    console.warn('Failed to load brands from asset bundle, using fallback:', error);
-  }
-
-  // Fallback: try loading from bundled data
-  try {
-    baseBrandsCache = Array.isArray(brandsData) ? brandsData : [];
-    console.log(`✓ Loaded ${baseBrandsCache.length} brands from bundled data`);
-    return baseBrandsCache;
-  } catch (error) {
-    console.error('Failed to load brands:', error);
-    return [];
-  }
+  baseBrandsCache = [];
+  console.log('[BrandMatcher] Skipping local/asset brand load (using Firestore suggestions)');
+  return baseBrandsCache;
 }
 
 /**

@@ -30,7 +30,7 @@ export type ThemeType = {
 const defaultTheme: ThemeType = {
   mode: 'dark',
   colors: {
-    background: '#0A1F1F',
+    background: '#C4DECC',
     surface: '#102D2C',
     surfaceAlt: '#173B3A',
     accent: '#35F2A9',

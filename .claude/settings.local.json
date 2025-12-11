@@ -27,7 +27,9 @@
       "Bash(cat:*)",
       "Bash(mkdir:*)",
       "Bash(chmod:*)",
-      "Bash(npx expo export:embed:*)"
+      "Bash(npx expo export:embed:*)",
+      "Bash(node scripts/splitBrands.js:*)",
+      "Bash(node scripts/populateFirestoreBrands.js:*)"
     ],
     "deny": [],
     "ask": []

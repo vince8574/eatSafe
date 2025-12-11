@@ -10,7 +10,7 @@ import {
   Alert
 } from 'react-native';
 import { useTheme } from '../theme/themeContext';
-import { getBrandMatcher, reloadBrandMatcher } from '../services/brandMatcher';
+import { searchBrands, addBrandToFirestore } from '../services/firestoreBrandsService';
 import { addCustomBrand, searchCustomBrands } from '../services/customBrandsService';
 
 interface BrandSuggestion {
@@ -46,7 +46,6 @@ export function BrandAutocomplete({
 
     setIsLoading(true);
     try {
-      const matcher = await getBrandMatcher();
       const results: BrandSuggestion[] = [];
 
       // 1. Rechercher dans les marques personnalisées
@@ -58,15 +57,14 @@ export function BrandAutocomplete({
         });
       });
 
-      // 2. Rechercher dans les marques de base
-      const matches = matcher.findTopMatches(searchText, 5, 0.5);
-      matches.forEach(match => {
+      // 2. Rechercher dans Firestore
+      const firestoreBrands = await searchBrands(searchText, 5);
+      firestoreBrands.forEach(brand => {
         // Ne pas dupliquer si déjà dans les customs
-        if (!results.find(r => r.name.toLowerCase() === match.brand.toLowerCase())) {
+        if (!results.find(r => r.name.toLowerCase() === brand.toLowerCase())) {
           results.push({
-            name: match.brand,
-            isCustom: false,
-            confidence: match.confidence
+            name: brand,
+            isCustom: false
           });
         }
       });
@@ -119,8 +117,8 @@ export function BrandAutocomplete({
           onPress: async () => {
             const success = await addCustomBrand(trimmedBrand);
             if (success) {
-              // Recharger le matcher pour inclure la nouvelle marque
-              await reloadBrandMatcher();
+              // Ajouter aussi à Firestore pour partage avec autres utilisateurs
+              await addBrandToFirestore(trimmedBrand);
               setShowSuggestions(false);
               Alert.alert('✓ Marque ajoutée', `"${trimmedBrand}" a été ajoutée à vos marques.`);
             } else {
@@ -180,7 +178,7 @@ export function BrandAutocomplete({
                 </Text>
                 {item.isCustom && (
                   <View style={[styles.badge, { backgroundColor: colors.accent }]}>
-                    <Text style={[styles.badgeText, { color: colors.background }]}>
+                    <Text style={[styles.badgeText, { color: colors.surface }]}>
                       Perso
                     </Text>
                   </View>

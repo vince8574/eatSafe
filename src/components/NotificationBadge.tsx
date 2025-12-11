@@ -14,7 +14,7 @@ export function NotificationBadge({ label, count }: NotificationBadgeProps) {
       <Text style={[styles.label, { color: colors.accent }]}>{label}</Text>
       {typeof count === 'number' && count > 0 && (
         <View style={[styles.countContainer, { backgroundColor: colors.accent }]}>
-          <Text style={[styles.countText, { color: colors.background }]}>{count}</Text>
+          <Text style={[styles.countText, { color: colors.surface }]}>{count}</Text>
         </View>
       )}
     </View>

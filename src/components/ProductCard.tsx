@@ -40,7 +40,15 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
-          <View style={[styles.statusTag, { backgroundColor: statusColors[product.recallStatus] }]}>
+          <View
+            style={[
+              styles.statusTag,
+              {
+                backgroundColor: statusColors[product.recallStatus]
+              }
+            ]}
+          >
+            <View style={styles.statusHighlight} />
             <Text style={styles.statusText}>{statusLabels[product.recallStatus]}</Text>
           </View>
         </View>
@@ -97,7 +105,23 @@ const styles = StyleSheet.create({
   statusTag: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 999
+    borderRadius: 999,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.35)',
+    shadowColor: '#000',
+    shadowOpacity: 0.18,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 4
+  },
+  statusHighlight: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '55%',
+    backgroundColor: 'rgba(255,255,255,0.3)'
   },
   statusText: {
     fontSize: 12,

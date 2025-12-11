@@ -58,7 +58,7 @@ export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
           Nous avons besoin d'accéder à votre appareil photo pour scanner les emballages.
         </Text>
         <TouchableOpacity style={[styles.permissionButton, { backgroundColor: colors.accent }]} onPress={requestPermission}>
-          <Text style={[styles.permissionButtonText, { color: colors.background }]}>Autoriser</Text>
+          <Text style={[styles.permissionButtonText, { color: colors.surface }]}>Autoriser</Text>
         </TouchableOpacity>
       </View>
     );

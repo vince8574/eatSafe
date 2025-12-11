@@ -1,8 +1,41 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Image, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
+
+const tabIcons = {
+  home: require('../../assets/home.png'),
+  scan: require('../../assets/scan.png'),
+  history: require('../../assets/history.png'),
+  language: require('../../assets/language.png')
+};
+
+const renderTabIcon =
+  (source: any) =>
+  ({ focused }: { focused: boolean }) => (
+    <View
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        overflow: 'hidden',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'transparent'
+      }}
+    >
+      <Image
+        source={source}
+        style={{
+          width: 34,
+          height: 34,
+          opacity: focused ? 1 : 0.65
+        }}
+        resizeMode="contain"
+      />
+    </View>
+  );
 
 export default function TabsLayout() {
   const { colors } = useTheme();
@@ -14,12 +47,13 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopWidth: 0,
-          paddingBottom: 12 + insets.bottom,
-          paddingTop: 8,
-          height: 68 + insets.bottom
+          paddingBottom: 14 + insets.bottom,
+          paddingTop: 10,
+          height: 76 + insets.bottom
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -37,36 +71,28 @@ export default function TabsLayout() {
         name="home"
         options={{
           title: t('navigation.home'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
-          )
+          tabBarIcon: renderTabIcon(tabIcons.home)
         }}
       />
       <Tabs.Screen
         name="scan"
         options={{
           title: t('navigation.scan'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="scan" size={size} color={color} />
-          )
+          tabBarIcon: renderTabIcon(tabIcons.scan)
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: t('navigation.history'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="time" size={size} color={color} />
-          )
+          tabBarIcon: renderTabIcon(tabIcons.history)
         }}
       />
       <Tabs.Screen
         name="language"
         options={{
           title: t('navigation.language'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="language" size={size} color={color} />
-          )
+          tabBarIcon: renderTabIcon(tabIcons.language)
         }}
       />
     </Tabs>

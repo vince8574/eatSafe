@@ -93,7 +93,7 @@ export function ManualEntryScreen() {
         onPress={handleSave}
         disabled={isSubmitting}
       >
-        <Text style={[styles.buttonText, { color: colors.background }]}>
+        <Text style={[styles.buttonText, { color: colors.surface }]}>
           {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
         </Text>
       </TouchableOpacity>
