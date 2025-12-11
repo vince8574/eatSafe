@@ -122,10 +122,10 @@
     "home": "Kryefaqja",
     "scan": "Skano",
     "history": "Historiku",
-    "language": "Gjuha"
+    "language": "Parametrat"
   },
   "language": {
-    "title": "Gjuha e aplikacionit",
+    "title": "Parametrat",
     "subtitle": "Zgjidhni gjuhën e shfaqjes së aplikacionit."
   },
   "notifications": {

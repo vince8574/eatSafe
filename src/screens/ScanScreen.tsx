@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
@@ -11,6 +11,8 @@ import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
+import { addCustomBrand } from '../services/customBrandsService';
+import { addBrandToFirestore } from '../services/firestoreBrandsService';
 
 type Step = 'brand' | 'lot';
 
@@ -25,9 +27,13 @@ export function ScanScreen() {
   const [brandText, setBrandText] = useState('');
   const [brandConfidence, setBrandConfidence] = useState(0);
   const [brandSuggestions, setBrandSuggestions] = useState<string[]>([]);
+  const [brandIsKnown, setBrandIsKnown] = useState(false);
   const [ocrText, setOcrText] = useState('');
   const [lotNumber, setLotNumber] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [confirmationStep, setConfirmationStep] = useState<Step | null>(null);
+  const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [isFinalizing, setIsFinalizing] = useState(false);
 
   const brandMutation = useMutation({
     mutationFn: async (brandPhoto: string) => {
@@ -42,6 +48,7 @@ export function ScanScreen() {
       setBrandText(brand);
       setBrandConfidence(confidence);
       setBrandSuggestions(suggestions || []);
+      setBrandIsKnown(isKnownBrand);
 
       if (!isKnownBrand && suggestions && suggestions.length > 0) {
         console.log(`⚠️ Brand not recognized with high confidence. Suggestions: ${suggestions.join(', ')}`);
@@ -55,7 +62,8 @@ export function ScanScreen() {
     },
     onSuccess: () => {
       setBrandCaptured(true);
-      setStep('lot');
+      setConfirmationStep('brand');
+      setConfirmModalVisible(true);
     }
   });
 
@@ -70,28 +78,13 @@ export function ScanScreen() {
         throw new Error(t('scan.errors.lotExtractFailed'));
       }
 
-      const recalls = await fetchRecallsByCountry(country);
-      const product = await addProduct({
-        brand: brandText || DEFAULT_BRAND_NAME,
-        lotNumber: lot
-      });
-
-      const status = await updateRecall(product, recalls);
-      return { productId: product.id, status };
     },
     onError: (error: unknown) => {
       setErrorMessage(error instanceof Error ? error.message : t('scan.errors.scanFailed'));
     },
-    onSuccess: ({ productId }) => {
-      setOcrText('');
-      setLotNumber('');
-      setErrorMessage('');
-      setBrandCaptured(false);
-      setBrandText('');
-      setBrandConfidence(0);
-      setBrandSuggestions([]);
-      setStep('brand');
-      router.push({ pathname: '/details/[id]', params: { id: productId } });
+    onSuccess: () => {
+      setConfirmationStep('lot');
+      setConfirmModalVisible(true);
     }
   });
 
@@ -100,16 +93,20 @@ export function ScanScreen() {
     setBrandText('');
     setBrandConfidence(0);
     setBrandSuggestions([]);
+    setBrandIsKnown(false);
     setOcrText('');
     setLotNumber('');
     setErrorMessage('');
     setStep('brand');
+    setConfirmationStep(null);
+    setConfirmModalVisible(false);
   }, []);
 
   const selectSuggestion = useCallback((suggestion: string) => {
     setBrandText(suggestion);
     setBrandConfidence(0.95);
     setBrandSuggestions([]);
+    setBrandIsKnown(true);
   }, []);
 
   const handleCapture = useCallback(
@@ -150,10 +147,10 @@ export function ScanScreen() {
         }
       }
     },
-    [brandCaptured, brandMutation, lotMutation, step]
+    [brandCaptured, brandMutation, lotMutation, step, t]
   );
 
-  const isProcessing = brandMutation.isPending || lotMutation.isPending;
+  const isProcessing = brandMutation.isPending || lotMutation.isPending || isFinalizing;
   const stepLabel = step === 'brand' ? t('scan.brandStep') : t('scan.lotStep');
   const stepInstruction = isProcessing
     ? step === 'brand'
@@ -172,14 +169,127 @@ export function ScanScreen() {
     return colors.textSecondary;
   };
 
+  const handleConfirm = useCallback(async () => {
+    if (!confirmationStep) return;
+    if (confirmationStep === 'brand') {
+      setIsFinalizing(true);
+      try {
+        if (!brandIsKnown && brandText && brandText !== DEFAULT_BRAND_NAME) {
+          await addCustomBrand(brandText);
+          await addBrandToFirestore(brandText);
+        }
+      } catch (error) {
+        console.warn('Failed to persist brand', error);
+      } finally {
+        setConfirmModalVisible(false);
+        setStep('lot');
+        setConfirmationStep(null);
+        setIsFinalizing(false);
+      }
+      return;
+    }
+
+    if (confirmationStep === 'lot') {
+      if (!lotNumber) {
+        setErrorMessage(t('scan.errors.lotExtractFailed'));
+        setConfirmModalVisible(false);
+        return;
+      }
+
+      setIsFinalizing(true);
+      try {
+        const recalls = await fetchRecallsByCountry(country);
+        const product = await addProduct({
+          brand: brandText || DEFAULT_BRAND_NAME,
+          lotNumber
+        });
+
+        await updateRecall(product, recalls);
+
+        const productId = product.id;
+        resetFlow();
+        router.push({ pathname: '/details/[id]', params: { id: productId } });
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : t('scan.errors.scanFailed'));
+      } finally {
+        setConfirmModalVisible(false);
+        setConfirmationStep(null);
+        setIsFinalizing(false);
+      }
+    }
+  }, [
+    addBrandToFirestore,
+    addCustomBrand,
+    addProduct,
+    brandIsKnown,
+    brandText,
+    confirmationStep,
+    country,
+    fetchRecallsByCountry,
+    lotNumber,
+    resetFlow,
+    router,
+    t,
+    updateRecall
+  ]);
+
+  const handleRestart = useCallback(() => {
+    if (confirmationStep === 'brand') {
+      resetFlow();
+    } else if (confirmationStep === 'lot') {
+      setLotNumber('');
+      setOcrText('');
+      setErrorMessage('');
+      setStep('lot');
+    }
+    setConfirmModalVisible(false);
+    setConfirmationStep(null);
+  }, [confirmationStep, resetFlow]);
+
+  const handleManualFromModal = useCallback(() => {
+    setConfirmModalVisible(false);
+    resetFlow();
+    router.push('/manual-entry');
+  }, [resetFlow, router]);
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Scanner onCapture={handleCapture} isProcessing={isProcessing} />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
-        <View style={styles.instructions}>
-          <Text style={[styles.stepLabel, { color: colors.accent }]}>{stepLabel}</Text>
-          <Text style={[styles.instructionText, { color: colors.textPrimary }]}>{stepInstruction}</Text>
+        <View
+          style={[
+            styles.instructions,
+            step === 'brand'
+              ? {
+                  backgroundColor: colors.accentSoft,
+                  borderColor: colors.accent,
+                  shadowColor: colors.accent
+                }
+              : {
+                  backgroundColor: 'rgba(255,200,87,0.18)',
+                  borderColor: colors.warning,
+                  shadowColor: colors.warning
+                }
+          ]}
+        >
+          <Text
+            style={[
+              styles.stepLabel,
+              { color: step === 'brand' ? colors.accent : colors.warning }
+            ]}
+          >
+            {stepLabel}
+          </Text>
+          <Text
+            style={[
+              styles.instructionText,
+              step === 'brand' && styles.instructionHighlight,
+              { color: colors.textPrimary }
+            ]}
+          >
+            {stepInstruction}
+          </Text>
         </View>
 
         <View style={styles.statusRow}>
@@ -269,6 +379,63 @@ export function ScanScreen() {
           <Text style={[styles.manualButtonText, { color: colors.textPrimary }]}>{t('scan.manualEntry')}</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <Modal
+        visible={isConfirmModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setConfirmModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              {confirmationStep === 'brand' ? t('scan.confirmBrandTitle') : t('scan.confirmLotTitle')}
+            </Text>
+            <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
+              {confirmationStep === 'brand'
+                ? t('scan.confirmBrandMessage', { brand: brandText || t('common.unknown') })
+                : t('scan.confirmLotMessage', { lot: lotNumber || t('common.unknown') })}
+            </Text>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border }]}
+                onPress={handleRestart}
+                disabled={isFinalizing}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
+                  {t('scan.restart')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: colors.accent }]}
+                onPress={handleConfirm}
+                disabled={isFinalizing}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.surface }]}>
+                  {t('scan.validate')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.manualModalButton,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.accent
+                }
+              ]}
+              onPress={handleManualFromModal}
+              disabled={isFinalizing}
+            >
+              <Text style={[styles.manualModalButtonText, { color: colors.accent }]}>
+                {t('scan.manualEntry')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -286,7 +453,16 @@ const styles = StyleSheet.create({
     gap: 16
   },
   instructions: {
-    gap: 6
+    gap: 6,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6
   },
   stepLabel: {
     fontSize: 14,
@@ -295,6 +471,9 @@ const styles = StyleSheet.create({
   instructionText: {
     fontSize: 16,
     lineHeight: 22
+  },
+  instructionHighlight: {
+    fontWeight: '800'
   },
   statusRow: {
     flexDirection: 'row',
@@ -380,5 +559,54 @@ const styles = StyleSheet.create({
   manualButtonText: {
     fontSize: 16,
     fontWeight: '600'
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24
+  },
+  modalContent: {
+    width: '92%',
+    maxHeight: '90%',
+    borderRadius: 22,
+    padding: 24,
+    gap: 14
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '800'
+  },
+  modalMessage: {
+    fontSize: 16,
+    lineHeight: 22
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 8
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 14,
+    alignItems: 'center'
+  },
+  modalButtonText: {
+    fontSize: 14,
+    fontWeight: '700'
+  },
+  manualModalButton: {
+    width: '100%',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    marginTop: 12
+  },
+  manualModalButtonText: {
+    fontSize: 15,
+    fontWeight: '700'
   }
 });

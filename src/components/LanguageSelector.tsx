@@ -25,7 +25,7 @@ export function LanguageSelector() {
       >
         <Text style={styles.flag}>{currentFlag}</Text>
         <Text style={[styles.buttonText, { color: colors.textPrimary }]}>{currentLanguageName}</Text>
-        <Text style={[styles.arrow, { color: colors.textSecondary }]}>▼</Text>
+        <Text style={[styles.arrow, { color: colors.textSecondary }]}>▾</Text>
       </TouchableOpacity>
 
       <Modal

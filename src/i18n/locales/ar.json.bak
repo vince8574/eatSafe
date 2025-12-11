@@ -110,10 +110,10 @@
     "home": "الرئيسية",
     "scan": "مسح",
     "history": "السجل",
-    "language": "اللغة"
+    "language": "الإعدادات"
   },
   "language": {
-    "title": "لغة التطبيق",
+    "title": "الإعدادات",
     "subtitle": "اختر لغتك المفضلة للتطبيق."
   },
   "notifications": {

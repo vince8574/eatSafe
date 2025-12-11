@@ -91,7 +91,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="language"
         options={{
-          title: t('navigation.language'),
+          title: t('settings.title'),
           tabBarIcon: renderTabIcon(tabIcons.language)
         }}
       />

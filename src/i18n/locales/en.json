@@ -26,10 +26,15 @@
     "step": "Step {{current}}/{{total}}",
     "brandStep": "Step 1/2",
     "lotStep": "Step 2/2",
-    "brandInstruction": "Frame the product brand (photo deleted after capture).",
+    "brandInstruction": "Please scan the product brand.",
     "lotInstruction": "Clearly frame the lot number and capture the photo.",
     "brandAnalyzing": "Analyzing brand...",
     "lotAnalyzing": "Analyzing lot number...",
+    "confirmBrandTitle": "Confirm detected brand",
+    "confirmBrandMessage": "Detected brand: {{brand}}",
+    "confirmLotTitle": "Confirm lot number",
+    "confirmLotMessage": "Detected lot number: {{lot}}",
+    "validate": "Validate",
     "privacyInfo": "Photos are processed locally only and deleted immediately. No images are stored.",
     "brandLabel": "Brand",
     "lotLabel": "Lot",
@@ -129,10 +134,10 @@
     "home": "Home",
     "scan": "Scan",
     "history": "History",
-    "language": "Language"
+    "language": "Settings"
   },
   "language": {
-    "title": "App language",
+    "title": "Settings",
     "subtitle": "Choose your preferred language for the app."
   },
   "notifications": {

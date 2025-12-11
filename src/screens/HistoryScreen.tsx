@@ -5,6 +5,7 @@ import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { ScannedProduct } from '../types';
 import { useI18n } from '../i18n/I18nContext';
+import { StatusTag } from '../components/StatusTag';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
@@ -34,32 +35,6 @@ export function HistoryScreen() {
     return products.filter((product) => product.recallStatus === filter);
   }, [filter, products]);
 
-  const getStatusColor = (status: ScannedProduct['recallStatus']) => {
-    switch (status) {
-      case 'recalled':
-        return colors.danger;
-      case 'safe':
-        return colors.success;
-      case 'warning':
-        return colors.warning;
-      default:
-        return colors.textSecondary;
-    }
-  };
-
-  const getStatusBackgroundColor = (status: ScannedProduct['recallStatus']) => {
-    switch (status) {
-      case 'recalled':
-        return '#FF647C';
-      case 'safe':
-        return '#35F2A9';
-      case 'warning':
-        return '#FFC857';
-      default:
-        return '#FFC857';
-    }
-  };
-
   const renderItem = ({ item }: { item: ScannedProduct }) => (
     <TouchableOpacity
       style={[styles.item, { backgroundColor: colors.surface }]}
@@ -67,9 +42,7 @@ export function HistoryScreen() {
     >
       <View style={styles.itemHeader}>
         <Text style={[styles.brand, { color: colors.textPrimary }]}>{item.brand}</Text>
-        <View style={[styles.statusTag, { backgroundColor: getStatusBackgroundColor(item.recallStatus) }]}>
-          <Text style={styles.statusText}>{statusLabels[item.recallStatus]}</Text>
-        </View>
+        <StatusTag status={item.recallStatus} label={statusLabels[item.recallStatus]} />
       </View>
       <Text style={[styles.lot, { color: colors.textSecondary }]}>
         {t('productCard.lot', { lot: item.lotNumber })}
@@ -92,7 +65,7 @@ export function HistoryScreen() {
               <Image
                 source={require('../../assets/logo_eatsok.png')}
                 style={styles.logo}
-                resizeMode="contain"
+                resizeMode="cover"
               />
               <Text style={[styles.title, { color: colors.textPrimary }]}>
                 {t('history.fullTitle')}
@@ -200,17 +173,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     flex: 1,
     marginRight: 8
-  },
-  statusTag: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 999
-  },
-  statusText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#0C1413',
-    textTransform: 'uppercase'
   },
   lot: {
     fontSize: 16

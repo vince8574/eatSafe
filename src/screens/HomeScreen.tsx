@@ -32,7 +32,7 @@ export function HomeScreen() {
               <Image
                 source={require('../../assets/logo_eatsok.png')}
                 style={styles.logo}
-                resizeMode="contain"
+                resizeMode="cover"
               />
               <Text
                 style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}

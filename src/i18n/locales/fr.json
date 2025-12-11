@@ -26,10 +26,15 @@
     "step": "Étape {{current}}/{{total}}",
     "brandStep": "Étape 1/2",
     "lotStep": "Étape 2/2",
-    "brandInstruction": "Cadrez la marque du produit (photo supprimée après capture).",
+    "brandInstruction": "Veuillez scanner la marque du produit.",
     "lotInstruction": "Cadrez clairement le numéro de lot et capturez la photo.",
     "brandAnalyzing": "Analyse de la marque en cours...",
     "lotAnalyzing": "Analyse du numéro de lot en cours...",
+    "confirmBrandTitle": "Valider la marque détectée",
+    "confirmBrandMessage": "Marque détectée : {{brand}}",
+    "confirmLotTitle": "Valider le numéro de lot",
+    "confirmLotMessage": "Numéro de lot détecté : {{lot}}",
+    "validate": "Valider",
     "privacyInfo": "Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée.",
     "brandLabel": "Marque",
     "lotLabel": "Lot",
@@ -129,10 +134,10 @@
     "home": "Accueil",
     "scan": "Scanner",
     "history": "Historique",
-    "language": "Langue"
+    "language": "Paramètres"
   },
   "language": {
-    "title": "Langue de l'application",
+    "title": "Paramètres",
     "subtitle": "Choisissez la langue d'affichage de l'app."
   },
   "notifications": {

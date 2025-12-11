@@ -110,10 +110,10 @@
     "home": "Home",
     "scan": "Scanner",
     "history": "Cronologia",
-    "language": "Lingua"
+    "language": "Impostazioni"
   },
   "language": {
-    "title": "Lingua dell'app",
+    "title": "Impostazioni",
     "subtitle": "Scegli la lingua preferita per l'app."
   },
   "notifications": {

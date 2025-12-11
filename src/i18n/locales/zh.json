@@ -122,10 +122,10 @@
     "home": "首页",
     "scan": "扫描",
     "history": "历史",
-    "language": "语言"
+    "language": "设置"
   },
   "language": {
-    "title": "应用语言",
+    "title": "设置",
     "subtitle": "选择应用的显示语言。"
   },
   "notifications": {

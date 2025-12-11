@@ -122,10 +122,10 @@
     "home": "Startseite",
     "scan": "Scannen",
     "history": "Verlauf",
-    "language": "Sprache"
+    "language": "Einstellungen"
   },
   "language": {
-    "title": "App-Sprache",
+    "title": "Einstellungen",
     "subtitle": "Wähle die bevorzugte Sprache der App."
   },
   "notifications": {

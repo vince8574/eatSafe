@@ -110,10 +110,10 @@
     "home": "ホーム",
     "scan": "スキャン",
     "history": "履歴",
-    "language": "言語"
+    "language": "設定"
   },
   "language": {
-    "title": "アプリの言語",
+    "title": "設定",
     "subtitle": "アプリで使用する言語を選択してください。"
   },
   "notifications": {

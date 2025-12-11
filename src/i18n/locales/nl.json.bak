@@ -110,10 +110,10 @@
     "home": "Start",
     "scan": "Scannen",
     "history": "Geschiedenis",
-    "language": "Taal"
+    "language": "Instellingen"
   },
   "language": {
-    "title": "App-taal",
+    "title": "Instellingen",
     "subtitle": "Kies de gewenste taal voor de app."
   },
   "notifications": {
