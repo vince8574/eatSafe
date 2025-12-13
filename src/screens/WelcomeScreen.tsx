@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, AppState } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { useUserStore } from '../stores/useUserStore';
 import { NamePromptModal } from '../components/NamePromptModal';
+import { SplashAnimation } from '../components/SplashAnimation';
+import { GradientBackground } from '../components/GradientBackground';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -14,15 +17,50 @@ export function WelcomeScreen() {
   const router = useRouter();
   const { firstName, setFirstName } = useUserStore();
   const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+  const appState = useRef(AppState.currentState);
+  const isFirstRender = useRef(true);
 
+  // Gérer le retour au premier plan de l'application
   useEffect(() => {
-    if (!firstName) {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        // L'app revient au premier plan, relancer l'animation
+        setShowSplash(true);
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  // Relancer l'animation quand l'écran reçoit le focus
+  useFocusEffect(
+    useCallback(() => {
+      if (!isFirstRender.current) {
+        // Pas le premier rendu, donc on relance l'animation
+        setShowSplash(true);
+      } else {
+        // Premier rendu, on laisse l'animation se jouer normalement
+        isFirstRender.current = false;
+      }
+    }, [])
+  );
+
+  // Gérer l'affichage du prompt de nom après l'animation
+  useEffect(() => {
+    if (!firstName && !showSplash) {
       const timer = setTimeout(() => {
         setShowNamePrompt(true);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [firstName]);
+  }, [firstName, showSplash]);
 
   const handleSaveName = (name: string) => {
     setFirstName(name);
@@ -39,8 +77,19 @@ export function WelcomeScreen() {
 
   const displayName = firstName || t('common.unknown');
 
+  // Afficher l'animation de démarrage
+  if (showSplash) {
+    return (
+      <SplashAnimation
+        onAnimationComplete={() => {
+          setShowSplash(false);
+        }}
+      />
+    );
+  }
+
   return (
-    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
+    <GradientBackground>
       <View style={styles.content}>
         {/* Logo */}
         <View style={styles.logoContainer}>
@@ -79,7 +128,7 @@ export function WelcomeScreen() {
         onSave={handleSaveName}
         onSkip={handleSkipName}
       />
-    </View>
+    </GradientBackground>
   );
 }
 

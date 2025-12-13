@@ -4,23 +4,32 @@ import { usePreferencesStore } from '../src/stores/usePreferencesStore';
 
 export default function RootRedirect() {
   const { firstName, hasSeenWelcome } = usePreferencesStore();
-  const [hydrated, setHydrated] = useState(usePreferencesStore.persist.hasHydrated());
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const unsub = usePreferencesStore.persist.onFinishHydration(() => setHydrated(true));
-    return () => unsub?.();
+    const wasHydrated = usePreferencesStore.persist.hasHydrated();
+
+    if (wasHydrated) {
+      setHydrated(true);
+    } else {
+      const unsub = usePreferencesStore.persist.onFinishHydration(() => setHydrated(true));
+      return () => unsub?.();
+    }
   }, []);
 
-  if (!hydrated) return null;
+  // Attendre que les données soient chargées
+  if (!hydrated) {
+    return null;
+  }
+
+  // Déterminer la destination (l'animation sera affichée dans WelcomeScreen)
+  let path = '/welcome-daily';
 
   if (!firstName.trim()) {
-    return <Redirect href="/onboarding" />;
+    path = '/onboarding';
+  } else if (!hasSeenWelcome) {
+    path = '/welcome';
   }
 
-  if (!hasSeenWelcome) {
-    return <Redirect href="/welcome" />;
-  }
-
-  // Toujours rediriger vers la page de bienvenue quotidienne au démarrage
-  return <Redirect href="/welcome-daily" />;
+  return <Redirect href={path as any} />;
 }

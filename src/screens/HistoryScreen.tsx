@@ -6,6 +6,7 @@ import { useTheme } from '../theme/themeContext';
 import { ScannedProduct } from '../types';
 import { useI18n } from '../i18n/I18nContext';
 import { StatusTag } from '../components/StatusTag';
+import { GradientBackground } from '../components/GradientBackground';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
@@ -54,7 +55,7 @@ export function HistoryScreen() {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
+    <GradientBackground>
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
@@ -110,7 +111,7 @@ export function HistoryScreen() {
           </View>
         }
       />
-    </View>
+    </GradientBackground>
   );
 }
 

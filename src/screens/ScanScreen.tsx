@@ -13,8 +13,11 @@ import { useI18n } from '../i18n/I18nContext';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 import { addCustomBrand } from '../services/customBrandsService';
 import { addBrandToFirestore } from '../services/firestoreBrandsService';
+import { GradientBackground } from '../components/GradientBackground';
+import { getProductByBarcode } from '../services/openFoodFactsService';
 
 type Step = 'brand' | 'lot';
+type ScanMode = 'barcode' | 'ocr';
 
 export function ScanScreen() {
   const { colors } = useTheme();
@@ -34,6 +37,7 @@ export function ScanScreen() {
   const [confirmationStep, setConfirmationStep] = useState<Step | null>(null);
   const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
+  const [scanMode, setScanMode] = useState<ScanMode>('barcode'); // Par défaut, scanner le code-barres
 
   const brandMutation = useMutation({
     mutationFn: async (brandPhoto: string) => {
@@ -157,7 +161,9 @@ export function ScanScreen() {
       ? t('scan.brandAnalyzing')
       : t('scan.lotAnalyzing')
     : step === 'brand'
-      ? t('scan.brandInstruction')
+      ? scanMode === 'barcode'
+        ? t('scan.barcodeInstruction')
+        : t('scan.brandInstruction')
       : t('scan.lotInstruction');
 
   const resetDisabled = isProcessing;
@@ -247,14 +253,57 @@ export function ScanScreen() {
   }, [confirmationStep, resetFlow]);
 
   const handleManualFromModal = useCallback(() => {
-    setConfirmModalVisible(false);
-    resetFlow();
-    router.push('/manual-entry');
-  }, [resetFlow, router]);
+    if (confirmationStep === 'brand') {
+      // Valider la marque détectée et passer au scan du lot
+      setConfirmModalVisible(false);
+      setStep('lot');
+      setConfirmationStep(null);
+    } else if (confirmationStep === 'lot') {
+      // Valider le lot détecté et finaliser
+      handleConfirm();
+    }
+  }, [confirmationStep, handleConfirm]);
+
+  const handleBarcodeScanned = useCallback(async (barcode: string) => {
+    if (step !== 'brand' || brandCaptured) {
+      return;
+    }
+
+    console.log('[ScanScreen] Barcode scanned:', barcode);
+    setErrorMessage('');
+
+    try {
+      const productInfo = await getProductByBarcode(barcode);
+
+      if (productInfo) {
+        console.log('[ScanScreen] Product found:', productInfo);
+        setBrandText(productInfo.brand);
+        setBrandConfidence(1.0); // 100% de confiance avec le code-barres
+        setBrandIsKnown(true);
+        setBrandSuggestions([]);
+        setBrandCaptured(true);
+        setConfirmationStep('brand');
+        setConfirmModalVisible(true);
+      } else {
+        setErrorMessage(t('scan.errors.barcodeNotFound'));
+        // Basculer en mode OCR si le produit n'est pas trouvé
+        setScanMode('ocr');
+      }
+    } catch (error) {
+      console.error('[ScanScreen] Barcode scan error:', error);
+      setErrorMessage(t('scan.errors.barcodeScanFailed'));
+      setScanMode('ocr');
+    }
+  }, [step, brandCaptured, t]);
 
   return (
-    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
-      <Scanner onCapture={handleCapture} isProcessing={isProcessing} />
+    <GradientBackground>
+      <Scanner
+        onCapture={handleCapture}
+        onBarcodeScanned={step === 'brand' && scanMode === 'barcode' ? handleBarcodeScanned : undefined}
+        enableBarcodeScanning={step === 'brand' && scanMode === 'barcode'}
+        isProcessing={isProcessing}
+      />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
         <View style={styles.instructionsWrapper}>
@@ -366,6 +415,18 @@ export function ScanScreen() {
           <Text style={[styles.errorText, { color: colors.danger }]}>{errorMessage}</Text>
         ) : null}
 
+        {step === 'brand' && !brandCaptured && (
+          <TouchableOpacity
+            style={[styles.toggleModeButton, { backgroundColor: colors.surface }]}
+            onPress={() => setScanMode(scanMode === 'barcode' ? 'ocr' : 'barcode')}
+            disabled={isProcessing}
+          >
+            <Text style={[styles.toggleModeText, { color: colors.accent }]}>
+              {scanMode === 'barcode' ? t('scan.switchToOcr') : t('scan.switchToBarcode')}
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={[styles.resetButton, { backgroundColor: colors.surface, opacity: resetDisabled ? 0.5 : 1 }]}
           onPress={resetFlow}
@@ -438,7 +499,7 @@ export function ScanScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    </GradientBackground>
   );
 }
 
@@ -549,6 +610,18 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 15,
     marginTop: 8
+  },
+  toggleModeButton: {
+    marginTop: 8,
+    paddingVertical: 14,
+    borderRadius: 16,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#0A8F72'
+  },
+  toggleModeText: {
+    fontSize: 15,
+    fontWeight: '700'
   },
   resetButton: {
     marginTop: 8,

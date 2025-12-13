@@ -26,6 +26,7 @@
     "step": "Step {{current}}/{{total}}",
     "brandStep": "Step 1/2",
     "lotStep": "Step 2/2",
+    "barcodeInstruction": "Scan the product barcode to automatically identify the brand.",
     "brandInstruction": "Please scan the product brand.",
     "lotInstruction": "Clearly frame the lot number and capture the photo.",
     "brandAnalyzing": "Analyzing brand...",
@@ -46,12 +47,16 @@
     "detectedLot": "Detected lot number",
     "restart": "Restart",
     "manualEntry": "Manual entry",
+    "switchToOcr": "📸 Scan brand text",
+    "switchToBarcode": "📊 Scan barcode",
     "waitingForCapture": "Waiting for capture...",
     "errors": {
       "brandCaptureFailed": "Brand capture failed.",
       "scanFailed": "Scan failed.",
       "lotExtractFailed": "Unable to extract lot number automatically.",
-      "brandFirst": "Capture the brand before the lot number."
+      "brandFirst": "Capture the brand before the lot number.",
+      "barcodeNotFound": "Barcode not recognized. Try scanning the brand text.",
+      "barcodeScanFailed": "Barcode scan failed. Try scanning the brand text."
     }
   },
   "manualEntry": {

@@ -9,6 +9,7 @@ import { fetchRecallsByCountry } from '../services/apiService';
 import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
+import { GradientBackground } from '../components/GradientBackground';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
@@ -63,8 +64,9 @@ export function ManualEntryScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
-      <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
+    <GradientBackground>
+      <View style={styles.container}>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         {t('manualEntry.subtitle')}
       </Text>
@@ -97,7 +99,8 @@ export function ManualEntryScreen() {
           {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
         </Text>
       </TouchableOpacity>
-    </View>
+      </View>
+    </GradientBackground>
   );
 }
 

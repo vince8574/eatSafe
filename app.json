@@ -24,8 +24,13 @@
       "package": "com.eatsafe.app",
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ]
+        "android.permission.RECORD_AUDIO",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
+      ],
+      "notification": {
+        "icon": "./assets/adaptive-icon.png",
+        "color": "#0BAE86"
+      }
     },
     "assetBundlePatterns": [
       "assets/**"
@@ -49,7 +54,8 @@
         }
       ],
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      "expo-barcode-scanner"
     ],
     "experiments": {
       "typedRoutes": true

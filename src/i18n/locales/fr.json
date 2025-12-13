@@ -26,6 +26,7 @@
     "step": "Étape {{current}}/{{total}}",
     "brandStep": "Étape 1/2",
     "lotStep": "Étape 2/2",
+    "barcodeInstruction": "Scannez le code-barres du produit pour identifier la marque automatiquement.",
     "brandInstruction": "Veuillez scanner la marque du produit.",
     "lotInstruction": "Cadrez clairement le numéro de lot et capturez la photo.",
     "brandAnalyzing": "Analyse de la marque en cours...",
@@ -46,12 +47,16 @@
     "detectedLot": "Numéro de lot détecté",
     "restart": "Recommencer",
     "manualEntry": "Saisie manuelle",
+    "switchToOcr": "📸 Scanner le texte de la marque",
+    "switchToBarcode": "📊 Scanner le code-barres",
     "waitingForCapture": "En attente de capture...",
     "errors": {
       "brandCaptureFailed": "La capture de la marque a échoué.",
       "scanFailed": "Le scan a échoué.",
       "lotExtractFailed": "Impossible d'extraire le numéro de lot automatiquement.",
-      "brandFirst": "Capturez d'abord la marque avant le numéro de lot."
+      "brandFirst": "Capturez d'abord la marque avant le numéro de lot.",
+      "barcodeNotFound": "Code-barres non reconnu. Essayez de scanner le texte de la marque.",
+      "barcodeScanFailed": "Échec du scan du code-barres. Essayez de scanner le texte de la marque."
     }
   },
   "manualEntry": {

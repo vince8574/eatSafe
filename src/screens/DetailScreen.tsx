@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchAllRecalls } from '../services/apiService';
 import { RecallAlert } from '../components/RecallAlert';
 import { extractRecallReason } from '../utils/recallUtils';
+import { GradientBackground } from '../components/GradientBackground';
 
 export function DetailScreen() {
   const { colors } = useTheme();
@@ -30,17 +31,17 @@ export function DetailScreen() {
 
   if (!product) {
     return (
-      <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
+      <GradientBackground>
         <Text style={[styles.missingText, { color: colors.textSecondary }]}>
           {t('details.notFound')}
         </Text>
-      </View>
+      </GradientBackground>
     );
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: '#C4DECC' }]}>
-      <View style={styles.content}>
+    <GradientBackground>
+      <ScrollView contentContainerStyle={styles.content}>
         {/* Alerte de rappel en haut si le produit est contaminé */}
         {isRecalled && recall && (
           <View style={styles.section}>
@@ -83,8 +84,8 @@ export function DetailScreen() {
             <Text style={styles.deleteText}>{t('details.actions.delete')}</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 

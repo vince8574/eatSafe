@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
+import { GradientBackground } from '../components/GradientBackground';
 
 export function HomeScreen() {
   const { colors } = useTheme();
@@ -20,7 +21,7 @@ export function HomeScreen() {
   }, [products]);
 
   return (
-    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
+    <GradientBackground>
       <FlatList
         data={[]}
         keyExtractor={(item) => item.id}
@@ -77,7 +78,7 @@ export function HomeScreen() {
         ListEmptyComponent={null}
         scrollEnabled={false}
       />
-    </View>
+    </GradientBackground>
   );
 }
 

@@ -1,24 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { useTheme } from '../theme/themeContext';
 
 type ScannerProps = {
   onCapture: (uri: string) => Promise<void> | void;
+  onBarcodeScanned?: (barcode: string) => void;
   isProcessing?: boolean;
+  enableBarcodeScanning?: boolean;
 };
 
-export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
+export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, enableBarcodeScanning = false }: ScannerProps) {
   const { colors } = useTheme();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
 
   useEffect(() => {
     if (!permission) {
       requestPermission();
     }
   }, [permission, requestPermission]);
+
+  const handleBarcodeScanned = useCallback((scanningResult: BarcodeScanningResult) => {
+    if (!enableBarcodeScanning || isProcessing || !onBarcodeScanned) {
+      return;
+    }
+
+    const barcode = scanningResult.data;
+
+    // Éviter les scans multiples du même code-barres
+    if (barcode && barcode !== scannedBarcode) {
+      console.log('[Scanner] Barcode scanned:', barcode);
+      setScannedBarcode(barcode);
+      onBarcodeScanned(barcode);
+    }
+  }, [enableBarcodeScanning, isProcessing, onBarcodeScanned, scannedBarcode]);
 
   const handleCapture = useCallback(async () => {
     if (!cameraRef.current || isProcessing || !cameraReady) {
@@ -72,6 +90,14 @@ export function Scanner({ onCapture, isProcessing = false }: ScannerProps) {
           style={styles.camera}
           facing="back"
           onCameraReady={() => setCameraReady(true)}
+          barcodeScannerSettings={
+            enableBarcodeScanning
+              ? {
+                  barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e', 'code128', 'code39']
+                }
+              : undefined
+          }
+          onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
         <View pointerEvents="none" style={styles.overlay}>
           <View style={[styles.frame, { borderColor: colors.accent }]} />
