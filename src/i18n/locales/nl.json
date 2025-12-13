@@ -161,5 +161,22 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "welcomeScreen": {
+    "greeting": "Hallo {{name}}",
+    "question": "Welk product wilt u vandaag controleren?",
+    "startScanning": "Begin met scannen",
+    "namePromptTitle": "Welkom bij Eats OK",
+    "namePromptMessage": "Om uw ervaring te personaliseren, voer uw voornaam in:",
+    "namePromptPlaceholder": "Uw voornaam",
+    "namePromptSave": "Doorgaan",
+    "namePromptSkip": "Overslaan"
+  },
+  "legal": {
+    "sectionTitle": "Juridische Documenten",
+    "privacyPolicy": "Privacybeleid",
+    "terms": "Algemene Voorwaarden",
+    "legalNotice": "Juridische Kennisgeving",
+    "errorLoading": "Fout bij het laden van document"
   }
 }

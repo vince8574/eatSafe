@@ -1,16 +1,15 @@
 import { useMemo } from 'react';
-import { FlatList, StyleSheet, Text, View, RefreshControl, TouchableOpacity, Image } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ProductCard } from '../components/ProductCard';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 
 export function HomeScreen() {
-  const { colors, typography } = useTheme();
+  const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
-  const { products, isLoading, refetch } = useScannedProducts();
+  const { products } = useScannedProducts();
 
   const stats = useMemo(() => {
     const total = products.length;
@@ -21,25 +20,29 @@ export function HomeScreen() {
   }, [products]);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
       <FlatList
-        data={products}
+        data={[]}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View>
-            <View style={styles.titleContainer}>
+            {/* Logo centré en grand */}
+            <View style={styles.logoContainer}>
               <Image
                 source={require('../../assets/logo_eatsok.png')}
-                style={styles.logo}
-                resizeMode="cover"
+                style={styles.logoBig}
+                resizeMode="contain"
               />
-              <Text
-                style={[styles.title, { color: colors.textPrimary, fontSize: typography.title }]}
-              >
-                {t('home.title')}
-              </Text>
             </View>
+
+            {/* Titre centré */}
+            <Text
+              style={[styles.title, { color: colors.textPrimary }]}
+            >
+              {t('home.title')}
+            </Text>
+
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('home.subtitle')}
             </Text>
@@ -68,25 +71,11 @@ export function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('home.historyTitle')}</Text>
           </View>
         }
-        renderItem={({ item }) => (
-          <ProductCard
-            product={item}
-            onPress={() => router.push({ pathname: '/details/[id]', params: { id: item.id } })}
-          />
-        )}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              {t('home.emptyState')}
-            </Text>
-          </View>
-        }
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={() => refetch()} tintColor={colors.accent} />
-        }
+        renderItem={() => null}
+        ListEmptyComponent={null}
+        scrollEnabled={false}
       />
     </View>
   );
@@ -99,27 +88,36 @@ const styles = StyleSheet.create({
   list: {
     padding: 24
   },
-  titleContainer: {
-    flexDirection: 'row',
+  logoContainer: {
     alignItems: 'center',
-    gap: 12
+    marginBottom: 20,
+    marginTop: 10
   },
-  logo: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    overflow: 'hidden'
+  logoBig: {
+    width: 140,
+    height: 140,
+    borderRadius: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 12
   },
   title: {
+    fontFamily: 'Lora_700Bold',
+    fontSize: 46,
     fontWeight: '700',
     letterSpacing: 0.5,
-    flex: 1
+    textAlign: 'center',
+    marginBottom: 8
   },
   subtitle: {
     fontSize: 16,
-    marginTop: 8,
-    marginBottom: 24,
-    lineHeight: 24
+    marginTop: 4,
+    marginBottom: 28,
+    lineHeight: 24,
+    textAlign: 'center',
+    paddingHorizontal: 12
   },
   statsContainer: {
     flexDirection: 'row',

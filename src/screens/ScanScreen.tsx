@@ -253,43 +253,45 @@ export function ScanScreen() {
   }, [resetFlow, router]);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
       <Scanner onCapture={handleCapture} isProcessing={isProcessing} />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
-        <View
-          style={[
-            styles.instructions,
-            step === 'brand'
-              ? {
-                  backgroundColor: colors.accentSoft,
-                  borderColor: colors.accent,
-                  shadowColor: colors.accent
-                }
-              : {
-                  backgroundColor: 'rgba(255,200,87,0.18)',
-                  borderColor: colors.warning,
-                  shadowColor: colors.warning
-                }
-          ]}
-        >
-          <Text
+        <View style={styles.instructionsWrapper}>
+          <View
             style={[
-              styles.stepLabel,
-              { color: step === 'brand' ? colors.accent : colors.warning }
+              styles.instructions,
+              step === 'brand'
+                ? {
+                    backgroundColor: colors.accentSoft,
+                    borderColor: colors.accent,
+                    shadowColor: colors.accent
+                  }
+                : {
+                    backgroundColor: 'rgba(255,200,87,0.18)',
+                    borderColor: colors.warning,
+                    shadowColor: colors.warning
+                  }
             ]}
           >
-            {stepLabel}
-          </Text>
-          <Text
-            style={[
-              styles.instructionText,
-              step === 'brand' && styles.instructionHighlight,
-              { color: colors.textPrimary }
-            ]}
-          >
-            {stepInstruction}
-          </Text>
+            <Text
+              style={[
+                styles.stepLabel,
+                { color: step === 'brand' ? colors.accent : colors.warning }
+              ]}
+            >
+              {stepLabel}
+            </Text>
+            <Text
+              style={[
+                styles.instructionText,
+                step === 'brand' && styles.instructionHighlight,
+                { color: colors.textPrimary }
+              ]}
+            >
+              {stepInstruction}
+            </Text>
+          </View>
         </View>
 
         <View style={styles.statusRow}>
@@ -452,28 +454,36 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     gap: 16
   },
+  instructionsWrapper: {
+    backgroundColor: '#C4DECC',
+    borderRadius: 24,
+    padding: 6,
+    marginHorizontal: -8
+  },
   instructions: {
-    gap: 6,
-    borderWidth: 1,
+    gap: 10,
+    borderWidth: 2,
     borderColor: 'transparent',
-    borderRadius: 18,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    shadowOpacity: 0.16,
-    shadowRadius: 8,
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 6
+    elevation: 8
   },
   stepLabel: {
-    fontSize: 14,
-    fontWeight: '700'
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 0.5
   },
   instructionText: {
-    fontSize: 16,
-    lineHeight: 22
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '600'
   },
   instructionHighlight: {
-    fontWeight: '800'
+    fontWeight: '900'
   },
   statusRow: {
     flexDirection: 'row',

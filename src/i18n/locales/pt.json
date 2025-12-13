@@ -161,5 +161,22 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "welcomeScreen": {
+    "greeting": "Olá {{name}}",
+    "question": "Que produto você gostaria de verificar hoje?",
+    "startScanning": "Começar a digitalizar",
+    "namePromptTitle": "Bem-vindo ao Eats OK",
+    "namePromptMessage": "Para personalizar sua experiência, digite seu primeiro nome:",
+    "namePromptPlaceholder": "Seu primeiro nome",
+    "namePromptSave": "Continuar",
+    "namePromptSkip": "Pular"
+  },
+  "legal": {
+    "sectionTitle": "Documentos Legais",
+    "privacyPolicy": "Política de Privacidade",
+    "terms": "Termos de Serviço",
+    "legalNotice": "Aviso Legal",
+    "errorLoading": "Erro ao carregar documento"
   }
 }

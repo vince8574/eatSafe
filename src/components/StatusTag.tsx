@@ -17,31 +17,31 @@ const gradients: Record<RecallStatus, [string, string]> = {
 const shadows: Record<RecallStatus, ViewStyle> = {
   safe: {
     shadowColor: '#0BAE86',
-    shadowOpacity: 0.32,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 10,
-    elevation: 8
+    shadowOpacity: 0.4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    elevation: 10
   },
   recalled: {
     shadowColor: '#C62842',
-    shadowOpacity: 0.35,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 10,
-    elevation: 8
+    shadowOpacity: 0.45,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    elevation: 10
   },
   warning: {
     shadowColor: '#C88A16',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 8,
-    elevation: 6
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    elevation: 8
   },
   unknown: {
     shadowColor: '#243533',
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 6,
-    elevation: 5
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 8,
+    elevation: 6
   }
 };
 
@@ -65,39 +65,42 @@ export function StatusTag({ status, label }: StatusTagProps) {
 
 const styles = StyleSheet.create({
   tag: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.35)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.4)',
     overflow: 'hidden',
-    minWidth: 94,
+    minWidth: 100,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignSelf: 'flex-start'
   },
   text: {
-    fontSize: 12,
-    fontWeight: '800',
+    fontSize: 11,
+    fontWeight: '900',
     color: '#0C1413',
     textTransform: 'uppercase',
-    letterSpacing: 0.4
+    letterSpacing: 0.6
   },
   shine: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '55%',
-    backgroundColor: 'rgba(255,255,255,0.28)'
+    height: '50%',
+    backgroundColor: 'rgba(255,255,255,0.35)',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
   },
   bottomGlow: {
     position: 'absolute',
-    left: -20,
-    right: -20,
-    bottom: -10,
-    height: 28,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    transform: [{ skewX: '-12deg' }],
-    opacity: 0.8
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 12,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20
   }
 });

@@ -54,7 +54,7 @@ export function HistoryScreen() {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}

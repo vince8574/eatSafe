@@ -161,5 +161,22 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "welcomeScreen": {
+    "greeting": "Здраво {{name}}",
+    "question": "Који производ желите да проверите данас?",
+    "startScanning": "Почни скенирање",
+    "namePromptTitle": "Добродошли у Eats OK",
+    "namePromptMessage": "Да бисте персонализовали искуство, унесите своје име:",
+    "namePromptPlaceholder": "Ваше име",
+    "namePromptSave": "Настави",
+    "namePromptSkip": "Прескочи"
+  },
+  "legal": {
+    "sectionTitle": "Pravni dokumenti",
+    "privacyPolicy": "Politika privatnosti",
+    "terms": "Uslovi korišćenja",
+    "legalNotice": "Pravna obaveštenja",
+    "errorLoading": "Greška pri učitavanju dokumenta"
   }
 }

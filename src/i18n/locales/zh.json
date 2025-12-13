@@ -161,5 +161,22 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "welcomeScreen": {
+    "greeting": "你好 {{name}}",
+    "question": "今天您想检查哪种产品？",
+    "startScanning": "开始扫描",
+    "namePromptTitle": "欢迎使用 Eats OK",
+    "namePromptMessage": "为了个性化您的体验，请输入您的名字：",
+    "namePromptPlaceholder": "您的名字",
+    "namePromptSave": "继续",
+    "namePromptSkip": "跳过"
+  },
+  "legal": {
+    "sectionTitle": "法律文件",
+    "privacyPolicy": "隐私政策",
+    "terms": "服务条款",
+    "legalNotice": "法律声明",
+    "errorLoading": "文档加载错误"
   }
 }

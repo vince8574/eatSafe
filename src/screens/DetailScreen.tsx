@@ -30,7 +30,7 @@ export function DetailScreen() {
 
   if (!product) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
         <Text style={[styles.missingText, { color: colors.textSecondary }]}>
           {t('details.notFound')}
         </Text>
@@ -39,7 +39,7 @@ export function DetailScreen() {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+    <ScrollView style={[styles.container, { backgroundColor: '#C4DECC' }]}>
       <View style={styles.content}>
         {/* Alerte de rappel en haut si le produit est contaminé */}
         {isRecalled && recall && (

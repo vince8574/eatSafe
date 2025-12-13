@@ -161,5 +161,22 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "welcomeScreen": {
+    "greeting": "こんにちは {{name}}",
+    "question": "今日はどの製品を確認しますか？",
+    "startScanning": "スキャンを開始",
+    "namePromptTitle": "Eats OK へようこそ",
+    "namePromptMessage": "体験をパーソナライズするために、お名前を入力してください：",
+    "namePromptPlaceholder": "あなたの名前",
+    "namePromptSave": "続ける",
+    "namePromptSkip": "スキップ"
+  },
+  "legal": {
+    "sectionTitle": "法的文書",
+    "privacyPolicy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "legalNotice": "法的通知",
+    "errorLoading": "ドキュメントの読み込みエラー"
   }
 }

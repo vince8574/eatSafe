@@ -63,7 +63,7 @@ export function ManualEntryScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
       <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         {t('manualEntry.subtitle')}

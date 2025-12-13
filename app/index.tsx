@@ -21,5 +21,6 @@ export default function RootRedirect() {
     return <Redirect href="/welcome" />;
   }
 
-  return <Redirect href="/(tabs)/home" />;
+  // Toujours rediriger vers la page de bienvenue quotidienne au démarrage
+  return <Redirect href="/welcome-daily" />;
 }

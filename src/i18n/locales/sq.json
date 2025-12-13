@@ -161,5 +161,22 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "welcomeScreen": {
+    "greeting": "Përshëndetje {{name}}",
+    "question": "Cilin produkt dëshironi të kontrolloni sot?",
+    "startScanning": "Fillo skanimin",
+    "namePromptTitle": "Mirë se vini në Eats OK",
+    "namePromptMessage": "Për të personalizuar përvojën tuaj, ju lutemi shkruani emrin tuaj:",
+    "namePromptPlaceholder": "Emri juaj",
+    "namePromptSave": "Vazhdo",
+    "namePromptSkip": "Kalo"
+  },
+  "legal": {
+    "sectionTitle": "Dokumente Ligjore",
+    "privacyPolicy": "Politika e Privatësisë",
+    "terms": "Kushtet e Shërbimit",
+    "legalNotice": "Njoftim Ligjor",
+    "errorLoading": "Gabim në ngarkimin e dokumentit"
   }
 }
