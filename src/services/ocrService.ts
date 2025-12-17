@@ -7,9 +7,9 @@ import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 
 const preprocessConfig = {
-  resize: { width: 1920 }, // Augmenter la résolution pour meilleure précision
+  resize: { width: 1800 }, // Résolution optimale pour ML Kit (trop élevé peut dégrader la précision)
   format: SaveFormat.PNG,
-  compress: 1
+  compress: 1 // Pas de compression pour garder la qualité maximale
 } as const;
 
 const MLKIT_UNAVAILABLE_MESSAGE =
@@ -22,10 +22,18 @@ function ensureMlkitAvailable() {
 }
 
 export async function preprocessImage(uri: string) {
-  const manipulated = await manipulateAsync(uri, [{ resize: preprocessConfig.resize }], {
-    compress: preprocessConfig.compress,
-    format: preprocessConfig.format
-  });
+  // Appliquer plusieurs manipulations pour améliorer la qualité OCR
+  const manipulated = await manipulateAsync(
+    uri,
+    [
+      { resize: preprocessConfig.resize }, // Augmenter la résolution
+      // Pas de filtre sharpen car expo-image-manipulator ne le supporte pas nativement
+    ],
+    {
+      compress: preprocessConfig.compress,
+      format: preprocessConfig.format
+    }
+  );
 
   return manipulated.uri;
 }
@@ -192,75 +200,396 @@ export async function extractBrand(rawText: string): Promise<string> {
   return bestCandidate;
 }
 
-export async function extractLotNumber(rawText: string): Promise<string> {
+/**
+ * Essaie d'extraire le numéro de lot en cherchant un GTIN suivi d'un lot dans le texte OCR
+ *
+ * LOGIQUE COMPLÈTE :
+ * 1. Récupère TOUT le texte OCR brut (sans filtrage)
+ * 2. Cherche dans Rappel Conso les rappels pour cette marque
+ * 3. Pour chaque rappel, extrait tous les GTIN possibles (13-14 chiffres)
+ * 4. Cherche ces GTIN dans le texte OCR
+ * 5. Si trouvé, extrait le numéro de lot qui suit immédiatement le GTIN
+ * 6. Filtre automatiquement les "déchets" (dates, heures, etc.)
+ */
+async function extractLotFromGTIN(rawText: string, brand: string): Promise<string> {
+  console.log('[extractLotFromGTIN] === GTIN-BASED EXTRACTION ===');
+  console.log('[extractLotFromGTIN] Brand:', brand);
+  console.log('[extractLotFromGTIN] Full OCR text:', rawText);
+
+  try {
+    // Récupérer TOUS les rappels pour cette marque
+    const { fetchRecallsByCountry } = await import('./apiService');
+    const recalls = await fetchRecallsByCountry('FR');
+
+    const brandRecalls = recalls.filter(recall =>
+      recall.brand?.toLowerCase() === brand.toLowerCase()
+    );
+
+    if (brandRecalls.length === 0) {
+      console.log('[extractLotFromGTIN] ❌ No recalls found for this brand');
+      return '';
+    }
+
+    console.log(`[extractLotFromGTIN] ✓ Found ${brandRecalls.length} recall(s)`);
+
+    // Nettoyer le texte OCR : enlever SEULEMENT les espaces
+    const cleanedText = rawText.replace(/\s+/g, '').toUpperCase();
+    console.log('[extractLotFromGTIN] Cleaned text:', cleanedText);
+
+    // Pour chaque rappel
+    for (const recall of brandRecalls) {
+      console.log('[extractLotFromGTIN] --- Checking recall:', recall.id);
+
+      // Chercher dans TOUTES les informations d'identification
+      for (const lotInfo of recall.lotNumbers) {
+        console.log('[extractLotFromGTIN]   Recall identification:', lotInfo);
+
+        // Extraire TOUS les GTIN (13-14 chiffres consécutifs)
+        const gtinRegex = /\d{13,14}/g;
+        let match;
+
+        while ((match = gtinRegex.exec(lotInfo)) !== null) {
+          const gtin = match[0];
+          console.log(`[extractLotFromGTIN]   🔍 GTIN found in recall: ${gtin}`);
+
+          // Chercher ce GTIN dans le texte OCR
+          const gtinIndex = cleanedText.indexOf(gtin);
+
+          if (gtinIndex !== -1) {
+            console.log(`[extractLotFromGTIN]   ✓ GTIN FOUND in OCR at position ${gtinIndex}!`);
+
+            // Extraire ce qui suit immédiatement le GTIN
+            const afterGTIN = cleanedText.substring(gtinIndex + gtin.length);
+            console.log('[extractLotFromGTIN]   Text after GTIN:', afterGTIN);
+
+            // Pattern pour extraire le lot :
+            // - Peut commencer par L
+            // - Contient des lettres ET des chiffres
+            // - S'arrête avant : ou / (dates/heures) ou FH
+            const lotMatch = afterGTIN.match(/^L?([0-9]+[A-Z][A-Z0-9]*|[A-Z]+[0-9][A-Z0-9]*)/i);
+
+            if (lotMatch) {
+              let lot = lotMatch[1].toUpperCase();
+              console.log('[extractLotFromGTIN]   Raw lot match:', lot);
+
+              // Limiter à 15 caractères
+              if (lot.length > 15) {
+                lot = lot.substring(0, 15);
+              }
+
+              console.log(`[extractLotFromGTIN]   ✅ SUCCESS! Final lot: ${lot}`);
+              return lot;
+            } else {
+              console.log('[extractLotFromGTIN]   ⚠️ No valid lot pattern after GTIN');
+            }
+          }
+        }
+      }
+    }
+
+    console.log('[extractLotFromGTIN] ❌ No GTIN match in OCR');
+    return '';
+  } catch (error) {
+    console.error('[extractLotFromGTIN] ❌ Error:', error);
+    return '';
+  }
+}
+
+export async function extractLotNumber(rawText: string, brand?: string): Promise<string> {
   console.log('[extractLotNumber] Extracting lot number from OCR text');
+  console.log('[extractLotNumber] Raw text:', rawText);
 
-  // Patterns pour différents formats de numéros de lot
-  const patterns = [
-    // Formats avec préfixe "LOT" ou "L" (priorité la plus haute)
-    { regex: /\bL(?:OT)?[:\s-]*([A-Z0-9\-\/\.]{4,})/i, priority: 1, name: 'LOT prefix' },
-
-    // Formats avec "N°", "NO", "No" (deuxième priorité)
-    { regex: /\bN[O0°][:\s-]*([A-Z0-9\-\/\.]{4,})\b/i, priority: 2, name: 'NO prefix' },
-
-    // Format DDL (Date de Durabilité Limitée) suivi d'un lot
-    { regex: /DDL[:\s]*\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}[:\s]*L?[:\s]*([A-Z0-9\-\/\.]{4,})/i, priority: 3, name: 'DDL with lot' },
-
-    // GTIN/EAN (codes-barres)
-    { regex: /\b(?:GTIN|EAN)[:\s-]*([0-9]{8,14})\b/i, priority: 4, name: 'GTIN/EAN' },
-
-    // Format "lettres+chiffres" (ex: AB1234, LOT1234, L1234)
-    { regex: /\b([A-Z]{1,4}\d{4,})\b/i, priority: 5, name: 'Letters+digits' },
-
-    // Format "chiffres+lettres" (ex: 1234AB, 123456A)
-    { regex: /\b(\d{4,}[A-Z]{1,4})\b/i, priority: 6, name: 'Digits+letters' },
-
-    // Format "lettres-chiffres-lettres" (ex: L-1234-A)
-    { regex: /\b([A-Z]+[\-\/\.]\d{2,}[\-\/\.]?[A-Z]*)\b/i, priority: 7, name: 'Mixed with separators' },
-
-    // Numéros de lot purement numériques longs (min 6 chiffres)
-    { regex: /\b(\d{6,})\b/, priority: 8, name: 'Pure numeric' },
-
-    // Format date qui peut être un lot (DDMMYY, DDMMYYYY)
-    { regex: /\b(\d{6}|\d{8})\b/, priority: 9, name: 'Date format' }
-  ];
+  // Si on a la marque, essayer d'abord la méthode GTIN
+  if (brand) {
+    const gtinLot = await extractLotFromGTIN(rawText, brand);
+    if (gtinLot) {
+      console.log(`✅ [extractLotNumber] Using GTIN-based extraction: ${gtinLot}`);
+      return gtinLot;
+    }
+    console.log('[extractLotNumber] GTIN-based extraction failed, falling back to pattern matching');
+  }
 
   // Nettoyer le texte mais préserver les séparateurs importants
   const cleaned = rawText.replace(/\s+/g, ' ').trim();
   console.log('[extractLotNumber] Cleaned text:', cleaned);
 
-  // Essayer chaque pattern dans l'ordre de priorité
-  for (const { regex, name } of patterns) {
-    const match = cleaned.match(regex);
-    if (match && match[1] && match[1].length >= 4) {
-      console.log(`✅ Lot number found with pattern "${name}": ${match[1]}`);
-      return match[1].toUpperCase(); // Normaliser en majuscules
+  // Liste de mots-clés à exclure (codes-barres, dates, etc.)
+  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'À CONSOMMER'];
+
+  // Fonction pour vérifier si un texte contient des mots-clés à exclure
+  const containsExcludedKeyword = (text: string): boolean => {
+    const upperText = text.toUpperCase();
+    return excludeKeywords.some(keyword => upperText.includes(keyword));
+  };
+
+  // Fonction pour vérifier si c'est un numéro de téléphone (format français: 0 XXX XXX XXX ou 0XXXXXXXXX)
+  const isPhoneNumber = (text: string): boolean => {
+    // Nettoyer le texte (enlever espaces, tirets, points)
+    const cleaned = text.replace(/[\s\-\.]/g, '');
+    // Vérifier si c'est un numéro français (10 chiffres commençant par 0)
+    return /^0\d{9}$/.test(cleaned);
+  };
+
+  // Patterns pour différents formats de numéros de lot (ordre de priorité)
+  const patterns = [
+    // 1. Format "LOT" ou "L" suivi du numéro (PRIORITÉ ABSOLUE)
+    // Chercher "L" ou "LOT" même sans word boundary strict
+    {
+      regex: /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi,
+      name: 'LOT/L prefix',
+      priority: 1,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        // Chercher tous les patterns qui commencent par L ou LOT
+        const regex = /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          let lotNum = match[1].trim();
+
+          // Arrêter avant les chiffres qui ressemblent à une heure (HH:MM) ou une date (DD/YYYY)
+          // Exemple: "693 R2102R 13:31" -> on garde "693 R2102R"
+          lotNum = lotNum.replace(/\s*\d{1,2}[:\/]\d{2,4}.*$/gi, '');
+
+          // Arrêter si on trouve "FH" (souvent suivi de date)
+          lotNum = lotNum.replace(/\s*FH.*$/gi, '');
+
+          // Nettoyer le numéro de lot en enlevant les espaces internes
+          lotNum = lotNum.replace(/\s+/g, '');
+
+          // Filtrer les matches trop courts ou qui sont juste des lettres
+          if (lotNum.length >= 3 && /\d/.test(lotNum) && !isPhoneNumber(lotNum)) {
+            // Tronquer à une longueur raisonnable (enlever le surplus)
+            if (lotNum.length > 15) {
+              lotNum = lotNum.substring(0, 15);
+            }
+
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+
+    // 2. Format "N°" ou "NO" suivi du numéro
+    {
+      regex: /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi,
+      name: 'NO prefix',
+      priority: 2,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const lotNum = match[1].trim();
+          if (lotNum.length >= 3 && /\d/.test(lotNum) && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+
+    // 3. Format ligne complète commençant par "L" + chiffres (pattern de secours pour OCR imparfait)
+    // Ex: "L693 A 2102R" -> "L693A2102R" ou "693 A 2102R" -> "L693A2102R"
+    {
+      regex: /(?:^|\s)L?(\d+[A-Z0-9\s]*)/gi,
+      name: 'L at line start',
+      priority: 3,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /(?:^|\s)L?(\d+[A-Z0-9\s]*)/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          let lotNum = match[1].trim();
+
+          // Nettoyer les espaces
+          lotNum = lotNum.replace(/\s+/g, '');
+
+          // Vérifier qu'on a au moins 3 chiffres/lettres et qu'il y a des lettres (pas que des chiffres)
+          if (lotNum.length >= 3 && /\d/.test(lotNum) && /[A-Z]/i.test(lotNum) && !isPhoneNumber(lotNum)) {
+            // Tronquer à une longueur raisonnable
+            if (lotNum.length > 15) {
+              lotNum = lotNum.substring(0, 15);
+            }
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+
+    // 4. Format "lettres+chiffres" (ex: AB1234, LOT1234, L1234)
+    {
+      regex: /\b([A-Z]{1,3}\d{3,})\b/gi,
+      name: 'Letters+digits',
+      priority: 4,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\b([A-Z]{1,3}\d{3,})\b/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const lotNum = match[1];
+          // Exclure les codes-barres EAN/GTIN qui sont purement numériques après 1-2 lettres
+          if (lotNum.length <= 10 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+
+    // 5. Format "chiffres+lettres" (ex: 1234AB, 123456A)
+    {
+      regex: /\b(\d{3,}[A-Z]{1,3})\b/gi,
+      name: 'Digits+letters',
+      priority: 5,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\b(\d{3,}[A-Z]{1,3})\b/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const lotNum = match[1];
+          if (lotNum.length <= 10 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    }
+  ];
+
+  // Collecter TOUS les candidats de tous les patterns
+  const allCandidates: string[] = [];
+
+  for (const pattern of patterns) {
+    const matches = pattern.extract(cleaned);
+    if (matches.length > 0) {
+      console.log(`✅ Found ${matches.length} candidate(s) with pattern "${pattern.name}": ${matches.join(', ')}`);
+      allCandidates.push(...matches.map(m => m.toUpperCase()));
     }
   }
 
-  console.log('[extractLotNumber] No pattern matched, trying fallback...');
-
-  // Fallback plus flexible : chercher n'importe quel token avec lettres ET chiffres
-  const tokens = cleaned.split(/[\s,;]+/);
-  const fallback = tokens.find((token) => {
-    // Nettoyer le token des caractères spéciaux aux extrémités
-    const cleanToken = token.replace(/^[^\w]+|[^\w]+$/g, '');
-
-    return (
-      cleanToken.length >= 4 && // Au moins 4 caractères
-      /[A-Z]/i.test(cleanToken) && // Contient au moins une lettre
-      /\d/.test(cleanToken) // Contient au moins un chiffre
-    );
-  });
-
-  if (fallback) {
-    const cleanedFallback = fallback.replace(/^[^\w]+|[^\w]+$/g, '').toUpperCase();
-    console.log(`⚠️ Fallback lot number found: ${cleanedFallback}`);
-    return cleanedFallback;
+  // Retourner le premier candidat (pour compatibilité)
+  // mais tous les candidats seront disponibles via une nouvelle fonction
+  if (allCandidates.length > 0) {
+    const lotNumber = allCandidates[0];
+    console.log(`✅ Returning first lot number: ${lotNumber} (${allCandidates.length} total candidates)`);
+    return lotNumber;
   }
 
+  console.log('[extractLotNumber] No pattern matched with strict rules');
   console.log('❌ No lot number found');
   return '';
+}
+
+/**
+ * Extrait TOUS les candidats de numéros de lot possibles
+ */
+export async function extractAllLotCandidates(rawText: string, brand?: string): Promise<string[]> {
+  console.log('[extractAllLotCandidates] Extracting all lot candidates from OCR text');
+
+  const allCandidates: string[] = [];
+
+  // Si on a la marque, essayer d'abord la méthode GTIN
+  if (brand) {
+    const gtinLot = await extractLotFromGTIN(rawText, brand);
+    if (gtinLot) {
+      console.log(`✅ GTIN-based candidate: ${gtinLot}`);
+      allCandidates.push(gtinLot);
+    }
+  }
+
+  // Nettoyer le texte mais préserver les séparateurs importants
+  const cleaned = rawText.replace(/\s+/g, ' ').trim();
+
+  // Fonction pour vérifier si c'est un numéro de téléphone
+  const isPhoneNumber = (text: string): boolean => {
+    const cleanedNum = text.replace(/[\s\-\.]/g, '');
+    return /^0\d{9}$/.test(cleanedNum);
+  };
+
+  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'À CONSOMMER'];
+  const containsExcludedKeyword = (text: string): boolean => {
+    const upperText = text.toUpperCase();
+    return excludeKeywords.some(keyword => upperText.includes(keyword));
+  };
+
+  // Patterns (copie des patterns existants)
+  const patterns = [
+    {
+      regex: /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi,
+      name: 'LOT/L prefix',
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          let lotNum = match[1].trim();
+          lotNum = lotNum.replace(/\s*\d{1,2}[:\/]\d{2,4}.*$/gi, '');
+          lotNum = lotNum.replace(/\s*FH.*$/gi, '');
+          lotNum = lotNum.replace(/\s+/g, '');
+          if (lotNum.length >= 3 && /\d/.test(lotNum) && !isPhoneNumber(lotNum)) {
+            if (lotNum.length > 15) {
+              lotNum = lotNum.substring(0, 15);
+            }
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+    {
+      regex: /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi,
+      name: 'NO prefix',
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const lotNum = match[1].trim();
+          if (lotNum.length >= 3 && /\d/.test(lotNum) && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+    {
+      regex: /(?:^|\s)L?(\d+[A-Z0-9\s]*)/gi,
+      name: 'L at line start',
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /(?:^|\s)L?(\d+[A-Z0-9\s]*)/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          let lotNum = match[1].trim();
+          lotNum = lotNum.replace(/\s+/g, '');
+          if (lotNum.length >= 3 && /\d/.test(lotNum) && /[A-Z]/i.test(lotNum) && !isPhoneNumber(lotNum)) {
+            if (lotNum.length > 15) {
+              lotNum = lotNum.substring(0, 15);
+            }
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    }
+  ];
+
+  // Collecter tous les candidats
+  for (const pattern of patterns) {
+    const matches = pattern.extract(cleaned);
+    if (matches.length > 0) {
+      console.log(`✅ Pattern "${pattern.name}" found ${matches.length} candidate(s): ${matches.join(', ')}`);
+      allCandidates.push(...matches.map(m => m.toUpperCase()));
+    }
+  }
+
+  // Dédupliquer les candidats
+  const uniqueCandidates = [...new Set(allCandidates)];
+  console.log(`✅ Total unique candidates: ${uniqueCandidates.length}`);
+
+  return uniqueCandidates;
 }
 
 export interface BrandExtractionResult {
@@ -338,19 +667,22 @@ export async function performOcrForBrand(uri: string): Promise<BrandExtractionRe
 export interface LotExtractionResult {
   lot: string;
   result: OCRResult;
+  candidates?: string[]; // Tous les candidats de numéros de lot détectés
 }
 
-export async function performOcr(uri: string): Promise<LotExtractionResult> {
+export async function performOcr(uri: string, brand?: string): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
   const processed = await preprocessImage(uri);
-  
+
   try {
     const result = await runMlkit(processed);
-    const lot = await extractLotNumber(result.text);
+    const lot = await extractLotNumber(result.text, brand);
+    const candidates = await extractAllLotCandidates(result.text, brand);
 
     return {
       lot,
-      result
+      result,
+      candidates
     };
   } finally {
     try {

@@ -153,7 +153,9 @@
     "dailyCheck": {
       "title": "Verification Eats OK",
       "body": "Mise a jour quotidienne des rappels en cours."
-    }
+    },
+    "newRecallTitle": "⚠️ Nouveau rappel détecté",
+    "newRecallBody": "Le produit {{brand}} - Lot {{lot}} fait maintenant l'objet d'un rappel. Ne pas consommer."
   },
   "settings": {
     "title": "Paramètres",

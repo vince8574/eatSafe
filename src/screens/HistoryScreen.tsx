@@ -1,12 +1,15 @@
-import { useMemo, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { ScannedProduct } from '../types';
 import { useI18n } from '../i18n/I18nContext';
 import { StatusTag } from '../components/StatusTag';
 import { GradientBackground } from '../components/GradientBackground';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
+import { checkAllProductsForRecalls } from '../services/recallCheckService';
+import * as Notifications from 'expo-notifications';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
@@ -14,8 +17,10 @@ export function HistoryScreen() {
   const { colors } = useTheme();
   const { t, locale } = useI18n();
   const router = useRouter();
-  const { products } = useScannedProducts();
+  const { products, updateRecall } = useScannedProducts();
+  const country = usePreferencesStore((state) => state.country);
   const [filter, setFilter] = useState<Filter>('all');
+  const [isCheckingRecalls, setIsCheckingRecalls] = useState(false);
 
   const formatDate = useCallback(
     (value: string) => new Date(value).toLocaleString(locale || undefined),
@@ -28,6 +33,64 @@ export function HistoryScreen() {
     unknown: t('recallStatus.unknown'),
     warning: t('recallStatus.warning')
   };
+
+  // Automatic recall checking when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      async function checkForNewRecalls() {
+        if (products.length === 0) return;
+
+        setIsCheckingRecalls(true);
+        console.log('[HistoryScreen] Checking for new recalls...');
+
+        try {
+          const results = await checkAllProductsForRecalls(products, country);
+
+          if (results.length > 0) {
+            console.log(`[HistoryScreen] Found ${results.length} products with status changes`);
+
+            // Update each product with new recalls
+            for (const result of results) {
+              if (result.newRecalls.length > 0) {
+                // Product now has recalls
+                for (const recall of result.newRecalls) {
+                  updateRecall(result.productId, recall);
+                }
+
+                // Send notification
+                const product = products.find((p) => p.id === result.productId);
+                if (product) {
+                  await Notifications.scheduleNotificationAsync({
+                    content: {
+                      title: t('notifications.newRecallTitle'),
+                      body: t('notifications.newRecallBody', {
+                        brand: product.brand,
+                        lot: product.lotNumber
+                      })
+                    },
+                    trigger: null
+                  });
+                }
+              } else {
+                // Product no longer recalled (rare case)
+                console.log(
+                  `[HistoryScreen] Product ${result.productId} is no longer recalled`
+                );
+              }
+            }
+          } else {
+            console.log('[HistoryScreen] No status changes detected');
+          }
+        } catch (error) {
+          console.error('[HistoryScreen] Error checking recalls:', error);
+        } finally {
+          setIsCheckingRecalls(false);
+        }
+      }
+
+      checkForNewRecalls();
+    }, [products, country, updateRecall, t])
+  );
 
   const filtered = useMemo(() => {
     if (filter === 'all') {
@@ -71,6 +134,9 @@ export function HistoryScreen() {
               <Text style={[styles.title, { color: colors.textPrimary }]}>
                 {t('history.fullTitle')}
               </Text>
+              {isCheckingRecalls && (
+                <ActivityIndicator size="small" color={colors.accent} style={styles.spinner} />
+              )}
             </View>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('history.subtitle')}
@@ -132,6 +198,9 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 10,
     overflow: 'hidden'
+  },
+  spinner: {
+    marginLeft: 8
   },
   title: {
     fontSize: 26,

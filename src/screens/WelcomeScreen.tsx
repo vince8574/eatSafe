@@ -19,7 +19,6 @@ export function WelcomeScreen() {
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const appState = useRef(AppState.currentState);
-  const isFirstRender = useRef(true);
 
   // Gérer le retour au premier plan de l'application
   useEffect(() => {
@@ -42,13 +41,8 @@ export function WelcomeScreen() {
   // Relancer l'animation quand l'écran reçoit le focus
   useFocusEffect(
     useCallback(() => {
-      if (!isFirstRender.current) {
-        // Pas le premier rendu, donc on relance l'animation
-        setShowSplash(true);
-      } else {
-        // Premier rendu, on laisse l'animation se jouer normalement
-        isFirstRender.current = false;
-      }
+      // Relancer l'animation à chaque fois que l'écran reçoit le focus
+      setShowSplash(true);
     }, [])
   );
 
@@ -75,6 +69,10 @@ export function WelcomeScreen() {
     router.push('/(tabs)/scan');
   };
 
+  const handleGoToHome = () => {
+    router.push('/(tabs)/home');
+  };
+
   const displayName = firstName || t('common.unknown');
 
   // Afficher l'animation de démarrage
@@ -94,7 +92,7 @@ export function WelcomeScreen() {
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../assets/logo_eatsok.png')}
+            source={require('../../assets/pomme.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -118,6 +116,17 @@ export function WelcomeScreen() {
         >
           <Text style={[styles.startButtonText, { color: colors.surface }]}>
             {t('welcomeScreen.startScanning')}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Home Button */}
+        <TouchableOpacity
+          style={[styles.homeButton, { backgroundColor: colors.surface, borderColor: colors.accent }]}
+          onPress={handleGoToHome}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.homeButtonText, { color: colors.accent }]}>
+            Accueil
           </Text>
         </TouchableOpacity>
       </View>
@@ -188,6 +197,20 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: 18,
     fontWeight: '800',
+    textAlign: 'center',
+    letterSpacing: 0.5
+  },
+  homeButton: {
+    marginTop: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 48,
+    borderRadius: 28,
+    borderWidth: 2,
+    minWidth: 260
+  },
+  homeButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
     textAlign: 'center',
     letterSpacing: 0.5
   }

@@ -3,14 +3,17 @@ import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'rea
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { useTheme } from '../theme/themeContext';
 
+type ScannerMode = 'barcode' | 'photo';
+
 type ScannerProps = {
   onCapture: (uri: string) => Promise<void> | void;
   onBarcodeScanned?: (barcode: string) => void;
   isProcessing?: boolean;
   enableBarcodeScanning?: boolean;
+  mode?: ScannerMode; // 'barcode' pour scan code-barres, 'photo' pour capture photo
 };
 
-export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, enableBarcodeScanning = false }: ScannerProps) {
+export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, enableBarcodeScanning = false, mode = 'photo' }: ScannerProps) {
   const { colors } = useTheme();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
@@ -100,22 +103,35 @@ export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, ena
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
         <View pointerEvents="none" style={styles.overlay}>
-          <View style={[styles.frame, { borderColor: colors.accent }]} />
+          {mode === 'barcode' ? (
+            // Cible carrée pour le scan de code-barres
+            <View style={styles.barcodeTarget}>
+              <View style={[styles.corner, styles.topLeft, { borderColor: colors.accent }]} />
+              <View style={[styles.corner, styles.topRight, { borderColor: colors.accent }]} />
+              <View style={[styles.corner, styles.bottomLeft, { borderColor: colors.accent }]} />
+              <View style={[styles.corner, styles.bottomRight, { borderColor: colors.accent }]} />
+            </View>
+          ) : (
+            // Cadre classique pour la capture photo
+            <View style={[styles.frame, { borderColor: colors.accent }]} />
+          )}
         </View>
       </View>
-      <View style={styles.controls}>
-        <TouchableOpacity
-          style={[styles.captureButton, { borderColor: colors.textPrimary }]}
-          onPress={handleCapture}
-          disabled={!cameraReady || isProcessing}
-        >
-          {isProcessing ? (
-            <ActivityIndicator color={colors.accent} />
-          ) : (
-            <View style={[styles.captureInner, { backgroundColor: colors.accent }]} />
-          )}
-        </TouchableOpacity>
-      </View>
+      {mode === 'photo' && (
+        <View style={styles.controls}>
+          <TouchableOpacity
+            style={[styles.captureButton, { borderColor: colors.surface, backgroundColor: 'rgba(0,0,0,0.3)' }]}
+            onPress={handleCapture}
+            disabled={!cameraReady || isProcessing}
+          >
+            {isProcessing ? (
+              <ActivityIndicator color={colors.accent} />
+            ) : (
+              <Text style={styles.cameraIcon}>📸</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -141,6 +157,41 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 24
   },
+  barcodeTarget: {
+    width: 280,
+    height: 280,
+    position: 'relative'
+  },
+  corner: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    borderWidth: 4
+  },
+  topLeft: {
+    top: 0,
+    left: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 0
+  },
+  topRight: {
+    top: 0,
+    right: 0,
+    borderLeftWidth: 0,
+    borderBottomWidth: 0
+  },
+  bottomLeft: {
+    bottom: 0,
+    left: 0,
+    borderRightWidth: 0,
+    borderTopWidth: 0
+  },
+  bottomRight: {
+    bottom: 0,
+    right: 0,
+    borderLeftWidth: 0,
+    borderTopWidth: 0
+  },
   controls: {
     position: 'absolute',
     bottom: 40,
@@ -149,10 +200,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   captureButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    borderWidth: 4,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    borderWidth: 3,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -160,6 +211,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24
+  },
+  cameraIcon: {
+    fontSize: 36
   },
   permissionContainer: {
     flex: 1,

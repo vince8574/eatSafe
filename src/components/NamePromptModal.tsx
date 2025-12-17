@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
+import { GradientBackground } from './GradientBackground';
 
 interface NamePromptModalProps {
   visible: boolean;
@@ -29,69 +30,71 @@ export function NamePromptModal({ visible, onSave, onSkip }: NamePromptModalProp
   return (
     <Modal
       visible={visible}
-      transparent
+      transparent={false}
       animationType="fade"
       onRequestClose={handleSkip}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.overlay}
-      >
-        <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            {t('welcomeScreen.namePromptTitle')}
-          </Text>
-          <Text style={[styles.message, { color: colors.textSecondary }]}>
-            {t('welcomeScreen.namePromptMessage')}
-          </Text>
+      <GradientBackground>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.overlay}
+        >
+          <View style={[styles.modalContent, { backgroundColor: 'rgba(255, 255, 255, 0.95)' }]}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>
+              {t('welcomeScreen.namePromptTitle')}
+            </Text>
+            <Text style={[styles.message, { color: colors.textSecondary }]}>
+              {t('welcomeScreen.namePromptMessage')}
+            </Text>
 
-          <TextInput
-            style={[
-              styles.input,
-              {
-                backgroundColor: colors.surfaceAlt,
-                color: colors.textPrimary,
-                borderColor: colors.border
-              }
-            ]}
-            placeholder={t('welcomeScreen.namePromptPlaceholder')}
-            placeholderTextColor={colors.textSecondary}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-            autoFocus
-            onSubmitEditing={handleSave}
-          />
-
-          <View style={styles.buttons}>
-            <TouchableOpacity
-              style={[styles.button, styles.skipButton, { backgroundColor: colors.surfaceAlt }]}
-              onPress={handleSkip}
-            >
-              <Text style={[styles.buttonText, { color: colors.textSecondary }]}>
-                {t('welcomeScreen.namePromptSkip')}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
+            <TextInput
               style={[
-                styles.button,
-                styles.saveButton,
+                styles.input,
                 {
-                  backgroundColor: colors.accent,
-                  opacity: name.trim() ? 1 : 0.5
+                  backgroundColor: colors.surfaceAlt,
+                  color: colors.textPrimary,
+                  borderColor: colors.border
                 }
               ]}
-              onPress={handleSave}
-              disabled={!name.trim()}
-            >
-              <Text style={[styles.buttonText, { color: colors.surface }]}>
-                {t('welcomeScreen.namePromptSave')}
-              </Text>
-            </TouchableOpacity>
+              placeholder={t('welcomeScreen.namePromptPlaceholder')}
+              placeholderTextColor={colors.textSecondary}
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="words"
+              autoFocus
+              onSubmitEditing={handleSave}
+            />
+
+            <View style={styles.buttons}>
+              <TouchableOpacity
+                style={[styles.button, styles.skipButton, { backgroundColor: colors.surfaceAlt }]}
+                onPress={handleSkip}
+              >
+                <Text style={[styles.buttonText, { color: colors.textSecondary }]}>
+                  {t('welcomeScreen.namePromptSkip')}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  styles.saveButton,
+                  {
+                    backgroundColor: colors.accent,
+                    opacity: name.trim() ? 1 : 0.5
+                  }
+                ]}
+                onPress={handleSave}
+                disabled={!name.trim()}
+              >
+                <Text style={[styles.buttonText, { color: colors.surface }]}>
+                  {t('welcomeScreen.namePromptSave')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </GradientBackground>
     </Modal>
   );
 }
@@ -99,7 +102,6 @@ export function NamePromptModal({ visible, onSave, onSkip }: NamePromptModalProp
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24

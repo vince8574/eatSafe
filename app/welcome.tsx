@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../src/theme/themeContext';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
@@ -18,12 +18,24 @@ export default function WelcomeScreen() {
     return () => clearTimeout(timer);
   }, [router, setHasSeenWelcome]);
 
+  const handleGoToHome = () => {
+    setHasSeenWelcome(true);
+    router.replace('/(tabs)/home');
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.center}>
-        <Image source={require('../assets/logo_eatsok.png')} style={styles.logo} resizeMode="contain" />
+        <Image source={require('../assets/pomme.png')} style={styles.logo} resizeMode="contain" />
         <Text style={[styles.greeting, { color: colors.textPrimary }]}>Bonjour {firstName || ''}</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Quel produit voulez-vous vérifier aujourd'hui ?</Text>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: colors.accent }]}
+          onPress={handleGoToHome}
+        >
+          <Text style={[styles.buttonText, { color: colors.surface }]}>Accéder à l'application</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -52,5 +64,16 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 15,
     textAlign: 'center'
+  },
+  button: {
+    marginTop: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 16,
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '700'
   }
 });

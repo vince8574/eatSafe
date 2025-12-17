@@ -21,8 +21,6 @@ interface SplashAnimationProps {
 export function SplashAnimation({ onAnimationComplete }: SplashAnimationProps) {
   // Valeurs animées
   const scale = useSharedValue(0.1);
-  const rotateX = useSharedValue(0);
-  const rotateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const opacity = useSharedValue(1);
@@ -43,22 +41,7 @@ export function SplashAnimation({ onAnimationComplete }: SplashAnimationProps) {
         withTiming(0.3, { duration: 750 })
       );
 
-      // 2. Rotation 3D pendant le grossissement (0-2s)
-      rotateX.value = withSequence(
-        withTiming(360, {
-          duration: 2000,
-          easing: Easing.inOut(Easing.ease),
-        })
-      );
-
-      rotateY.value = withSequence(
-        withTiming(360, {
-          duration: 2000,
-          easing: Easing.inOut(Easing.ease),
-        })
-      );
-
-      // 3. Réduction à la taille normale (1.5-2.5s)
+      // 2. Réduction à la taille normale (1.5-2.5s)
       scale.value = withDelay(
         1500,
         withTiming(1, {
@@ -108,12 +91,9 @@ export function SplashAnimation({ onAnimationComplete }: SplashAnimationProps) {
   const animatedLogoStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        { perspective: 1000 },
         { translateX: translateX.value },
         { translateY: translateY.value },
         { scale: scale.value },
-        { rotateX: `${rotateX.value}deg` },
-        { rotateY: `${rotateY.value}deg` },
       ],
       opacity: opacity.value,
     };
@@ -148,7 +128,7 @@ export function SplashAnimation({ onAnimationComplete }: SplashAnimationProps) {
       {/* Logo animé */}
       <Animated.View style={[styles.logoContainer, animatedLogoStyle]}>
         <Image
-          source={require('../../assets/logo_eatsok.png')}
+          source={require('../../assets/pomme.png')}
           style={styles.logo}
           resizeMode="contain"
         />
