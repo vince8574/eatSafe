@@ -11,9 +11,10 @@ type ScannerProps = {
   isProcessing?: boolean;
   enableBarcodeScanning?: boolean;
   mode?: ScannerMode; // 'barcode' pour scan code-barres, 'photo' pour capture photo
+  resetToken?: number; // change pour forcer un remount de la camÇ¸ra
 };
 
-export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, enableBarcodeScanning = false, mode = 'photo' }: ScannerProps) {
+export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, enableBarcodeScanning = false, mode = 'photo', resetToken }: ScannerProps) {
   const { colors } = useTheme();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
@@ -62,6 +63,12 @@ export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, ena
     }
   }, [isProcessing, onCapture, cameraReady]);
 
+  // Forcer un reset (remontage) du composant camÇ¸ra
+  useEffect(() => {
+    setScannedBarcode(null);
+    setCameraReady(false);
+  }, [resetToken]);
+
   if (!permission) {
     return (
       <View style={styles.permissionContainer}>
@@ -89,6 +96,7 @@ export function Scanner({ onCapture, onBarcodeScanned, isProcessing = false, ena
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
         <CameraView
+          key={resetToken}
           ref={cameraRef}
           style={styles.camera}
           facing="back"

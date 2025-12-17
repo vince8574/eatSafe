@@ -6,6 +6,7 @@ import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
 import { getProductByBarcode } from '../services/openFoodFactsService';
+import { useFocusEffect } from '@react-navigation/native';
 
 export function ScanScreen() {
   const { colors } = useTheme();
@@ -16,6 +17,7 @@ export function ScanScreen() {
   const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
   const [isEditingBrand, setIsEditingBrand] = useState(false);
   const [editedBrand, setEditedBrand] = useState('');
+  const [scannerResetToken, setScannerResetToken] = useState(0);
 
   const resetFlow = useCallback(() => {
     setBrandText('');
@@ -23,7 +25,16 @@ export function ScanScreen() {
     setConfirmModalVisible(false);
     setIsEditingBrand(false);
     setEditedBrand('');
+    setScannerResetToken((t) => t + 1);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Remonter la camÇ¸ra quand on revient sur l'Ç¸cran
+      setScannerResetToken((t) => t + 1);
+      return () => {};
+    }, [])
+  );
 
   const handleConfirm = useCallback(() => {
     const finalBrand = isEditingBrand ? editedBrand.trim() : brandText;
@@ -90,6 +101,7 @@ export function ScanScreen() {
         enableBarcodeScanning={true}
         isProcessing={false}
         mode="barcode"
+        resetToken={scannerResetToken}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>

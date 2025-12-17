@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMutation } from '@tanstack/react-query';
@@ -13,6 +14,10 @@ import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
 import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
+
+function normalizeLotValue(lot: string) {
+  return lot.replace(/\s+/g, '').replace(/[-_\.]/g, '').toUpperCase();
+}
 
 export function ScanLotScreen() {
   const { colors } = useTheme();
@@ -35,6 +40,7 @@ export function ScanLotScreen() {
   const [matchedLot, setMatchedLot] = useState<string>('');
   const [matchedRecall, setMatchedRecall] = useState<any>(null);
   const [showRecallAlert, setShowRecallAlert] = useState(false);
+  const [scannerResetToken, setScannerResetToken] = useState(0);
 
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
@@ -93,10 +99,12 @@ export function ScanLotScreen() {
   const resetFlow = useCallback(() => {
     setOcrText('');
     setLotNumber('');
+    setLotCandidates([]);
     setErrorMessage('');
     setConfirmModalVisible(false);
     setIsEditingLot(false);
     setEditedLot('');
+    setScannerResetToken((token) => token + 1);
   }, []);
 
   const handleCapture = useCallback(
@@ -120,6 +128,10 @@ export function ScanLotScreen() {
 
   const handleConfirm = useCallback(async () => {
     const finalLot = isEditingLot ? editedLot.trim().toUpperCase() : lotNumber;
+    const normalizedOcrText = normalizeLotValue(ocrText || '');
+    const candidatesForMatch = [finalLot, ...lotCandidates]
+      .filter(Boolean)
+      .map((candidate) => normalizeLotValue(candidate));
 
     if (!finalLot || !brand) {
       setErrorMessage(t('scan.errors.lotExtractFailed'));
@@ -140,34 +152,41 @@ export function ScanLotScreen() {
       }
 
       const recallList = await fetchRecallsByCountry(country);
-      const productId = addProduct({
+      const product = await addProduct({
         brand,
-        lot: finalLot,
-        scannedAt: new Date().toISOString()
+        lotNumber: finalLot
       });
 
       const matchingRecalls = recallList.filter((recall) => {
-        const brandMatch = recall.marque?.toLowerCase() === brand.toLowerCase();
-        const lotMatch =
-          recall.lotNumber?.toLowerCase() === finalLot.toLowerCase() ||
-          recall.lotNumber === '';
+        const brandMatch = recall.brand ? recall.brand.toLowerCase() === brand.toLowerCase() : true;
+        if (!recall.lotNumbers || recall.lotNumbers.length === 0) {
+          return brandMatch;
+        }
+
+        const lotMatch = recall.lotNumbers.some((lot) => {
+          const normalizedRecallLot = normalizeLotValue(lot);
+          if (!normalizedRecallLot) {
+            return false;
+          }
+
+          const candidateHit = candidatesForMatch.some(
+            (candidate) =>
+              candidate.includes(normalizedRecallLot) || normalizedRecallLot.includes(candidate)
+          );
+          const inFullText = normalizedOcrText.includes(normalizedRecallLot);
+
+          return candidateHit || inFullText;
+        });
+
         return brandMatch && lotMatch;
       });
 
       if (matchingRecalls.length > 0) {
-        matchingRecalls.forEach((recall) => {
-          updateRecall(productId, {
-            id: recall.id,
-            risque: recall.risque,
-            motif: recall.motif,
-            marque: recall.marque,
-            lotNumber: recall.lotNumber
-          });
-        });
+        await updateRecall(product, matchingRecalls);
       }
 
       resetFlow();
-      router.replace(`/details?productId=${productId}`);
+      router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('scan.errors.scanFailed'));
     } finally {
@@ -181,6 +200,8 @@ export function ScanLotScreen() {
     lotNumber,
     isEditingLot,
     editedLot,
+    ocrText,
+    lotCandidates,
     resetFlow,
     router,
     t,
@@ -190,10 +211,12 @@ export function ScanLotScreen() {
   const handleRestart = useCallback(() => {
     setLotNumber('');
     setOcrText('');
+    setLotCandidates([]);
     setErrorMessage('');
     setConfirmModalVisible(false);
     setIsEditingLot(false);
     setEditedLot('');
+    setScannerResetToken((token) => token + 1);
   }, []);
 
   const handleEditLot = useCallback(() => {
@@ -211,6 +234,13 @@ export function ScanLotScreen() {
     router.back();
   }, [router]);
 
+  useFocusEffect(
+    useCallback(() => {
+      setScannerResetToken((token) => token + 1);
+      return () => {};
+    }, [])
+  );
+
   return (
     <GradientBackground>
       <Scanner
@@ -218,6 +248,7 @@ export function ScanLotScreen() {
         enableBarcodeScanning={false}
         isProcessing={isProcessing}
         mode="photo"
+        resetToken={scannerResetToken}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
@@ -281,11 +312,6 @@ export function ScanLotScreen() {
           </View>
         </View>
 
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('scan.ocrExtraction')}</Text>
-        <Text style={[styles.paragraph, { color: colors.textSecondary }]}>
-          {ocrText || t('scan.waitingForCapture')}
-        </Text>
-
         <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('scan.detectedLot')}</Text>
         <Text style={[styles.lotText, { color: colors.accent }]}>{lotNumber || '--'}</Text>
 
@@ -323,35 +349,6 @@ export function ScanLotScreen() {
 
             {isEditingLot ? (
               <>
-                {lotCandidates.length > 0 && (
-                  <>
-                    <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                      Numéros de lot détectés (cliquez pour sélectionner) :
-                    </Text>
-                    <View style={styles.candidatesContainer}>
-                      {lotCandidates.map((candidate, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          style={[
-                            styles.candidateButton,
-                            {
-                              backgroundColor: editedLot === candidate ? colors.accent : colors.surfaceAlt,
-                              borderColor: colors.accent
-                            }
-                          ]}
-                          onPress={() => setEditedLot(candidate)}
-                        >
-                          <Text style={[
-                            styles.candidateText,
-                            { color: editedLot === candidate ? colors.surface : colors.textPrimary }
-                          ]}>
-                            {candidate}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </>
-                )}
                 <Text style={[styles.modalMessage, { color: colors.textSecondary, marginTop: 12 }]}>
                   Ou modifier manuellement :
                 </Text>
@@ -423,13 +420,6 @@ export function ScanLotScreen() {
                   </View>
                 )}
 
-                {lotCandidates.length > 0 && (
-                  <>
-                    <Text style={[styles.modalMessage, { color: colors.textSecondary, marginTop: 12 }]}>
-                      Candidats détectés : {lotCandidates.join(', ')}
-                    </Text>
-                  </>
-                )}
 
                 <TouchableOpacity
                   style={[styles.editButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}

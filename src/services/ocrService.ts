@@ -310,7 +310,7 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
   }
 
   // Nettoyer le texte mais préserver les séparateurs importants
-  const cleaned = rawText.replace(/\s+/g, ' ').trim();
+  const cleaned = rawText.replace(/[^\w\s/:.-]/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
   console.log('[extractLotNumber] Cleaned text:', cleaned);
 
   // Liste de mots-clés à exclure (codes-barres, dates, etc.)
@@ -359,8 +359,8 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
           // Filtrer les matches trop courts ou qui sont juste des lettres
           if (lotNum.length >= 3 && /\d/.test(lotNum) && !isPhoneNumber(lotNum)) {
             // Tronquer à une longueur raisonnable (enlever le surplus)
-            if (lotNum.length > 15) {
-              lotNum = lotNum.substring(0, 15);
+            if (lotNum.length > 22) {
+              lotNum = lotNum.substring(0, 22);
             }
 
             results.push(lotNum);
@@ -408,8 +408,8 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
           // Vérifier qu'on a au moins 3 chiffres/lettres et qu'il y a des lettres (pas que des chiffres)
           if (lotNum.length >= 3 && /\d/.test(lotNum) && /[A-Z]/i.test(lotNum) && !isPhoneNumber(lotNum)) {
             // Tronquer à une longueur raisonnable
-            if (lotNum.length > 15) {
-              lotNum = lotNum.substring(0, 15);
+            if (lotNum.length > 22) {
+              lotNum = lotNum.substring(0, 22);
             }
             results.push(lotNum);
           }
@@ -455,6 +455,20 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
         }
         return results;
       }
+    },
+    // 6. Séquences alphanumériques denses (tokens OCR)
+    {
+      regex: /[A-Z0-9]{6,24}/gi,
+      name: 'Dense alphanumerics',
+      priority: 6,
+      extract: (text: string): string[] => {
+        const tokens = text
+          .replace(/[^A-Z0-9]/gi, ' ')
+          .split(/\s+/)
+          .map((t) => t.trim())
+          .filter(Boolean);
+        return tokens.filter((token) => token.length >= 6 && token.length <= 24 && /\d/.test(token));
+      }
     }
   ];
 
@@ -489,26 +503,32 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
   console.log('[extractAllLotCandidates] Extracting all lot candidates from OCR text');
 
   const allCandidates: string[] = [];
+  const addCandidate = (value: string | undefined) => {
+    if (!value) return;
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    allCandidates.push(trimmed.toUpperCase());
+  };
 
-  // Si on a la marque, essayer d'abord la méthode GTIN
+  // Si on a la marque, essayer d'abord la m?thode GTIN
   if (brand) {
     const gtinLot = await extractLotFromGTIN(rawText, brand);
     if (gtinLot) {
-      console.log(`✅ GTIN-based candidate: ${gtinLot}`);
-      allCandidates.push(gtinLot);
+      console.log(`? GTIN-based candidate: ${gtinLot}`);
+      addCandidate(gtinLot);
     }
   }
 
-  // Nettoyer le texte mais préserver les séparateurs importants
-  const cleaned = rawText.replace(/\s+/g, ' ').trim();
+  // Nettoyer le texte mais pr?server les s?parateurs importants
+  const cleaned = rawText.replace(/[^\w\s/:.-]/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
 
-  // Fonction pour vérifier si c'est un numéro de téléphone
+  // Fonction pour v?rifier si c'est un num?ro de t?l?phone
   const isPhoneNumber = (text: string): boolean => {
-    const cleanedNum = text.replace(/[\s\-\.]/g, '');
+    const cleanedNum = text.replace(/[\s\-.]/g, '');
     return /^0\d{9}$/.test(cleanedNum);
   };
 
-  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'À CONSOMMER'];
+  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', '? CONSOMMER'];
   const containsExcludedKeyword = (text: string): boolean => {
     const upperText = text.toUpperCase();
     return excludeKeywords.some(keyword => upperText.includes(keyword));
@@ -517,11 +537,11 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
   // Patterns (copie des patterns existants)
   const patterns = [
     {
-      regex: /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi,
+      regex: /(?:^|[^A-Z])(?:LOT|L)[:\s\-.]*([A-Z0-9]{3,}[A-Z0-9\s\-/.]*)/gi,
       name: 'LOT/L prefix',
       extract: (text: string): string[] => {
         const results: string[] = [];
-        const regex = /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi;
+        const regex = /(?:^|[^A-Z])(?:LOT|L)[:\s\-.]*([A-Z0-9]{3,}[A-Z0-9\s\-/.]*)/gi;
         let match;
         while ((match = regex.exec(text)) !== null) {
           let lotNum = match[1].trim();
@@ -529,8 +549,8 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
           lotNum = lotNum.replace(/\s*FH.*$/gi, '');
           lotNum = lotNum.replace(/\s+/g, '');
           if (lotNum.length >= 3 && /\d/.test(lotNum) && !isPhoneNumber(lotNum)) {
-            if (lotNum.length > 15) {
-              lotNum = lotNum.substring(0, 15);
+            if (lotNum.length > 22) {
+              lotNum = lotNum.substring(0, 22);
             }
             results.push(lotNum);
           }
@@ -539,16 +559,16 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
       }
     },
     {
-      regex: /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi,
+      regex: /N[O0??][:\s\-.]*([A-Z0-9]{3,}[A-Z0-9\-/\.]*)/gi,
       name: 'NO prefix',
       extract: (text: string): string[] => {
         const results: string[] = [];
-        const regex = /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi;
+        const regex = /N[O0??][:\s\-.]*([A-Z0-9]{3,}[A-Z0-9\-/\.]*)/gi;
         let match;
         while ((match = regex.exec(text)) !== null) {
           const lotNum = match[1].trim();
           if (lotNum.length >= 3 && /\d/.test(lotNum) && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
-            results.push(lotNum);
+            results.push(lotNum.length > 22 ? lotNum.substring(0, 22) : lotNum);
           }
         }
         return results;
@@ -565,13 +585,26 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
           let lotNum = match[1].trim();
           lotNum = lotNum.replace(/\s+/g, '');
           if (lotNum.length >= 3 && /\d/.test(lotNum) && /[A-Z]/i.test(lotNum) && !isPhoneNumber(lotNum)) {
-            if (lotNum.length > 15) {
-              lotNum = lotNum.substring(0, 15);
+            if (lotNum.length > 22) {
+              lotNum = lotNum.substring(0, 22);
             }
             results.push(lotNum);
           }
         }
         return results;
+      }
+    },
+    // Denses alphanum?riques (tokens)
+    {
+      regex: /[A-Z0-9]{6,24}/gi,
+      name: 'Dense alphanumerics',
+      extract: (text: string): string[] => {
+        const tokens = text
+          .replace(/[^A-Z0-9]/gi, ' ')
+          .split(/\s+/)
+          .map((t) => t.trim())
+          .filter(Boolean);
+        return tokens.filter((token) => token.length >= 6 && token.length <= 24 && /\d/.test(token));
       }
     }
   ];
@@ -580,18 +613,42 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
   for (const pattern of patterns) {
     const matches = pattern.extract(cleaned);
     if (matches.length > 0) {
-      console.log(`✅ Pattern "${pattern.name}" found ${matches.length} candidate(s): ${matches.join(', ')}`);
-      allCandidates.push(...matches.map(m => m.toUpperCase()));
+      console.log(`? Pattern "${pattern.name}" found ${matches.length} candidate(s): ${matches.join(', ')}`);
+      matches.forEach(addCandidate);
     }
   }
 
-  // Dédupliquer les candidats
+  // Ajouter les tokens alphanum?riques de chaque ligne (combinaison et fusion)
+  const lines = rawText.split('\n').map((l) => l.trim()).filter(Boolean);
+  for (const line of lines) {
+    const tokens = line
+      .replace(/[^A-Z0-9]/gi, ' ')
+      .split(/\s+/)
+      .map((t) => t.trim())
+      .filter(Boolean);
+    for (const token of tokens) {
+      if (token.length >= 4 && token.length <= 24 && /\d/.test(token)) {
+        addCandidate(token);
+      }
+    }
+    for (let i = 0; i < tokens.length; i++) {
+      for (let size = 2; size <= 3; size++) {
+        const slice = tokens.slice(i, i + size);
+        if (slice.length < size) continue;
+        const merged = slice.join('');
+        if (merged.length >= 6 && merged.length <= 24 && /\d/.test(merged)) {
+          addCandidate(merged);
+        }
+      }
+    }
+  }
+
+  // D?dupliquer les candidats
   const uniqueCandidates = [...new Set(allCandidates)];
-  console.log(`✅ Total unique candidates: ${uniqueCandidates.length}`);
+  console.log(`? Total unique candidates: ${uniqueCandidates.length}`);
 
   return uniqueCandidates;
 }
-
 export interface BrandExtractionResult {
   brand: string;
   confidence: number;
