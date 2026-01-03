@@ -64,6 +64,10 @@
       "router": {},
       "eas": {
         "projectId": "13561448-e971-4d9b-ba0d-a05c8b685a42"
+      },
+      "vision": {
+        "endpoint": "https://vision.googleapis.com/v1/images:annotate",
+        "apiKey": "AIzaSyA3cIHYbn2otFdS8DGsq5mi_VgzLYBJbq0"
       }
     }
   }

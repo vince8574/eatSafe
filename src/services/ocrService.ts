@@ -5,6 +5,7 @@ import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { OCRResult } from '../types';
 import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
+import { tryVisionFallback } from './visionFallbackService';
 
 const preprocessConfig = {
   resize: { width: 1800 }, // Résolution optimale pour ML Kit (trop élevé peut dégrader la précision)
@@ -21,21 +22,52 @@ function ensureMlkitAvailable() {
   }
 }
 
-export async function preprocessImage(uri: string) {
-  // Appliquer plusieurs manipulations pour améliorer la qualité OCR
-  const manipulated = await manipulateAsync(
+type PreprocessOptions = {
+  cropForLot?: boolean;
+  narrowBand?: boolean;
+};
+
+export async function preprocessImage(uri: string, options?: PreprocessOptions) {
+  // Étape 1 : upscale pour améliorer le détail
+  const resized = await manipulateAsync(
     uri,
-    [
-      { resize: preprocessConfig.resize }, // Augmenter la résolution
-      // Pas de filtre sharpen car expo-image-manipulator ne le supporte pas nativement
-    ],
+    [{ resize: preprocessConfig.resize }],
     {
       compress: preprocessConfig.compress,
       format: preprocessConfig.format
     }
   );
 
-  return manipulated.uri;
+  // Étape 2 : recadrer une bande centrale pour les numéros de lot (réduit le bruit de fond)
+  if (options?.cropForLot && resized.width && resized.height) {
+    const bandHeightFactor = options?.narrowBand ? 0.22 : 0.45;
+    const bandHeight = Math.floor(resized.height * bandHeightFactor);
+    const originY = Math.max(0, Math.floor(resized.height * 0.5 - bandHeight / 2));
+    const originX = Math.floor(resized.width * 0.05);
+    const cropWidth = Math.floor(resized.width * 0.9);
+
+    const cropped = await manipulateAsync(
+      resized.uri,
+      [
+        {
+          crop: {
+            originX,
+            originY,
+            width: cropWidth,
+            height: bandHeight
+          }
+        }
+      ],
+      {
+        compress: preprocessConfig.compress,
+        format: preprocessConfig.format
+      }
+    );
+
+    return cropped.uri;
+  }
+
+  return resized.uri;
 }
 
 export async function runMlkit(uri: string): Promise<OCRResult> {
@@ -56,13 +88,21 @@ export async function runMlkit(uri: string): Promise<OCRResult> {
 
   const lines = blocks.flatMap((block) =>
     Array.isArray(block.lines) ? block.lines.map((line) => ({
-      content: line.text
+      content: line.text,
+      confidence: typeof (line as any).confidence === 'number' ? (line as any).confidence : undefined
     })) : []
   );
 
+  const averageConfidence =
+    lines.length > 0
+      ? lines.reduce((sum, line) => sum + (line.confidence ?? 1), 0) / lines.length
+      : undefined;
+
   return {
     text,
-    lines
+    lines,
+    confidence: averageConfidence,
+    source: 'mlkit'
   };
 }
 
@@ -665,35 +705,41 @@ export async function performOcrForBrand(uri: string): Promise<BrandExtractionRe
 
   try {
     console.log('[Brand OCR] Step 3: Starting runMlkit');
-    const result = await runMlkit(processed);
-    console.log('[Brand OCR] Step 4: runMlkit complete, extracting brand from text');
+    let result = await runMlkit(processed);
+    console.log('[Brand OCR] Step 4: runMlkit complete, checking quality');
+
+    const visionFallback = await tryVisionFallback(processed, result, 'brand');
+    if (visionFallback) {
+      result = visionFallback;
+    }
+    console.log('[Brand OCR] Step 5: OCR source:', result.source);
 
     const brand = await extractBrand(result.text);
-    console.log('[Brand OCR] Step 5: Brand extracted:', brand);
+    console.log('[Brand OCR] Step 6: Brand extracted:', brand);
 
     // Check if brand is in Firestore and get suggestions
-    console.log('[Brand OCR] Step 6: Searching Firestore for exact match');
+    console.log('[Brand OCR] Step 7: Searching Firestore for exact match');
     let isKnownBrand = false;
     let confidence = 0;
     let suggestions: string[] | undefined;
 
     try {
       const matches = await searchBrands(brand, 3);
-      console.log('[Brand OCR] Step 7: Firestore matches:', matches);
+      console.log('[Brand OCR] Step 8: Firestore matches:', matches);
 
       if (matches.length > 0 && matches[0].toLowerCase() === brand.toLowerCase()) {
         // Exact match found
         isKnownBrand = true;
         confidence = 1.0;
-        console.log(`✅ Exact brand match in Firestore: ${matches[0]}`);
+        console.log('[Brand OCR] Exact brand match in Firestore:', matches[0]);
       } else if (matches.length > 0) {
         // Similar matches found - use as suggestions
         suggestions = matches;
         confidence = 0.7;
-        console.log(`⚠️ Similar brands found: ${matches.join(', ')}`);
+        console.log('[Brand OCR] Similar brands found:', matches.join(', '));
       } else {
         // No match - search for suggestions
-        console.log('[Brand OCR] Step 8: No exact match, getting suggestions');
+        console.log('[Brand OCR] Step 9: No exact match, getting suggestions');
         suggestions = await searchBrands(brand, 3);
         confidence = 0.3;
       }
@@ -702,7 +748,7 @@ export async function performOcrForBrand(uri: string): Promise<BrandExtractionRe
       confidence = 0;
     }
 
-    console.log('[Brand OCR] Step 9: Building result object');
+    console.log('[Brand OCR] Step 10: Building result object');
     const finalResult = {
       brand: brand || DEFAULT_BRAND_NAME,
       confidence,
@@ -710,7 +756,7 @@ export async function performOcrForBrand(uri: string): Promise<BrandExtractionRe
       suggestions: suggestions && suggestions.length > 0 ? suggestions : undefined,
       result
     };
-    console.log('[Brand OCR] Step 10: Returning result');
+    console.log('[Brand OCR] Step 11: Returning result');
     return finalResult;
   } finally {
     try {
@@ -729,10 +775,16 @@ export interface LotExtractionResult {
 
 export async function performOcr(uri: string, brand?: string): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
-  const processed = await preprocessImage(uri);
+  const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
 
   try {
-    const result = await runMlkit(processed);
+    let result = await runMlkit(processed);
+    const visionFallback = await tryVisionFallback(processed, result, 'lot');
+    if (visionFallback) {
+      result = visionFallback;
+    }
+    console.log('[Lot OCR] OCR source:', result.source);
+
     const lot = await extractLotNumber(result.text, brand);
     const candidates = await extractAllLotCandidates(result.text, brand);
 

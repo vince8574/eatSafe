@@ -244,10 +244,11 @@ export function ScanLotScreen() {
   return (
     <GradientBackground>
       <Scanner
+        key={`lot-scanner-${scannerResetToken}`}
         onCapture={handleCapture}
         enableBarcodeScanning={false}
         isProcessing={isProcessing}
-        mode="photo"
+        mode="band"
         resetToken={scannerResetToken}
       />
 
