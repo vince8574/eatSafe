@@ -29,6 +29,8 @@ Il riconoscimento del testo può contenere errori. Devi sempre verificare visiva
 
 L'editore non garantisce l'accuratezza delle informazioni. In caso di richiamo, consulta le fonti ufficiali.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Dati
 
 Tutti i tuoi dati sono memorizzati localmente sul tuo dispositivo. Nessuna foto viene inviata a un server.

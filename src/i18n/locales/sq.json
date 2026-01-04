@@ -9,7 +9,10 @@
     "edit": "Ndrysho",
     "back": "Kthehu",
     "refresh": "Rifresko",
-    "unknown": "I panjohur"
+    "unknown": "I panjohur",
+    "dataDisclaimer": "Bazuar në të dhënat e disponueshme në këtë kohë",
+    "appDisclaimer": "Ky aplikacion ofron informacion mbi t?rheqjet bazuar n? databaza publike zyrtare. Nuk garanton sigurin? e produktit. Ky aplikacion nuk verifikon datat e skadenc?s ose freskin? e produkteve.",
+    "noRecallDisclaimer": "Mungesa e nj? t?rheqjeje nuk garanton sigurin? e produktit."
   },
   "home": {
     "title": "Eats OK",
@@ -42,6 +45,7 @@
     "restart": "Rifillo",
     "manualEntry": "Hyrje manuale",
     "waitingForCapture": "Duke pritur për kapur...",
+    "aiPrecision": "AI përdoret për saktësi më të mirë",
     "errors": {
       "brandCaptureFailed": "Kapja e markës dështoi.",
       "scanFailed": "Skanimi dështoi.",
@@ -88,7 +92,7 @@
     "filters": {
       "all": "Të gjitha",
       "recalled": "Të rikthyera",
-      "safe": "Të sigurta",
+      "safe": "Pa thirrje",
       "unknown": "Të panjohura"
     },
     "emptyState": "Asnjë produkt i skanuar aktualisht.",
@@ -96,7 +100,7 @@
   },
   "productCard": {
     "lot": "Loti {{lot}}",
-    "scannedAt": "Skanuar më {{date}}",
+    "scannedAt": "Skanuar m? {{date}} n? {{time}}",
     "privacy": "Asnjë fotografi nuk ruhet; vetëm marka dhe numri i lotit ruhen.",
     "delete": "Fshi"
   },
@@ -110,10 +114,11 @@
     "callSamu": "Telefononi 112 (Emergjenca)",
     "callEmergency": "Telefononi 112 (Emergjenca)",
     "viewOfficialNotice": "Shikoni njoftimin zyrtar të rikujtimit",
-    "returnForRefund": "Kthejeni produktin në dyqan për rimbursim"
+    "returnForRefund": "Kthejeni produktin në dyqan për rimbursim",
+    "reportedBy": "T?rheqja ?sht? raportuar nga FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Asnjë rikujtim i njohur",
+    "safe": "Nuk u gjet asnjë tërheqje në bazat e të dhënave zyrtare në këtë moment",
     "recalled": "I rikthyer",
     "unknown": "Analizë në progres",
     "warning": "Për t'u monitoruar"
@@ -177,6 +182,18 @@
     "privacyPolicy": "Politika e Privatësisë",
     "terms": "Kushtet e Shërbimit",
     "legalNotice": "Njoftim Ligjor",
-    "errorLoading": "Gabim në ngarkimin e dokumentit"
+    "errorLoading": "Gabim në ngarkimin e dokumentit",
+    "disclaimer": "P?rjashtim p?rgjegj?sie",
+    "dataSources": "Burimet e t? dh?nave (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "P?rjashtim p?rgjegj?sie p?r t?rheqjet ushqimore",
+    "body": "Ky aplikacion ofron informacion p?r t?rheqjet e ushqimeve p?r produkte t? shitura n? Shtetet e Bashkuara vet?m p?r q?llime informuese.\n\nInformacioni i shfaqur n? k?t? aplikacion bazohet n? t? dh?na publike nga agjenci qeveritare (p?rfshir?, por pa u kufizuar n?, FDA dhe USDA) dhe burime t? tjera t? pal?ve t? treta. Ne nuk garantojm? sakt?sin?, plot?sin? ose aktualitetin e informacionit t? ofruar.\n\nKy aplikacion nuk z?vend?son njoftimet zyrtare t? t?rheqjes, komunikimet e prodhuesve ose udh?zimet e autoriteteve rregullatore. P?rdoruesit inkurajohen t? verifikojn? informacionin e t?rheqjes drejtp?rdrejt me burime zyrtare.\n\nNj? produkt q? nuk identifikohet si i t?rhequr n? k?t? aplikacion nuk garanton q? produkti ?sht? i sigurt ose q? nuk i n?nshtrohet nj? t?rheqjeje aktuale ose t? ardhshme.\n\nKy aplikacion nuk ofron k?shilla mjek?sore, ushqimore ose sh?ndet?sore. N?se keni shqet?sime p?r sigurin? ushqimore, ndotjen, alergjit? ose s?mundjen, konsultohuni me nj? profesionist t? kualifikuar t? sh?ndetit ose ndiqni udh?zimet zyrtare t? autoriteteve t? sh?ndetit publik.\n\nKy aplikacion nuk verifikon datat e skadenc?s ose freskin? e produkteve.\n\nSkanimi i kodeve me shirita, njohja e numrave t? lotit dhe daljet zanore ose vizuale mund t? jen? subjekt i kufizimeve teknike ose gabimeve. P?rdoruesit mbeten p?rgjegj?s p?r verifikimin e detajeve t? produktit dhe statusit t? t?rheqjes.\n\nN? mas?n maksimale t? lejuar nga ligji, zhvilluesi nuk mban p?rgjegj?si p?r d?me, l?ndime ose humbje t? drejtp?rdrejta apo t? t?rthorta q? rrjedhin nga p?rdorimi ose mb?shtetja n? informacionin e ofruar nga ky aplikacion.\n\nMbulimi i t?rheqjeve ?sht? i kufizuar n? produktet ushqimore t? shitura n? Shtetet e Bashkuara dhe mund t? mos zbatohet p?r produktet e shitura n? vende t? tjera."
+  },
+  "dataSources": {
+    "title": "Burimet e t? dh?nave",
+    "description": "Burime zyrtare p?r informacionet e t?rheqjeve n? SHBA:",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

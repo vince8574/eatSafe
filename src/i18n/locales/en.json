@@ -9,7 +9,10 @@
     "edit": "Edit",
     "back": "Back",
     "refresh": "Refresh",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "dataDisclaimer": "Based on available data at this time",
+    "appDisclaimer": "This app provides recall information based on official public databases. It does not guarantee product safety. This app does not verify expiration dates or product freshness.",
+    "noRecallDisclaimer": "The absence of a recall does not guarantee product safety."
   },
   "home": {
     "title": "Eats OK",
@@ -50,6 +53,7 @@
     "switchToOcr": "📸 Scan brand text",
     "switchToBarcode": "📊 Scan barcode",
     "waitingForCapture": "Waiting for capture...",
+    "aiPrecision": "AI used for better accuracy",
     "errors": {
       "brandCaptureFailed": "Brand capture failed.",
       "scanFailed": "Scan failed.",
@@ -105,7 +109,7 @@
     "filters": {
       "all": "All",
       "recalled": "Recalled",
-      "safe": "Safe",
+      "safe": "No recall",
       "unknown": "Unknown"
     },
     "emptyState": "No scanned products yet.",
@@ -113,7 +117,7 @@
   },
   "productCard": {
     "lot": "Lot {{lot}}",
-    "scannedAt": "Scanned on {{date}}",
+    "scannedAt": "Scanned on {{date}} at {{time}}",
     "privacy": "No photos are stored; only the brand and lot number are kept.",
     "delete": "Delete"
   },
@@ -127,10 +131,11 @@
     "callSamu": "Call 911 (Emergency)",
     "callEmergency": "Call 112 (Emergency)",
     "viewOfficialNotice": "View official recall notice",
-    "returnForRefund": "Return the product to the store for a refund"
+    "returnForRefund": "Return the product to the store for a refund",
+    "reportedBy": "Recall reported by FDA / USDA"
   },
   "recallStatus": {
-    "safe": "No known recall",
+    "safe": "No recall found in official databases at this time",
     "recalled": "Recalled",
     "unknown": "Under review",
     "warning": "Monitor"
@@ -196,6 +201,18 @@
     "privacyPolicy": "Privacy Policy",
     "terms": "Terms of Service",
     "legalNotice": "Legal Notice",
-    "errorLoading": "Error loading document"
+    "errorLoading": "Error loading document",
+    "disclaimer": "Disclaimer",
+    "dataSources": "Data Sources"
+  },
+  "disclaimer": {
+    "title": "Food Recall Disclaimer",
+    "body": "This application provides food recall information for products sold in the United States for informational purposes only.\n\nThe information displayed in this app is based on publicly available data from government agencies (including but not limited to the FDA and USDA) and other third-party sources. We do not guarantee the accuracy, completeness, or timeliness of the information provided.\n\nThis app does not replace official recall notifications, manufacturer communications, or guidance from regulatory authorities. Users are encouraged to verify recall information directly with official sources.\n\nA product not identified as recalled in this app does not guarantee that the product is safe or not subject to a current or future recall.\n\nThis app does not provide medical, nutritional, or health advice. If you have concerns about food safety, contamination, allergies, or illness, consult a qualified healthcare professional or follow official guidance from public health authorities.\n\nThis app does not verify expiration dates or product freshness.\n\nBarcode scanning, lot number recognition, and voice or visual outputs may be subject to technical limitations or errors. Users remain responsible for verifying product details and recall status.\n\nTo the maximum extent permitted by law, the developer shall not be liable for any direct or indirect damages, injuries, or losses arising from the use or reliance on the information provided by this app.\n\nRecall coverage is limited to food products sold in the United States and may not apply to products sold in other countries."
+  },
+  "dataSources": {
+    "title": "Data Sources",
+    "description": "Official sources for U.S. recall information:",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

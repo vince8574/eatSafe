@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -21,13 +21,18 @@ function normalizeLotValue(lot: string) {
 
 export function ScanLotScreen() {
   const { colors } = useTheme();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const router = useRouter();
-  const { brand } = useLocalSearchParams<{ brand: string }>();
+  const { brand, productName, productImage } = useLocalSearchParams<{
+    brand: string;
+    productName?: string;
+    productImage?: string;
+  }>();
   const { addProduct, updateRecall } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
 
   const [ocrText, setOcrText] = useState('');
+  const [ocrSource, setOcrSource] = useState<string>('');
   const [lotNumber, setLotNumber] = useState('');
   const [lotCandidates, setLotCandidates] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -40,6 +45,7 @@ export function ScanLotScreen() {
   const [matchedLot, setMatchedLot] = useState<string>('');
   const [matchedRecall, setMatchedRecall] = useState<any>(null);
   const [showRecallAlert, setShowRecallAlert] = useState(false);
+  const [verifiedAt, setVerifiedAt] = useState<number | null>(null);
   const [scannerResetToken, setScannerResetToken] = useState(0);
 
   const lotMutation = useMutation({
@@ -47,6 +53,7 @@ export function ScanLotScreen() {
       setErrorMessage('');
       const { lot, result, candidates } = await performOcr(lotPhoto, brand);
       setOcrText(result.text);
+      setOcrSource(result.source || 'unknown');
       setLotNumber(lot);
       setLotCandidates(candidates || []);
 
@@ -71,6 +78,7 @@ export function ScanLotScreen() {
         try {
           const matchResult = await checkAllCandidates(candidates, brand, country);
           setHasRecall(matchResult.hasRecall);
+          setVerifiedAt(Date.now());
           if (matchResult.matchedCandidate) {
             setMatchedLot(matchResult.matchedCandidate);
           }
@@ -98,12 +106,14 @@ export function ScanLotScreen() {
 
   const resetFlow = useCallback(() => {
     setOcrText('');
+    setOcrSource('');
     setLotNumber('');
     setLotCandidates([]);
     setErrorMessage('');
     setConfirmModalVisible(false);
     setIsEditingLot(false);
     setEditedLot('');
+    setVerifiedAt(null);
     setScannerResetToken((token) => token + 1);
   }, []);
 
@@ -154,7 +164,9 @@ export function ScanLotScreen() {
       const recallList = await fetchRecallsByCountry(country);
       const product = await addProduct({
         brand,
-        lotNumber: finalLot
+        lotNumber: finalLot,
+        ...(productName && { productName }),
+        ...(productImage && { productImage })
       });
 
       const matchingRecalls = recallList.filter((recall) => {
@@ -192,6 +204,8 @@ export function ScanLotScreen() {
     } finally {
       setConfirmModalVisible(false);
       setIsFinalizing(false);
+      setIsEditingLot(false);
+      setEditedLot('');
     }
   }, [
     addProduct,
@@ -211,11 +225,13 @@ export function ScanLotScreen() {
   const handleRestart = useCallback(() => {
     setLotNumber('');
     setOcrText('');
+    setOcrSource('');
     setLotCandidates([]);
     setErrorMessage('');
     setConfirmModalVisible(false);
     setIsEditingLot(false);
     setEditedLot('');
+    setVerifiedAt(null);
     setScannerResetToken((token) => token + 1);
   }, []);
 
@@ -250,6 +266,7 @@ export function ScanLotScreen() {
         isProcessing={isProcessing}
         mode="band"
         resetToken={scannerResetToken}
+        aiMessage={!lotNumber ? t('scan.aiPrecision') : undefined}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
@@ -280,6 +297,23 @@ export function ScanLotScreen() {
             {isProcessing ? t('scan.lotAnalyzing') : t('scan.lotInstruction')}
           </Text>
         </View>
+
+        {(productImage || productName) && (
+          <View style={[styles.productInfoCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            {productImage ? (
+              <Image
+                source={{ uri: productImage }}
+                style={styles.productImageSmall}
+                resizeMode="contain"
+              />
+            ) : null}
+            {productName ? (
+              <Text style={[styles.productNameSmall, { color: colors.textPrimary }]}>
+                {productName}
+              </Text>
+            ) : null}
+          </View>
+        )}
 
         <View style={styles.statusRow}>
           <View
@@ -319,6 +353,12 @@ export function ScanLotScreen() {
         {errorMessage ? (
           <Text style={[styles.errorText, { color: colors.danger }]}>{errorMessage}</Text>
         ) : null}
+
+        <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+          <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+            ⚠️ {t('common.appDisclaimer')}
+          </Text>
+        </View>
 
         <TouchableOpacity
           style={[styles.resetButton, { backgroundColor: colors.surface, opacity: isProcessing ? 0.5 : 1 }]}
@@ -396,6 +436,28 @@ export function ScanLotScreen() {
                     {ocrText || 'Aucun texte détecté'}
                   </Text>
                 </View>
+
+                {ocrSource && (
+                  <View style={[styles.ocrSourceContainer, { backgroundColor: ocrSource === 'vision-fallback' ? '#e8f5e9' : '#e3f2fd' }]}>
+                    <Text style={[styles.ocrSourceText, { color: ocrSource === 'vision-fallback' ? '#2e7d32' : '#1565c0' }]}>
+                      {ocrSource === 'vision-fallback' ? '🤖 Google Vision API' : ocrSource === 'mlkit' ? '📱 ML Kit' : `📋 ${ocrSource}`}
+                    </Text>
+                    {verifiedAt && (
+                      <Text style={[styles.recallMeta, { color: colors.textSecondary }]}>
+                        {t('productCard.scannedAt', {
+                          date: new Date(verifiedAt).toLocaleDateString(locale || undefined),
+                          time: new Date(verifiedAt).toLocaleTimeString(locale || undefined, {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })
+                        })}
+                      </Text>
+                    )}
+                    <Text style={[styles.recallDisclaimer, { color: colors.textSecondary }]}>
+                      {t('common.noRecallDisclaimer')}
+                    </Text>
+                  </View>
+                )}
 
                 {isCheckingRecall && (
                   <View style={styles.checkingContainer}>
@@ -656,6 +718,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20
   },
+  ocrSourceContainer: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 8
+  },
+  ocrSourceText: {
+    fontSize: 12,
+    fontWeight: '600'
+  },
   checkingContainer: {
     paddingVertical: 12,
     alignItems: 'center'
@@ -674,6 +748,49 @@ const styles = StyleSheet.create({
   recallStatusText: {
     fontSize: 16,
     fontWeight: '700',
+    textAlign: 'center'
+  },
+  recallMeta: {
+    marginTop: 8,
+    fontSize: 12,
+    textAlign: 'center'
+  },
+  recallDisclaimer: {
+    marginTop: 6,
+    fontSize: 12,
+    fontStyle: 'italic',
+    textAlign: 'center'
+  },
+  productInfoCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 12,
+    marginVertical: 8
+  },
+  productImageSmall: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: '#f5f5f5'
+  },
+  productNameSmall: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 18
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 16,
+    marginBottom: 8
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
     textAlign: 'center'
   }
 });

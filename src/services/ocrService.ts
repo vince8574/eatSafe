@@ -13,6 +13,12 @@ const preprocessConfig = {
   compress: 1 // Pas de compression pour garder la qualité maximale
 } as const;
 
+const visionPreprocessConfig = {
+  resize: { width: 3000 }, // Résolution très élevée pour Google Vision (maximiser la détection du texte)
+  format: SaveFormat.PNG,
+  compress: 1
+} as const;
+
 const MLKIT_UNAVAILABLE_MESSAGE =
   'OCR necessita une build native (development ou production). Installez EatSafe via EAS Build pour activer la reconnaissance.';
 
@@ -25,26 +31,33 @@ function ensureMlkitAvailable() {
 type PreprocessOptions = {
   cropForLot?: boolean;
   narrowBand?: boolean;
+  useVisionConfig?: boolean; // Utiliser la config haute résolution pour Google Vision
 };
 
 export async function preprocessImage(uri: string, options?: PreprocessOptions) {
   // Étape 1 : upscale pour améliorer le détail
+  const config = options?.useVisionConfig ? visionPreprocessConfig : preprocessConfig;
   const resized = await manipulateAsync(
     uri,
-    [{ resize: preprocessConfig.resize }],
+    [{ resize: config.resize }],
     {
-      compress: preprocessConfig.compress,
-      format: preprocessConfig.format
+      compress: config.compress,
+      format: config.format
     }
   );
 
+  let processedUri = resized.uri;
+
   // Étape 2 : recadrer une bande centrale pour les numéros de lot (réduit le bruit de fond)
   if (options?.cropForLot && resized.width && resized.height) {
-    const bandHeightFactor = options?.narrowBand ? 0.22 : 0.45;
+    // Utiliser les mêmes dimensions que le cadre visible dans l'UI (Scanner mode "band")
+    // 22% de hauteur, 90% de largeur pour correspondre exactement au cadre
+    const bandHeightFactor = options?.narrowBand ? 0.22 : 0.5;
+    const bandWidthFactor = options?.narrowBand ? 0.90 : 0.96;
     const bandHeight = Math.floor(resized.height * bandHeightFactor);
     const originY = Math.max(0, Math.floor(resized.height * 0.5 - bandHeight / 2));
-    const originX = Math.floor(resized.width * 0.05);
-    const cropWidth = Math.floor(resized.width * 0.9);
+    const cropWidth = Math.floor(resized.width * bandWidthFactor);
+    const originX = Math.floor((resized.width - cropWidth) / 2);
 
     const cropped = await manipulateAsync(
       resized.uri,
@@ -64,10 +77,20 @@ export async function preprocessImage(uri: string, options?: PreprocessOptions) 
       }
     );
 
-    return cropped.uri;
+    processedUri = cropped.uri;
   }
 
-  return resized.uri;
+  // Étape 3 : Finaliser avec la config appropriée
+  const enhanced = await manipulateAsync(
+    processedUri,
+    [],
+    {
+      compress: config.compress,
+      format: config.format
+    }
+  );
+
+  return enhanced.uri;
 }
 
 export async function runMlkit(uri: string): Promise<OCRResult> {
@@ -775,29 +798,90 @@ export interface LotExtractionResult {
 
 export async function performOcr(uri: string, brand?: string): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
-  const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
 
   try {
-    let result = await runMlkit(processed);
-    const visionFallback = await tryVisionFallback(processed, result, 'lot');
-    if (visionFallback) {
-      result = visionFallback;
+    // Pour les numéros de lot, utiliser Google Vision en premier (meilleure précision)
+    let result: OCRResult;
+
+    console.log('[Lot OCR] Trying Google Vision API first...');
+
+    // Pour Google Vision, cropper selon le cadre visible (bande centrale comme dans l'UI)
+    // Cela correspond au cadre "band" affiché à l'utilisateur: 90% largeur, 22% hauteur
+    const processedForVision = await preprocessImage(uri, {
+      cropForLot: true,
+      narrowBand: true,
+      useVisionConfig: true
+    });
+    const visionResult = await tryVisionFallback(processedForVision, { text: '', lines: [], source: 'none' }, 'lot');
+
+    if (visionResult) {
+      console.log('[Lot OCR] Using Google Vision API result');
+      result = visionResult;
+
+      // Nettoyer l'image préprocessée pour Vision
+      try {
+        await FileSystem.deleteAsync(processedForVision, { idempotent: true });
+      } catch (error) {
+        console.warn('Failed to delete vision processed image', error);
+      }
+    } else {
+      console.log('[Lot OCR] Google Vision unavailable, using ML Kit');
+
+      // Nettoyer l'image préprocessée pour Vision
+      try {
+        await FileSystem.deleteAsync(processedForVision, { idempotent: true });
+      } catch (error) {
+        console.warn('Failed to delete vision processed image', error);
+      }
+
+      // Pour ML Kit, utiliser le crop agressif
+      const processedForMlkit = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+      result = await runMlkit(processedForMlkit);
+
+      // Nettoyer l'image préprocessée pour MLKit
+      try {
+        await FileSystem.deleteAsync(processedForMlkit, { idempotent: true });
+      } catch (error) {
+        console.warn('Failed to delete mlkit processed image', error);
+      }
     }
+
     console.log('[Lot OCR] OCR source:', result.source);
 
-    const lot = await extractLotNumber(result.text, brand);
-    const candidates = await extractAllLotCandidates(result.text, brand);
+    // Filtrer le texte OCR pour enlever les lignes contenant la marque
+    // (car la marque est déjà détectée par le code-barres et pollue la détection du lot)
+    let filteredText = result.text;
+    if (brand) {
+      console.log(`[Lot OCR] Filtering brand "${brand}" from OCR text`);
+      const lines = result.text.split('\n');
+      const brandUpper = brand.toUpperCase();
+
+      // Garder seulement les lignes qui ne contiennent pas la marque
+      const filteredLines = lines.filter(line => {
+        const lineUpper = line.trim().toUpperCase();
+        // Exclure les lignes qui contiennent la marque
+        const containsBrand = lineUpper.includes(brandUpper);
+        if (containsBrand) {
+          console.log(`[Lot OCR] Filtering out line: "${line}"`);
+        }
+        return !containsBrand;
+      });
+
+      filteredText = filteredLines.join('\n');
+      console.log(`[Lot OCR] Original text length: ${result.text.length}, Filtered text length: ${filteredText.length}`);
+      console.log(`[Lot OCR] Filtered text: "${filteredText}"`);
+    }
+
+    const lot = await extractLotNumber(filteredText, brand);
+    const candidates = await extractAllLotCandidates(filteredText, brand);
 
     return {
       lot,
       result,
       candidates
     };
-  } finally {
-    try {
-      await FileSystem.deleteAsync(processed, { idempotent: true });
-    } catch (error) {
-      console.warn('Failed to delete processed image', error);
-    }
+  } catch (error) {
+    console.error('[Lot OCR] Error:', error);
+    throw error;
   }
 }

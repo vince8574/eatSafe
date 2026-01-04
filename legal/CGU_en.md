@@ -28,6 +28,8 @@ Text recognition may contain errors. You must always visually verify the detecte
 
 The publisher does not guarantee the accuracy of information. In case of recall, consult official sources.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Data
 
 All your data is stored locally on your device. No photo is sent to a server.

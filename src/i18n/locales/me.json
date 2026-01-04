@@ -9,7 +9,10 @@
     "edit": "Измијени",
     "back": "Назад",
     "refresh": "Освјежи",
-    "unknown": "Непознато"
+    "unknown": "Непознато",
+    "dataDisclaimer": "Na osnovu dostupnih podataka u ovom trenutku",
+    "appDisclaimer": "Ova aplikacija pru?a informacije o opozivu na osnovu zvani?nih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svje?inu proizvoda.",
+    "noRecallDisclaimer": "Izostanak opoziva ne garantuje bezbjednost proizvoda."
   },
   "home": {
     "title": "Eats OK",
@@ -42,6 +45,7 @@
     "restart": "Почни поново",
     "manualEntry": "Ручни унос",
     "waitingForCapture": "Чекање на снимање...",
+    "aiPrecision": "AI se koristi za veću preciznost",
     "errors": {
       "brandCaptureFailed": "Снимање марке није успјело.",
       "scanFailed": "Скенирање није успјело.",
@@ -88,7 +92,7 @@
     "filters": {
       "all": "Све",
       "recalled": "Повучени",
-      "safe": "Безбједни",
+      "safe": "Bez opoziva",
       "unknown": "Непознати"
     },
     "emptyState": "Тренутно нема скенираних производа.",
@@ -96,7 +100,7 @@
   },
   "productCard": {
     "lot": "Лот {{lot}}",
-    "scannedAt": "Скенирано {{date}}",
+    "scannedAt": "Skenirano {{date}} u {{time}}",
     "privacy": "Ниједна фотографија није сачувана; чувају се само марка и број лота.",
     "delete": "Обриши"
   },
@@ -110,10 +114,11 @@
     "callSamu": "Позовите 112 (Хитна помоћ)",
     "callEmergency": "Позовите 112 (Хитна помоћ)",
     "viewOfficialNotice": "Погледајте званично обавјештење о повлачењу",
-    "returnForRefund": "Вратите производ у продавницу за повраћај новца"
+    "returnForRefund": "Вратите производ у продавницу за повраћај новца",
+    "reportedBy": "Opoziv prijavljen od FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Нема познатих повлачења",
+    "safe": "Nije pronađen opoziv u zvaničnim bazama podataka u ovom trenutku",
     "recalled": "Повучен",
     "unknown": "Анализа у току",
     "warning": "Треба пратити"
@@ -177,6 +182,18 @@
     "privacyPolicy": "Politika privatnosti",
     "terms": "Uslovi korišćenja",
     "legalNotice": "Pravna obavještenja",
-    "errorLoading": "Greška pri učitavanju dokumenta"
+    "errorLoading": "Greška pri učitavanju dokumenta",
+    "disclaimer": "Odricanje od odgovornosti",
+    "dataSources": "Izvori podataka (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "Odricanje od odgovornosti za opozive hrane",
+    "body": "Ova aplikacija pru?a informacije o opozivima hrane za proizvode koji se prodaju u Sjedinjenim Dr?avama, samo u informativne svrhe.\n\nInformacije prikazane u ovoj aplikaciji zasnovane su na javno dostupnim podacima vladinih agencija (uklju?uju?i, ali ne ograni?avaju?i se na FDA i USDA) i drugih izvora tre?ih strana. Ne garantujemo ta?nost, potpunost ili a?urnost pru?enih informacija.\n\nOva aplikacija ne zamjenjuje zvani?na obavje?tenja o opozivu, komunikacije proizvo?a?a ili smjernice regulatornih organa. Korisnicima se preporu?uje da informacije o opozivu provjere direktno iz zvani?nih izvora.\n\nProizvod koji nije ozna?en kao opozvan u ovoj aplikaciji ne garantuje da je proizvod bezbjedan ili da nije predmet aktuelnog ili budu?eg opoziva.\n\nOva aplikacija ne pru?a medicinske, nutritivne ili zdravstvene savjete. Ako imate zabrinutosti u vezi sa bezbjedno??u hrane, kontaminacijom, alergijama ili bole??u, konsultujte kvalifikovanog zdravstvenog stru?njaka ili slijedite zvani?ne smjernice javnih zdravstvenih vlasti.\n\nOva aplikacija ne provjerava rokove trajanja niti svje?inu proizvoda.\n\nSkeniranje bar-kodova, prepoznavanje brojeva lota i glasovni ili vizuelni izlazi mogu biti podlo?ni tehni?kim ograni?enjima ili gre?kama. Korisnici ostaju odgovorni za provjeru detalja proizvoda i statusa opoziva.\n\nU najve?oj mjeri dozvoljenoj zakonom, developer ne?e biti odgovoran za bilo kakvu direktnu ili indirektnu ?tetu, povrede ili gubitke nastale upotrebom ili oslanjanjem na informacije koje pru?a ova aplikacija.\n\nObuhvat opoziva je ograni?en na prehrambene proizvode koji se prodaju u Sjedinjenim Dr?avama i mo?da se ne odnosi na proizvode koji se prodaju u drugim zemljama."
+  },
+  "dataSources": {
+    "title": "Izvori podataka",
+    "description": "Zvani?ni izvori informacija o opozivima u SAD:",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

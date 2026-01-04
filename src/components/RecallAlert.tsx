@@ -42,6 +42,7 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
         {recall.description && (
           <Text style={styles.recallDescription}>{recall.description}</Text>
         )}
+        <Text style={styles.reportedBy}>{t('recallAlert.reportedBy')}</Text>
       </View>
 
       <View style={[styles.emergencyBox, { backgroundColor: 'rgba(0,0,0,0.2)' }]}>
@@ -155,6 +156,11 @@ const styles = StyleSheet.create({
     color: '#FFF',
     lineHeight: 22,
     opacity: 0.95
+  },
+  reportedBy: {
+    fontSize: 13,
+    color: '#FFF',
+    opacity: 0.85
   },
   emergencyBox: {
     padding: 16,

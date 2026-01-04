@@ -10,6 +10,8 @@ export type ScannedProduct = {
   recallStatus: RecallStatus;
   recallReference?: string;
   lastCheckedAt?: number;
+  productName?: string;
+  productImage?: string;
 };
 
 export type RecallRecord = {
@@ -29,7 +31,7 @@ export type OCRResult = {
   text: string;
   confidence?: number;
   lines: Array<{ content: string; confidence?: number }>;
-  source?: 'mlkit' | 'vision-fallback' | 'cloud-ocr';
+  source?: 'mlkit' | 'vision-fallback' | 'cloud-ocr' | 'none';
 };
 
 export type ApiError = {

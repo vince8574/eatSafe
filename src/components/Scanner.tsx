@@ -13,6 +13,7 @@ type ScannerProps = {
   mode?: ScannerMode; // 'barcode' pour scan code-barres, 'photo' ou 'band' pour capture photo
   resetToken?: number; // change pour forcer un remount de la caméra
   enableFlashToggle?: boolean;
+  aiMessage?: string; // Message à afficher quand l'IA est utilisée
 };
 
 export function Scanner({
@@ -22,14 +23,15 @@ export function Scanner({
   enableBarcodeScanning = false,
   mode = 'photo',
   resetToken,
-  enableFlashToggle = true
+  enableFlashToggle = true,
+  aiMessage
 }: ScannerProps) {
   const { colors } = useTheme();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
-  const [flashOn, setFlashOn] = useState(true);
+  const [flashOn, setFlashOn] = useState(false);
 
   useEffect(() => {
     if (!permission) {
@@ -62,7 +64,8 @@ export function Scanner({
 
     try {
       const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.8
+        quality: 1.0,
+        skipProcessing: false
       });
 
       if (photo?.uri) {
@@ -77,7 +80,7 @@ export function Scanner({
   useEffect(() => {
     setScannedBarcode(null);
     setCameraReady(false);
-    setFlashOn(true);
+    setFlashOn(false);
   }, [resetToken]);
 
   if (!permission) {
@@ -125,6 +128,22 @@ export function Scanner({
           }
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
+        {/* Bouton Flash en haut à gauche */}
+        {enableFlashToggle && (
+          <TouchableOpacity
+            style={styles.flashButtonTop}
+            onPress={() => setFlashOn((prev) => !prev)}
+            disabled={!cameraReady}
+          >
+            <View style={[styles.flashIconContainer, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+              <Text style={[styles.flashIcon, { color: flashOn ? '#FFD700' : colors.surface }]}>
+                ⚡
+              </Text>
+              {flashOn && <View style={styles.flashActiveDot} />}
+            </View>
+          </TouchableOpacity>
+        )}
+
         <View pointerEvents="none" style={styles.overlay}>
           {mode === 'barcode' ? (
             // Cible carrée pour le scan de code-barres
@@ -135,12 +154,21 @@ export function Scanner({
               <View style={[styles.corner, styles.bottomRight, { borderColor: colors.accent }]} />
             </View>
           ) : mode === 'band' ? (
-            <View style={[styles.bandFrame, { borderColor: colors.accent }]}>
-              <View style={[styles.bandCorner, styles.bandTopLeft, { borderColor: colors.accent }]} />
-              <View style={[styles.bandCorner, styles.bandTopRight, { borderColor: colors.accent }]} />
-              <View style={[styles.bandCorner, styles.bandBottomLeft, { borderColor: colors.accent }]} />
-              <View style={[styles.bandCorner, styles.bandBottomRight, { borderColor: colors.accent }]} />
-            </View>
+            <>
+              <View style={[styles.bandFrame, { borderColor: colors.accent }]}>
+                <View style={[styles.bandCorner, styles.bandTopLeft, { borderColor: colors.accent }]} />
+                <View style={[styles.bandCorner, styles.bandTopRight, { borderColor: colors.accent }]} />
+                <View style={[styles.bandCorner, styles.bandBottomLeft, { borderColor: colors.accent }]} />
+                <View style={[styles.bandCorner, styles.bandBottomRight, { borderColor: colors.accent }]} />
+              </View>
+              {aiMessage && (
+                <View style={[styles.aiMessageContainer, { backgroundColor: 'rgba(46, 125, 50, 0.9)' }]}>
+                  <Text style={[styles.aiMessageText, { color: colors.surface }]}>
+                    🤖 {aiMessage}
+                  </Text>
+                </View>
+              )}
+            </>
           ) : (
             // Cadre classique pour la capture photo
             <View style={[styles.frame, { borderColor: colors.accent }]} />
@@ -148,33 +176,19 @@ export function Scanner({
         </View>
       </View>
 
-      {(showCapture || enableFlashToggle) && (
+      {showCapture && (
         <View style={styles.controls}>
-          {showCapture && (
-            <TouchableOpacity
-              style={[styles.captureButton, { borderColor: colors.surface, backgroundColor: 'rgba(0,0,0,0.3)' }]}
-              onPress={handleCapture}
-              disabled={!cameraReady || isProcessing}
-            >
-              {isProcessing ? (
-                <ActivityIndicator color={colors.accent} />
-              ) : (
-                <Text style={styles.cameraIcon}>📸</Text>
-              )}
-            </TouchableOpacity>
-          )}
-
-          {enableFlashToggle && (
-            <TouchableOpacity
-              style={[styles.flashButton, { borderColor: colors.surface, backgroundColor: 'rgba(0,0,0,0.4)' }]}
-              onPress={() => setFlashOn((prev) => !prev)}
-              disabled={!cameraReady}
-            >
-              <Text style={[styles.flashText, { color: colors.surface }]}>
-                {flashOn ? 'Flash on' : 'Flash off'}
-              </Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            style={[styles.captureButton, { borderColor: colors.surface, backgroundColor: 'rgba(0,0,0,0.3)' }]}
+            onPress={handleCapture}
+            disabled={!cameraReady || isProcessing}
+          >
+            {isProcessing ? (
+              <ActivityIndicator color={colors.accent} />
+            ) : (
+              <Text style={styles.cameraIcon}>📸</Text>
+            )}
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -291,15 +305,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  flashButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    borderWidth: 2
+  flashButtonTop: {
+    position: 'absolute',
+    top: 16,
+    left: 16,
+    zIndex: 10
   },
-  flashText: {
-    fontSize: 14,
-    fontWeight: '700'
+  flashIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative'
+  },
+  flashIcon: {
+    fontSize: 24
+  },
+  flashActiveDot: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FFD700'
   },
   cameraIcon: {
     fontSize: 16,
@@ -325,5 +355,19 @@ const styles = StyleSheet.create({
   permissionButtonText: {
     fontSize: 16,
     fontWeight: '600'
+  },
+  aiMessageContainer: {
+    position: 'absolute',
+    bottom: -60,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    maxWidth: '80%'
+  },
+  aiMessageText: {
+    fontSize: 13,
+    fontWeight: '700',
+    textAlign: 'center',
+    lineHeight: 18
   }
 });

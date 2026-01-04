@@ -9,7 +9,10 @@
     "edit": "Bewerken",
     "back": "Terug",
     "refresh": "Vernieuwen",
-    "unknown": "Onbekend"
+    "unknown": "Onbekend",
+    "dataDisclaimer": "Op basis van beschikbare gegevens op dit moment",
+    "appDisclaimer": "Deze app biedt recall-informatie op basis van offici?le openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
+    "noRecallDisclaimer": "De afwezigheid van een recall garandeert niet de veiligheid van het product."
   },
   "home": {
     "title": "Eats OK",
@@ -42,6 +45,7 @@
     "restart": "Opnieuw beginnen",
     "manualEntry": "Handmatige invoer",
     "waitingForCapture": "Wachten op opname...",
+    "aiPrecision": "AI gebruikt voor betere nauwkeurigheid",
     "errors": {
       "brandCaptureFailed": "Merkopname mislukt.",
       "scanFailed": "Scan mislukt.",
@@ -88,7 +92,7 @@
     "filters": {
       "all": "Alles",
       "recalled": "Teruggeroepen",
-      "safe": "Veilig",
+      "safe": "Geen recall",
       "unknown": "Onbekend"
     },
     "emptyState": "Nog geen gescande producten.",
@@ -96,7 +100,7 @@
   },
   "productCard": {
     "lot": "Partij {{lot}}",
-    "scannedAt": "Gescand op {{date}}",
+    "scannedAt": "Gescand op {{date}} om {{time}}",
     "privacy": "Er worden geen foto's opgeslagen; alleen merk en partijnummer worden bewaard.",
     "delete": "Verwijderen"
   },
@@ -110,10 +114,11 @@
     "callSamu": "Bel 112 (Noodgeval)",
     "callEmergency": "Bel 112 (Noodgeval)",
     "viewOfficialNotice": "Bekijk officiële terugroepmededeling",
-    "returnForRefund": "Breng het product terug naar de winkel voor een terugbetaling"
+    "returnForRefund": "Breng het product terug naar de winkel voor een terugbetaling",
+    "reportedBy": "Recall gemeld door FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Geen bekende terugroepactie",
+    "safe": "Geen terugroeping gevonden in officiële databases op dit moment",
     "recalled": "Teruggeroepen",
     "unknown": "In beoordeling",
     "warning": "In de gaten houden"
@@ -177,6 +182,18 @@
     "privacyPolicy": "Privacybeleid",
     "terms": "Algemene Voorwaarden",
     "legalNotice": "Juridische Kennisgeving",
-    "errorLoading": "Fout bij het laden van document"
+    "errorLoading": "Fout bij het laden van document",
+    "disclaimer": "Disclaimer",
+    "dataSources": "Databronnen (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "Disclaimer voor voedselterugroepingen",
+    "body": "Deze toepassing biedt informatie over voedselterugroepingen voor producten die in de Verenigde Staten worden verkocht, uitsluitend ter informatie.\n\nDe informatie die in deze app wordt weergegeven is gebaseerd op openbaar beschikbare gegevens van overheidsinstanties (waaronder, maar niet beperkt tot, de FDA en USDA) en andere bronnen van derden. Wij garanderen niet de juistheid, volledigheid of actualiteit van de verstrekte informatie.\n\nDeze app vervangt geen offici?le terugroepmeldingen, communicatie van fabrikanten of richtlijnen van toezichthoudende instanties. Gebruikers worden aangemoedigd terugroepinformatie rechtstreeks bij offici?le bronnen te verifi?ren.\n\nEen product dat in deze app niet als teruggeroepen wordt ge?dentificeerd, garandeert niet dat het product veilig is of niet onder een huidige of toekomstige terugroepactie valt.\n\nDeze app geeft geen medisch, voedings- of gezondheidsadvies. Als u zich zorgen maakt over voedselveiligheid, besmetting, allergie?n of ziekte, raadpleeg dan een gekwalificeerde zorgverlener of volg offici?le richtlijnen van volksgezondheidsinstanties.\n\nDeze app controleert geen houdbaarheidsdata of de versheid van producten.\n\nHet scannen van barcodes, het herkennen van lotnummers en spraak- of visuele output kan onderhevig zijn aan technische beperkingen of fouten. Gebruikers blijven verantwoordelijk voor het verifi?ren van productdetails en terugroepstatus.\n\nVoor zover wettelijk toegestaan is de ontwikkelaar niet aansprakelijk voor directe of indirecte schade, letsel of verliezen die voortvloeien uit het gebruik van of het vertrouwen op de informatie die door deze app wordt verstrekt.\n\nDe recall-dekking is beperkt tot voedselproducten die in de Verenigde Staten worden verkocht en is mogelijk niet van toepassing op producten die in andere landen worden verkocht."
+  },
+  "dataSources": {
+    "title": "Databronnen",
+    "description": "Offici?le bronnen voor terugroepinformatie in de VS:",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

@@ -167,6 +167,8 @@ Si vous choisissez de renseigner votre prénom :
 - De l'accès non autorisé à l'appareil de l'utilisateur
 - De la compromission de la sécurité du smartphone
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ### 7.2 Responsabilité de l'utilisateur
 
 **L'utilisateur est seul responsable :**

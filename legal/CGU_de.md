@@ -29,6 +29,8 @@ Die Texterkennung kann Fehler enthalten. Sie müssen die erkannten Informationen
 
 Der Herausgeber garantiert nicht die Richtigkeit der Informationen. Im Falle eines Rückrufs konsultieren Sie offizielle Quellen.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Daten
 
 Alle Ihre Daten werden lokal auf Ihrem Gerät gespeichert. Kein Foto wird an einen Server gesendet.

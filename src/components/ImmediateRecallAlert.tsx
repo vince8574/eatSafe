@@ -141,6 +141,8 @@ export function ImmediateRecallAlert({
                 <Text style={styles.infoValue}>{recall.description}</Text>
               </View>
             )}
+
+            <Text style={styles.infoNote}>{t('recallAlert.reportedBy')}</Text>
           </View>
 
           {/* Consignes en cas d'ingestion */}
@@ -263,6 +265,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     lineHeight: 22,
+  },
+  infoNote: {
+    fontSize: 12,
+    color: '#666',
+    fontStyle: 'italic'
   },
   instructionsContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',

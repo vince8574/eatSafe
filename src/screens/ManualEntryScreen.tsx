@@ -90,6 +90,12 @@ export function ManualEntryScreen() {
         />
       </View>
 
+      <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+        <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+          ⚠️ {t('common.appDisclaimer')}
+        </Text>
+      </View>
+
       <TouchableOpacity
         style={[styles.button, { backgroundColor: colors.accent, opacity: isSubmitting ? 0.5 : 1 }]}
         onPress={handleSave}
@@ -145,5 +151,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase'
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 24,
+    marginBottom: 16
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center'
   }
 });

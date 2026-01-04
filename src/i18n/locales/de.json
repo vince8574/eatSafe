@@ -9,7 +9,10 @@
     "edit": "Bearbeiten",
     "back": "Zurück",
     "refresh": "Aktualisieren",
-    "unknown": "Unbekannt"
+    "unknown": "Unbekannt",
+    "dataDisclaimer": "Basierend auf verfügbaren Daten zu diesem Zeitpunkt",
+    "appDisclaimer": "Diese App liefert R?ckrufinformationen basierend auf offiziellen ?ffentlichen Datenbanken. Sie garantiert nicht die Produktsicherheit. Diese App ?berpr?ft weder das Verfallsdatum noch die Frische der Produkte.",
+    "noRecallDisclaimer": "Das Fehlen eines R?ckrufs garantiert nicht die Produktsicherheit."
   },
   "home": {
     "title": "Eats OK",
@@ -42,6 +45,7 @@
     "restart": "Neu starten",
     "manualEntry": "Manuelle Eingabe",
     "waitingForCapture": "Warte auf Aufnahme...",
+    "aiPrecision": "KI für mehr Genauigkeit verwendet",
     "errors": {
       "brandCaptureFailed": "Markenaufnahme fehlgeschlagen.",
       "scanFailed": "Scan fehlgeschlagen.",
@@ -88,7 +92,7 @@
     "filters": {
       "all": "Alle",
       "recalled": "Zurückgerufen",
-      "safe": "Sicher",
+      "safe": "Kein Rückruf",
       "unknown": "Unbekannt"
     },
     "emptyState": "Noch keine gescannten Produkte.",
@@ -96,7 +100,7 @@
   },
   "productCard": {
     "lot": "Charge {{lot}}",
-    "scannedAt": "Gescannt am {{date}}",
+    "scannedAt": "Gescannt am {{date}} um {{time}}",
     "privacy": "Es werden keine Fotos gespeichert; nur Marke und Chargennummer bleiben erhalten.",
     "delete": "Löschen"
   },
@@ -110,10 +114,11 @@
     "callSamu": "Notruf 112 anrufen",
     "callEmergency": "Notruf 112 anrufen",
     "viewOfficialNotice": "Offizielle Rückrufmeldung ansehen",
-    "returnForRefund": "Bringen Sie das Produkt zur Rückerstattung ins Geschäft zurück"
+    "returnForRefund": "Bringen Sie das Produkt zur Rückerstattung ins Geschäft zurück",
+    "reportedBy": "R?ckruf gemeldet von FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Kein bekannter Rückruf",
+    "safe": "Kein Rückruf in offiziellen Datenbanken zu diesem Zeitpunkt gefunden",
     "recalled": "Zurückgerufen",
     "unknown": "In Prüfung",
     "warning": "Beobachten"
@@ -177,6 +182,18 @@
     "privacyPolicy": "Datenschutzerklärung",
     "terms": "Nutzungsbedingungen",
     "legalNotice": "Impressum",
-    "errorLoading": "Fehler beim Laden des Dokuments"
+    "errorLoading": "Fehler beim Laden des Dokuments",
+    "disclaimer": "Haftungsausschluss",
+    "dataSources": "Datenquellen (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "Haftungsausschluss zu Lebensmittelr?ckrufen",
+    "body": "Diese Anwendung stellt Informationen zu Lebensmittelr?ckrufen f?r Produkte bereit, die in den Vereinigten Staaten verkauft werden, ausschlie?lich zu Informationszwecken.\n\nDie in dieser App angezeigten Informationen basieren auf ?ffentlich verf?gbaren Daten von Regierungsbeh?rden (einschlie?lich, aber nicht beschr?nkt auf FDA und USDA) und anderen Drittquellen. Wir ?bernehmen keine Gew?hr f?r die Richtigkeit, Vollst?ndigkeit oder Aktualit?t der bereitgestellten Informationen.\n\nDiese App ersetzt keine offiziellen R?ckrufmeldungen, Herstellerinformationen oder Hinweise von Aufsichtsbeh?rden. Nutzer werden ermutigt, R?ckrufinformationen direkt bei offiziellen Stellen zu ?berpr?fen.\n\nEin Produkt, das in dieser App nicht als zur?ckgerufen gekennzeichnet ist, garantiert nicht, dass das Produkt sicher ist oder nicht Gegenstand eines aktuellen oder zuk?nftigen R?ckrufs ist.\n\nDiese App bietet keine medizinischen, ern?hrungsbezogenen oder gesundheitlichen Ratschl?ge. Wenn Sie Bedenken hinsichtlich Lebensmittelsicherheit, Kontamination, Allergien oder Erkrankungen haben, wenden Sie sich an eine qualifizierte medizinische Fachkraft oder befolgen Sie offizielle Hinweise der Gesundheitsbeh?rden.\n\nDiese App ?berpr?ft keine Verfallsdaten oder die Frische von Produkten.\n\nBarcode-Scanning, Erkennung von Chargennummern sowie Sprach- oder visuelle Ausgaben k?nnen technischen Einschr?nkungen oder Fehlern unterliegen. Nutzer bleiben daf?r verantwortlich, Produktdetails und R?ckrufstatus zu ?berpr?fen.\n\nSoweit gesetzlich zul?ssig, haftet der Entwickler nicht f?r direkte oder indirekte Sch?den, Verletzungen oder Verluste, die aus der Nutzung oder dem Vertrauen auf die in dieser App bereitgestellten Informationen entstehen.\n\nDie R?ckrufabdeckung ist auf Lebensmittelprodukte beschr?nkt, die in den Vereinigten Staaten verkauft werden, und gilt m?glicherweise nicht f?r Produkte, die in anderen L?ndern verkauft werden."
+  },
+  "dataSources": {
+    "title": "Datenquellen",
+    "description": "Offizielle Quellen f?r R?ckrufinformationen in den USA:",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

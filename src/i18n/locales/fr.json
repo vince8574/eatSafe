@@ -9,7 +9,10 @@
     "edit": "Modifier",
     "back": "Retour",
     "refresh": "Actualiser",
-    "unknown": "Inconnu"
+    "unknown": "Inconnu",
+    "dataDisclaimer": "Basé sur les données disponibles à ce moment",
+    "appDisclaimer": "Cette application fournit des informations de rappel bas?es sur des bases de donn?es publiques officielles. Elle ne garantit pas la s?curit? du produit. Cette application ne v?rifie pas les dates de p?remption ni la fra?cheur des produits.",
+    "noRecallDisclaimer": "L'absence de rappel ne garantit pas la s?curit? du produit."
   },
   "home": {
     "title": "Eats OK",
@@ -50,6 +53,7 @@
     "switchToOcr": "📸 Scanner le texte de la marque",
     "switchToBarcode": "📊 Scanner le code-barres",
     "waitingForCapture": "En attente de capture...",
+    "aiPrecision": "IA utilisée pour plus de précision",
     "errors": {
       "brandCaptureFailed": "La capture de la marque a échoué.",
       "scanFailed": "Le scan a échoué.",
@@ -105,7 +109,7 @@
     "filters": {
       "all": "Tous",
       "recalled": "Rappelés",
-      "safe": "Sûr",
+      "safe": "Sans rappel",
       "unknown": "Inconnu"
     },
     "emptyState": "Aucun produit scanné pour le moment.",
@@ -113,7 +117,7 @@
   },
   "productCard": {
     "lot": "Lot {{lot}}",
-    "scannedAt": "Scanné le {{date}}",
+    "scannedAt": "Scann? le {{date}} ? {{time}}",
     "privacy": "Aucune photo n'est stockée ; seuls la marque et le numéro de lot sont conservés.",
     "delete": "Supprimer"
   },
@@ -127,10 +131,11 @@
     "callSamu": "Appeler le 15 (SAMU)",
     "callEmergency": "Appeler le 112 (Urgences)",
     "viewOfficialNotice": "Consulter la fiche officielle du rappel",
-    "returnForRefund": "Rapportez le produit au magasin pour obtenir un remboursement"
+    "returnForRefund": "Rapportez le produit au magasin pour obtenir un remboursement",
+    "reportedBy": "Rappel signal? par la FDA / l'USDA"
   },
   "recallStatus": {
-    "safe": "Aucun rappel connu",
+    "safe": "Aucun rappel trouvé dans les bases officielles pour le moment",
     "recalled": "Rappelé",
     "unknown": "Analyse en cours",
     "warning": "À surveiller"
@@ -196,6 +201,18 @@
     "privacyPolicy": "Politique de Confidentialité",
     "terms": "Conditions Générales d'Utilisation",
     "legalNotice": "Mentions Légales",
-    "errorLoading": "Erreur de chargement du document"
+    "errorLoading": "Erreur de chargement du document",
+    "disclaimer": "Avertissement",
+    "dataSources": "Sources de donn?es (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "Avertissement sur les rappels alimentaires",
+    "body": "Cette application fournit des informations sur les rappels alimentaires pour les produits vendus aux ?tats-Unis, uniquement ? titre informatif.\n\nLes informations affich?es dans cette application sont bas?es sur des donn?es publiques provenant d'agences gouvernementales (y compris, mais sans s'y limiter, la FDA et l'USDA) et d'autres sources tierces. Nous ne garantissons pas l'exactitude, l'exhaustivit? ni l'actualit? des informations fournies.\n\nCette application ne remplace pas les notifications officielles de rappel, les communications des fabricants ou les consignes des autorit?s r?glementaires. Les utilisateurs sont encourag?s ? v?rifier les informations de rappel directement aupr?s des sources officielles.\n\nLe fait qu'un produit ne soit pas identifi? comme rappel? dans cette application ne garantit pas que le produit est s?r ou qu'il ne fait pas l'objet d'un rappel en cours ou futur.\n\nCette application ne fournit pas de conseils m?dicaux, nutritionnels ou de sant?. Si vous avez des pr?occupations concernant la s?curit? alimentaire, la contamination, les allergies ou une maladie, consultez un professionnel de sant? qualifi? ou suivez les consignes officielles des autorit?s de sant? publique.\n\nCette application ne v?rifie pas les dates de p?remption ni la fra?cheur des produits.\n\nLa lecture des codes-barres, la reconnaissance des num?ros de lot et les sorties vocales ou visuelles peuvent ?tre sujettes ? des limites techniques ou ? des erreurs. Les utilisateurs restent responsables de la v?rification des d?tails du produit et du statut de rappel.\n\nDans la mesure maximale permise par la loi, le d?veloppeur ne saurait ?tre tenu responsable des dommages, blessures ou pertes directes ou indirectes r?sultant de l'utilisation ou de la confiance accord?e aux informations fournies par cette application.\n\nLa couverture des rappels est limit?e aux produits alimentaires vendus aux ?tats-Unis et peut ne pas s'appliquer aux produits vendus dans d'autres pays."
+  },
+  "dataSources": {
+    "title": "Sources de donn?es",
+    "description": "Sources officielles d'information sur les rappels aux ?tats-Unis :",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

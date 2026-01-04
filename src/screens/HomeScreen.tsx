@@ -72,6 +72,12 @@ export function HomeScreen() {
               </TouchableOpacity>
             </View>
 
+            <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+              <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+                ⚠️ {t('common.appDisclaimer')}
+              </Text>
+            </View>
+
           </View>
         }
         renderItem={() => null}
@@ -154,5 +160,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 22
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 24,
+    marginBottom: 16
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center'
   }
 });

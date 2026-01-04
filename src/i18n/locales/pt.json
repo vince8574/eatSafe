@@ -9,7 +9,10 @@
     "edit": "Editar",
     "back": "Voltar",
     "refresh": "Atualizar",
-    "unknown": "Desconhecido"
+    "unknown": "Desconhecido",
+    "dataDisclaimer": "Com base nos dados disponíveis neste momento",
+    "appDisclaimer": "Este app fornece informa??es de recall com base em bancos de dados p?blicos oficiais. N?o garante a seguran?a do produto. Este app n?o verifica datas de validade ou o frescor dos produtos.",
+    "noRecallDisclaimer": "A aus?ncia de recall n?o garante a seguran?a do produto."
   },
   "home": {
     "title": "Eats OK",
@@ -42,6 +45,7 @@
     "restart": "Reiniciar",
     "manualEntry": "Entrada manual",
     "waitingForCapture": "Aguardando captura...",
+    "aiPrecision": "IA usada para maior precisão",
     "errors": {
       "brandCaptureFailed": "Captura da marca falhou.",
       "scanFailed": "Escaneamento falhou.",
@@ -88,7 +92,7 @@
     "filters": {
       "all": "Todos",
       "recalled": "Recolhidos",
-      "safe": "Seguro",
+      "safe": "Sem recall",
       "unknown": "Desconhecido"
     },
     "emptyState": "Ainda não há produtos escaneados.",
@@ -96,7 +100,7 @@
   },
   "productCard": {
     "lot": "Lote {{lot}}",
-    "scannedAt": "Escaneado em {{date}}",
+    "scannedAt": "Escaneado em {{date}} ?s {{time}}",
     "privacy": "Nenhuma foto é armazenada; apenas marca e número do lote são mantidos.",
     "delete": "Excluir"
   },
@@ -110,10 +114,11 @@
     "callSamu": "Ligar para 112 (Emergência)",
     "callEmergency": "Ligar para 112 (Emergência)",
     "viewOfficialNotice": "Ver aviso oficial do recall",
-    "returnForRefund": "Devolva o produto à loja para reembolso"
+    "returnForRefund": "Devolva o produto à loja para reembolso",
+    "reportedBy": "Recall informado por FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Sem recall conhecido",
+    "safe": "Nenhum recall encontrado nas bases de dados oficiais no momento",
     "recalled": "Recolhido",
     "unknown": "Em análise",
     "warning": "Monitorar"
@@ -177,6 +182,18 @@
     "privacyPolicy": "Política de Privacidade",
     "terms": "Termos de Serviço",
     "legalNotice": "Aviso Legal",
-    "errorLoading": "Erro ao carregar documento"
+    "errorLoading": "Erro ao carregar documento",
+    "disclaimer": "Isen??o de responsabilidade",
+    "dataSources": "Fontes de dados (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "Isen??o de responsabilidade sobre recalls de alimentos",
+    "body": "Este aplicativo fornece informa??es de recall de alimentos para produtos vendidos nos Estados Unidos apenas para fins informativos.\n\nAs informa??es exibidas neste app s?o baseadas em dados publicamente dispon?veis de ag?ncias governamentais (incluindo, mas n?o se limitando a, FDA e USDA) e outras fontes de terceiros. N?o garantimos a precis?o, a integridade ou a atualidade das informa??es fornecidas.\n\nEste app n?o substitui notifica??es oficiais de recall, comunica??es de fabricantes ou orienta??es de autoridades regulat?rias. Os usu?rios s?o incentivados a verificar as informa??es de recall diretamente com fontes oficiais.\n\nUm produto n?o identificado como recall neste app n?o garante que o produto seja seguro ou n?o esteja sujeito a um recall atual ou futuro.\n\nEste app n?o fornece aconselhamento m?dico, nutricional ou de sa?de. Se voc? tiver preocupa??es sobre seguran?a alimentar, contamina??o, alergias ou doen?a, consulte um profissional de sa?de qualificado ou siga orienta??es oficiais das autoridades de sa?de p?blica.\n\nEste app n?o verifica datas de validade ou o frescor dos produtos.\n\nA leitura de c?digo de barras, o reconhecimento de n?meros de lote e sa?das de voz ou visuais podem estar sujeitos a limita??es t?cnicas ou erros. Os usu?rios permanecem respons?veis por verificar os detalhes do produto e o status do recall.\n\nNa m?xima extens?o permitida por lei, o desenvolvedor n?o ser? respons?vel por quaisquer danos, les?es ou perdas diretas ou indiretas decorrentes do uso ou da confian?a nas informa??es fornecidas por este app.\n\nA cobertura de recalls ? limitada a produtos alimentares vendidos nos Estados Unidos e pode n?o se aplicar a produtos vendidos em outros pa?ses."
+  },
+  "dataSources": {
+    "title": "Fontes de dados",
+    "description": "Fontes oficiais de informa??es sobre recalls nos EUA:",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Scanner } from '../components/Scanner';
 import { useTheme } from '../theme/themeContext';
@@ -13,6 +13,8 @@ export function ScanScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const [brandText, setBrandText] = useState('');
+  const [productName, setProductName] = useState('');
+  const [productImage, setProductImage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
   const [isEditingBrand, setIsEditingBrand] = useState(false);
@@ -21,6 +23,8 @@ export function ScanScreen() {
 
   const resetFlow = useCallback(() => {
     setBrandText('');
+    setProductName('');
+    setProductImage('');
     setErrorMessage('');
     setConfirmModalVisible(false);
     setIsEditingBrand(false);
@@ -45,10 +49,15 @@ export function ScanScreen() {
       return;
     }
 
-    // Rediriger vers l'écran de scan du lot avec la marque
+    // Rediriger vers l'écran de scan du lot avec la marque et les infos produit
     setConfirmModalVisible(false);
-    router.push(`/scan-lot?brand=${encodeURIComponent(finalBrand)}` as any);
-  }, [brandText, isEditingBrand, editedBrand, router, t]);
+    const params = new URLSearchParams({
+      brand: finalBrand,
+      ...(productName && { productName }),
+      ...(productImage && { productImage })
+    });
+    router.push(`/scan-lot?${params.toString()}` as any);
+  }, [brandText, isEditingBrand, editedBrand, productName, productImage, router, t]);
 
   const handleRestart = useCallback(() => {
     resetFlow();
@@ -78,6 +87,8 @@ export function ScanScreen() {
       if (productInfo) {
         console.log('[ScanScreen] Product found:', productInfo);
         setBrandText(productInfo.brand);
+        setProductName(productInfo.productName);
+        setProductImage(productInfo.imageUrl || '');
         setConfirmModalVisible(true);
       } else {
         setErrorMessage(t('scan.errors.barcodeNotFound'));
@@ -155,6 +166,12 @@ export function ScanScreen() {
           <Text style={[styles.errorText, { color: colors.danger }]}>{errorMessage}</Text>
         ) : null}
 
+        <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+          <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+            ⚠️ {t('common.appDisclaimer')}
+          </Text>
+        </View>
+
         <TouchableOpacity
           style={[styles.resetButton, { backgroundColor: colors.surface }]}
           onPress={resetFlow}
@@ -216,6 +233,20 @@ export function ScanScreen() {
               </>
             ) : (
               <>
+                {productImage ? (
+                  <Image
+                    source={{ uri: productImage }}
+                    style={styles.productImage}
+                    resizeMode="contain"
+                  />
+                ) : null}
+
+                {productName ? (
+                  <Text style={[styles.productName, { color: colors.textPrimary }]}>
+                    {productName}
+                  </Text>
+                ) : null}
+
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
                   {t('scan.confirmBrandMessage', { brand: brandText || t('common.unknown') })}
                 </Text>
@@ -400,5 +431,28 @@ const styles = StyleSheet.create({
   editButtonText: {
     fontSize: 16,
     fontWeight: '700'
+  },
+  productImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 12,
+    backgroundColor: '#f5f5f5'
+  },
+  productName: {
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginTop: 8
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 16,
+    marginBottom: 8
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center'
   }
 });

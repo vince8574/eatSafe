@@ -29,6 +29,8 @@ Tekstherkenning kan fouten bevatten. U moet de gedetecteerde informatie altijd v
 
 De uitgever garandeert niet de nauwkeurigheid van informatie. In geval van terugroeping, raadpleeg officiële bronnen.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Gegevens
 
 Al uw gegevens worden lokaal op uw apparaat opgeslagen. Geen enkele foto wordt naar een server verzonden.

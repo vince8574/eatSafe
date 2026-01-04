@@ -29,6 +29,8 @@ Njohja e tekstit mund të përmbajë gabime. Ju duhet të verifikoni gjithmonë 
 
 Botori nuk garanton saktësinë e informacionit. Në rast tërheqjeje, konsultoni burimet zyrtare.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Të dhënat
 
 Të gjitha të dhënat tuaja ruhen lokalisht në pajisjen tuaj. Asnjë foto nuk dërgohet në një server.

@@ -29,6 +29,8 @@ Prepoznavanje teksta može sadržati greške. Uvijek morate vizuelno provjeriti 
 
 Izdavač ne garantuje tačnost informacija. U slučaju opoziva, konsultujte zvanične izvore.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Podaci
 
 Svi vaši podaci se čuvaju lokalno na vašem uređaju. Nijedna fotografija se ne šalje na server.

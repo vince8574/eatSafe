@@ -4,6 +4,7 @@ import { LanguageSelector } from '../../src/components/LanguageSelector';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
 import { Ionicons } from '@expo/vector-icons';
+import { GradientBackground } from '../../src/components/GradientBackground';
 
 export default function LanguageScreen() {
   const { colors } = useTheme();
@@ -11,7 +12,8 @@ export default function LanguageScreen() {
   const router = useRouter();
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: '#C4DECC' }]}>
+    <GradientBackground>
+      <ScrollView style={styles.container}>
       <View style={styles.titleContainer}>
         <Image
           source={require('../../assets/logo_eatsok.png')}
@@ -72,8 +74,41 @@ export default function LanguageScreen() {
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.legalButton, { backgroundColor: colors.surface }]}
+          onPress={() => router.push('/legal/disclaimer')}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="alert-circle-outline" size={24} color={colors.accent} />
+            <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+              {t('legal.disclaimer')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.legalButton, { backgroundColor: colors.surface }]}
+          onPress={() => router.push('/legal/data-sources')}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="link-outline" size={24} color={colors.accent} />
+            <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+              {t('legal.dataSources')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+
+      <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+        <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+          ⚠️ {t('common.appDisclaimer')}
+        </Text>
+      </View>
+      </ScrollView>
+    </GradientBackground>
   );
 }
 
@@ -139,5 +174,16 @@ const styles = StyleSheet.create({
   legalButtonText: {
     fontSize: 16,
     fontWeight: '600'
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 24,
+    marginBottom: 16
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center'
   }
 });

@@ -21,6 +21,8 @@ function RootStack() {
       <Stack.Screen name="legal/privacy-policy" options={{ headerShown: false }} />
       <Stack.Screen name="legal/terms" options={{ headerShown: false }} />
       <Stack.Screen name="legal/legal-notice" options={{ headerShown: false }} />
+      <Stack.Screen name="legal/disclaimer" options={{ headerShown: false }} />
+      <Stack.Screen name="legal/data-sources" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

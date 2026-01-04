@@ -24,6 +24,13 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
     }),
     [t, locale]
   );
+  const scannedAt = useMemo(() => {
+    const date = new Date(product.scannedAt);
+    return {
+      date: date.toLocaleDateString(locale || undefined),
+      time: date.toLocaleTimeString(locale || undefined, { hour: '2-digit', minute: '2-digit' })
+    };
+  }, [product.scannedAt, locale]);
 
   return (
     <TouchableOpacity
@@ -44,9 +51,7 @@ export const ProductCard = memo(({ product, onPress, onRemove }: ProductCardProp
           {t('productCard.lot', { lot: product.lotNumber })}
         </Text>
         <Text style={[styles.date, { color: colors.textSecondary }]}>
-          {t('productCard.scannedAt', {
-            date: new Date(product.scannedAt).toLocaleDateString(locale || undefined)
-          })}
+          {t('productCard.scannedAt', scannedAt)}
         </Text>
 
         <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>

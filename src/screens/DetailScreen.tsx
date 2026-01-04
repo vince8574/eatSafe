@@ -66,11 +66,20 @@ export function DetailScreen() {
             <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
               {getStatusLabel(product.recallStatus, t)}
             </Text>
+            <Text style={[styles.disclaimer, { color: colors.textSecondary, marginTop: 8 }]}>
+              {t('common.dataDisclaimer')}
+            </Text>
             <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.lastChecked')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
               {product.lastCheckedAt
                 ? new Date(product.lastCheckedAt).toLocaleString('fr-FR')
                 : t('details.never')}
+            </Text>
+          </View>
+
+          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+            <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+              ⚠️ {t('common.appDisclaimer')}
             </Text>
           </View>
 
@@ -159,9 +168,23 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 8
   },
+  disclaimer: {
+    fontSize: 12,
+    fontStyle: 'italic'
+  },
   value: {
     fontSize: 16,
     marginTop: 8
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center'
   },
   sectionTitle: {
     fontSize: 18,

@@ -9,7 +9,10 @@
     "edit": "Editar",
     "back": "Volver",
     "refresh": "Actualizar",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "dataDisclaimer": "Basado en datos disponibles en este momento",
+    "appDisclaimer": "Esta app proporciona informaci?n de retiros basada en bases de datos p?blicas oficiales. No garantiza la seguridad del producto. Esta app no verifica las fechas de caducidad ni la frescura de los productos.",
+    "noRecallDisclaimer": "La ausencia de un retiro no garantiza la seguridad del producto."
   },
   "home": {
     "title": "Eats OK",
@@ -42,6 +45,7 @@
     "restart": "Reiniciar",
     "manualEntry": "Entrada manual",
     "waitingForCapture": "Esperando captura...",
+    "aiPrecision": "IA utilizada para mayor precisión",
     "errors": {
       "brandCaptureFailed": "Fallo en la captura de marca.",
       "scanFailed": "Escaneo fallido.",
@@ -88,7 +92,7 @@
     "filters": {
       "all": "Todo",
       "recalled": "Retirados",
-      "safe": "Seguro",
+      "safe": "Sin retiro",
       "unknown": "Desconocido"
     },
     "emptyState": "Aún no hay productos escaneados.",
@@ -96,7 +100,7 @@
   },
   "productCard": {
     "lot": "Lote {{lot}}",
-    "scannedAt": "Escaneado el {{date}}",
+    "scannedAt": "Escaneado el {{date}} a las {{time}}",
     "privacy": "No se guarda ninguna foto; solo se conservan la marca y el número de lote.",
     "delete": "Eliminar"
   },
@@ -110,10 +114,11 @@
     "callSamu": "Llamar al 112 (Emergencia)",
     "callEmergency": "Llamar al 112 (Emergencia)",
     "viewOfficialNotice": "Ver aviso oficial del retiro",
-    "returnForRefund": "Devuelva el producto a la tienda para obtener un reembolso"
+    "returnForRefund": "Devuelva el producto a la tienda para obtener un reembolso",
+    "reportedBy": "Retiro informado por la FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Sin retirada conocida",
+    "safe": "No se encontró ningún retiro en las bases de datos oficiales en este momento",
     "recalled": "Retirado",
     "unknown": "En revisión",
     "warning": "A vigilar"
@@ -177,6 +182,18 @@
     "privacyPolicy": "Política de Privacidad",
     "terms": "Términos y Condiciones",
     "legalNotice": "Aviso Legal",
-    "errorLoading": "Error al cargar el documento"
+    "errorLoading": "Error al cargar el documento",
+    "disclaimer": "Descargo de responsabilidad",
+    "dataSources": "Fuentes de datos (FDA / USDA)"
+  },
+  "disclaimer": {
+    "title": "Descargo de responsabilidad sobre retiros de alimentos",
+    "body": "Esta aplicaci?n proporciona informaci?n sobre retiros de alimentos para productos vendidos en los Estados Unidos solo con fines informativos.\n\nLa informaci?n mostrada en esta app se basa en datos disponibles p?blicamente de agencias gubernamentales (incluidas, entre otras, la FDA y el USDA) y otras fuentes de terceros. No garantizamos la exactitud, integridad ni actualidad de la informaci?n proporcionada.\n\nEsta app no reemplaza las notificaciones oficiales de retiro, las comunicaciones de los fabricantes ni la orientaci?n de las autoridades regulatorias. Se recomienda a los usuarios verificar la informaci?n de retiro directamente con fuentes oficiales.\n\nEl hecho de que un producto no sea identificado como retirado en esta app no garantiza que el producto sea seguro ni que no est? sujeto a un retiro actual o futuro.\n\nEsta app no proporciona asesoramiento m?dico, nutricional ni de salud. Si tiene inquietudes sobre seguridad alimentaria, contaminaci?n, alergias o enfermedad, consulte a un profesional de la salud calificado o siga la orientaci?n oficial de las autoridades de salud p?blica.\n\nEsta app no verifica las fechas de caducidad ni la frescura de los productos.\n\nEl escaneo de c?digos de barras, el reconocimiento de n?meros de lote y las salidas de voz o visuales pueden estar sujetos a limitaciones t?cnicas o errores. Los usuarios siguen siendo responsables de verificar los detalles del producto y el estado del retiro.\n\nEn la m?xima medida permitida por la ley, el desarrollador no ser? responsable de da?os, lesiones o p?rdidas directas o indirectas derivados del uso o la confianza en la informaci?n proporcionada por esta app.\n\nLa cobertura de retiros se limita a productos alimentarios vendidos en los Estados Unidos y puede no aplicarse a productos vendidos en otros pa?ses."
+  },
+  "dataSources": {
+    "title": "Fuentes de datos",
+    "description": "Fuentes oficiales de informaci?n sobre retiros en EE. UU.",
+    "fda": "FDA ? Food and Drug Administration",
+    "usda": "USDA ? Food Safety and Inspection Service"
   }
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
@@ -23,7 +23,13 @@ export function HistoryScreen() {
   const [isCheckingRecalls, setIsCheckingRecalls] = useState(false);
 
   const formatDate = useCallback(
-    (value: string) => new Date(value).toLocaleString(locale || undefined),
+    (value: string | number) => {
+      const date = new Date(value);
+      return {
+        date: date.toLocaleDateString(locale || undefined),
+        time: date.toLocaleTimeString(locale || undefined, { hour: '2-digit', minute: '2-digit' })
+      };
+    },
     [locale]
   );
 
@@ -53,12 +59,12 @@ export function HistoryScreen() {
             for (const result of results) {
               if (result.newRecalls.length > 0) {
                 // Product now has recalls
-                for (const recall of result.newRecalls) {
-                  updateRecall(result.productId, recall);
+                const product = products.find((p) => p.id === result.productId);
+                if (product) {
+                  updateRecall(product, result.newRecalls);
                 }
 
                 // Send notification
-                const product = products.find((p) => p.id === result.productId);
                 if (product) {
                   await Notifications.scheduleNotificationAsync({
                     content: {
@@ -99,23 +105,49 @@ export function HistoryScreen() {
     return products.filter((product) => product.recallStatus === filter);
   }, [filter, products]);
 
-  const renderItem = ({ item }: { item: ScannedProduct }) => (
+  const renderItem = ({ item }: { item: ScannedProduct }) => {
+    const scannedAt = formatDate(item.scannedAt);
+
+    return (
     <TouchableOpacity
       style={[styles.item, { backgroundColor: colors.surface }]}
       onPress={() => router.push({ pathname: '/details/[id]', params: { id: item.id } })}
     >
-      <View style={styles.itemHeader}>
-        <Text style={[styles.brand, { color: colors.textPrimary }]}>{item.brand}</Text>
-        <StatusTag status={item.recallStatus} label={statusLabels[item.recallStatus]} />
+      <View style={styles.itemContent}>
+        {item.productImage ? (
+          <Image
+            source={{ uri: item.productImage }}
+            style={styles.productThumbnail}
+            resizeMode="contain"
+          />
+        ) : null}
+        <View style={styles.itemDetails}>
+          {item.productName ? (
+            <Text style={[styles.productName, { color: colors.textPrimary }]} numberOfLines={2}>
+              {item.productName}
+            </Text>
+          ) : null}
+          <View style={styles.itemHeader}>
+            <Text style={[styles.brand, { color: colors.textPrimary }]}>{item.brand}</Text>
+            <StatusTag status={item.recallStatus} label={statusLabels[item.recallStatus]} />
+          </View>
+          <Text style={[styles.dataDisclaimer, { color: colors.textSecondary }]}>
+            {t('common.dataDisclaimer')}
+          </Text>
+          <Text style={[styles.lot, { color: colors.textSecondary }]}>
+            {t('productCard.lot', { lot: item.lotNumber })}
+          </Text>
+          <Text style={[styles.date, { color: colors.textSecondary }]}>
+            {t('productCard.scannedAt', scannedAt)}
+          </Text>
+          <Text style={[styles.noRecallDisclaimer, { color: colors.textSecondary }]}>
+            {t('common.noRecallDisclaimer')}
+          </Text>
+        </View>
       </View>
-      <Text style={[styles.lot, { color: colors.textSecondary }]}>
-        {t('productCard.lot', { lot: item.lotNumber })}
-      </Text>
-      <Text style={[styles.date, { color: colors.textSecondary }]}>
-        {t('productCard.scannedAt', { date: formatDate(item.scannedAt) })}
-      </Text>
     </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <GradientBackground>
@@ -150,7 +182,7 @@ export function HistoryScreen() {
                   style={[
                     styles.filterChip,
                     {
-                      backgroundColor: filter === item ? colors.accentSoft : colors.surfaceAlt,
+                      backgroundColor: filter === item ? colors.accent : colors.surfaceAlt,
                       borderColor: filter === item ? colors.accent : colors.surfaceAlt
                     }
                   ]}
@@ -158,7 +190,7 @@ export function HistoryScreen() {
                   <Text
                     style={[
                       styles.filterText,
-                      { color: filter === item ? colors.accent : colors.textSecondary }
+                      { color: filter === item ? colors.surface : colors.textSecondary }
                     ]}
                   >
                     {t(`history.filters.${item}`)}
@@ -173,6 +205,13 @@ export function HistoryScreen() {
           <View style={styles.empty}>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
               {t('history.emptyStateDetailed')}
+            </Text>
+          </View>
+        }
+        ListFooterComponent={
+          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+            <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+              ⚠️ {t('common.appDisclaimer')}
             </Text>
           </View>
         }
@@ -247,8 +286,19 @@ const styles = StyleSheet.create({
   lot: {
     fontSize: 16
   },
+  dataDisclaimer: {
+    fontSize: 11,
+    fontStyle: 'italic',
+    marginTop: 4,
+    marginBottom: 4
+  },
   date: {
     fontSize: 13,
+    marginTop: 8
+  },
+  noRecallDisclaimer: {
+    fontSize: 12,
+    fontStyle: 'italic',
     marginTop: 8
   },
   empty: {
@@ -260,5 +310,33 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     lineHeight: 24
+  },
+  itemContent: {
+    flexDirection: 'row',
+    gap: 12
+  },
+  productThumbnail: {
+    width: 70,
+    height: 70,
+    borderRadius: 12,
+    backgroundColor: '#f5f5f5'
+  },
+  itemDetails: {
+    flex: 1
+  },
+  productName: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 6
+  },
+  appDisclaimerBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 24
+  },
+  appDisclaimerText: {
+    fontSize: 13,
+    lineHeight: 20,
+    textAlign: 'center'
   }
 });

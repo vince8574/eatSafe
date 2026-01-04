@@ -29,6 +29,8 @@ Eats OK 是一款免费的移动应用程序，允许您扫描食品并检查它
 
 发布者不保证信息的准确性。如有召回，请查阅官方来源。
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. 数据
 
 您的所有数据都存储在您的设备本地。没有照片被发送到服务器。

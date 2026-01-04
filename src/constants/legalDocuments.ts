@@ -90,6 +90,8 @@ Eats OK ne saurait être tenu responsable :
 - Des décisions prises sur la base des informations fournies
 - De l'exhaustivité des données de rappel
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 6. Contact
 
 Pour toute question : contact@eatsok.app

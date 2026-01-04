@@ -29,6 +29,8 @@ Eats OK は、食品をスキャンしてリコールの対象となっている
 
 発行者は情報の正確性を保証しません。リコールの場合は、公式ソースを参照してください。
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. データ
 
 すべてのデータはデバイスにローカルに保存されます。写真がサーバーに送信されることはありません。

@@ -29,6 +29,8 @@ O reconhecimento de texto pode conter erros. Você deve sempre verificar visualm
 
 O editor não garante a precisão das informações. Em caso de recall, consulte fontes oficiais.
 
+No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
+
 ## 5. Dados
 
 Todos os seus dados são armazenados localmente em seu dispositivo. Nenhuma foto é enviada para um servidor.
