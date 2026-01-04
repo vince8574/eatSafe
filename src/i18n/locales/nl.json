@@ -11,8 +11,10 @@
     "refresh": "Vernieuwen",
     "unknown": "Onbekend",
     "dataDisclaimer": "Op basis van beschikbare gegevens op dit moment",
-    "appDisclaimer": "Deze app biedt recall-informatie op basis van offici?le openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
-    "noRecallDisclaimer": "De afwezigheid van een recall garandeert niet de veiligheid van het product."
+    "appDisclaimer": "Deze app biedt recall-informatie op basis van officiële openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
+    "noRecallDisclaimer": "De afwezigheid van een recall garandeert niet de veiligheid van het product.",
+    "verifyWithSources": "Verifieer terugroepinformatie altijd met officiële bronnen van de FDA of USDA.",
+    "governmentInfoDisclaimer": "Deze app vervangt geen officiële overheidsinformatie."
   },
   "home": {
     "title": "Eats OK",
@@ -46,6 +48,7 @@
     "manualEntry": "Handmatige invoer",
     "waitingForCapture": "Wachten op opname...",
     "aiPrecision": "AI gebruikt voor betere nauwkeurigheid",
+    "productNotPubliclyListed": "Dit product is niet publiekelijk vermeld.\nScan het etiket om het lotnummer en terugroepacties te controleren.",
     "errors": {
       "brandCaptureFailed": "Merkopname mislukt.",
       "scanFailed": "Scan mislukt.",

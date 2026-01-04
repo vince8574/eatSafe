@@ -12,7 +12,9 @@
     "unknown": "Inconnu",
     "dataDisclaimer": "Basé sur les données disponibles à ce moment",
     "appDisclaimer": "Cette application fournit des informations de rappel bas?es sur des bases de donn?es publiques officielles. Elle ne garantit pas la s?curit? du produit. Cette application ne v?rifie pas les dates de p?remption ni la fra?cheur des produits.",
-    "noRecallDisclaimer": "L'absence de rappel ne garantit pas la s?curit? du produit."
+    "noRecallDisclaimer": "L'absence de rappel ne garantit pas la s?curit? du produit.",
+    "verifyWithSources": "Vérifiez toujours les informations de rappel auprès des sources officielles de la FDA ou de l'USDA.",
+    "governmentInfoDisclaimer": "Cette application ne remplace pas les informations officielles du gouvernement."
   },
   "home": {
     "title": "Eats OK",
@@ -54,6 +56,7 @@
     "switchToBarcode": "📊 Scanner le code-barres",
     "waitingForCapture": "En attente de capture...",
     "aiPrecision": "IA utilisée pour plus de précision",
+    "productNotPubliclyListed": "Ce produit n'est pas référencé publiquement.\nScannez l'étiquette pour vérifier le numéro de lot et les rappels.",
     "errors": {
       "brandCaptureFailed": "La capture de la marque a échoué.",
       "scanFailed": "Le scan a échoué.",

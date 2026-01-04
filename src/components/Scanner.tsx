@@ -122,7 +122,21 @@ export function Scanner({
           barcodeScannerSettings={
             enableBarcodeScanning
               ? {
-                  barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e', 'code128', 'code39']
+                  barcodeTypes: [
+                    'qr',           // QR codes (très utilisés aux USA)
+                    'ean13',        // EAN-13 (international)
+                    'ean8',         // EAN-8
+                    'upc_a',        // UPC-A (standard USA)
+                    'upc_e',        // UPC-E (USA compact)
+                    'code128',      // Code 128 (expédition, emballage)
+                    'code39',       // Code 39
+                    'code93',       // Code 93
+                    'codabar',      // Codabar
+                    'itf14',        // ITF-14 (cartons USA)
+                    'aztec',        // Aztec (codes 2D)
+                    'pdf417',       // PDF417 (codes 2D USA)
+                    'datamatrix'    // Data Matrix (codes 2D)
+                  ]
                 }
               : undefined
           }

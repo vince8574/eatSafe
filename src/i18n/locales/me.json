@@ -11,8 +11,10 @@
     "refresh": "Освјежи",
     "unknown": "Непознато",
     "dataDisclaimer": "Na osnovu dostupnih podataka u ovom trenutku",
-    "appDisclaimer": "Ova aplikacija pru?a informacije o opozivu na osnovu zvani?nih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svje?inu proizvoda.",
-    "noRecallDisclaimer": "Izostanak opoziva ne garantuje bezbjednost proizvoda."
+    "appDisclaimer": "Ova aplikacija pruža informacije o opozivu na osnovu zvaničnih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svježinu proizvoda.",
+    "noRecallDisclaimer": "Izostanak opoziva ne garantuje bezbjednost proizvoda.",
+    "verifyWithSources": "Uvijek provjeravajte informacije o opozivu sa zvaničnim izvorima FDA ili USDA.",
+    "governmentInfoDisclaimer": "Ova aplikacija ne zamjenjuje zvani?ne vladine informacije."
   },
   "home": {
     "title": "Eats OK",
@@ -46,6 +48,7 @@
     "manualEntry": "Ручни унос",
     "waitingForCapture": "Чекање на снимање...",
     "aiPrecision": "AI se koristi za veću preciznost",
+    "productNotPubliclyListed": "Ovaj proizvod nije javno registrovan.\nSkenirajte etiketu da biste provjerili broj lota i opozive.",
     "errors": {
       "brandCaptureFailed": "Снимање марке није успјело.",
       "scanFailed": "Скенирање није успјело.",

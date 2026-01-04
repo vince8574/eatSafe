@@ -11,8 +11,10 @@
     "refresh": "Atualizar",
     "unknown": "Desconhecido",
     "dataDisclaimer": "Com base nos dados disponíveis neste momento",
-    "appDisclaimer": "Este app fornece informa??es de recall com base em bancos de dados p?blicos oficiais. N?o garante a seguran?a do produto. Este app n?o verifica datas de validade ou o frescor dos produtos.",
-    "noRecallDisclaimer": "A aus?ncia de recall n?o garante a seguran?a do produto."
+    "appDisclaimer": "Este app fornece informações de recall com base em bancos de dados públicos oficiais. Não garante a segurança do produto. Este app não verifica datas de validade ou o frescor dos produtos.",
+    "noRecallDisclaimer": "A ausência de recall não garante a segurança do produto.",
+    "verifyWithSources": "Sempre verifique as informações de recall com fontes oficiais da FDA ou USDA.",
+    "governmentInfoDisclaimer": "Este aplicativo não substitui as informações oficiais do governo."
   },
   "home": {
     "title": "Eats OK",
@@ -46,6 +48,7 @@
     "manualEntry": "Entrada manual",
     "waitingForCapture": "Aguardando captura...",
     "aiPrecision": "IA usada para maior precisão",
+    "productNotPubliclyListed": "Este produto não está registrado publicamente.\nEscaneie o rótulo para verificar o número do lote e recalls.",
     "errors": {
       "brandCaptureFailed": "Captura da marca falhou.",
       "scanFailed": "Escaneamento falhou.",

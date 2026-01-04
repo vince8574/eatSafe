@@ -7,7 +7,8 @@ type RecallResponse = {
 const FRANCE_ENDPOINT =
   'https://data.economie.gouv.fr/api/records/1.0/search/?dataset=rappelconso0&rows=50&sort=date_de_publication';
 
-const USA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=50';
+const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=50';
+const USDA_ENDPOINT = 'https://www.fsis.usda.gov/fsis/api/recall';
 
 function extractLotNumbers(identificationText: string | undefined): string[] {
   if (!identificationText) return [];
@@ -57,15 +58,15 @@ export async function fetchFranceRecalls(): Promise<RecallRecord[]> {
   }));
 }
 
-export async function fetchUsRecalls(): Promise<RecallRecord[]> {
-  const response = await fetch(USA_ENDPOINT);
+/**
+ * Récupère les rappels FDA (aliments généraux)
+ */
+export async function fetchFdaRecalls(): Promise<RecallRecord[]> {
+  const response = await fetch(FDA_ENDPOINT);
 
   if (!response.ok) {
-    const err: ApiError = {
-      status: response.status,
-      message: "Impossible de récupérer les rappels alimentaires américains."
-    };
-    throw err;
+    console.warn(`[FDA] API returned status ${response.status}`);
+    return [];
   }
 
   const data = await response.json();
@@ -82,6 +83,62 @@ export async function fetchUsRecalls(): Promise<RecallRecord[]> {
     link: item.more_details,
     imageUrl: undefined
   }));
+}
+
+/**
+ * Récupère les rappels USDA (viandes et volailles)
+ */
+export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
+  try {
+    const response = await fetch(USDA_ENDPOINT);
+
+    if (!response.ok) {
+      console.warn(`[USDA] API returned status ${response.status}`);
+      return [];
+    }
+
+    const data = await response.json();
+
+    return (data ?? []).map((item: any) => ({
+      id: item.recallNumber || item.id || `usda-${Date.now()}`,
+      title: item.productName || item.description || 'Meat/Poultry Recall',
+      description: item.recallReason || item.reason || '',
+      lotNumbers: item.lotNumbers ? item.lotNumbers.split(',').map((lot: string) => lot.trim()) : [],
+      brand: item.establishment || item.company || '',
+      productCategory: 'Meat/Poultry',
+      country: 'US' as const,
+      publishedAt: item.recallDate || item.date,
+      link: item.url,
+      imageUrl: undefined
+    }));
+  } catch (error) {
+    console.error('[USDA] Error fetching recalls:', error);
+    return [];
+  }
+}
+
+/**
+ * Récupère tous les rappels américains (FDA + USDA combinés)
+ */
+export async function fetchUsRecalls(): Promise<RecallRecord[]> {
+  const [fdaRecalls, usdaRecalls] = await Promise.allSettled([
+    fetchFdaRecalls(),
+    fetchUsdaRecalls()
+  ]);
+
+  const results: RecallRecord[] = [];
+
+  if (fdaRecalls.status === 'fulfilled') {
+    results.push(...fdaRecalls.value);
+  }
+
+  if (usdaRecalls.status === 'fulfilled') {
+    results.push(...usdaRecalls.value);
+  }
+
+  console.log(`[US Recalls] Total: ${results.length} (FDA: ${fdaRecalls.status === 'fulfilled' ? fdaRecalls.value.length : 0}, USDA: ${usdaRecalls.status === 'fulfilled' ? usdaRecalls.value.length : 0})`);
+
+  return results;
 }
 
 export async function fetchRecallsByCountry(country: CountryCode) {

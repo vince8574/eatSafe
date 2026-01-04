@@ -11,8 +11,10 @@
     "refresh": "Rifresko",
     "unknown": "I panjohur",
     "dataDisclaimer": "Bazuar në të dhënat e disponueshme në këtë kohë",
-    "appDisclaimer": "Ky aplikacion ofron informacion mbi t?rheqjet bazuar n? databaza publike zyrtare. Nuk garanton sigurin? e produktit. Ky aplikacion nuk verifikon datat e skadenc?s ose freskin? e produkteve.",
-    "noRecallDisclaimer": "Mungesa e nj? t?rheqjeje nuk garanton sigurin? e produktit."
+    "appDisclaimer": "Ky aplikacion ofron informacion mbi tërheqjet bazuar në databaza publike zyrtare. Nuk garanton sigurinë e produktit. Ky aplikacion nuk verifikon datat e skadencës ose freskinë e produkteve.",
+    "noRecallDisclaimer": "Mungesa e një tërheqjeje nuk garanton sigurinë e produktit.",
+    "verifyWithSources": "Verifikoni gjithmonë informacionin e tërheqjes me burime zyrtare nga FDA ose USDA.",
+    "governmentInfoDisclaimer": "Ky aplikacion nuk zëvendëson informacionin zyrtar të qeverisë."
   },
   "home": {
     "title": "Eats OK",
@@ -46,6 +48,7 @@
     "manualEntry": "Hyrje manuale",
     "waitingForCapture": "Duke pritur për kapur...",
     "aiPrecision": "AI përdoret për saktësi më të mirë",
+    "productNotPubliclyListed": "Ky produkt nuk është i regjistruar publikisht.\nSkanoni etiketën për të verifikuar numrin e lotit dhe rikujtimet.",
     "errors": {
       "brandCaptureFailed": "Kapja e markës dështoi.",
       "scanFailed": "Skanimi dështoi.",
@@ -183,17 +186,17 @@
     "terms": "Kushtet e Shërbimit",
     "legalNotice": "Njoftim Ligjor",
     "errorLoading": "Gabim në ngarkimin e dokumentit",
-    "disclaimer": "P?rjashtim p?rgjegj?sie",
-    "dataSources": "Burimet e t? dh?nave (FDA / USDA)"
+    "disclaimer": "Përjashtim përgjegjësie",
+    "dataSources": "Burimet e të dhënave (FDA / USDA)"
   },
   "disclaimer": {
-    "title": "P?rjashtim p?rgjegj?sie p?r t?rheqjet ushqimore",
-    "body": "Ky aplikacion ofron informacion p?r t?rheqjet e ushqimeve p?r produkte t? shitura n? Shtetet e Bashkuara vet?m p?r q?llime informuese.\n\nInformacioni i shfaqur n? k?t? aplikacion bazohet n? t? dh?na publike nga agjenci qeveritare (p?rfshir?, por pa u kufizuar n?, FDA dhe USDA) dhe burime t? tjera t? pal?ve t? treta. Ne nuk garantojm? sakt?sin?, plot?sin? ose aktualitetin e informacionit t? ofruar.\n\nKy aplikacion nuk z?vend?son njoftimet zyrtare t? t?rheqjes, komunikimet e prodhuesve ose udh?zimet e autoriteteve rregullatore. P?rdoruesit inkurajohen t? verifikojn? informacionin e t?rheqjes drejtp?rdrejt me burime zyrtare.\n\nNj? produkt q? nuk identifikohet si i t?rhequr n? k?t? aplikacion nuk garanton q? produkti ?sht? i sigurt ose q? nuk i n?nshtrohet nj? t?rheqjeje aktuale ose t? ardhshme.\n\nKy aplikacion nuk ofron k?shilla mjek?sore, ushqimore ose sh?ndet?sore. N?se keni shqet?sime p?r sigurin? ushqimore, ndotjen, alergjit? ose s?mundjen, konsultohuni me nj? profesionist t? kualifikuar t? sh?ndetit ose ndiqni udh?zimet zyrtare t? autoriteteve t? sh?ndetit publik.\n\nKy aplikacion nuk verifikon datat e skadenc?s ose freskin? e produkteve.\n\nSkanimi i kodeve me shirita, njohja e numrave t? lotit dhe daljet zanore ose vizuale mund t? jen? subjekt i kufizimeve teknike ose gabimeve. P?rdoruesit mbeten p?rgjegj?s p?r verifikimin e detajeve t? produktit dhe statusit t? t?rheqjes.\n\nN? mas?n maksimale t? lejuar nga ligji, zhvilluesi nuk mban p?rgjegj?si p?r d?me, l?ndime ose humbje t? drejtp?rdrejta apo t? t?rthorta q? rrjedhin nga p?rdorimi ose mb?shtetja n? informacionin e ofruar nga ky aplikacion.\n\nMbulimi i t?rheqjeve ?sht? i kufizuar n? produktet ushqimore t? shitura n? Shtetet e Bashkuara dhe mund t? mos zbatohet p?r produktet e shitura n? vende t? tjera."
+    "title": "Përjashtim përgjegjësie për tërheqjet ushqimore",
+    "body": "Ky aplikacion ofron informacion për tërheqjet e ushqimeve për produkte të shitura në Shtetet e Bashkuara vetëm për qëllime informuese.\n\nInformacioni i shfaqur në këtë aplikacion bazohet në të dhëna publike nga agjenci qeveritare (përfshirë, por pa u kufizuar në, FDA dhe USDA) dhe burime të tjera të palëve të treta. Ne nuk garantojmë saktësinë, plotësinë ose aktualitetin e informacionit të ofruar.\n\nKy aplikacion nuk zëvendëson njoftimet zyrtare të tërheqjes, komunikimet e prodhuesve ose udhëzimet e autoriteteve rregullatore. Përdoruesit inkurajohen të verifikojnë informacionin e tërheqjes drejtpërdrejt me burime zyrtare.\n\nNjë produkt që nuk identifikohet si i tërhequr në këtë aplikacion nuk garanton që produkti është i sigurt ose që nuk i nënshtrohet një tërheqjeje aktuale ose të ardhshme.\n\nKy aplikacion nuk ofron këshilla mjekësore, ushqimore ose shëndetësore. Nëse keni shqetësime për sigurinë ushqimore, ndotjen, alergjitë ose sëmundjen, konsultohuni me një profesionist të kualifikuar të shëndetit ose ndiqni udhëzimet zyrtare të autoriteteve të shëndetit publik.\n\nKy aplikacion nuk verifikon datat e skadencës ose freskinë e produkteve.\n\nSkanimi i kodeve me shirita, njohja e numrave të lotit dhe daljet zanore ose vizuale mund të jenë subjekt i kufizimeve teknike ose gabimeve. Përdoruesit mbeten përgjegjës për verifikimin e detajeve të produktit dhe statusit të tërheqjes.\n\nNë masën maksimale të lejuar nga ligji, zhvilluesi nuk mban përgjegjësi për dëme, lëndime ose humbje të drejtpërdrejta apo të tërthorta që rrjedhin nga përdorimi ose mbështetja në informacionin e ofruar nga ky aplikacion.\n\nMbulimi i tërheqjeve është i kufizuar në produktet ushqimore të shitura në Shtetet e Bashkuara dhe mund të mos zbatohet për produktet e shitura në vende të tjera."
   },
   "dataSources": {
-    "title": "Burimet e t? dh?nave",
-    "description": "Burime zyrtare p?r informacionet e t?rheqjeve n? SHBA:",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
+    "title": "Burimet e të dhënave",
+    "description": "Burime zyrtare për informacionet e tërheqjeve në SHBA:",
+    "fda": "FDA – Food and Drug Administration",
+    "usda": "USDA – Food Safety and Inspection Service"
   }
 }

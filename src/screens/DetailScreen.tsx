@@ -77,6 +77,18 @@ export function DetailScreen() {
             </Text>
           </View>
 
+          <View style={[styles.verifyBox, { backgroundColor: colors.accentSoft, borderColor: colors.accent }]}>
+            <Text style={[styles.verifyText, { color: colors.textPrimary }]}>
+              ℹ️ {t('common.verifyWithSources')}
+            </Text>
+          </View>
+
+          <View style={[styles.governmentInfoBox, { backgroundColor: '#FFA50020', borderColor: '#FFA500' }]}>
+            <Text style={[styles.governmentInfoText, { color: colors.textPrimary }]}>
+              ⚠️ {t('common.governmentInfoDisclaimer')}
+            </Text>
+          </View>
+
           <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
             <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
               ⚠️ {t('common.appDisclaimer')}
@@ -175,6 +187,30 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     marginTop: 8
+  },
+  verifyBox: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 2
+  },
+  verifyText: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    fontWeight: '600'
+  },
+  governmentInfoBox: {
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 16,
+    borderWidth: 3
+  },
+  governmentInfoText: {
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: 'center',
+    fontWeight: '700'
   },
   appDisclaimerBox: {
     borderRadius: 16,

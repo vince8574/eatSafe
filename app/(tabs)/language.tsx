@@ -77,6 +77,19 @@ export default function LanguageScreen() {
 
         <TouchableOpacity
           style={[styles.legalButton, { backgroundColor: colors.surface }]}
+          onPress={() => router.push('/subscription')}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="pricetag-outline" size={24} color={colors.accent} />
+            <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+              Abonnement & forfaits
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.legalButton, { backgroundColor: colors.surface }]}
           onPress={() => router.push('/legal/disclaimer')}
         >
           <View style={styles.legalButtonContent}>

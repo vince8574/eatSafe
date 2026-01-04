@@ -12,7 +12,9 @@
     "unknown": "Sconosciuto",
     "dataDisclaimer": "Basato sui dati disponibili al momento",
     "appDisclaimer": "Questa app fornisce informazioni sui richiami basate su database pubblici ufficiali. Non garantisce la sicurezza del prodotto. Questa app non verifica le date di scadenza o la freschezza dei prodotti.",
-    "noRecallDisclaimer": "L'assenza di un richiamo non garantisce la sicurezza del prodotto."
+    "noRecallDisclaimer": "L'assenza di un richiamo non garantisce la sicurezza del prodotto.",
+    "verifyWithSources": "Verificare sempre le informazioni sui richiami con fonti ufficiali della FDA o USDA.",
+    "governmentInfoDisclaimer": "Questa app non sostituisce le informazioni ufficiali del governo."
   },
   "home": {
     "title": "Eats OK",
@@ -46,6 +48,7 @@
     "manualEntry": "Inserimento manuale",
     "waitingForCapture": "In attesa di acquisizione...",
     "aiPrecision": "IA utilizzata per maggiore precisione",
+    "productNotPubliclyListed": "Questo prodotto non è pubblicamente registrato.\nScansionare l'etichetta per verificare il numero di lotto e i richiami.",
     "errors": {
       "brandCaptureFailed": "Acquisizione del marchio non riuscita.",
       "scanFailed": "Scansione non riuscita.",

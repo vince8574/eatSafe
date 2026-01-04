@@ -12,7 +12,9 @@
     "unknown": "Unknown",
     "dataDisclaimer": "Based on available data at this time",
     "appDisclaimer": "This app provides recall information based on official public databases. It does not guarantee product safety. This app does not verify expiration dates or product freshness.",
-    "noRecallDisclaimer": "The absence of a recall does not guarantee product safety."
+    "noRecallDisclaimer": "The absence of a recall does not guarantee product safety.",
+    "verifyWithSources": "Always verify recall information with official sources from the FDA or USDA.",
+    "governmentInfoDisclaimer": "This app does not replace official government information."
   },
   "home": {
     "title": "Eats OK",
@@ -54,6 +56,7 @@
     "switchToBarcode": "📊 Scan barcode",
     "waitingForCapture": "Waiting for capture...",
     "aiPrecision": "AI used for better accuracy",
+    "productNotPubliclyListed": "This product is not publicly listed.\nScan the label to check the lot number and recalls.",
     "errors": {
       "brandCaptureFailed": "Brand capture failed.",
       "scanFailed": "Scan failed.",
@@ -212,7 +215,7 @@
   "dataSources": {
     "title": "Data Sources",
     "description": "Official sources for U.S. recall information:",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
+    "fda": "FDA – Food and Drug Administration",
+    "usda": "USDA – Food Safety and Inspection Service"
   }
 }

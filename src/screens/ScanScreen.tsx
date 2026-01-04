@@ -5,7 +5,7 @@ import { Scanner } from '../components/Scanner';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
-import { getProductByBarcode } from '../services/openFoodFactsService';
+import { getProductByBarcode } from '../services/productLookupService';
 import { useFocusEffect } from '@react-navigation/native';
 
 export function ScanScreen() {
@@ -91,13 +91,25 @@ export function ScanScreen() {
         setProductImage(productInfo.imageUrl || '');
         setConfirmModalVisible(true);
       } else {
-        setErrorMessage(t('scan.errors.barcodeNotFound'));
+        // Produit non trouvé dans les bases publiques
+        // Passer directement au scan du lot pour vérifier les rappels
+        console.log('[ScanScreen] Product not found in databases, proceeding to lot scan');
+        setErrorMessage(t('scan.productNotPubliclyListed'));
+
+        // Attendre 2 secondes pour que l'utilisateur lise le message
+        setTimeout(() => {
+          router.push('/scan-lot' as any);
+        }, 2500);
       }
     } catch (error) {
       console.error('[ScanScreen] Barcode scan error:', error);
-      setErrorMessage(t('scan.errors.barcodeScanFailed'));
+      // Passer également au scan de lot en cas d'erreur
+      setErrorMessage(t('scan.productNotPubliclyListed'));
+      setTimeout(() => {
+        router.push('/scan-lot' as any);
+      }, 2500);
     }
-  }, [brandText, t]);
+  }, [brandText, t, router]);
 
   const handleCapture = useCallback(async (uri: string) => {
     // Pas de capture de photo pour l'écran de scan de code-barres

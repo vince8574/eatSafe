@@ -99,11 +99,19 @@ export async function checkProductForRecalls(
     const recalls = await fetchRecallsByCountry(country);
 
     const matchingRecalls = recalls.filter((recall) => {
-      const brandMatch = recall.marque?.toLowerCase() === brand.toLowerCase();
+      // Si la marque est fournie, vérifier marque ET lot
+      // Sinon, vérifier uniquement le lot (mode professionnel)
       const lotMatch =
         recall.lotNumber?.toLowerCase() === lotNumber.toLowerCase() ||
         recall.lotNumber === '';
-      return brandMatch && lotMatch;
+
+      if (brand && brand.trim() !== '') {
+        const brandMatch = recall.marque?.toLowerCase() === brand.toLowerCase();
+        return brandMatch && lotMatch;
+      } else {
+        // Mode sans marque : vérifier uniquement le lot
+        return lotMatch;
+      }
     });
 
     console.log(`[RecallCheck] Found ${matchingRecalls.length} matching recalls`);
