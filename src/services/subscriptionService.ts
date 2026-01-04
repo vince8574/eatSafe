@@ -1,6 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
+import { getCurrentUserId } from './authService';
 
 export type SubscriptionStatus = 'none' | 'active' | 'expired';
 
@@ -105,17 +105,7 @@ export const SCAN_PACKS = [
   { id: 'pack_scans_5000', label: 'Pack 5000 scans', quantity: 5000 }
 ];
 
-const DEVICE_ID_KEY = '@subscription_device_id';
 const COLLECTION = 'subscriptions';
-
-async function getDeviceId(): Promise<string> {
-  const cached = await AsyncStorage.getItem(DEVICE_ID_KEY);
-  if (cached) return cached;
-
-  const generated = `device_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-  await AsyncStorage.setItem(DEVICE_ID_KEY, generated);
-  return generated;
-}
 
 function buildSubscriptionFromPlan(plan: Plan): Subscription {
   return {
@@ -141,8 +131,8 @@ function getPlanById(planId: string | null): Plan | null {
 
 export async function fetchSubscription(): Promise<Subscription> {
   const db = getFirestore();
-  const deviceId = await getDeviceId();
-  const docRef = db.collection(COLLECTION).doc(deviceId);
+  const uid = await getCurrentUserId();
+  const docRef = db.collection(COLLECTION).doc(uid);
   const snap = await docRef.get();
 
   if (!snap.exists) {
@@ -187,8 +177,8 @@ export async function selectPlan(planId: string): Promise<Subscription> {
   }
 
   const db = getFirestore();
-  const deviceId = await getDeviceId();
-  const docRef = db.collection(COLLECTION).doc(deviceId);
+  const uid = await getCurrentUserId();
+  const docRef = db.collection(COLLECTION).doc(uid);
   const payload = buildSubscriptionFromPlan(plan);
   await docRef.set(payload, { merge: true });
   return payload;
@@ -196,8 +186,8 @@ export async function selectPlan(planId: string): Promise<Subscription> {
 
 export async function addScanPack(quantity: number): Promise<Subscription> {
   const db = getFirestore();
-  const deviceId = await getDeviceId();
-  const docRef = db.collection(COLLECTION).doc(deviceId);
+  const uid = await getCurrentUserId();
+  const docRef = db.collection(COLLECTION).doc(uid);
 
   await db.runTransaction(async (transaction) => {
     const snap = await transaction.get(docRef);
@@ -218,8 +208,8 @@ export async function addScanPack(quantity: number): Promise<Subscription> {
 
 export async function decrementScanCounter(count: number = 1): Promise<void> {
   const db = getFirestore();
-  const deviceId = await getDeviceId();
-  const docRef = db.collection(COLLECTION).doc(deviceId);
+  const uid = await getCurrentUserId();
+  const docRef = db.collection(COLLECTION).doc(uid);
   await docRef.update({
     scansRemaining: firestore.FieldValue.increment(-count),
     updatedAt: Date.now()

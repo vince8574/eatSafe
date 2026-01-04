@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
@@ -10,6 +10,8 @@ import { GradientBackground } from '../components/GradientBackground';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { checkAllProductsForRecalls } from '../services/recallCheckService';
 import * as Notifications from 'expo-notifications';
+import * as FileSystem from 'expo-file-system';
+import { useSubscription } from '../hooks/useSubscription';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
@@ -18,9 +20,11 @@ export function HistoryScreen() {
   const { t, locale } = useI18n();
   const router = useRouter();
   const { products, updateRecall } = useScannedProducts();
+  const { subscription, loading: subLoading } = useSubscription();
   const country = usePreferencesStore((state) => state.country);
   const [filter, setFilter] = useState<Filter>('all');
   const [isCheckingRecalls, setIsCheckingRecalls] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const formatDate = useCallback(
     (value: string | number) => {
@@ -105,6 +109,53 @@ export function HistoryScreen() {
     return products.filter((product) => product.recallStatus === filter);
   }, [filter, products]);
 
+  const canExport = subscription?.exportEnabled === true;
+
+  const escapeCsv = (value: string | number | null | undefined) => {
+    const str = value === null || value === undefined ? '' : String(value);
+    const escaped = str.replace(/"/g, '""');
+    return `"${escaped}"`;
+  };
+
+  const handleExport = useCallback(async () => {
+    if (!canExport) {
+      Alert.alert('Export réservé', 'L’export est disponible avec un forfait incluant l’option export.');
+      return;
+    }
+
+    if (filtered.length === 0) {
+      Alert.alert('Aucune donnée', 'Il n’y a rien à exporter pour l’instant.');
+      return;
+    }
+
+    try {
+      setIsExporting(true);
+      const headers = ['Date', 'Heure', 'Marque', 'Lot', 'Produit', 'Statut rappel'];
+      const rows = filtered.map((item) => {
+        const dt = formatDate(item.scannedAt);
+        return [
+          escapeCsv(dt.date),
+          escapeCsv(dt.time),
+          escapeCsv(item.brand),
+          escapeCsv(item.lotNumber),
+          escapeCsv(item.productName ?? ''),
+          escapeCsv(statusLabels[item.recallStatus])
+        ].join(',');
+      });
+
+      const csv = [headers.map(escapeCsv).join(','), ...rows].join('\n');
+      const fileUri = `${FileSystem.cacheDirectory}history_export_${Date.now()}.csv`;
+      await FileSystem.writeAsStringAsync(fileUri, csv, { encoding: FileSystem.EncodingType.UTF8 });
+
+      Alert.alert('Export créé', `Fichier CSV généré (ouvrable dans Excel) :\n${fileUri}`);
+    } catch (error) {
+      console.error('[HistoryScreen] Export error', error);
+      Alert.alert('Erreur', 'Impossible de générer le fichier export.');
+    } finally {
+      setIsExporting(false);
+    }
+  }, [canExport, filtered, formatDate, statusLabels]);
+
   const renderItem = ({ item }: { item: ScannedProduct }) => {
     const scannedAt = formatDate(item.scannedAt);
 
@@ -173,6 +224,34 @@ export function HistoryScreen() {
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('history.subtitle')}
             </Text>
+
+            <View style={styles.actionsRow}>
+              <TouchableOpacity
+                style={[
+                  styles.exportButton,
+                  {
+                    backgroundColor: canExport ? colors.surface : colors.surfaceAlt,
+                    borderColor: canExport ? colors.accent : colors.surfaceAlt,
+                    opacity: isExporting ? 0.6 : 1
+                  }
+                ]}
+                onPress={handleExport}
+                disabled={!canExport || isExporting || subLoading}
+              >
+                {isExporting ? (
+                  <ActivityIndicator size="small" color={colors.accent} />
+                ) : (
+                  <Text style={[styles.exportButtonText, { color: canExport ? colors.accent : colors.textSecondary }]}>
+                    Export CSV (Excel)
+                  </Text>
+                )}
+              </TouchableOpacity>
+              {!canExport && !subLoading ? (
+                <Text style={[styles.exportInfo, { color: colors.textSecondary }]}>
+                  Disponible avec un forfait incluant l’export
+                </Text>
+              ) : null}
+            </View>
 
             <View style={styles.filters}>
               {(['all', 'recalled', 'safe', 'unknown'] as Filter[]).map((item) => (
@@ -249,6 +328,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 8,
     marginBottom: 18
+  },
+  actionsRow: {
+    gap: 6,
+    marginBottom: 10
+  },
+  exportButton: {
+    borderRadius: 12,
+    borderWidth: 1.5,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    alignItems: 'center'
+  },
+  exportButtonText: {
+    fontSize: 14,
+    fontWeight: '800'
+  },
+  exportInfo: {
+    fontSize: 12,
+    lineHeight: 16
   },
   filters: {
     flexDirection: 'row',
