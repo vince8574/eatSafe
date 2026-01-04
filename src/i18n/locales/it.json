@@ -1,6 +1,6 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
+    "appName": "Numeline",
     "loading": "Caricamento...",
     "save": "Salva",
     "cancel": "Annulla",
@@ -17,7 +17,7 @@
     "governmentInfoDisclaimer": "Questa app non sostituisce le informazioni ufficiali del governo."
   },
   "home": {
-    "title": "Eats OK",
+    "title": "Numeline",
     "subtitle": "Monitora i tuoi prodotti scansionati e ricevi avvisi di richiamo in tempo reale.",
     "stats": {
       "scanned": "Prodotti scansionati",
@@ -48,7 +48,7 @@
     "manualEntry": "Inserimento manuale",
     "waitingForCapture": "In attesa di acquisizione...",
     "aiPrecision": "IA utilizzata per maggiore precisione",
-    "productNotPubliclyListed": "Questo prodotto non è pubblicamente registrato.\nScansionare l'etichetta per verificare il numero di lotto e i richiami.",
+    "productNotPubliclyListed": "Questo prodotto non Ã¨ pubblicamente registrato.\nScansionare l'etichetta per verificare il numero di lotto e i richiami.",
     "errors": {
       "brandCaptureFailed": "Acquisizione del marchio non riuscita.",
       "scanFailed": "Scansione non riuscita.",
@@ -64,7 +64,7 @@
     "lotLabel": "Numero di lotto",
     "lotPlaceholder": "Es: L12345",
     "save": "Salva",
-    "verifying": "Verifica…",
+    "verifying": "Verificaâ€¦",
     "errors": {
       "lotRequired": "Numero di lotto richiesto",
       "lotRequiredMessage": "Inserisci un numero di lotto per continuare.",
@@ -110,7 +110,7 @@
   "recallAlert": {
     "title": "PRODOTTO CONTAMINATO",
     "doNotConsume": "NON CONSUMARE",
-    "warning": "Questo prodotto è oggetto di un richiamo ufficiale e non deve essere consumato.",
+    "warning": "Questo prodotto Ã¨ oggetto di un richiamo ufficiale e non deve essere consumato.",
     "reasonLabel": "Motivo del richiamo:",
     "emergencyTitle": "Se consumato",
     "emergencyText": "Se hai consumato questo prodotto e avverti sintomi, contatta immediatamente i servizi di emergenza.",
@@ -138,11 +138,11 @@
   },
   "notifications": {
     "alert": {
-      "title": "🚨 ALLARME PRODOTTO CONTAMINATO",
-      "body": "⚠️ {{brand}} - Lotto {{lot}}\nMotivo: {{reason}}\n\n🚫 NON CONSUMARE\nIn caso di consumo, contattare i servizi di emergenza (112)"
+      "title": "ðŸš¨ ALLARME PRODOTTO CONTAMINATO",
+      "body": "âš ï¸ {{brand}} - Lotto {{lot}}\nMotivo: {{reason}}\n\nðŸš« NON CONSUMARE\nIn caso di consumo, contattare i servizi di emergenza (112)"
     },
     "dailyCheck": {
-      "title": "Verifica Eats OK",
+      "title": "Verifica Numeline",
       "body": "Aggiornamento giornaliero dei richiami in corso."
     }
   },
@@ -155,26 +155,26 @@
     "about": "Informazioni"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Ciao {{name}}",
     "question": "Quale prodotto vuoi controllare oggi?",
     "startScanning": "Inizia la scansione",
-    "namePromptTitle": "Benvenuto su Eats OK",
+    "namePromptTitle": "Benvenuto su Numeline",
     "namePromptMessage": "Per personalizzare la tua esperienza, inserisci il tuo nome:",
     "namePromptPlaceholder": "Il tuo nome",
     "namePromptSave": "Continua",
@@ -186,17 +186,21 @@
     "terms": "Termini di Servizio",
     "legalNotice": "Note Legali",
     "errorLoading": "Errore nel caricamento del documento",
-    "disclaimer": "Dichiarazione di non responsabilit?",
+    "disclaimer": "Dichiarazione di non responsabilita",
     "dataSources": "Fonti dati (FDA / USDA)"
   },
   "disclaimer": {
     "title": "Dichiarazione sui richiami alimentari",
-    "body": "Questa applicazione fornisce informazioni sui richiami alimentari per prodotti venduti negli Stati Uniti solo a scopo informativo.\n\nLe informazioni visualizzate in questa app si basano su dati disponibili pubblicamente da agenzie governative (incluse, a titolo esemplificativo, FDA e USDA) e altre fonti di terze parti. Non garantiamo l'accuratezza, la completezza o la tempestivit? delle informazioni fornite.\n\nQuesta app non sostituisce le notifiche ufficiali di richiamo, le comunicazioni dei produttori o le indicazioni delle autorit? regolatorie. Gli utenti sono invitati a verificare le informazioni sui richiami direttamente con fonti ufficiali.\n\nUn prodotto non identificato come richiamato in questa app non garantisce che il prodotto sia sicuro o non soggetto a un richiamo attuale o futuro.\n\nQuesta app non fornisce consigli medici, nutrizionali o sanitari. Se hai dubbi sulla sicurezza alimentare, contaminazione, allergie o malattia, consulta un professionista sanitario qualificato o segui le indicazioni delle autorit? sanitarie pubbliche.\n\nQuesta app non verifica le date di scadenza o la freschezza dei prodotti.\n\nLa scansione dei codici a barre, il riconoscimento dei numeri di lotto e gli output vocali o visivi possono essere soggetti a limitazioni tecniche o errori. Gli utenti restano responsabili della verifica dei dettagli del prodotto e dello stato del richiamo.\n\nNella misura massima consentita dalla legge, lo sviluppatore non sar? responsabile per danni, lesioni o perdite dirette o indirette derivanti dall'uso o dall'affidamento alle informazioni fornite da questa app.\n\nLa copertura dei richiami ? limitata ai prodotti alimentari venduti negli Stati Uniti e potrebbe non applicarsi ai prodotti venduti in altri Paesi."
+    "body": "Questa applicazione fornisce informazioni sui richiami alimentari per prodotti venduti negli Stati Uniti solo a scopo informativo.\n\nLe informazioni visualizzate in questa app si basano su dati disponibili pubblicamente da agenzie governative (incluse, a titolo esemplificativo, FDA e USDA) e altre fonti di terze parti. Non garantiamo l'accuratezza, la completezza o la tempestivite delle informazioni fornite.\n\nQuesta app non sostituisce le notifiche ufficiali di richiamo, le comunicazioni dei produttori o le indicazioni delle autorite regolatorie. Gli utenti sono invitati a verificare le informazioni sui richiami direttamente con fonti ufficiali.\n\nUn prodotto non identificato come richiamato in questa app non garantisce che il prodotto sia sicuro o non soggetto a un richiamo attuale o futuro.\n\nQuesta app non fornisce consigli medici, nutrizionali o sanitari. Se hai dubbi sulla sicurezza alimentare, contaminazione, allergie o malattia, consulta un professionista sanitario qualificato o segui le indicazioni delle autorite sanitarie pubbliche.\n\nQuesta app non verifica le date di scadenza o la freschezza dei prodotti.\n\nLa scansione dei codici a barre, il riconoscimento dei numeri di lotto e gli output vocali o visivi possono essere soggetti a limitazioni tecniche o errori. Gli utenti restano responsabili della verifica dei dettagli del prodotto e dello stato del richiamo.\n\nNella misura massima consentita dalla legge, lo sviluppatore non sare responsabile per danni, lesioni o perdite dirette o indirette derivanti dall'uso o dall'affidamento alle informazioni fornite da questa app.\n\nLa copertura dei richiami ? limitata ai prodotti alimentari venduti negli Stati Uniti e potrebbe non applicarsi ai prodotti venduti in altri Paesi."
   },
   "dataSources": {
     "title": "Fonti dati",
     "description": "Fonti ufficiali di informazioni sui richiami negli Stati Uniti:",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
+    "fda": "FDA - Food and Drug Administration",
+    "usda": "USDA - Food Safety and Inspection Service"
   }
 }
+
+
+
+

@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
+import { GradientBackground } from '../../src/components/GradientBackground';
 
 const FDA_URL = 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts';
 const USDA_URL = 'https://www.fsis.usda.gov/recalls';
@@ -13,48 +14,50 @@ export default function DataSourcesScreen() {
   const router = useRouter();
 
   return (
-    <View style={[styles.container, { backgroundColor: '#C4DECC' }]}>
-      <View style={[styles.header, { backgroundColor: colors.surface }]}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-          {t('dataSources.title')}
-        </Text>
+    <GradientBackground>
+      <View style={styles.container}>
+        <View style={[styles.header, { backgroundColor: colors.surface }]}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
+            {t('dataSources.title')}
+          </Text>
+        </View>
+
+        <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+          <Text style={[styles.description, { color: colors.textSecondary }]}>
+            {t('dataSources.description')}
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.sourceCard, { backgroundColor: colors.surface }]}
+            onPress={() => Linking.openURL(FDA_URL)}
+          >
+            <View style={styles.sourceHeader}>
+              <Text style={[styles.sourceTitle, { color: colors.textPrimary }]}>
+                {t('dataSources.fda')}
+              </Text>
+              <Ionicons name="open-outline" size={20} color={colors.accent} />
+            </View>
+            <Text style={[styles.sourceUrl, { color: colors.textSecondary }]}>{FDA_URL}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.sourceCard, { backgroundColor: colors.surface }]}
+            onPress={() => Linking.openURL(USDA_URL)}
+          >
+            <View style={styles.sourceHeader}>
+              <Text style={[styles.sourceTitle, { color: colors.textPrimary }]}>
+                {t('dataSources.usda')}
+              </Text>
+              <Ionicons name="open-outline" size={20} color={colors.accent} />
+            </View>
+            <Text style={[styles.sourceUrl, { color: colors.textSecondary }]}>{USDA_URL}</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
-
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-        <Text style={[styles.description, { color: colors.textSecondary }]}>
-          {t('dataSources.description')}
-        </Text>
-
-        <TouchableOpacity
-          style={[styles.sourceCard, { backgroundColor: colors.surface }]}
-          onPress={() => Linking.openURL(FDA_URL)}
-        >
-          <View style={styles.sourceHeader}>
-            <Text style={[styles.sourceTitle, { color: colors.textPrimary }]}>
-              {t('dataSources.fda')}
-            </Text>
-            <Ionicons name="open-outline" size={20} color={colors.accent} />
-          </View>
-          <Text style={[styles.sourceUrl, { color: colors.textSecondary }]}>{FDA_URL}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.sourceCard, { backgroundColor: colors.surface }]}
-          onPress={() => Linking.openURL(USDA_URL)}
-        >
-          <View style={styles.sourceHeader}>
-            <Text style={[styles.sourceTitle, { color: colors.textPrimary }]}>
-              {t('dataSources.usda')}
-            </Text>
-            <Ionicons name="open-outline" size={20} color={colors.accent} />
-          </View>
-          <Text style={[styles.sourceUrl, { color: colors.textSecondary }]}>{USDA_URL}</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
+    </GradientBackground>
   );
 }
 
@@ -88,6 +91,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
+    paddingBottom: 48,
     gap: 16
   },
   description: {

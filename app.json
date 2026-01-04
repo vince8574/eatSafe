@@ -1,6 +1,6 @@
-{
+﻿{
   "expo": {
-    "name": "Eats OK",
+    "name": "Numeline",
     "slug": "eatsok",
     "scheme": "eatsafe",
     "version": "0.1.0",
@@ -44,7 +44,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Nous avons besoin d'accéder à votre appareil photo pour scanner les emballages."
+          "cameraPermission": "Nous avons besoin d'accÃ©der Ã  votre appareil photo pour scanner les emballages."
         }
       ],
       [
@@ -72,3 +72,4 @@
     }
   }
 }
+

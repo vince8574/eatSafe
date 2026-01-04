@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+﻿import { useCallback, useEffect, useState } from 'react';
 import { Subscription, fetchSubscription, selectPlan, addScanPack, PLANS, SCAN_PACKS } from '../services/subscriptionService';
 
 type UseSubscriptionState = {
@@ -23,7 +23,7 @@ export function useSubscription() {
       setState({
         subscription: null,
         loading: false,
-        error: error instanceof Error ? error.message : 'Erreur lors du chargement de l’abonnement'
+        error: error instanceof Error ? error.message : "Erreur lors du chargement de l'abonnement"
       });
     }
   }, []);
@@ -37,7 +37,7 @@ export function useSubscription() {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Impossible de sélectionner le plan'
+        error: error instanceof Error ? error.message : 'Impossible de selectionner le plan'
       }));
     }
   }, []);
@@ -51,7 +51,7 @@ export function useSubscription() {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Impossible d’ajouter le pack'
+        error: error instanceof Error ? error.message : 'Impossible d'ajouter le pack'
       }));
     }
   }, []);

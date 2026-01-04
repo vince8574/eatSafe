@@ -1,41 +1,41 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
-    "loading": "Lädt...",
+    "appName": "Numeline",
+    "loading": "LÃ¤dt...",
     "save": "Speichern",
     "cancel": "Abbrechen",
-    "confirm": "Bestätigen",
-    "delete": "Löschen",
+    "confirm": "BestÃ¤tigen",
+    "delete": "LÃ¶schen",
     "edit": "Bearbeiten",
-    "back": "Zurück",
+    "back": "ZurÃ¼ck",
     "refresh": "Aktualisieren",
     "unknown": "Unbekannt",
-    "dataDisclaimer": "Basierend auf verfügbaren Daten zu diesem Zeitpunkt",
-    "appDisclaimer": "Diese App liefert Rückrufinformationen basierend auf offiziellen öffentlichen Datenbanken. Sie garantiert nicht die Produktsicherheit. Diese App überprüft weder das Verfallsdatum noch die Frische der Produkte.",
-    "noRecallDisclaimer": "Das Fehlen eines Rückrufs garantiert nicht die Produktsicherheit.",
-    "verifyWithSources": "Überprüfen Sie Rückrufinformationen immer bei offiziellen Quellen der FDA oder USDA.",
+    "dataDisclaimer": "Basierend auf verfÃ¼gbaren Daten zu diesem Zeitpunkt",
+    "appDisclaimer": "Diese App liefert RÃ¼ckrufinformationen basierend auf offiziellen Ã¶ffentlichen Datenbanken. Sie garantiert nicht die Produktsicherheit. Diese App Ã¼berprÃ¼ft weder das Verfallsdatum noch die Frische der Produkte.",
+    "noRecallDisclaimer": "Das Fehlen eines RÃ¼ckrufs garantiert nicht die Produktsicherheit.",
+    "verifyWithSources": "ÃœberprÃ¼fen Sie RÃ¼ckrufinformationen immer bei offiziellen Quellen der FDA oder USDA.",
     "governmentInfoDisclaimer": "Diese App ersetzt keine offiziellen Regierungsinformationen."
   },
   "home": {
-    "title": "Eats OK",
-    "subtitle": "Überwachen Sie Ihre gescannten Produkte und erhalten Sie Echtzeit-Rückrufwarnungen.",
+    "title": "Numeline",
+    "subtitle": "Ãœberwachen Sie Ihre gescannten Produkte und erhalten Sie Echtzeit-RÃ¼ckrufwarnungen.",
     "stats": {
       "scanned": "Gescannte Produkte",
-      "recalled": "Zurückgerufene Produkte",
+      "recalled": "ZurÃ¼ckgerufene Produkte",
       "pending": "In Analyse"
     },
     "historyTitle": "Scan-Verlauf",
-    "emptyState": "Scannen Sie Ihr erstes Produkt, um seinen Rückrufstatus zu verfolgen."
+    "emptyState": "Scannen Sie Ihr erstes Produkt, um seinen RÃ¼ckrufstatus zu verfolgen."
   },
   "scan": {
     "step": "Schritt {{current}}/{{total}}",
     "brandStep": "Schritt 1/2",
     "lotStep": "Schritt 2/2",
-    "brandInstruction": "Rahmen Sie die Produktmarke ein (Foto wird nach der Aufnahme gelöscht).",
+    "brandInstruction": "Rahmen Sie die Produktmarke ein (Foto wird nach der Aufnahme gelÃ¶scht).",
     "lotInstruction": "Rahmen Sie die Chargennummer deutlich ein und machen Sie das Foto.",
     "brandAnalyzing": "Marke wird analysiert...",
     "lotAnalyzing": "Chargennummer wird analysiert...",
-    "privacyInfo": "Fotos werden nur lokal verarbeitet und sofort gelöscht. Es werden keine Bilder gespeichert.",
+    "privacyInfo": "Fotos werden nur lokal verarbeitet und sofort gelÃ¶scht. Es werden keine Bilder gespeichert.",
     "brandLabel": "Marke",
     "lotLabel": "Charge",
     "analyzing": "Analysiere...",
@@ -47,8 +47,8 @@
     "restart": "Neu starten",
     "manualEntry": "Manuelle Eingabe",
     "waitingForCapture": "Warte auf Aufnahme...",
-    "aiPrecision": "KI für mehr Genauigkeit verwendet",
-    "productNotPubliclyListed": "Dieses Produkt ist nicht öffentlich gelistet.\nScannen Sie das Etikett, um die Chargennummer und Rückrufe zu überprüfen.",
+    "aiPrecision": "KI fÃ¼r mehr Genauigkeit verwendet",
+    "productNotPubliclyListed": "Dieses Produkt ist nicht Ã¶ffentlich gelistet.\nScannen Sie das Etikett, um die Chargennummer und RÃ¼ckrufe zu Ã¼berprÃ¼fen.",
     "errors": {
       "brandCaptureFailed": "Markenaufnahme fehlgeschlagen.",
       "scanFailed": "Scan fehlgeschlagen.",
@@ -58,18 +58,18 @@
   },
   "manualEntry": {
     "title": "Manuelle Eingabe",
-    "subtitle": "Fügen Sie ein Produkt hinzu, indem Sie seine Chargennummer und Marke eingeben.",
+    "subtitle": "FÃ¼gen Sie ein Produkt hinzu, indem Sie seine Chargennummer und Marke eingeben.",
     "brandLabel": "Marke",
     "brandPlaceholder": "z.B.: Marke X",
     "lotLabel": "Chargennummer",
     "lotPlaceholder": "z.B.: L12345",
     "save": "Speichern",
-    "verifying": "Überprüfung…",
+    "verifying": "ÃœberprÃ¼fungâ€¦",
     "errors": {
       "lotRequired": "Chargennummer erforderlich",
       "lotRequiredMessage": "Bitte geben Sie eine Chargennummer ein, um fortzufahren.",
       "saveFailed": "Speichern fehlgeschlagen",
-      "checkFailed": "Rückrufe können derzeit nicht überprüft werden."
+      "checkFailed": "RÃ¼ckrufe kÃ¶nnen derzeit nicht Ã¼berprÃ¼ft werden."
     }
   },
   "details": {
@@ -79,51 +79,51 @@
     "scannedAt": "Gescannt am",
     "status": {
       "safe": "Sicher",
-      "recalled": "Zurückgerufen",
+      "recalled": "ZurÃ¼ckgerufen",
       "unknown": "Status unbekannt"
     },
-    "recallInfo": "Rückrufinformationen",
+    "recallInfo": "RÃ¼ckrufinformationen",
     "actions": {
-      "delete": "Löschen",
-      "viewRecall": "Rückruf ansehen"
+      "delete": "LÃ¶schen",
+      "viewRecall": "RÃ¼ckruf ansehen"
     }
   },
   "history": {
     "title": "Verlauf",
-    "fullTitle": "Vollständiger Verlauf",
-    "subtitle": "Filtere deine Scans nach Rückrufstatus.",
+    "fullTitle": "VollstÃ¤ndiger Verlauf",
+    "subtitle": "Filtere deine Scans nach RÃ¼ckrufstatus.",
     "filters": {
       "all": "Alle",
-      "recalled": "Zurückgerufen",
-      "safe": "Kein Rückruf",
+      "recalled": "ZurÃ¼ckgerufen",
+      "safe": "Kein RÃ¼ckruf",
       "unknown": "Unbekannt"
     },
     "emptyState": "Noch keine gescannten Produkte.",
-    "emptyStateDetailed": "Keine Daten vorhanden. Starte einen Scan, um den Verlauf zu füllen."
+    "emptyStateDetailed": "Keine Daten vorhanden. Starte einen Scan, um den Verlauf zu fÃ¼llen."
   },
   "productCard": {
     "lot": "Charge {{lot}}",
     "scannedAt": "Gescannt am {{date}} um {{time}}",
     "privacy": "Es werden keine Fotos gespeichert; nur Marke und Chargennummer bleiben erhalten.",
-    "delete": "Löschen"
+    "delete": "LÃ¶schen"
   },
   "recallAlert": {
     "title": "KONTAMINIERTES PRODUKT",
     "doNotConsume": "NICHT KONSUMIEREN",
-    "warning": "Dieses Produkt unterliegt einem offiziellen Rückruf und darf nicht konsumiert werden.",
-    "reasonLabel": "Grund des Rückrufs:",
+    "warning": "Dieses Produkt unterliegt einem offiziellen RÃ¼ckruf und darf nicht konsumiert werden.",
+    "reasonLabel": "Grund des RÃ¼ckrufs:",
     "emergencyTitle": "Bei Verzehr",
-    "emergencyText": "Wenn Sie dieses Produkt konsumiert haben und Symptome verspüren, kontaktieren Sie sofort den Notdienst.",
+    "emergencyText": "Wenn Sie dieses Produkt konsumiert haben und Symptome verspÃ¼ren, kontaktieren Sie sofort den Notdienst.",
     "callSamu": "Notruf 112 anrufen",
     "callEmergency": "Notruf 112 anrufen",
-    "viewOfficialNotice": "Offizielle Rückrufmeldung ansehen",
-    "returnForRefund": "Bringen Sie das Produkt zur Rückerstattung ins Geschäft zurück",
-    "reportedBy": "R?ckruf gemeldet von FDA / USDA"
+    "viewOfficialNotice": "Offizielle RÃ¼ckrufmeldung ansehen",
+    "returnForRefund": "Bringen Sie das Produkt zur RÃ¼ckerstattung ins GeschÃ¤ft zurÃ¼ck",
+    "reportedBy": "Reckruf gemeldet von FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Kein Rückruf in offiziellen Datenbanken zu diesem Zeitpunkt gefunden",
-    "recalled": "Zurückgerufen",
-    "unknown": "In Prüfung",
+    "safe": "Kein RÃ¼ckruf in offiziellen Datenbanken zu diesem Zeitpunkt gefunden",
+    "recalled": "ZurÃ¼ckgerufen",
+    "unknown": "In PrÃ¼fung",
     "warning": "Beobachten"
   },
   "navigation": {
@@ -134,16 +134,16 @@
   },
   "language": {
     "title": "Einstellungen",
-    "subtitle": "Wähle die bevorzugte Sprache der App."
+    "subtitle": "WÃ¤hle die bevorzugte Sprache der App."
   },
   "notifications": {
     "alert": {
-      "title": "🚨 KONTAMINIERTES PRODUKT ALARM",
-      "body": "⚠️ {{brand}} - Charge {{lot}}\nGrund: {{reason}}\n\n🚫 NICHT KONSUMIEREN\nBei Verzehr kontaktieren Sie den Notdienst (112)"
+      "title": "ðŸš¨ KONTAMINIERTES PRODUKT ALARM",
+      "body": "âš ï¸ {{brand}} - Charge {{lot}}\nGrund: {{reason}}\n\nðŸš« NICHT KONSUMIEREN\nBei Verzehr kontaktieren Sie den Notdienst (112)"
     },
     "dailyCheck": {
-      "title": "Eats OK Überprüfung",
-      "body": "Tägliche Rückrufaktualisierung läuft."
+      "title": "Numeline ÃœberprÃ¼fung",
+      "body": "TÃ¤gliche RÃ¼ckrufaktualisierung lÃ¤uft."
     }
   },
   "settings": {
@@ -152,37 +152,37 @@
     "country": "Land",
     "theme": "Design",
     "notifications": "Benachrichtigungen",
-    "about": "Über"
+    "about": "Ãœber"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Hallo {{name}}",
-    "question": "Welches Produkt möchten Sie heute prüfen?",
+    "question": "Welches Produkt moechten Sie heute prufen ?",
     "startScanning": "Scannen beginnen",
-    "namePromptTitle": "Willkommen bei Eats OK",
+    "namePromptTitle": "Willkommen bei Numeline",
     "namePromptMessage": "Um Ihr Erlebnis zu personalisieren, geben Sie bitte Ihren Vornamen ein:",
     "namePromptPlaceholder": "Ihr Vorname",
     "namePromptSave": "Weiter",
-    "namePromptSkip": "Überspringen"
+    "namePromptSkip": "Ãœberspringen"
   },
   "legal": {
     "sectionTitle": "Rechtsdokumente",
-    "privacyPolicy": "Datenschutzerklärung",
+    "privacyPolicy": "DatenschutzerklÃ¤rung",
     "terms": "Nutzungsbedingungen",
     "legalNotice": "Impressum",
     "errorLoading": "Fehler beim Laden des Dokuments",
@@ -190,13 +190,13 @@
     "dataSources": "Datenquellen (FDA / USDA)"
   },
   "disclaimer": {
-    "title": "Haftungsausschluss zu Lebensmittelr?ckrufen",
-    "body": "Diese Anwendung stellt Informationen zu Lebensmittelr?ckrufen f?r Produkte bereit, die in den Vereinigten Staaten verkauft werden, ausschlie?lich zu Informationszwecken.\n\nDie in dieser App angezeigten Informationen basieren auf ?ffentlich verf?gbaren Daten von Regierungsbeh?rden (einschlie?lich, aber nicht beschr?nkt auf FDA und USDA) und anderen Drittquellen. Wir ?bernehmen keine Gew?hr f?r die Richtigkeit, Vollst?ndigkeit oder Aktualit?t der bereitgestellten Informationen.\n\nDiese App ersetzt keine offiziellen R?ckrufmeldungen, Herstellerinformationen oder Hinweise von Aufsichtsbeh?rden. Nutzer werden ermutigt, R?ckrufinformationen direkt bei offiziellen Stellen zu ?berpr?fen.\n\nEin Produkt, das in dieser App nicht als zur?ckgerufen gekennzeichnet ist, garantiert nicht, dass das Produkt sicher ist oder nicht Gegenstand eines aktuellen oder zuk?nftigen R?ckrufs ist.\n\nDiese App bietet keine medizinischen, ern?hrungsbezogenen oder gesundheitlichen Ratschl?ge. Wenn Sie Bedenken hinsichtlich Lebensmittelsicherheit, Kontamination, Allergien oder Erkrankungen haben, wenden Sie sich an eine qualifizierte medizinische Fachkraft oder befolgen Sie offizielle Hinweise der Gesundheitsbeh?rden.\n\nDiese App ?berpr?ft keine Verfallsdaten oder die Frische von Produkten.\n\nBarcode-Scanning, Erkennung von Chargennummern sowie Sprach- oder visuelle Ausgaben k?nnen technischen Einschr?nkungen oder Fehlern unterliegen. Nutzer bleiben daf?r verantwortlich, Produktdetails und R?ckrufstatus zu ?berpr?fen.\n\nSoweit gesetzlich zul?ssig, haftet der Entwickler nicht f?r direkte oder indirekte Sch?den, Verletzungen oder Verluste, die aus der Nutzung oder dem Vertrauen auf die in dieser App bereitgestellten Informationen entstehen.\n\nDie R?ckrufabdeckung ist auf Lebensmittelprodukte beschr?nkt, die in den Vereinigten Staaten verkauft werden, und gilt m?glicherweise nicht f?r Produkte, die in anderen L?ndern verkauft werden."
+    "title": "Haftungsausschluss zu Lebensmittelrueckrufen",
+    "body": "Diese Anwendung stellt Informationen zu Lebensmittelrueckrufen fer Produkte bereit, die in den Vereinigten Staaten verkauft werden, ausschlieelich zu Informationszwecken.\n\nDie in dieser App angezeigten Informationen basieren auf effentlich verfegbaren Daten von Regierungsbeherden (einschlieelich, aber nicht beschrenkt auf FDA und USDA) und anderen Drittquellen. Wir ebernehmen keine Gewehr fer die Richtigkeit, Vollstendigkeit oder Aktualitet der bereitgestellten Informationen.\n\nDiese App ersetzt keine offiziellen Reckrufmeldungen, Herstellerinformationen oder Hinweise von Aufsichtsbeherden. Nutzer werden ermutigt, Reckrufinformationen direkt bei offiziellen Stellen zu eberprefen.\n\nEin Produkt, das in dieser App nicht als zureckgerufen gekennzeichnet ist, garantiert nicht, dass das Produkt sicher ist oder nicht Gegenstand eines aktuellen oder zukenftigen Reckrufs ist.\n\nDiese App bietet keine medizinischen, ernehrungsbezogenen oder gesundheitlichen Ratschlege. Wenn Sie Bedenken hinsichtlich Lebensmittelsicherheit, Kontamination, Allergien oder Erkrankungen haben, wenden Sie sich an eine qualifizierte medizinische Fachkraft oder befolgen Sie offizielle Hinweise der Gesundheitsbeherden.\n\nDiese App eberpreft keine Verfallsdaten oder die Frische von Produkten.\n\nBarcode-Scanning, Erkennung von Chargennummern sowie Sprach- oder visuelle Ausgaben kennen technischen Einschrenkungen oder Fehlern unterliegen. Nutzer bleiben dafer verantwortlich, Produktdetails und Reckrufstatus zu eberprefen.\n\nSoweit gesetzlich zulessig, haftet der Entwickler nicht fer direkte oder indirekte Scheden, Verletzungen oder Verluste, die aus der Nutzung oder dem Vertrauen auf die in dieser App bereitgestellten Informationen entstehen.\n\nDie Reckrufabdeckung ist auf Lebensmittelprodukte beschrenkt, die in den Vereinigten Staaten verkauft werden, und gilt meglicherweise nicht fer Produkte, die in anderen Lendern verkauft werden."
   },
-  "dataSources": {
-    "title": "Datenquellen",
-    "description": "Offizielle Quellen f?r R?ckrufinformationen in den USA:",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
-  }
+  "dataSources": {"title": "Datenquellen","description": "Offizielle Quellen fuer Rueckrufinformationen in den USA:","fda": "FDA - Food and Drug Administration","usda": "USDA - Food Safety and Inspection Service"}
 }
+
+
+
+
+

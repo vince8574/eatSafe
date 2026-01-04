@@ -1,40 +1,41 @@
-# Termos de Uso - Eats OK
+﻿# Termos de Uso - Numeline
 
-*Última atualização: 13 de dezembro de 2025*
+*Ãšltima atualizaÃ§Ã£o: 13 de dezembro de 2025*
 
-**IMPORTANTE**: Ao baixar, instalar ou usar o aplicativo Eats OK, você aceita incondicionalmente estes Termos de Uso.
+**IMPORTANTE**: Ao baixar, instalar ou usar o aplicativo Numeline, vocÃª aceita incondicionalmente estes Termos de Uso.
 
-Esta aplicação e suas funcionalidades estão protegidas por direitos autorais e anterioridade.
+Esta aplicaÃ§Ã£o e suas funcionalidades estÃ£o protegidas por direitos autorais e anterioridade.
 This application and its functionalities are protected by copyright and prior art.
 
 ---
 
-## 1. Serviço
+## 1. ServiÃ§o
 
-Eats OK é um aplicativo móvel gratuito que permite escanear produtos alimentícios e verificar se estão sujeitos a recall.
+Numeline Ã© um aplicativo mÃ³vel gratuito que permite escanear produtos alimentÃ­cios e verificar se estÃ£o sujeitos a recall.
 
 ## 2. Funcionalidades
 
-- Digitalizar com câmera
-- Reconhecimento automático (marca e lote)
-- Verificação de recalls
-- Notificações de recall
-- Histórico local
+- Digitalizar com cÃ¢mera
+- Reconhecimento automÃ¡tico (marca e lote)
+- VerificaÃ§Ã£o de recalls
+- NotificaÃ§Ãµes de recall
+- HistÃ³rico local
 
-## 3. Precisão OCR
+## 3. PrecisÃ£o OCR
 
-O reconhecimento de texto pode conter erros. Você deve sempre verificar visualmente as informações detectadas.
+O reconhecimento de texto pode conter erros. VocÃª deve sempre verificar visualmente as informaÃ§Ãµes detectadas.
 
 ## 4. Responsabilidade
 
-O editor não garante a precisão das informações. Em caso de recall, consulte fontes oficiais.
+O editor nÃ£o garante a precisÃ£o das informaÃ§Ãµes. Em caso de recall, consulte fontes oficiais.
 
 No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
 
 ## 5. Dados
 
-Todos os seus dados são armazenados localmente em seu dispositivo. Nenhuma foto é enviada para um servidor.
+Todos os seus dados sÃ£o armazenados localmente em seu dispositivo. Nenhuma foto Ã© enviada para um servidor.
 
 ## 6. Contato
 
 Email : legal@eatsok.app
+

@@ -1,6 +1,6 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
+    "appName": "Numeline",
     "loading": "Duke ngarkuar...",
     "save": "Ruaj",
     "cancel": "Anulo",
@@ -10,73 +10,73 @@
     "back": "Kthehu",
     "refresh": "Rifresko",
     "unknown": "I panjohur",
-    "dataDisclaimer": "Bazuar në të dhënat e disponueshme në këtë kohë",
-    "appDisclaimer": "Ky aplikacion ofron informacion mbi tërheqjet bazuar në databaza publike zyrtare. Nuk garanton sigurinë e produktit. Ky aplikacion nuk verifikon datat e skadencës ose freskinë e produkteve.",
-    "noRecallDisclaimer": "Mungesa e një tërheqjeje nuk garanton sigurinë e produktit.",
-    "verifyWithSources": "Verifikoni gjithmonë informacionin e tërheqjes me burime zyrtare nga FDA ose USDA.",
-    "governmentInfoDisclaimer": "Ky aplikacion nuk zëvendëson informacionin zyrtar të qeverisë."
+    "dataDisclaimer": "Bazuar nÃ« tÃ« dhÃ«nat e disponueshme nÃ« kÃ«tÃ« kohÃ«",
+    "appDisclaimer": "Ky aplikacion ofron informacion mbi tÃ«rheqjet bazuar nÃ« databaza publike zyrtare. Nuk garanton sigurinÃ« e produktit. Ky aplikacion nuk verifikon datat e skadencÃ«s ose freskinÃ« e produkteve.",
+    "noRecallDisclaimer": "Mungesa e njÃ« tÃ«rheqjeje nuk garanton sigurinÃ« e produktit.",
+    "verifyWithSources": "Verifikoni gjithmonÃ« informacionin e tÃ«rheqjes me burime zyrtare nga FDA ose USDA.",
+    "governmentInfoDisclaimer": "Ky aplikacion nuk zÃ«vendÃ«son informacionin zyrtar tÃ« qeverisÃ«."
   },
   "home": {
-    "title": "Eats OK",
-    "subtitle": "Monitoroni produktet tuaja të skanuara dhe merrni alarme rikujtimi në kohë reale.",
+    "title": "Numeline",
+    "subtitle": "Monitoroni produktet tuaja tÃ« skanuara dhe merrni alarme rikujtimi nÃ« kohÃ« reale.",
     "stats": {
-      "scanned": "Produkte të skanuara",
-      "recalled": "Produkte të rikthyera",
-      "pending": "Në analizë"
+      "scanned": "Produkte tÃ« skanuara",
+      "recalled": "Produkte tÃ« rikthyera",
+      "pending": "NÃ« analizÃ«"
     },
     "historyTitle": "Historiku i skanimit",
-    "emptyState": "Skanoni produktin tuaj të parë për të ndjekur statusin e rikujtimit."
+    "emptyState": "Skanoni produktin tuaj tÃ« parÃ« pÃ«r tÃ« ndjekur statusin e rikujtimit."
   },
   "scan": {
     "step": "Hapi {{current}}/{{total}}",
     "brandStep": "Hapi 1/2",
     "lotStep": "Hapi 2/2",
-    "brandInstruction": "Kadroni markën e produktit (fotografia do të fshihet pas kapur).",
-    "lotInstruction": "Kadroni qartë numrin e lotit dhe kapo foton.",
-    "brandAnalyzing": "Analiza e markës në progres...",
-    "lotAnalyzing": "Analiza e numrit të lotit në progres...",
-    "privacyInfo": "Fotografitë përpunohen vetëm lokalisht dhe më pas fshihen menjëherë. Asnjë imazh nuk ruhet.",
+    "brandInstruction": "Kadroni markÃ«n e produktit (fotografia do tÃ« fshihet pas kapur).",
+    "lotInstruction": "Kadroni qartÃ« numrin e lotit dhe kapo foton.",
+    "brandAnalyzing": "Analiza e markÃ«s nÃ« progres...",
+    "lotAnalyzing": "Analiza e numrit tÃ« lotit nÃ« progres...",
+    "privacyInfo": "FotografitÃ« pÃ«rpunohen vetÃ«m lokalisht dhe mÃ« pas fshihen menjÃ«herÃ«. AsnjÃ« imazh nuk ruhet.",
     "brandLabel": "Marka",
     "lotLabel": "Loti",
     "analyzing": "Analizim...",
     "waiting": "Duke pritur",
-    "confidence": "Besueshmëri: {{value}}%",
-    "suggestions": "A keni dashur të thoni?",
+    "confidence": "BesueshmÃ«ri: {{value}}%",
+    "suggestions": "A keni dashur tÃ« thoni?",
     "ocrExtraction": "Ekstraktimi OCR",
     "detectedLot": "Numri i lotit i zbuluar",
     "restart": "Rifillo",
     "manualEntry": "Hyrje manuale",
-    "waitingForCapture": "Duke pritur për kapur...",
-    "aiPrecision": "AI përdoret për saktësi më të mirë",
-    "productNotPubliclyListed": "Ky produkt nuk është i regjistruar publikisht.\nSkanoni etiketën për të verifikuar numrin e lotit dhe rikujtimet.",
+    "waitingForCapture": "Duke pritur pÃ«r kapur...",
+    "aiPrecision": "AI pÃ«rdoret pÃ«r saktÃ«si mÃ« tÃ« mirÃ«",
+    "productNotPubliclyListed": "Ky produkt nuk Ã«shtÃ« i regjistruar publikisht.\nSkanoni etiketÃ«n pÃ«r tÃ« verifikuar numrin e lotit dhe rikujtimet.",
     "errors": {
-      "brandCaptureFailed": "Kapja e markës dështoi.",
-      "scanFailed": "Skanimi dështoi.",
-      "lotExtractFailed": "E pamundur të ekstraktohet numri i lotit automatikisht.",
-      "brandFirst": "Kapo markën para numrit të lotit."
+      "brandCaptureFailed": "Kapja e markÃ«s dÃ«shtoi.",
+      "scanFailed": "Skanimi dÃ«shtoi.",
+      "lotExtractFailed": "E pamundur tÃ« ekstraktohet numri i lotit automatikisht.",
+      "brandFirst": "Kapo markÃ«n para numrit tÃ« lotit."
     }
   },
   "manualEntry": {
     "title": "Hyrje manuale",
-    "subtitle": "Shto një produkt duke plotësuar numrin e lotit dhe markën.",
+    "subtitle": "Shto njÃ« produkt duke plotÃ«suar numrin e lotit dhe markÃ«n.",
     "brandLabel": "Marka",
     "brandPlaceholder": "Shembull: Marka X",
     "lotLabel": "Numri i lotit",
     "lotPlaceholder": "Shembull: L12345",
     "save": "Ruaj",
-    "verifying": "Duke verifikuar…",
+    "verifying": "Duke verifikuarâ€¦",
     "errors": {
-      "lotRequired": "Numri i lotit kërkohet",
-      "lotRequiredMessage": "Ju lutemi jepni numrin e lotit për të vazhduar.",
-      "saveFailed": "Ruajtja dështoi",
-      "checkFailed": "E pamundur të verifikohen rikujtimet për momentin."
+      "lotRequired": "Numri i lotit kÃ«rkohet",
+      "lotRequiredMessage": "Ju lutemi jepni numrin e lotit pÃ«r tÃ« vazhduar.",
+      "saveFailed": "Ruajtja dÃ«shtoi",
+      "checkFailed": "E pamundur tÃ« verifikohen rikujtimet pÃ«r momentin."
     }
   },
   "details": {
     "title": "Detajet e produktit",
     "brand": "Marka",
     "lot": "Loti",
-    "scannedAt": "Skanuar më",
+    "scannedAt": "Skanuar mÃ«",
     "status": {
       "safe": "I sigurt",
       "recalled": "I rikthyer",
@@ -90,41 +90,41 @@
   },
   "history": {
     "title": "Historiku",
-    "fullTitle": "Historiku i plotë",
-    "subtitle": "Filtroni skanime sipas statusit të rikujtimit.",
+    "fullTitle": "Historiku i plotÃ«",
+    "subtitle": "Filtroni skanime sipas statusit tÃ« rikujtimit.",
     "filters": {
-      "all": "Të gjitha",
-      "recalled": "Të rikthyera",
+      "all": "TÃ« gjitha",
+      "recalled": "TÃ« rikthyera",
       "safe": "Pa thirrje",
-      "unknown": "Të panjohura"
+      "unknown": "TÃ« panjohura"
     },
-    "emptyState": "Asnjë produkt i skanuar aktualisht.",
-    "emptyStateDetailed": "Asnjë të dhënë e disponueshme. Filloni një skanim për të ushqyer historikun."
+    "emptyState": "AsnjÃ« produkt i skanuar aktualisht.",
+    "emptyStateDetailed": "AsnjÃ« tÃ« dhÃ«nÃ« e disponueshme. Filloni njÃ« skanim pÃ«r tÃ« ushqyer historikun."
   },
   "productCard": {
     "lot": "Loti {{lot}}",
-    "scannedAt": "Skanuar m? {{date}} n? {{time}}",
-    "privacy": "Asnjë fotografi nuk ruhet; vetëm marka dhe numri i lotit ruhen.",
+    "scannedAt": "Skanuar me {{date}} ne {{time}}",
+    "privacy": "AsnjÃ« fotografi nuk ruhet; vetÃ«m marka dhe numri i lotit ruhen.",
     "delete": "Fshi"
   },
   "recallAlert": {
     "title": "PRODUKT I KONTAMINUAR",
     "doNotConsume": "MOS KONSUMONI",
-    "warning": "Ky produkt është objekt i një rikujtimi zyrtar dhe nuk duhet të konsumohet.",
+    "warning": "Ky produkt Ã«shtÃ« objekt i njÃ« rikujtimi zyrtar dhe nuk duhet tÃ« konsumohet.",
     "reasonLabel": "Arsyeja e rikujtimit:",
-    "emergencyTitle": "Nëse është konsumuar",
-    "emergencyText": "Nëse keni konsumuar këtë produkt dhe keni simptoma, kontaktoni menjëherë shërbimet e emergjencës.",
+    "emergencyTitle": "NÃ«se Ã«shtÃ« konsumuar",
+    "emergencyText": "NÃ«se keni konsumuar kÃ«tÃ« produkt dhe keni simptoma, kontaktoni menjÃ«herÃ« shÃ«rbimet e emergjencÃ«s.",
     "callSamu": "Telefononi 112 (Emergjenca)",
     "callEmergency": "Telefononi 112 (Emergjenca)",
-    "viewOfficialNotice": "Shikoni njoftimin zyrtar të rikujtimit",
-    "returnForRefund": "Kthejeni produktin në dyqan për rimbursim",
-    "reportedBy": "T?rheqja ?sht? raportuar nga FDA / USDA"
+    "viewOfficialNotice": "Shikoni njoftimin zyrtar tÃ« rikujtimit",
+    "returnForRefund": "Kthejeni produktin nÃ« dyqan pÃ«r rimbursim",
+    "reportedBy": "Terheqja eshte raportuar nga FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Nuk u gjet asnjë tërheqje në bazat e të dhënave zyrtare në këtë moment",
+    "safe": "Nuk u gjet asnjÃ« tÃ«rheqje nÃ« bazat e tÃ« dhÃ«nave zyrtare nÃ« kÃ«tÃ« moment",
     "recalled": "I rikthyer",
-    "unknown": "Analizë në progres",
-    "warning": "Për t'u monitoruar"
+    "unknown": "AnalizÃ« nÃ« progres",
+    "warning": "PÃ«r t'u monitoruar"
   },
   "navigation": {
     "home": "Kryefaqja",
@@ -134,16 +134,16 @@
   },
   "language": {
     "title": "Parametrat",
-    "subtitle": "Zgjidhni gjuhën e shfaqjes së aplikacionit."
+    "subtitle": "Zgjidhni gjuhÃ«n e shfaqjes sÃ« aplikacionit."
   },
   "notifications": {
     "alert": {
-      "title": "🚨 ALARM PRODUKTI I KONTAMINUAR",
-      "body": "⚠️ {{brand}} - Loti {{lot}}\nArsyeja: {{reason}}\n\n🚫 MOS KONSUMONI\nNë rast konsumimi, kontaktoni urgjencën (15 ose 112)"
+      "title": "ðŸš¨ ALARM PRODUKTI I KONTAMINUAR",
+      "body": "âš ï¸ {{brand}} - Loti {{lot}}\nArsyeja: {{reason}}\n\nðŸš« MOS KONSUMONI\nNÃ« rast konsumimi, kontaktoni urgjencÃ«n (15 ose 112)"
     },
     "dailyCheck": {
-      "title": "Verifikimi Eats OK",
-      "body": "Përditësimi ditor i rikujtimeve në progres."
+      "title": "Verifikimi Numeline",
+      "body": "PÃ«rditÃ«simi ditor i rikujtimeve nÃ« progres."
     }
   },
   "settings": {
@@ -155,48 +155,51 @@
     "about": "Rreth"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
-    "greeting": "Përshëndetje {{name}}",
-    "question": "Cilin produkt dëshironi të kontrolloni sot?",
+    "greeting": "PÃ«rshÃ«ndetje {{name}}",
+    "question": "Cilin produkt dÃ«shironi tÃ« kontrolloni sot?",
     "startScanning": "Fillo skanimin",
-    "namePromptTitle": "Mirë se vini në Eats OK",
-    "namePromptMessage": "Për të personalizuar përvojën tuaj, ju lutemi shkruani emrin tuaj:",
+    "namePromptTitle": "MirÃ« se vini nÃ« Numeline",
+    "namePromptMessage": "PÃ«r tÃ« personalizuar pÃ«rvojÃ«n tuaj, ju lutemi shkruani emrin tuaj:",
     "namePromptPlaceholder": "Emri juaj",
     "namePromptSave": "Vazhdo",
     "namePromptSkip": "Kalo"
   },
   "legal": {
     "sectionTitle": "Dokumente Ligjore",
-    "privacyPolicy": "Politika e Privatësisë",
-    "terms": "Kushtet e Shërbimit",
+    "privacyPolicy": "Politika e PrivatÃ«sisÃ«",
+    "terms": "Kushtet e ShÃ«rbimit",
     "legalNotice": "Njoftim Ligjor",
-    "errorLoading": "Gabim në ngarkimin e dokumentit",
-    "disclaimer": "Përjashtim përgjegjësie",
-    "dataSources": "Burimet e të dhënave (FDA / USDA)"
+    "errorLoading": "Gabim nÃ« ngarkimin e dokumentit",
+    "disclaimer": "PÃ«rjashtim pÃ«rgjegjÃ«sie",
+    "dataSources": "Burimet e tÃ« dhÃ«nave (FDA / USDA)"
   },
   "disclaimer": {
-    "title": "Përjashtim përgjegjësie për tërheqjet ushqimore",
-    "body": "Ky aplikacion ofron informacion për tërheqjet e ushqimeve për produkte të shitura në Shtetet e Bashkuara vetëm për qëllime informuese.\n\nInformacioni i shfaqur në këtë aplikacion bazohet në të dhëna publike nga agjenci qeveritare (përfshirë, por pa u kufizuar në, FDA dhe USDA) dhe burime të tjera të palëve të treta. Ne nuk garantojmë saktësinë, plotësinë ose aktualitetin e informacionit të ofruar.\n\nKy aplikacion nuk zëvendëson njoftimet zyrtare të tërheqjes, komunikimet e prodhuesve ose udhëzimet e autoriteteve rregullatore. Përdoruesit inkurajohen të verifikojnë informacionin e tërheqjes drejtpërdrejt me burime zyrtare.\n\nNjë produkt që nuk identifikohet si i tërhequr në këtë aplikacion nuk garanton që produkti është i sigurt ose që nuk i nënshtrohet një tërheqjeje aktuale ose të ardhshme.\n\nKy aplikacion nuk ofron këshilla mjekësore, ushqimore ose shëndetësore. Nëse keni shqetësime për sigurinë ushqimore, ndotjen, alergjitë ose sëmundjen, konsultohuni me një profesionist të kualifikuar të shëndetit ose ndiqni udhëzimet zyrtare të autoriteteve të shëndetit publik.\n\nKy aplikacion nuk verifikon datat e skadencës ose freskinë e produkteve.\n\nSkanimi i kodeve me shirita, njohja e numrave të lotit dhe daljet zanore ose vizuale mund të jenë subjekt i kufizimeve teknike ose gabimeve. Përdoruesit mbeten përgjegjës për verifikimin e detajeve të produktit dhe statusit të tërheqjes.\n\nNë masën maksimale të lejuar nga ligji, zhvilluesi nuk mban përgjegjësi për dëme, lëndime ose humbje të drejtpërdrejta apo të tërthorta që rrjedhin nga përdorimi ose mbështetja në informacionin e ofruar nga ky aplikacion.\n\nMbulimi i tërheqjeve është i kufizuar në produktet ushqimore të shitura në Shtetet e Bashkuara dhe mund të mos zbatohet për produktet e shitura në vende të tjera."
+    "title": "PÃ«rjashtim pÃ«rgjegjÃ«sie pÃ«r tÃ«rheqjet ushqimore",
+    "body": "Ky aplikacion ofron informacion pÃ«r tÃ«rheqjet e ushqimeve pÃ«r produkte tÃ« shitura nÃ« Shtetet e Bashkuara vetÃ«m pÃ«r qÃ«llime informuese.\n\nInformacioni i shfaqur nÃ« kÃ«tÃ« aplikacion bazohet nÃ« tÃ« dhÃ«na publike nga agjenci qeveritare (pÃ«rfshirÃ«, por pa u kufizuar nÃ«, FDA dhe USDA) dhe burime tÃ« tjera tÃ« palÃ«ve tÃ« treta. Ne nuk garantojmÃ« saktÃ«sinÃ«, plotÃ«sinÃ« ose aktualitetin e informacionit tÃ« ofruar.\n\nKy aplikacion nuk zÃ«vendÃ«son njoftimet zyrtare tÃ« tÃ«rheqjes, komunikimet e prodhuesve ose udhÃ«zimet e autoriteteve rregullatore. PÃ«rdoruesit inkurajohen tÃ« verifikojnÃ« informacionin e tÃ«rheqjes drejtpÃ«rdrejt me burime zyrtare.\n\nNjÃ« produkt qÃ« nuk identifikohet si i tÃ«rhequr nÃ« kÃ«tÃ« aplikacion nuk garanton qÃ« produkti Ã«shtÃ« i sigurt ose qÃ« nuk i nÃ«nshtrohet njÃ« tÃ«rheqjeje aktuale ose tÃ« ardhshme.\n\nKy aplikacion nuk ofron kÃ«shilla mjekÃ«sore, ushqimore ose shÃ«ndetÃ«sore. NÃ«se keni shqetÃ«sime pÃ«r sigurinÃ« ushqimore, ndotjen, alergjitÃ« ose sÃ«mundjen, konsultohuni me njÃ« profesionist tÃ« kualifikuar tÃ« shÃ«ndetit ose ndiqni udhÃ«zimet zyrtare tÃ« autoriteteve tÃ« shÃ«ndetit publik.\n\nKy aplikacion nuk verifikon datat e skadencÃ«s ose freskinÃ« e produkteve.\n\nSkanimi i kodeve me shirita, njohja e numrave tÃ« lotit dhe daljet zanore ose vizuale mund tÃ« jenÃ« subjekt i kufizimeve teknike ose gabimeve. PÃ«rdoruesit mbeten pÃ«rgjegjÃ«s pÃ«r verifikimin e detajeve tÃ« produktit dhe statusit tÃ« tÃ«rheqjes.\n\nNÃ« masÃ«n maksimale tÃ« lejuar nga ligji, zhvilluesi nuk mban pÃ«rgjegjÃ«si pÃ«r dÃ«me, lÃ«ndime ose humbje tÃ« drejtpÃ«rdrejta apo tÃ« tÃ«rthorta qÃ« rrjedhin nga pÃ«rdorimi ose mbÃ«shtetja nÃ« informacionin e ofruar nga ky aplikacion.\n\nMbulimi i tÃ«rheqjeve Ã«shtÃ« i kufizuar nÃ« produktet ushqimore tÃ« shitura nÃ« Shtetet e Bashkuara dhe mund tÃ« mos zbatohet pÃ«r produktet e shitura nÃ« vende tÃ« tjera."
   },
   "dataSources": {
-    "title": "Burimet e të dhënave",
-    "description": "Burime zyrtare për informacionet e tërheqjeve në SHBA:",
-    "fda": "FDA – Food and Drug Administration",
-    "usda": "USDA – Food Safety and Inspection Service"
+    "title": "Burimet e tÃ« dhÃ«nave",
+    "description": "Burime zyrtare pÃ«r informacionet e tÃ«rheqjeve nÃ« SHBA:",
+    "fda": "FDA â€“ Food and Drug Administration",
+    "usda": "USDA â€“ Food Safety and Inspection Service"
   }
 }
+
+
+

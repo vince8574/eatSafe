@@ -1,6 +1,6 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
+    "appName": "Numeline",
     "loading": "Chargement...",
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -10,38 +10,38 @@
     "back": "Retour",
     "refresh": "Actualiser",
     "unknown": "Inconnu",
-    "dataDisclaimer": "Basé sur les données disponibles à ce moment",
-    "appDisclaimer": "Cette application fournit des informations de rappel bas?es sur des bases de donn?es publiques officielles. Elle ne garantit pas la s?curit? du produit. Cette application ne v?rifie pas les dates de p?remption ni la fra?cheur des produits.",
-    "noRecallDisclaimer": "L'absence de rappel ne garantit pas la s?curit? du produit.",
-    "verifyWithSources": "Vérifiez toujours les informations de rappel auprès des sources officielles de la FDA ou de l'USDA.",
+    "dataDisclaimer": "BasÃ© sur les donnÃ©es disponibles Ã  ce moment",
+    "appDisclaimer": "Cette application fournit des informations de rappel basees sur des bases de donnees publiques officielles. Elle ne garantit pas la securite du produit. Cette application ne verifie pas les dates de peremption ni la fraecheur des produits.",
+    "noRecallDisclaimer": "L'absence de rappel ne garantit pas la securite du produit.",
+    "verifyWithSources": "VÃ©rifiez toujours les informations de rappel auprÃ¨s des sources officielles de la FDA ou de l'USDA.",
     "governmentInfoDisclaimer": "Cette application ne remplace pas les informations officielles du gouvernement."
   },
   "home": {
-    "title": "Eats OK",
-    "subtitle": "Surveillez vos produits scannés et recevez des alertes rappel en temps réel.",
+    "title": "Numeline",
+    "subtitle": "Surveillez vos produits scannÃ©s et recevez des alertes rappel en temps rÃ©el.",
     "stats": {
-      "scanned": "Produits scannés",
-      "recalled": "Produits rappelés",
+      "scanned": "Produits scannÃ©s",
+      "recalled": "Produits rappelÃ©s",
       "pending": "En analyse"
     },
     "historyTitle": "Historique des scans",
     "emptyState": "Scannez votre premier produit pour suivre son statut rappel."
   },
   "scan": {
-    "step": "Étape {{current}}/{{total}}",
-    "brandStep": "Étape 1/2",
-    "lotStep": "Étape 2/2",
+    "step": "Ã‰tape {{current}}/{{total}}",
+    "brandStep": "Ã‰tape 1/2",
+    "lotStep": "Ã‰tape 2/2",
     "barcodeInstruction": "Scannez le code-barres du produit pour identifier la marque automatiquement.",
     "brandInstruction": "Veuillez scanner la marque du produit.",
-    "lotInstruction": "Cadrez clairement le numéro de lot et capturez la photo.",
+    "lotInstruction": "Cadrez clairement le numÃ©ro de lot et capturez la photo.",
     "brandAnalyzing": "Analyse de la marque en cours...",
-    "lotAnalyzing": "Analyse du numéro de lot en cours...",
-    "confirmBrandTitle": "Valider la marque détectée",
-    "confirmBrandMessage": "Marque détectée : {{brand}}",
-    "confirmLotTitle": "Valider le numéro de lot",
-    "confirmLotMessage": "Numéro de lot détecté : {{lot}}",
+    "lotAnalyzing": "Analyse du numÃ©ro de lot en cours...",
+    "confirmBrandTitle": "Valider la marque dÃ©tectÃ©e",
+    "confirmBrandMessage": "Marque dÃ©tectÃ©e : {{brand}}",
+    "confirmLotTitle": "Valider le numÃ©ro de lot",
+    "confirmLotMessage": "NumÃ©ro de lot dÃ©tectÃ© : {{lot}}",
     "validate": "Valider",
-    "privacyInfo": "Les photos sont traitées uniquement en local puis supprimées immédiatement. Aucune image n'est stockée.",
+    "privacyInfo": "Les photos sont traitÃ©es uniquement en local puis supprimÃ©es immÃ©diatement. Aucune image n'est stockÃ©e.",
     "brandLabel": "Marque",
     "lotLabel": "Lot",
     "analyzing": "Analyse...",
@@ -49,55 +49,55 @@
     "confidence": "Confiance: {{value}}%",
     "suggestions": "Vouliez-vous dire ?",
     "ocrExtraction": "Extraction OCR",
-    "detectedLot": "Numéro de lot détecté",
+    "detectedLot": "NumÃ©ro de lot dÃ©tectÃ©",
     "restart": "Recommencer",
     "manualEntry": "Saisie manuelle",
-    "switchToOcr": "📸 Scanner le texte de la marque",
-    "switchToBarcode": "📊 Scanner le code-barres",
+    "switchToOcr": "ðŸ“¸ Scanner le texte de la marque",
+    "switchToBarcode": "ðŸ“Š Scanner le code-barres",
     "waitingForCapture": "En attente de capture...",
-    "aiPrecision": "IA utilisée pour plus de précision",
-    "productNotPubliclyListed": "Ce produit n'est pas référencé publiquement.\nScannez l'étiquette pour vérifier le numéro de lot et les rappels.",
+    "aiPrecision": "IA utilisÃ©e pour plus de prÃ©cision",
+    "productNotPubliclyListed": "Ce produit n'est pas rÃ©fÃ©rencÃ© publiquement.\nScannez l'Ã©tiquette pour vÃ©rifier le numÃ©ro de lot et les rappels.",
     "errors": {
-      "brandCaptureFailed": "La capture de la marque a échoué.",
-      "scanFailed": "Le scan a échoué.",
-      "lotExtractFailed": "Impossible d'extraire le numéro de lot automatiquement.",
-      "brandFirst": "Capturez d'abord la marque avant le numéro de lot.",
+      "brandCaptureFailed": "La capture de la marque a Ã©chouÃ©.",
+      "scanFailed": "Le scan a Ã©chouÃ©.",
+      "lotExtractFailed": "Impossible d'extraire le numÃ©ro de lot automatiquement.",
+      "brandFirst": "Capturez d'abord la marque avant le numÃ©ro de lot.",
       "barcodeNotFound": "Code-barres non reconnu. Essayez de scanner le texte de la marque.",
-      "barcodeScanFailed": "Échec du scan du code-barres. Essayez de scanner le texte de la marque."
+      "barcodeScanFailed": "Ã‰chec du scan du code-barres. Essayez de scanner le texte de la marque."
     }
   },
   "manualEntry": {
     "title": "Saisie manuelle",
-    "subtitle": "Ajoutez un produit en renseignant son numéro de lot et sa marque.",
+    "subtitle": "Ajoutez un produit en renseignant son numÃ©ro de lot et sa marque.",
     "brandLabel": "Marque",
     "brandPlaceholder": "Ex: Marque X",
-    "lotLabel": "Numéro de lot",
+    "lotLabel": "NumÃ©ro de lot",
     "lotPlaceholder": "Ex: L12345",
     "save": "Enregistrer",
-    "verifying": "Vérification…",
+    "verifying": "VÃ©rificationâ€¦",
     "errors": {
-      "lotRequired": "Numéro de lot requis",
-      "lotRequiredMessage": "Veuillez renseigner un numéro de lot pour continuer.",
-      "saveFailed": "Enregistrement échoué",
-      "checkFailed": "Impossible de vérifier les rappels pour le moment."
+      "lotRequired": "NumÃ©ro de lot requis",
+      "lotRequiredMessage": "Veuillez renseigner un numÃ©ro de lot pour continuer.",
+      "saveFailed": "Enregistrement Ã©chouÃ©",
+      "checkFailed": "Impossible de vÃ©rifier les rappels pour le moment."
     }
   },
   "details": {
-    "title": "Détails du produit",
+    "title": "DÃ©tails du produit",
     "brand": "Marque",
     "lot": "Lot",
-    "lotNumber": "Numéro de lot",
-    "scannedAt": "Scanné le",
-    "lastChecked": "Dernière vérification",
+    "lotNumber": "NumÃ©ro de lot",
+    "scannedAt": "ScannÃ© le",
+    "lastChecked": "DerniÃ¨re vÃ©rification",
     "never": "Jamais",
-    "notFound": "Produit introuvable ou supprimé.",
-    "privacyInfo": "Les photos prises pendant le scan sont traitées localement puis supprimées immédiatement. Seuls la marque et le numéro de lot sont conservés sur cet appareil.",
+    "notFound": "Produit introuvable ou supprimÃ©.",
+    "privacyInfo": "Les photos prises pendant le scan sont traitÃ©es localement puis supprimÃ©es immÃ©diatement. Seuls la marque et le numÃ©ro de lot sont conservÃ©s sur cet appareil.",
     "recallStatusLabel": "Statut rappel",
     "status": {
-      "safe": "✅ SÉCURITAIRE",
-      "recalled": "🚨 RAPPELÉ - NE PAS CONSOMMER",
-      "unknown": "❓ INCONNU",
-      "warning": "⚠️ AVERTISSEMENT"
+      "safe": "âœ… SÃ‰CURITAIRE",
+      "recalled": "ðŸš¨ RAPPELÃ‰ - NE PAS CONSOMMER",
+      "unknown": "â“ INCONNU",
+      "warning": "âš ï¸ AVERTISSEMENT"
     },
     "recallInfo": "Informations du rappel",
     "actions": {
@@ -111,111 +111,112 @@
     "subtitle": "Filtrez vos scans selon leur statut rappel.",
     "filters": {
       "all": "Tous",
-      "recalled": "Rappelés",
+      "recalled": "RappelÃ©s",
       "safe": "Sans rappel",
       "unknown": "Inconnu"
     },
-    "emptyState": "Aucun produit scanné pour le moment.",
-    "emptyStateDetailed": "Aucune donnée disponible. Lancez un scan pour alimenter l'historique."
+    "emptyState": "Aucun produit scannÃ© pour le moment.",
+    "emptyStateDetailed": "Aucune donnÃ©e disponible. Lancez un scan pour alimenter l'historique."
   },
   "productCard": {
     "lot": "Lot {{lot}}",
-    "scannedAt": "Scann? le {{date}} ? {{time}}",
-    "privacy": "Aucune photo n'est stockée ; seuls la marque et le numéro de lot sont conservés.",
+    "scannedAt": "Scanne le {{date}} a {{time}}",
+    "privacy": "Aucune photo n'est stockÃ©e ; seuls la marque et le numÃ©ro de lot sont conservÃ©s.",
     "delete": "Supprimer"
   },
   "recallAlert": {
-    "title": "PRODUIT CONTAMINÉ",
+    "title": "PRODUIT CONTAMINÃ‰",
     "doNotConsume": "NE PAS CONSOMMER",
-    "warning": "Ce produit fait l'objet d'un rappel officiel et ne doit pas être consommé.",
+    "warning": "Ce produit fait l'objet d'un rappel officiel et ne doit pas Ãªtre consommÃ©.",
     "reasonLabel": "Raison du rappel :",
     "emergencyTitle": "En cas de consommation",
-    "emergencyText": "Si vous avez consommé ce produit et ressentez des symptômes, contactez immédiatement les urgences.",
+    "emergencyText": "Si vous avez consommÃ© ce produit et ressentez des symptÃ´mes, contactez immÃ©diatement les urgences.",
     "callSamu": "Appeler le 15 (SAMU)",
     "callEmergency": "Appeler le 112 (Urgences)",
     "viewOfficialNotice": "Consulter la fiche officielle du rappel",
     "returnForRefund": "Rapportez le produit au magasin pour obtenir un remboursement",
-    "reportedBy": "Rappel signal? par la FDA / l'USDA"
+    "reportedBy": "Rappel signale par la FDA / l'USDA"
   },
   "recallStatus": {
-    "safe": "Aucun rappel trouvé dans les bases officielles pour le moment",
-    "recalled": "Rappelé",
+    "safe": "Aucun rappel trouvÃ© dans les bases officielles pour le moment",
+    "recalled": "RappelÃ©",
     "unknown": "Analyse en cours",
-    "warning": "À surveiller"
+    "warning": "Ã€ surveiller"
   },
   "navigation": {
     "home": "Accueil",
     "scan": "Scanner",
     "history": "Historique",
-    "language": "Paramètres"
+    "language": "ParamÃ¨tres"
   },
   "language": {
-    "title": "Paramètres",
+    "title": "ParamÃ¨tres",
     "subtitle": "Choisissez la langue d'affichage de l'app."
   },
   "notifications": {
     "alert": {
-      "title": "🚨 ALERTE PRODUIT CONTAMINÉ",
-      "body": "⚠️ {{brand}} - Lot {{lot}}\nRaison: {{reason}}\n\n🚫 NE PAS CONSOMMER\nEn cas de consommation, contactez les urgences (15 ou 112)"
+      "title": "ðŸš¨ ALERTE PRODUIT CONTAMINÃ‰",
+      "body": "âš ï¸ {{brand}} - Lot {{lot}}\nRaison: {{reason}}\n\nðŸš« NE PAS CONSOMMER\nEn cas de consommation, contactez les urgences (15 ou 112)"
     },
     "dailyCheck": {
-      "title": "Verification Eats OK",
+      "title": "Verification Numeline",
       "body": "Mise a jour quotidienne des rappels en cours."
     },
-    "newRecallTitle": "⚠️ Nouveau rappel détecté",
+    "newRecallTitle": "âš ï¸ Nouveau rappel dÃ©tectÃ©",
     "newRecallBody": "Le produit {{brand}} - Lot {{lot}} fait maintenant l'objet d'un rappel. Ne pas consommer."
   },
   "settings": {
-    "title": "Paramètres",
+    "title": "ParamÃ¨tres",
     "language": "Langue",
     "country": "Pays",
-    "theme": "Thème",
+    "theme": "ThÃ¨me",
     "notifications": "Notifications",
-    "about": "À propos"
+    "about": "Ã€ propos"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Bonjour {{name}}",
-    "question": "Quel produit voulez-vous contrôler aujourd'hui ?",
+    "question": "Quel produit voulez-vous contrÃ´ler aujourd'hui ?",
     "startScanning": "Commencer le scan",
-    "namePromptTitle": "Bienvenue sur Eats OK",
-    "namePromptMessage": "Pour personnaliser votre expérience, veuillez entrer votre prénom :",
-    "namePromptPlaceholder": "Votre prénom",
+    "namePromptTitle": "Bienvenue sur Numeline",
+    "namePromptMessage": "Pour personnaliser votre expÃ©rience, veuillez entrer votre prÃ©nom :",
+    "namePromptPlaceholder": "Votre prÃ©nom",
     "namePromptSave": "Continuer",
     "namePromptSkip": "Ignorer"
   },
   "legal": {
-    "sectionTitle": "Documents Légaux",
-    "privacyPolicy": "Politique de Confidentialité",
-    "terms": "Conditions Générales d'Utilisation",
-    "legalNotice": "Mentions Légales",
+    "sectionTitle": "Documents LÃ©gaux",
+    "privacyPolicy": "Politique de ConfidentialitÃ©",
+    "terms": "Conditions GÃ©nÃ©rales d'Utilisation",
+    "legalNotice": "Mentions LÃ©gales",
     "errorLoading": "Erreur de chargement du document",
     "disclaimer": "Avertissement",
-    "dataSources": "Sources de donn?es (FDA / USDA)"
+    "dataSources": "Sources de donnees (FDA / USDA)"
   },
   "disclaimer": {
     "title": "Avertissement sur les rappels alimentaires",
-    "body": "Cette application fournit des informations sur les rappels alimentaires pour les produits vendus aux ?tats-Unis, uniquement ? titre informatif.\n\nLes informations affich?es dans cette application sont bas?es sur des donn?es publiques provenant d'agences gouvernementales (y compris, mais sans s'y limiter, la FDA et l'USDA) et d'autres sources tierces. Nous ne garantissons pas l'exactitude, l'exhaustivit? ni l'actualit? des informations fournies.\n\nCette application ne remplace pas les notifications officielles de rappel, les communications des fabricants ou les consignes des autorit?s r?glementaires. Les utilisateurs sont encourag?s ? v?rifier les informations de rappel directement aupr?s des sources officielles.\n\nLe fait qu'un produit ne soit pas identifi? comme rappel? dans cette application ne garantit pas que le produit est s?r ou qu'il ne fait pas l'objet d'un rappel en cours ou futur.\n\nCette application ne fournit pas de conseils m?dicaux, nutritionnels ou de sant?. Si vous avez des pr?occupations concernant la s?curit? alimentaire, la contamination, les allergies ou une maladie, consultez un professionnel de sant? qualifi? ou suivez les consignes officielles des autorit?s de sant? publique.\n\nCette application ne v?rifie pas les dates de p?remption ni la fra?cheur des produits.\n\nLa lecture des codes-barres, la reconnaissance des num?ros de lot et les sorties vocales ou visuelles peuvent ?tre sujettes ? des limites techniques ou ? des erreurs. Les utilisateurs restent responsables de la v?rification des d?tails du produit et du statut de rappel.\n\nDans la mesure maximale permise par la loi, le d?veloppeur ne saurait ?tre tenu responsable des dommages, blessures ou pertes directes ou indirectes r?sultant de l'utilisation ou de la confiance accord?e aux informations fournies par cette application.\n\nLa couverture des rappels est limit?e aux produits alimentaires vendus aux ?tats-Unis et peut ne pas s'appliquer aux produits vendus dans d'autres pays."
+    "body": "Cette application fournit des informations sur les rappels alimentaires pour les produits vendus aux etats-Unis, uniquement a titre informatif.\n\nLes informations affichees dans cette application sont basees sur des donnees publiques provenant d'agences gouvernementales (y compris, mais sans s'y limiter, la FDA et l'USDA) et d'autres sources tierces. Nous ne garantissons pas l'exactitude, l'exhaustivite ni l'actualite des informations fournies.\n\nCette application ne remplace pas les notifications officielles de rappel, les communications des fabricants ou les consignes des autorites reglementaires. Les utilisateurs sont encourages a verifier les informations de rappel directement aupres des sources officielles.\n\nLe fait qu'un produit ne soit pas identifie comme rappele dans cette application ne garantit pas que le produit est ser ou qu'il ne fait pas l'objet d'un rappel en cours ou futur.\n\nCette application ne fournit pas de conseils medicaux, nutritionnels ou de sant?. Si vous avez des preoccupations concernant la securite alimentaire, la contamination, les allergies ou une maladie, consultez un professionnel de sante qualifie ou suivez les consignes officielles des autorites de sante publique.\n\nCette application ne verifie pas les dates de peremption ni la fraecheur des produits.\n\nLa lecture des codes-barres, la reconnaissance des numeros de lot et les sorties vocales ou visuelles peuvent etre sujettes a des limites techniques ou a des erreurs. Les utilisateurs restent responsables de la verification des details du produit et du statut de rappel.\n\nDans la mesure maximale permise par la loi, le developpeur ne saurait etre tenu responsable des dommages, blessures ou pertes directes ou indirectes resultant de l'utilisation ou de la confiance accordee aux informations fournies par cette application.\n\nLa couverture des rappels est limitee aux produits alimentaires vendus aux etats-Unis et peut ne pas s'appliquer aux produits vendus dans d'autres pays."
   },
-  "dataSources": {
-    "title": "Sources de donn?es",
-    "description": "Sources officielles d'information sur les rappels aux ?tats-Unis :",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
-  }
+  "dataSources": {"title": "Sources de donnees","description": "Sources officielles d information sur les rappels aux Etats-Unis :","fda": "FDA - Food and Drug Administration","usda": "USDA - Food Safety and Inspection Service"}
 }
+
+
+
+
+
+

@@ -1,202 +1,203 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
-    "loading": "加载中...",
-    "save": "保存",
-    "cancel": "取消",
-    "confirm": "确认",
-    "delete": "删除",
-    "edit": "编辑",
-    "back": "返回",
-    "refresh": "刷新",
-    "unknown": "未知",
-    "dataDisclaimer": "基于当前可用数据",
-    "appDisclaimer": "本应用程序根据官方公共数据库提供召回信息。它不保证产品安全。本应用程序不验证保质期或产品新鲜度。",
-    "noRecallDisclaimer": "无召回不保证产品安全。",
-    "verifyWithSources": "请始终通过FDA或USDA的官方来源验证召回信息。",
-    "governmentInfoDisclaimer": "本应用程序不能替代官方政府信息。"
+    "appName": "Numeline",
+    "loading": "åŠ è½½ä¸­...",
+    "save": "ä¿å­˜",
+    "cancel": "å–æ¶ˆ",
+    "confirm": "ç¡®è®¤",
+    "delete": "åˆ é™¤",
+    "edit": "ç¼–è¾‘",
+    "back": "è¿”å›ž",
+    "refresh": "åˆ·æ–°",
+    "unknown": "æœªçŸ¥",
+    "dataDisclaimer": "åŸºäºŽå½“å‰å¯ç”¨æ•°æ®",
+    "appDisclaimer": "æœ¬åº”ç”¨ç¨‹åºæ ¹æ®å®˜æ–¹å…¬å…±æ•°æ®åº“æä¾›å¬å›žä¿¡æ¯ã€‚å®ƒä¸ä¿è¯äº§å“å®‰å…¨ã€‚æœ¬åº”ç”¨ç¨‹åºä¸éªŒè¯ä¿è´¨æœŸæˆ–äº§å“æ–°é²œåº¦ã€‚",
+    "noRecallDisclaimer": "æ— å¬å›žä¸ä¿è¯äº§å“å®‰å…¨ã€‚",
+    "verifyWithSources": "è¯·å§‹ç»ˆé€šè¿‡FDAæˆ–USDAçš„å®˜æ–¹æ¥æºéªŒè¯å¬å›žä¿¡æ¯ã€‚",
+    "governmentInfoDisclaimer": "æœ¬åº”ç”¨ç¨‹åºä¸èƒ½æ›¿ä»£å®˜æ–¹æ”¿åºœä¿¡æ¯ã€‚"
   },
   "home": {
-    "title": "Eats OK",
-    "subtitle": "监控已扫描的产品并实时收到召回提醒。",
+    "title": "Numeline",
+    "subtitle": "ç›‘æŽ§å·²æ‰«æçš„äº§å“å¹¶å®žæ—¶æ”¶åˆ°å¬å›žæé†’ã€‚",
     "stats": {
-      "scanned": "已扫描产品",
-      "recalled": "已召回产品",
-      "pending": "分析中"
+      "scanned": "å·²æ‰«æäº§å“",
+      "recalled": "å·²å¬å›žäº§å“",
+      "pending": "åˆ†æžä¸­"
     },
-    "historyTitle": "扫描记录",
-    "emptyState": "扫描第一个产品以追踪召回状态。"
+    "historyTitle": "æ‰«æè®°å½•",
+    "emptyState": "æ‰«æç¬¬ä¸€ä¸ªäº§å“ä»¥è¿½è¸ªå¬å›žçŠ¶æ€ã€‚"
   },
   "scan": {
-    "step": "步骤 {{current}}/{{total}}",
-    "brandStep": "步骤 1/2",
-    "lotStep": "步骤 2/2",
-    "brandInstruction": "对准产品品牌（拍摄后会删除照片）。",
-    "lotInstruction": "清晰对准批次号并拍照。",
-    "brandAnalyzing": "正在分析品牌...",
-    "lotAnalyzing": "正在分析批次号...",
-    "privacyInfo": "照片仅在本地处理并立即删除，不会存储任何图片。",
-    "brandLabel": "品牌",
-    "lotLabel": "批次",
-    "analyzing": "分析中...",
-    "waiting": "等待中",
-    "confidence": "置信度：{{value}}%",
-    "suggestions": "你要找的是？",
-    "ocrExtraction": "OCR 提取",
-    "detectedLot": "检测到的批次号",
-    "restart": "重新开始",
-    "manualEntry": "手动输入",
-    "waitingForCapture": "等待拍摄...",
-    "aiPrecision": "使用AI提高精度",
-    "productNotPubliclyListed": "该产品未公开列出。\n扫描标签以检查批次号和召回信息。",
+    "step": "æ­¥éª¤ {{current}}/{{total}}",
+    "brandStep": "æ­¥éª¤ 1/2",
+    "lotStep": "æ­¥éª¤ 2/2",
+    "brandInstruction": "å¯¹å‡†äº§å“å“ç‰Œï¼ˆæ‹æ‘„åŽä¼šåˆ é™¤ç…§ç‰‡ï¼‰ã€‚",
+    "lotInstruction": "æ¸…æ™°å¯¹å‡†æ‰¹æ¬¡å·å¹¶æ‹ç…§ã€‚",
+    "brandAnalyzing": "æ­£åœ¨åˆ†æžå“ç‰Œ...",
+    "lotAnalyzing": "æ­£åœ¨åˆ†æžæ‰¹æ¬¡å·...",
+    "privacyInfo": "ç…§ç‰‡ä»…åœ¨æœ¬åœ°å¤„ç†å¹¶ç«‹å³åˆ é™¤ï¼Œä¸ä¼šå­˜å‚¨ä»»ä½•å›¾ç‰‡ã€‚",
+    "brandLabel": "å“ç‰Œ",
+    "lotLabel": "æ‰¹æ¬¡",
+    "analyzing": "åˆ†æžä¸­...",
+    "waiting": "ç­‰å¾…ä¸­",
+    "confidence": "ç½®ä¿¡åº¦ï¼š{{value}}%",
+    "suggestions": "ä½ è¦æ‰¾çš„æ˜¯ï¼Ÿ",
+    "ocrExtraction": "OCR æå–",
+    "detectedLot": "æ£€æµ‹åˆ°çš„æ‰¹æ¬¡å·",
+    "restart": "é‡æ–°å¼€å§‹",
+    "manualEntry": "æ‰‹åŠ¨è¾“å…¥",
+    "waitingForCapture": "ç­‰å¾…æ‹æ‘„...",
+    "aiPrecision": "ä½¿ç”¨AIæé«˜ç²¾åº¦",
+    "productNotPubliclyListed": "è¯¥äº§å“æœªå…¬å¼€åˆ—å‡ºã€‚\næ‰«ææ ‡ç­¾ä»¥æ£€æŸ¥æ‰¹æ¬¡å·å’Œå¬å›žä¿¡æ¯ã€‚",
     "errors": {
-      "brandCaptureFailed": "品牌拍摄失败。",
-      "scanFailed": "扫描失败。",
-      "lotExtractFailed": "无法自动提取批次号。",
-      "brandFirst": "请先拍摄品牌，再拍摄批次号。"
+      "brandCaptureFailed": "å“ç‰Œæ‹æ‘„å¤±è´¥ã€‚",
+      "scanFailed": "æ‰«æå¤±è´¥ã€‚",
+      "lotExtractFailed": "æ— æ³•è‡ªåŠ¨æå–æ‰¹æ¬¡å·ã€‚",
+      "brandFirst": "è¯·å…ˆæ‹æ‘„å“ç‰Œï¼Œå†æ‹æ‘„æ‰¹æ¬¡å·ã€‚"
     }
   },
   "manualEntry": {
-    "title": "手动输入",
-    "subtitle": "输入批次号和品牌以添加产品。",
-    "brandLabel": "品牌",
-    "brandPlaceholder": "如：品牌 X",
-    "lotLabel": "批次号",
-    "lotPlaceholder": "如：L12345",
-    "save": "保存",
-    "verifying": "正在验证...",
+    "title": "æ‰‹åŠ¨è¾“å…¥",
+    "subtitle": "è¾“å…¥æ‰¹æ¬¡å·å’Œå“ç‰Œä»¥æ·»åŠ äº§å“ã€‚",
+    "brandLabel": "å“ç‰Œ",
+    "brandPlaceholder": "å¦‚ï¼šå“ç‰Œ X",
+    "lotLabel": "æ‰¹æ¬¡å·",
+    "lotPlaceholder": "å¦‚ï¼šL12345",
+    "save": "ä¿å­˜",
+    "verifying": "æ­£åœ¨éªŒè¯...",
     "errors": {
-      "lotRequired": "需要批次号",
-      "lotRequiredMessage": "请输入批次号以继续。",
-      "saveFailed": "保存失败",
-      "checkFailed": "当前无法检查召回。"
+      "lotRequired": "éœ€è¦æ‰¹æ¬¡å·",
+      "lotRequiredMessage": "è¯·è¾“å…¥æ‰¹æ¬¡å·ä»¥ç»§ç»­ã€‚",
+      "saveFailed": "ä¿å­˜å¤±è´¥",
+      "checkFailed": "å½“å‰æ— æ³•æ£€æŸ¥å¬å›žã€‚"
     }
   },
   "details": {
-    "title": "产品详情",
-    "brand": "品牌",
-    "lot": "批次",
-    "scannedAt": "扫描于",
+    "title": "äº§å“è¯¦æƒ…",
+    "brand": "å“ç‰Œ",
+    "lot": "æ‰¹æ¬¡",
+    "scannedAt": "æ‰«æäºŽ",
     "status": {
-      "safe": "安全",
-      "recalled": "已召回",
-      "unknown": "状态未知"
+      "safe": "å®‰å…¨",
+      "recalled": "å·²å¬å›ž",
+      "unknown": "çŠ¶æ€æœªçŸ¥"
     },
-    "recallInfo": "召回信息",
+    "recallInfo": "å¬å›žä¿¡æ¯",
     "actions": {
-      "delete": "删除",
-      "viewRecall": "查看召回"
+      "delete": "åˆ é™¤",
+      "viewRecall": "æŸ¥çœ‹å¬å›ž"
     }
   },
   "history": {
-    "title": "历史",
-    "fullTitle": "全部记录",
-    "subtitle": "按召回状态筛选扫描记录。",
+    "title": "åŽ†å²",
+    "fullTitle": "å…¨éƒ¨è®°å½•",
+    "subtitle": "æŒ‰å¬å›žçŠ¶æ€ç­›é€‰æ‰«æè®°å½•ã€‚",
     "filters": {
-      "all": "全部",
-      "recalled": "已召回",
-      "safe": "无召回",
-      "unknown": "未知"
+      "all": "å…¨éƒ¨",
+      "recalled": "å·²å¬å›ž",
+      "safe": "æ— å¬å›ž",
+      "unknown": "æœªçŸ¥"
     },
-    "emptyState": "还没有已扫描产品。",
-    "emptyStateDetailed": "暂无数据，请先扫描一个产品。"
+    "emptyState": "è¿˜æ²¡æœ‰å·²æ‰«æäº§å“ã€‚",
+    "emptyStateDetailed": "æš‚æ— æ•°æ®ï¼Œè¯·å…ˆæ‰«æä¸€ä¸ªäº§å“ã€‚"
   },
   "productCard": {
-    "lot": "批次 {{lot}}",
+    "lot": "æ‰¹æ¬¡ {{lot}}",
     "scannedAt": "??? {{date}} {{time}}",
-    "privacy": "不会保存照片；只保留品牌和批次号。",
-    "delete": "删除"
+    "privacy": "ä¸ä¼šä¿å­˜ç…§ç‰‡ï¼›åªä¿ç•™å“ç‰Œå’Œæ‰¹æ¬¡å·ã€‚",
+    "delete": "åˆ é™¤"
   },
   "recallAlert": {
-    "title": "污染产品",
-    "doNotConsume": "请勿食用",
-    "warning": "该产品已被官方召回，不得食用。",
-    "reasonLabel": "召回原因：",
-    "emergencyTitle": "如已食用",
-    "emergencyText": "如果您已食用该产品并出现症状，请立即联系急救服务。",
-    "callSamu": "拨打 112（紧急情况）",
-    "callEmergency": "拨打 112（紧急情况）",
-    "viewOfficialNotice": "查看官方召回通知",
-    "returnForRefund": "将产品退回商店以获得退款",
+    "title": "æ±¡æŸ“äº§å“",
+    "doNotConsume": "è¯·å‹¿é£Ÿç”¨",
+    "warning": "è¯¥äº§å“å·²è¢«å®˜æ–¹å¬å›žï¼Œä¸å¾—é£Ÿç”¨ã€‚",
+    "reasonLabel": "å¬å›žåŽŸå› ï¼š",
+    "emergencyTitle": "å¦‚å·²é£Ÿç”¨",
+    "emergencyText": "å¦‚æžœæ‚¨å·²é£Ÿç”¨è¯¥äº§å“å¹¶å‡ºçŽ°ç—‡çŠ¶ï¼Œè¯·ç«‹å³è”ç³»æ€¥æ•‘æœåŠ¡ã€‚",
+    "callSamu": "æ‹¨æ‰“ 112ï¼ˆç´§æ€¥æƒ…å†µï¼‰",
+    "callEmergency": "æ‹¨æ‰“ 112ï¼ˆç´§æ€¥æƒ…å†µï¼‰",
+    "viewOfficialNotice": "æŸ¥çœ‹å®˜æ–¹å¬å›žé€šçŸ¥",
+    "returnForRefund": "å°†äº§å“é€€å›žå•†åº—ä»¥èŽ·å¾—é€€æ¬¾",
     "reportedBy": "??? FDA / USDA ??"
   },
   "recallStatus": {
-    "safe": "目前在官方数据库中未找到召回信息",
-    "recalled": "已召回",
-    "unknown": "审核中",
-    "warning": "注意"
+    "safe": "ç›®å‰åœ¨å®˜æ–¹æ•°æ®åº“ä¸­æœªæ‰¾åˆ°å¬å›žä¿¡æ¯",
+    "recalled": "å·²å¬å›ž",
+    "unknown": "å®¡æ ¸ä¸­",
+    "warning": "æ³¨æ„"
   },
   "navigation": {
-    "home": "首页",
-    "scan": "扫描",
-    "history": "历史",
-    "language": "设置"
+    "home": "é¦–é¡µ",
+    "scan": "æ‰«æ",
+    "history": "åŽ†å²",
+    "language": "è®¾ç½®"
   },
   "language": {
-    "title": "设置",
-    "subtitle": "选择应用的显示语言。"
+    "title": "è®¾ç½®",
+    "subtitle": "é€‰æ‹©åº”ç”¨çš„æ˜¾ç¤ºè¯­è¨€ã€‚"
   },
   "notifications": {
     "alert": {
-      "title": "⚠️ 受污染产品警报",
-      "body": "🚫 {{brand}} - 批次 {{lot}}\n原因: {{reason}}\n\n⚠️ 请勿食用\n如已食用，请联系急救"
+      "title": "âš ï¸ å—æ±¡æŸ“äº§å“è­¦æŠ¥",
+      "body": "ðŸš« {{brand}} - æ‰¹æ¬¡ {{lot}}\nåŽŸå› : {{reason}}\n\nâš ï¸ è¯·å‹¿é£Ÿç”¨\nå¦‚å·²é£Ÿç”¨ï¼Œè¯·è”ç³»æ€¥æ•‘"
     },
     "dailyCheck": {
-      "title": "Eats OK 检查",
-      "body": "正在更新每日召回信息。"
+      "title": "Numeline æ£€æŸ¥",
+      "body": "æ­£åœ¨æ›´æ–°æ¯æ—¥å¬å›žä¿¡æ¯ã€‚"
     }
   },
   "settings": {
-    "title": "设置",
-    "language": "语言",
-    "country": "国家",
-    "theme": "主题",
-    "notifications": "通知",
-    "about": "关于"
+    "title": "è®¾ç½®",
+    "language": "è¯­è¨€",
+    "country": "å›½å®¶",
+    "theme": "ä¸»é¢˜",
+    "notifications": "é€šçŸ¥",
+    "about": "å…³äºŽ"
   },
   "languages": {
-    "fr": "法语",
+    "fr": "æ³•è¯­",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
-    "greeting": "你好 {{name}}",
-    "question": "今天您想检查哪种产品？",
-    "startScanning": "开始扫描",
-    "namePromptTitle": "欢迎使用 Eats OK",
-    "namePromptMessage": "为了个性化您的体验，请输入您的名字：",
-    "namePromptPlaceholder": "您的名字",
-    "namePromptSave": "继续",
-    "namePromptSkip": "跳过"
+    "greeting": "ä½ å¥½ {{name}}",
+    "question": "ä»Šå¤©æ‚¨æƒ³æ£€æŸ¥å“ªç§äº§å“ï¼Ÿ",
+    "startScanning": "å¼€å§‹æ‰«æ",
+    "namePromptTitle": "æ¬¢è¿Žä½¿ç”¨ Numeline",
+    "namePromptMessage": "ä¸ºäº†ä¸ªæ€§åŒ–æ‚¨çš„ä½“éªŒï¼Œè¯·è¾“å…¥æ‚¨çš„åå­—ï¼š",
+    "namePromptPlaceholder": "æ‚¨çš„åå­—",
+    "namePromptSave": "ç»§ç»­",
+    "namePromptSkip": "è·³è¿‡"
   },
   "legal": {
-    "sectionTitle": "法律文件",
-    "privacyPolicy": "隐私政策",
-    "terms": "服务条款",
-    "legalNotice": "法律声明",
-    "errorLoading": "文档加载错误",
-    "disclaimer": "免责声明",
-    "dataSources": "数据来源 (FDA / USDA)"
+    "sectionTitle": "æ³•å¾‹æ–‡ä»¶",
+    "privacyPolicy": "éšç§æ”¿ç­–",
+    "terms": "æœåŠ¡æ¡æ¬¾",
+    "legalNotice": "æ³•å¾‹å£°æ˜Ž",
+    "errorLoading": "æ–‡æ¡£åŠ è½½é”™è¯¯",
+    "disclaimer": "å…è´£å£°æ˜Ž",
+    "dataSources": "æ•°æ®æ¥æº (FDA / USDA)"
   },
   "disclaimer": {
-    "title": "食品召回免责声明",
-    "body": "本应用程序提供有关在美国销售产品的食品召回信息,仅供参考。\n\n本应用程序中显示的信息基于政府机构(包括但不限于FDA和USDA)和其他第三方来源的公开数据。我们不保证所提供信息的准确性、完整性或及时性。\n\n本应用程序不能替代官方召回通知、制造商通讯或监管机构的指导。鼓励用户直接通过官方来源验证召回信息。\n\n产品未在本应用程序中被识别为召回,并不保证该产品安全或不受当前或未来召回的影响。\n\n本应用程序不提供医疗、营养或健康建议。如果您对食品安全、污染、过敏或疾病有疑虑,请咨询合格的医疗保健专业人员或遵循公共卫生当局的官方指导。\n\n本应用程序不验证保质期或产品新鲜度。\n\n条形码扫描、批号识别以及语音或视觉输出可能受到技术限制或错误的影响。用户仍有责任验证产品详细信息和召回状态。\n\n在法律允许的最大范围内,开发者不对因使用或依赖本应用程序提供的信息而导致的任何直接或间接损害、伤害或损失承担责任。\n\n召回覆盖范围仅限于在美国销售的食品,可能不适用于在其他国家销售的产品。"
+    "title": "é£Ÿå“å¬å›žå…è´£å£°æ˜Ž",
+    "body": "æœ¬åº”ç”¨ç¨‹åºæä¾›æœ‰å…³åœ¨ç¾Žå›½é”€å”®äº§å“çš„é£Ÿå“å¬å›žä¿¡æ¯,ä»…ä¾›å‚è€ƒã€‚\n\næœ¬åº”ç”¨ç¨‹åºä¸­æ˜¾ç¤ºçš„ä¿¡æ¯åŸºäºŽæ”¿åºœæœºæž„(åŒ…æ‹¬ä½†ä¸é™äºŽFDAå’ŒUSDA)å’Œå…¶ä»–ç¬¬ä¸‰æ–¹æ¥æºçš„å…¬å¼€æ•°æ®ã€‚æˆ‘ä»¬ä¸ä¿è¯æ‰€æä¾›ä¿¡æ¯çš„å‡†ç¡®æ€§ã€å®Œæ•´æ€§æˆ–åŠæ—¶æ€§ã€‚\n\næœ¬åº”ç”¨ç¨‹åºä¸èƒ½æ›¿ä»£å®˜æ–¹å¬å›žé€šçŸ¥ã€åˆ¶é€ å•†é€šè®¯æˆ–ç›‘ç®¡æœºæž„çš„æŒ‡å¯¼ã€‚é¼“åŠ±ç”¨æˆ·ç›´æŽ¥é€šè¿‡å®˜æ–¹æ¥æºéªŒè¯å¬å›žä¿¡æ¯ã€‚\n\näº§å“æœªåœ¨æœ¬åº”ç”¨ç¨‹åºä¸­è¢«è¯†åˆ«ä¸ºå¬å›ž,å¹¶ä¸ä¿è¯è¯¥äº§å“å®‰å…¨æˆ–ä¸å—å½“å‰æˆ–æœªæ¥å¬å›žçš„å½±å“ã€‚\n\næœ¬åº”ç”¨ç¨‹åºä¸æä¾›åŒ»ç–—ã€è¥å…»æˆ–å¥åº·å»ºè®®ã€‚å¦‚æžœæ‚¨å¯¹é£Ÿå“å®‰å…¨ã€æ±¡æŸ“ã€è¿‡æ•æˆ–ç–¾ç—…æœ‰ç–‘è™‘,è¯·å’¨è¯¢åˆæ ¼çš„åŒ»ç–—ä¿å¥ä¸“ä¸šäººå‘˜æˆ–éµå¾ªå…¬å…±å«ç”Ÿå½“å±€çš„å®˜æ–¹æŒ‡å¯¼ã€‚\n\næœ¬åº”ç”¨ç¨‹åºä¸éªŒè¯ä¿è´¨æœŸæˆ–äº§å“æ–°é²œåº¦ã€‚\n\næ¡å½¢ç æ‰«æã€æ‰¹å·è¯†åˆ«ä»¥åŠè¯­éŸ³æˆ–è§†è§‰è¾“å‡ºå¯èƒ½å—åˆ°æŠ€æœ¯é™åˆ¶æˆ–é”™è¯¯çš„å½±å“ã€‚ç”¨æˆ·ä»æœ‰è´£ä»»éªŒè¯äº§å“è¯¦ç»†ä¿¡æ¯å’Œå¬å›žçŠ¶æ€ã€‚\n\nåœ¨æ³•å¾‹å…è®¸çš„æœ€å¤§èŒƒå›´å†…,å¼€å‘è€…ä¸å¯¹å› ä½¿ç”¨æˆ–ä¾èµ–æœ¬åº”ç”¨ç¨‹åºæä¾›çš„ä¿¡æ¯è€Œå¯¼è‡´çš„ä»»ä½•ç›´æŽ¥æˆ–é—´æŽ¥æŸå®³ã€ä¼¤å®³æˆ–æŸå¤±æ‰¿æ‹…è´£ä»»ã€‚\n\nå¬å›žè¦†ç›–èŒƒå›´ä»…é™äºŽåœ¨ç¾Žå›½é”€å”®çš„é£Ÿå“,å¯èƒ½ä¸é€‚ç”¨äºŽåœ¨å…¶ä»–å›½å®¶é”€å”®çš„äº§å“ã€‚"
   },
   "dataSources": {
-    "title": "数据来源",
-    "description": "美国召回信息的官方来源:",
-    "fda": "FDA – Food and Drug Administration",
-    "usda": "USDA – Food Safety and Inspection Service"
+    "title": "æ•°æ®æ¥æº",
+    "description": "ç¾Žå›½å¬å›žä¿¡æ¯çš„å®˜æ–¹æ¥æº:",
+    "fda": "FDA â€“ Food and Drug Administration",
+    "usda": "USDA â€“ Food Safety and Inspection Service"
   }
 }
+

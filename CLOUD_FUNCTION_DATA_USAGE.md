@@ -1,46 +1,46 @@
-# Consommation de Données - Vérification Horaire des Rappels
+﻿# Consommation de DonnÃ©es - VÃ©rification Horaire des Rappels
 
-## 📊 Estimation de la Consommation de Données
+## ðŸ“Š Estimation de la Consommation de DonnÃ©es
 
 ### Cloud Function (Serveur Firebase)
-La vérification horaire s'exécute **sur les serveurs Firebase**, PAS sur le téléphone de l'utilisateur.
+La vÃ©rification horaire s'exÃ©cute **sur les serveurs Firebase**, PAS sur le tÃ©lÃ©phone de l'utilisateur.
 
-**✅ Impact sur le forfait téléphonique : MINIMAL**
+**âœ… Impact sur le forfait tÃ©lÃ©phonique : MINIMAL**
 
-### Détail de la Consommation Mobile
+### DÃ©tail de la Consommation Mobile
 
-#### 1. **Vérification automatique (Cloud Function)**
-- **Fréquence** : Toutes les heures (24 fois par jour)
-- **Lieu d'exécution** : Serveurs Firebase ☁️
+#### 1. **VÃ©rification automatique (Cloud Function)**
+- **FrÃ©quence** : Toutes les heures (24 fois par jour)
+- **Lieu d'exÃ©cution** : Serveurs Firebase â˜ï¸
 - **Consommation mobile** : **0 KB** (ne consomme pas le forfait utilisateur)
 
 #### 2. **Notification Push (FCM)**
-Quand un rappel est détecté :
+Quand un rappel est dÃ©tectÃ© :
 - **Taille d'une notification** : ~1-2 KB
-- **Fréquence** : Uniquement si un produit scanné est rappelé
-- **Consommation** : Quasi-nulle (les notifications push utilisent très peu de data)
+- **FrÃ©quence** : Uniquement si un produit scannÃ© est rappelÃ©
+- **Consommation** : Quasi-nulle (les notifications push utilisent trÃ¨s peu de data)
 
 #### 3. **Utilisation manuelle de l'app**
 L'utilisateur consomme de la data uniquement quand il :
-- Scanne un nouveau produit : ~50-100 KB (requête API)
-- Ouvre l'historique : ~10-20 KB (si données Firestore)
-- Rafraîchit les données : ~50-100 KB
+- Scanne un nouveau produit : ~50-100 KB (requÃªte API)
+- Ouvre l'historique : ~10-20 KB (si donnÃ©es Firestore)
+- RafraÃ®chit les donnÃ©es : ~50-100 KB
 
 ---
 
-## 📈 Estimation Mensuelle
+## ðŸ“ˆ Estimation Mensuelle
 
-### Scénario Passif (utilisateur ne fait rien)
-| Action | Fréquence | Data |
+### ScÃ©nario Passif (utilisateur ne fait rien)
+| Action | FrÃ©quence | Data |
 |--------|-----------|------|
-| Cloud Function | 24/jour × 30 jours | **0 KB** |
-| Notifications reçues | 0-5/mois | ~5-10 KB |
+| Cloud Function | 24/jour Ã— 30 jours | **0 KB** |
+| Notifications reÃ§ues | 0-5/mois | ~5-10 KB |
 | **TOTAL** | | **~5-10 KB/mois** |
 
-### Scénario Actif (5 scans/semaine)
-| Action | Fréquence | Data |
+### ScÃ©nario Actif (5 scans/semaine)
+| Action | FrÃ©quence | Data |
 |--------|-----------|------|
-| Cloud Function | 24/jour × 30 jours | **0 KB** |
+| Cloud Function | 24/jour Ã— 30 jours | **0 KB** |
 | Scans produits | 20/mois | ~1-2 MB |
 | Notifications | 0-5/mois | ~5-10 KB |
 | Ouverture app | 20/mois | ~200-400 KB |
@@ -48,82 +48,83 @@ L'utilisateur consomme de la data uniquement quand il :
 
 ---
 
-## 💡 Optimisations Implémentées
+## ðŸ’¡ Optimisations ImplÃ©mentÃ©es
 
-### 1. **Vérification côté serveur**
-✅ La Cloud Function s'exécute sur Firebase (Google Cloud)
-✅ Aucune consommation de data sur le téléphone de l'utilisateur
+### 1. **VÃ©rification cÃ´tÃ© serveur**
+âœ… La Cloud Function s'exÃ©cute sur Firebase (Google Cloud)
+âœ… Aucune consommation de data sur le tÃ©lÃ©phone de l'utilisateur
 
-### 2. **Notifications Push optimisées**
-✅ Utilise FCM (Firebase Cloud Messaging)
-✅ Taille minimale : ~1-2 KB par notification
-✅ Envoyées uniquement en cas de rappel détecté
+### 2. **Notifications Push optimisÃ©es**
+âœ… Utilise FCM (Firebase Cloud Messaging)
+âœ… Taille minimale : ~1-2 KB par notification
+âœ… EnvoyÃ©es uniquement en cas de rappel dÃ©tectÃ©
 
 ### 3. **Pagination API**
-✅ Limite de 100 rappels par requête (au lieu de tous)
-✅ Requête effectuée depuis le serveur, pas depuis le mobile
+âœ… Limite de 100 rappels par requÃªte (au lieu de tous)
+âœ… RequÃªte effectuÃ©e depuis le serveur, pas depuis le mobile
 
 ### 4. **Cache local**
-✅ L'app stocke les données localement (SQLite)
-✅ Réduit les appels API répétés
+âœ… L'app stocke les donnÃ©es localement (SQLite)
+âœ… RÃ©duit les appels API rÃ©pÃ©tÃ©s
 
 ---
 
-## 🎯 Conclusion
+## ðŸŽ¯ Conclusion
 
 ### Pour l'utilisateur moyen :
 - **Consommation mensuelle** : ~1.5-2.5 MB
-- **Équivalent** : Charger 2-3 pages web simples
-- **Impact sur forfait** : Négligeable (< 0.01% d'un forfait 20 GB)
+- **Ã‰quivalent** : Charger 2-3 pages web simples
+- **Impact sur forfait** : NÃ©gligeable (< 0.01% d'un forfait 20 GB)
 
 ### Comparaison :
 | Application | Consommation/mois |
 |-------------|-------------------|
-| **Eats OK** | 1.5-2.5 MB |
-| Instagram (usage léger) | 500-1000 MB |
-| WhatsApp (usage léger) | 100-300 MB |
-| Gmail (usage léger) | 50-100 MB |
+| **Numeline** | 1.5-2.5 MB |
+| Instagram (usage lÃ©ger) | 500-1000 MB |
+| WhatsApp (usage lÃ©ger) | 100-300 MB |
+| Gmail (usage lÃ©ger) | 50-100 MB |
 
 ---
 
-## ⚙️ Comment fonctionne la vérification horaire ?
+## âš™ï¸ Comment fonctionne la vÃ©rification horaire ?
 
 ```
-┌─────────────────┐
-│ Firebase Cloud  │  ← Toutes les heures
-│   Function      │
-└────────┬────────┘
-         │
-         ├─> 1. Interroge API Rappel Conso (serveur Firebase)
-         │
-         ├─> 2. Compare avec produits scannés (Firestore)
-         │
-         └─> 3. Si correspondance → Envoie notification push (1-2 KB)
-                 │
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ Firebase Cloud  â”‚  â† Toutes les heures
+â”‚   Function      â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+         â”‚
+         â”œâ”€> 1. Interroge API Rappel Conso (serveur Firebase)
+         â”‚
+         â”œâ”€> 2. Compare avec produits scannÃ©s (Firestore)
+         â”‚
+         â””â”€> 3. Si correspondance â†’ Envoie notification push (1-2 KB)
+                 â”‚
                  v
-         ┌───────────────┐
-         │  Téléphone    │  ← Reçoit notification (1-2 KB)
-         │  utilisateur  │
-         └───────────────┘
+         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+         â”‚  TÃ©lÃ©phone    â”‚  â† ReÃ§oit notification (1-2 KB)
+         â”‚  utilisateur  â”‚
+         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-**La majeure partie du travail se fait sur les serveurs Firebase, PAS sur le téléphone !**
+**La majeure partie du travail se fait sur les serveurs Firebase, PAS sur le tÃ©lÃ©phone !**
 
 ---
 
-## 📱 Recommandations
+## ðŸ“± Recommandations
 
-### Pour réduire encore la consommation :
-1. ✅ **Déjà implémenté** : Vérification côté serveur
-2. ✅ **Déjà implémenté** : Notifications push légères
-3. ✅ **Déjà implémenté** : Cache local (SQLite)
-4. 🔄 **Optionnel** : Permettre à l'utilisateur de désactiver les notifications
+### Pour rÃ©duire encore la consommation :
+1. âœ… **DÃ©jÃ  implÃ©mentÃ©** : VÃ©rification cÃ´tÃ© serveur
+2. âœ… **DÃ©jÃ  implÃ©mentÃ©** : Notifications push lÃ©gÃ¨res
+3. âœ… **DÃ©jÃ  implÃ©mentÃ©** : Cache local (SQLite)
+4. ðŸ”„ **Optionnel** : Permettre Ã  l'utilisateur de dÃ©sactiver les notifications
 
-### Coût Firebase (pour développeur) :
-- **Cloud Functions** : ~0.40€/million d'invocations
-- **24 vérifications/jour** = 720/mois = ~0.0003€/mois
-- **FCM Notifications** : Gratuit (usage illimité)
+### CoÃ»t Firebase (pour dÃ©veloppeur) :
+- **Cloud Functions** : ~0.40â‚¬/million d'invocations
+- **24 vÃ©rifications/jour** = 720/mois = ~0.0003â‚¬/mois
+- **FCM Notifications** : Gratuit (usage illimitÃ©)
 
 ---
 
-**✅ Conclusion finale : La vérification horaire consomme TRÈS PEU de data mobile (<3 MB/mois) et la majorité du traitement se fait côté serveur Firebase.**
+**âœ… Conclusion finale : La vÃ©rification horaire consomme TRÃˆS PEU de data mobile (<3 MB/mois) et la majoritÃ© du traitement se fait cÃ´tÃ© serveur Firebase.**
+

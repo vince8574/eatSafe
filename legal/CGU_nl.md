@@ -1,8 +1,8 @@
-# Gebruiksvoorwaarden - Eats OK
+﻿# Gebruiksvoorwaarden - Numeline
 
 *Laatste update: 13 december 2025*
 
-**BELANGRIJK**: Door de Eats OK-applicatie te downloaden, installeren of gebruiken, accepteert u onvoorwaardelijk deze Gebruiksvoorwaarden.
+**BELANGRIJK**: Door de Numeline-applicatie te downloaden, installeren of gebruiken, accepteert u onvoorwaardelijk deze Gebruiksvoorwaarden.
 
 Deze applicatie en haar functionaliteiten zijn beschermd door auteursrecht en voorrang.
 This application and its functionalities are protected by copyright and prior art.
@@ -11,7 +11,7 @@ This application and its functionalities are protected by copyright and prior ar
 
 ## 1. Service
 
-Eats OK is een gratis mobiele applicatie waarmee u voedingsproducten kunt scannen en controleren of ze onderhevig zijn aan een terugroeping.
+Numeline is een gratis mobiele applicatie waarmee u voedingsproducten kunt scannen en controleren of ze onderhevig zijn aan een terugroeping.
 
 ## 2. Functionaliteiten
 
@@ -23,11 +23,11 @@ Eats OK is een gratis mobiele applicatie waarmee u voedingsproducten kunt scanne
 
 ## 3. OCR-nauwkeurigheid
 
-Tekstherkenning kan fouten bevatten. U moet de gedetecteerde informatie altijd visueel verifiëren.
+Tekstherkenning kan fouten bevatten. U moet de gedetecteerde informatie altijd visueel verifiÃ«ren.
 
 ## 4. Aansprakelijkheid
 
-De uitgever garandeert niet de nauwkeurigheid van informatie. In geval van terugroeping, raadpleeg officiële bronnen.
+De uitgever garandeert niet de nauwkeurigheid van informatie. In geval van terugroeping, raadpleeg officiÃ«le bronnen.
 
 No warranty, express or implied, is provided regarding the accuracy or completeness of the information.
 
@@ -38,3 +38,4 @@ Al uw gegevens worden lokaal op uw apparaat opgeslagen. Geen enkele foto wordt n
 ## 6. Contact
 
 Email : legal@eatsok.app
+

@@ -1,202 +1,206 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
-    "loading": "Учитавање...",
-    "save": "Сачувај",
-    "cancel": "Откажи",
-    "confirm": "Потврди",
-    "delete": "Обриши",
-    "edit": "Измијени",
-    "back": "Назад",
-    "refresh": "Освјежи",
-    "unknown": "Непознато",
+    "appName": "Numeline",
+    "loading": "Ð£Ñ‡Ð¸Ñ‚Ð°Ð²Ð°ÑšÐµ...",
+    "save": "Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜",
+    "cancel": "ÐžÑ‚ÐºÐ°Ð¶Ð¸",
+    "confirm": "ÐŸÐ¾Ñ‚Ð²Ñ€Ð´Ð¸",
+    "delete": "ÐžÐ±Ñ€Ð¸ÑˆÐ¸",
+    "edit": "Ð˜Ð·Ð¼Ð¸Ñ˜ÐµÐ½Ð¸",
+    "back": "ÐÐ°Ð·Ð°Ð´",
+    "refresh": "ÐžÑÐ²Ñ˜ÐµÐ¶Ð¸",
+    "unknown": "ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾",
     "dataDisclaimer": "Na osnovu dostupnih podataka u ovom trenutku",
-    "appDisclaimer": "Ova aplikacija pruža informacije o opozivu na osnovu zvaničnih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svježinu proizvoda.",
+    "appDisclaimer": "Ova aplikacija pruÅ¾a informacije o opozivu na osnovu zvaniÄnih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svjeÅ¾inu proizvoda.",
     "noRecallDisclaimer": "Izostanak opoziva ne garantuje bezbjednost proizvoda.",
-    "verifyWithSources": "Uvijek provjeravajte informacije o opozivu sa zvaničnim izvorima FDA ili USDA.",
-    "governmentInfoDisclaimer": "Ova aplikacija ne zamjenjuje zvani?ne vladine informacije."
+    "verifyWithSources": "Uvijek provjeravajte informacije o opozivu sa zvaniÄnim izvorima FDA ili USDA.",
+    "governmentInfoDisclaimer": "Ova aplikacija ne zamjenjuje zvaniene vladine informacije."
   },
   "home": {
-    "title": "Eats OK",
-    "subtitle": "Пратите скениране производе и добијајте аларме о повлачењу у реалном времену.",
+    "title": "Numeline",
+    "subtitle": "ÐŸÑ€Ð°Ñ‚Ð¸Ñ‚Ðµ ÑÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ðµ Ð¸ Ð´Ð¾Ð±Ð¸Ñ˜Ð°Ñ˜Ñ‚Ðµ Ð°Ð»Ð°Ñ€Ð¼Ðµ Ð¾ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÑƒ Ñƒ Ñ€ÐµÐ°Ð»Ð½Ð¾Ð¼ Ð²Ñ€ÐµÐ¼ÐµÐ½Ñƒ.",
     "stats": {
-      "scanned": "Скенирани производи",
-      "recalled": "Повучени производи",
-      "pending": "У анализи"
+      "scanned": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð¸",
+      "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð¸",
+      "pending": "Ð£ Ð°Ð½Ð°Ð»Ð¸Ð·Ð¸"
     },
-    "historyTitle": "Историја скенирања",
-    "emptyState": "Скенирајте свој први производ да пратите статус повлачења."
+    "historyTitle": "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð° ÑÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐ°",
+    "emptyState": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ ÑÐ²Ð¾Ñ˜ Ð¿Ñ€Ð²Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ð´Ð° Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ðµ ÑÑ‚Ð°Ñ‚ÑƒÑ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°."
   },
   "scan": {
-    "step": "Корак {{current}}/{{total}}",
-    "brandStep": "Корак 1/2",
-    "lotStep": "Корак 2/2",
-    "brandInstruction": "Кадрирајте марку производа (фотографија ће бити обрисана након снимка).",
-    "lotInstruction": "Јасно кадрирајте број лота и направите снимак.",
-    "brandAnalyzing": "Анализа марке у току...",
-    "lotAnalyzing": "Анализа броја лота у току...",
-    "privacyInfo": "Фотографије се обрађују само локално и затим се одмах бришу. Ниједна слика се не чува.",
-    "brandLabel": "Марка",
-    "lotLabel": "Лот",
-    "analyzing": "Анализирање...",
-    "waiting": "Чекање",
-    "confidence": "Поузданост: {{value}}%",
-    "suggestions": "Да ли сте мислили?",
-    "ocrExtraction": "OCR екстракција",
-    "detectedLot": "Откривен број лота",
-    "restart": "Почни поново",
-    "manualEntry": "Ручни унос",
-    "waitingForCapture": "Чекање на снимање...",
-    "aiPrecision": "AI se koristi za veću preciznost",
+    "step": "ÐšÐ¾Ñ€Ð°Ðº {{current}}/{{total}}",
+    "brandStep": "ÐšÐ¾Ñ€Ð°Ðº 1/2",
+    "lotStep": "ÐšÐ¾Ñ€Ð°Ðº 2/2",
+    "brandInstruction": "ÐšÐ°Ð´Ñ€Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ð¼Ð°Ñ€ÐºÑƒ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð° (Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ˜Ð° Ñ›Ðµ Ð±Ð¸Ñ‚Ð¸ Ð¾Ð±Ñ€Ð¸ÑÐ°Ð½Ð° Ð½Ð°ÐºÐ¾Ð½ ÑÐ½Ð¸Ð¼ÐºÐ°).",
+    "lotInstruction": "ÐˆÐ°ÑÐ½Ð¾ ÐºÐ°Ð´Ñ€Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð° Ð¸ Ð½Ð°Ð¿Ñ€Ð°Ð²Ð¸Ñ‚Ðµ ÑÐ½Ð¸Ð¼Ð°Ðº.",
+    "brandAnalyzing": "ÐÐ½Ð°Ð»Ð¸Ð·Ð° Ð¼Ð°Ñ€ÐºÐµ Ñƒ Ñ‚Ð¾ÐºÑƒ...",
+    "lotAnalyzing": "ÐÐ½Ð°Ð»Ð¸Ð·Ð° Ð±Ñ€Ð¾Ñ˜Ð° Ð»Ð¾Ñ‚Ð° Ñƒ Ñ‚Ð¾ÐºÑƒ...",
+    "privacyInfo": "Ð¤Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ˜Ðµ ÑÐµ Ð¾Ð±Ñ€Ð°Ñ’ÑƒÑ˜Ñƒ ÑÐ°Ð¼Ð¾ Ð»Ð¾ÐºÐ°Ð»Ð½Ð¾ Ð¸ Ð·Ð°Ñ‚Ð¸Ð¼ ÑÐµ Ð¾Ð´Ð¼Ð°Ñ… Ð±Ñ€Ð¸ÑˆÑƒ. ÐÐ¸Ñ˜ÐµÐ´Ð½Ð° ÑÐ»Ð¸ÐºÐ° ÑÐµ Ð½Ðµ Ñ‡ÑƒÐ²Ð°.",
+    "brandLabel": "ÐœÐ°Ñ€ÐºÐ°",
+    "lotLabel": "Ð›Ð¾Ñ‚",
+    "analyzing": "ÐÐ½Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð°ÑšÐµ...",
+    "waiting": "Ð§ÐµÐºÐ°ÑšÐµ",
+    "confidence": "ÐŸÐ¾ÑƒÐ·Ð´Ð°Ð½Ð¾ÑÑ‚: {{value}}%",
+    "suggestions": "Da li ste mislili ?",
+    "ocrExtraction": "OCR ÐµÐºÑÑ‚Ñ€Ð°ÐºÑ†Ð¸Ñ˜Ð°",
+    "detectedLot": "ÐžÑ‚ÐºÑ€Ð¸Ð²ÐµÐ½ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°",
+    "restart": "ÐŸÐ¾Ñ‡Ð½Ð¸ Ð¿Ð¾Ð½Ð¾Ð²Ð¾",
+    "manualEntry": "Ð ÑƒÑ‡Ð½Ð¸ ÑƒÐ½Ð¾Ñ",
+    "waitingForCapture": "Ð§ÐµÐºÐ°ÑšÐµ Ð½Ð° ÑÐ½Ð¸Ð¼Ð°ÑšÐµ...",
+    "aiPrecision": "AI se koristi za veÄ‡u preciznost",
     "productNotPubliclyListed": "Ovaj proizvod nije javno registrovan.\nSkenirajte etiketu da biste provjerili broj lota i opozive.",
     "errors": {
-      "brandCaptureFailed": "Снимање марке није успјело.",
-      "scanFailed": "Скенирање није успјело.",
-      "lotExtractFailed": "Није могуће аутоматски извући број лота.",
-      "brandFirst": "Снимите марку прије броја лота."
+      "brandCaptureFailed": "Ð¡Ð½Ð¸Ð¼Ð°ÑšÐµ Ð¼Ð°Ñ€ÐºÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿Ñ˜ÐµÐ»Ð¾.",
+      "scanFailed": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿Ñ˜ÐµÐ»Ð¾.",
+      "lotExtractFailed": "ÐÐ¸Ñ˜Ðµ Ð¼Ð¾Ð³ÑƒÑ›Ðµ Ð°ÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¸ Ð¸Ð·Ð²ÑƒÑ›Ð¸ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°.",
+      "brandFirst": "Ð¡Ð½Ð¸Ð¼Ð¸Ñ‚Ðµ Ð¼Ð°Ñ€ÐºÑƒ Ð¿Ñ€Ð¸Ñ˜Ðµ Ð±Ñ€Ð¾Ñ˜Ð° Ð»Ð¾Ñ‚Ð°."
     }
   },
   "manualEntry": {
-    "title": "Ручни унос",
-    "subtitle": "Додајте производ уносом броја лота и марке.",
-    "brandLabel": "Марка",
-    "brandPlaceholder": "Нпр: Марка X",
-    "lotLabel": "Број лота",
-    "lotPlaceholder": "Нпр: L12345",
-    "save": "Сачувај",
-    "verifying": "Провјера…",
+    "title": "Ð ÑƒÑ‡Ð½Ð¸ ÑƒÐ½Ð¾Ñ",
+    "subtitle": "Ð”Ð¾Ð´Ð°Ñ˜Ñ‚Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ ÑƒÐ½Ð¾ÑÐ¾Ð¼ Ð±Ñ€Ð¾Ñ˜Ð° Ð»Ð¾Ñ‚Ð° Ð¸ Ð¼Ð°Ñ€ÐºÐµ.",
+    "brandLabel": "ÐœÐ°Ñ€ÐºÐ°",
+    "brandPlaceholder": "ÐÐ¿Ñ€: ÐœÐ°Ñ€ÐºÐ° X",
+    "lotLabel": "Ð‘Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°",
+    "lotPlaceholder": "ÐÐ¿Ñ€: L12345",
+    "save": "Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜",
+    "verifying": "ÐŸÑ€Ð¾Ð²Ñ˜ÐµÑ€Ð°â€¦",
     "errors": {
-      "lotRequired": "Број лота је потребан",
-      "lotRequiredMessage": "Молимо унесите број лота да наставите.",
-      "saveFailed": "Чување није успјело",
-      "checkFailed": "Тренутно није могуће провјерити повлачења."
+      "lotRequired": "Ð‘Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð° Ñ˜Ðµ Ð¿Ð¾Ñ‚Ñ€ÐµÐ±Ð°Ð½",
+      "lotRequiredMessage": "ÐœÐ¾Ð»Ð¸Ð¼Ð¾ ÑƒÐ½ÐµÑÐ¸Ñ‚Ðµ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð° Ð´Ð° Ð½Ð°ÑÑ‚Ð°Ð²Ð¸Ñ‚Ðµ.",
+      "saveFailed": "Ð§ÑƒÐ²Ð°ÑšÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿Ñ˜ÐµÐ»Ð¾",
+      "checkFailed": "Ð¢Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð½Ð¸Ñ˜Ðµ Ð¼Ð¾Ð³ÑƒÑ›Ðµ Ð¿Ñ€Ð¾Ð²Ñ˜ÐµÑ€Ð¸Ñ‚Ð¸ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°."
     }
   },
   "details": {
-    "title": "Детаљи производа",
-    "brand": "Марка",
-    "lot": "Лот",
-    "scannedAt": "Скенирано",
+    "title": "Ð”ÐµÑ‚Ð°Ñ™Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð°",
+    "brand": "ÐœÐ°Ñ€ÐºÐ°",
+    "lot": "Ð›Ð¾Ñ‚",
+    "scannedAt": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ð¾",
     "status": {
-      "safe": "Безбједан",
-      "recalled": "Повучен",
-      "unknown": "Непознат статус"
+      "safe": "Ð‘ÐµÐ·Ð±Ñ˜ÐµÐ´Ð°Ð½",
+      "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½",
+      "unknown": "ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚ ÑÑ‚Ð°Ñ‚ÑƒÑ"
     },
-    "recallInfo": "Информације о повлачењу",
+    "recallInfo": "Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ˜Ðµ Ð¾ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÑƒ",
     "actions": {
-      "delete": "Обриши",
-      "viewRecall": "Погледај повлачење"
+      "delete": "ÐžÐ±Ñ€Ð¸ÑˆÐ¸",
+      "viewRecall": "ÐŸÐ¾Ð³Ð»ÐµÐ´Ð°Ñ˜ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐµ"
     }
   },
   "history": {
-    "title": "Историја",
-    "fullTitle": "Потпуна историја",
-    "subtitle": "Филтрирајте скенирања према статусу повлачења.",
+    "title": "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð°",
+    "fullTitle": "ÐŸÐ¾Ñ‚Ð¿ÑƒÐ½Ð° Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð°",
+    "subtitle": "Ð¤Ð¸Ð»Ñ‚Ñ€Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ ÑÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐ° Ð¿Ñ€ÐµÐ¼Ð° ÑÑ‚Ð°Ñ‚ÑƒÑÑƒ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°.",
     "filters": {
-      "all": "Све",
-      "recalled": "Повучени",
+      "all": "Ð¡Ð²Ðµ",
+      "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½Ð¸",
       "safe": "Bez opoziva",
-      "unknown": "Непознати"
+      "unknown": "ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¸"
     },
-    "emptyState": "Тренутно нема скенираних производа.",
-    "emptyStateDetailed": "Нема доступних података. Покрените скенирање да попуните историју."
+    "emptyState": "Ð¢Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð½ÐµÐ¼Ð° ÑÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð°.",
+    "emptyStateDetailed": "ÐÐµÐ¼Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ñ… Ð¿Ð¾Ð´Ð°Ñ‚Ð°ÐºÐ°. ÐŸÐ¾ÐºÑ€ÐµÐ½Ð¸Ñ‚Ðµ ÑÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐµ Ð´Ð° Ð¿Ð¾Ð¿ÑƒÐ½Ð¸Ñ‚Ðµ Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ñƒ."
   },
   "productCard": {
-    "lot": "Лот {{lot}}",
+    "lot": "Ð›Ð¾Ñ‚ {{lot}}",
     "scannedAt": "Skenirano {{date}} u {{time}}",
-    "privacy": "Ниједна фотографија није сачувана; чувају се само марка и број лота.",
-    "delete": "Обриши"
+    "privacy": "ÐÐ¸Ñ˜ÐµÐ´Ð½Ð° Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ˜Ð° Ð½Ð¸Ñ˜Ðµ ÑÐ°Ñ‡ÑƒÐ²Ð°Ð½Ð°; Ñ‡ÑƒÐ²Ð°Ñ˜Ñƒ ÑÐµ ÑÐ°Ð¼Ð¾ Ð¼Ð°Ñ€ÐºÐ° Ð¸ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°.",
+    "delete": "ÐžÐ±Ñ€Ð¸ÑˆÐ¸"
   },
   "recallAlert": {
-    "title": "КОНТАМИНИРАН ПРОИЗВОД",
-    "doNotConsume": "НЕ КОНЗУМИРАТИ",
-    "warning": "Овај производ је предмет званичног повлачења и не смије се конзумирати.",
-    "reasonLabel": "Разлог повлачења:",
-    "emergencyTitle": "Ако је конзумирано",
-    "emergencyText": "Ако сте конзумирали овај производ и имате симптоме, одмах контактирајте хитну службу.",
-    "callSamu": "Позовите 112 (Хитна помоћ)",
-    "callEmergency": "Позовите 112 (Хитна помоћ)",
-    "viewOfficialNotice": "Погледајте званично обавјештење о повлачењу",
-    "returnForRefund": "Вратите производ у продавницу за повраћај новца",
+    "title": "ÐšÐžÐÐ¢ÐÐœÐ˜ÐÐ˜Ð ÐÐ ÐŸÐ ÐžÐ˜Ð—Ð’ÐžÐ”",
+    "doNotConsume": "ÐÐ• ÐšÐžÐÐ—Ð£ÐœÐ˜Ð ÐÐ¢Ð˜",
+    "warning": "ÐžÐ²Ð°Ñ˜ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ñ˜Ðµ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚ Ð·Ð²Ð°Ð½Ð¸Ñ‡Ð½Ð¾Ð³ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ° Ð¸ Ð½Ðµ ÑÐ¼Ð¸Ñ˜Ðµ ÑÐµ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð¸Ñ€Ð°Ñ‚Ð¸.",
+    "reasonLabel": "Ð Ð°Ð·Ð»Ð¾Ð³ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°:",
+    "emergencyTitle": "ÐÐºÐ¾ Ñ˜Ðµ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð¸Ñ€Ð°Ð½Ð¾",
+    "emergencyText": "ÐÐºÐ¾ ÑÑ‚Ðµ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð¸Ñ€Ð°Ð»Ð¸ Ð¾Ð²Ð°Ñ˜ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ð¸ Ð¸Ð¼Ð°Ñ‚Ðµ ÑÐ¸Ð¼Ð¿Ñ‚Ð¾Ð¼Ðµ, Ð¾Ð´Ð¼Ð°Ñ… ÐºÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ñ…Ð¸Ñ‚Ð½Ñƒ ÑÐ»ÑƒÐ¶Ð±Ñƒ.",
+    "callSamu": "ÐŸÐ¾Ð·Ð¾Ð²Ð¸Ñ‚Ðµ 112 (Ð¥Ð¸Ñ‚Ð½Ð° Ð¿Ð¾Ð¼Ð¾Ñ›)",
+    "callEmergency": "ÐŸÐ¾Ð·Ð¾Ð²Ð¸Ñ‚Ðµ 112 (Ð¥Ð¸Ñ‚Ð½Ð° Ð¿Ð¾Ð¼Ð¾Ñ›)",
+    "viewOfficialNotice": "ÐŸÐ¾Ð³Ð»ÐµÐ´Ð°Ñ˜Ñ‚Ðµ Ð·Ð²Ð°Ð½Ð¸Ñ‡Ð½Ð¾ Ð¾Ð±Ð°Ð²Ñ˜ÐµÑˆÑ‚ÐµÑšÐµ Ð¾ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÑƒ",
+    "returnForRefund": "Ð’Ñ€Ð°Ñ‚Ð¸Ñ‚Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ñƒ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ñƒ Ð·Ð° Ð¿Ð¾Ð²Ñ€Ð°Ñ›Ð°Ñ˜ Ð½Ð¾Ð²Ñ†Ð°",
     "reportedBy": "Opoziv prijavljen od FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Nije pronađen opoziv u zvaničnim bazama podataka u ovom trenutku",
-    "recalled": "Повучен",
-    "unknown": "Анализа у току",
-    "warning": "Треба пратити"
+    "safe": "Nije pronaÄ‘en opoziv u zvaniÄnim bazama podataka u ovom trenutku",
+    "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½",
+    "unknown": "ÐÐ½Ð°Ð»Ð¸Ð·Ð° Ñƒ Ñ‚Ð¾ÐºÑƒ",
+    "warning": "Ð¢Ñ€ÐµÐ±Ð° Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ð¸"
   },
   "navigation": {
-    "home": "Почетна",
-    "scan": "Скенирај",
-    "history": "Историја",
-    "language": "Подешавања"
+    "home": "ÐŸÐ¾Ñ‡ÐµÑ‚Ð½Ð°",
+    "scan": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ñ˜",
+    "history": "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð°",
+    "language": "ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°"
   },
   "language": {
-    "title": "Подешавања",
-    "subtitle": "Изаберите језик приказа апликације."
+    "title": "ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°",
+    "subtitle": "Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ñ˜ÐµÐ·Ð¸Ðº Ð¿Ñ€Ð¸ÐºÐ°Ð·Ð° Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ."
   },
   "notifications": {
     "alert": {
-      "title": "🚨 УЗБУНА КОНТАМИНИРАНИ ПРОИЗВОД",
-      "body": "⚠️ {{brand}} - Лот {{lot}}\nРазлог: {{reason}}\n\n🚫 НЕ КОНЗУМИРАЈТЕ\nУ случају конзумације, контактирајте хитну помоћ (15 или 112)"
+      "title": "ðŸš¨ Ð£Ð—Ð‘Ð£ÐÐ ÐšÐžÐÐ¢ÐÐœÐ˜ÐÐ˜Ð ÐÐÐ˜ ÐŸÐ ÐžÐ˜Ð—Ð’ÐžÐ”",
+      "body": "âš ï¸ {{brand}} - Ð›Ð¾Ñ‚ {{lot}}\nÐ Ð°Ð·Ð»Ð¾Ð³: {{reason}}\n\nðŸš« ÐÐ• ÐšÐžÐÐ—Ð£ÐœÐ˜Ð ÐÐˆÐ¢Ð•\nÐ£ ÑÐ»ÑƒÑ‡Ð°Ñ˜Ñƒ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð°Ñ†Ð¸Ñ˜Ðµ, ÐºÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ñ…Ð¸Ñ‚Ð½Ñƒ Ð¿Ð¾Ð¼Ð¾Ñ› (15 Ð¸Ð»Ð¸ 112)"
     },
     "dailyCheck": {
-      "title": "Eats OK провјера",
-      "body": "Дневно ажурирање повлачења у току."
+      "title": "Numeline Ð¿Ñ€Ð¾Ð²Ñ˜ÐµÑ€Ð°",
+      "body": "Ð”Ð½ÐµÐ²Ð½Ð¾ Ð°Ð¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐµ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ° Ñƒ Ñ‚Ð¾ÐºÑƒ."
     }
   },
   "settings": {
-    "title": "Подешавања",
-    "language": "Језик",
-    "country": "Земља",
-    "theme": "Тема",
-    "notifications": "Обавјештења",
-    "about": "О апликацији"
+    "title": "ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°",
+    "language": "ÐˆÐµÐ·Ð¸Ðº",
+    "country": "Ð—ÐµÐ¼Ñ™Ð°",
+    "theme": "Ð¢ÐµÐ¼Ð°",
+    "notifications": "ÐžÐ±Ð°Ð²Ñ˜ÐµÑˆÑ‚ÐµÑšÐ°",
+    "about": "Ðž Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ð¸"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Zdravo {{name}}",
-    "question": "Koji proizvod želite da provjerite danas?",
-    "startScanning": "Počni skeniranje",
-    "namePromptTitle": "Dobrodošli u Eats OK",
+    "question": "Koji proizvod Å¾elite da provjerite danas?",
+    "startScanning": "PoÄni skeniranje",
+    "namePromptTitle": "DobrodoÅ¡li u Numeline",
     "namePromptMessage": "Da biste personalizovali iskustvo, unesite svoje ime:",
-    "namePromptPlaceholder": "Vaše ime",
+    "namePromptPlaceholder": "VaÅ¡e ime",
     "namePromptSave": "Nastavi",
-    "namePromptSkip": "Preskoči"
+    "namePromptSkip": "PreskoÄi"
   },
   "legal": {
     "sectionTitle": "Pravni dokumenti",
     "privacyPolicy": "Politika privatnosti",
-    "terms": "Uslovi korišćenja",
-    "legalNotice": "Pravna obavještenja",
-    "errorLoading": "Greška pri učitavanju dokumenta",
+    "terms": "Uslovi koriÅ¡Ä‡enja",
+    "legalNotice": "Pravna obavjeÅ¡tenja",
+    "errorLoading": "GreÅ¡ka pri uÄitavanju dokumenta",
     "disclaimer": "Odricanje od odgovornosti",
     "dataSources": "Izvori podataka (FDA / USDA)"
   },
   "disclaimer": {
     "title": "Odricanje od odgovornosti za opozive hrane",
-    "body": "Ova aplikacija pru?a informacije o opozivima hrane za proizvode koji se prodaju u Sjedinjenim Dr?avama, samo u informativne svrhe.\n\nInformacije prikazane u ovoj aplikaciji zasnovane su na javno dostupnim podacima vladinih agencija (uklju?uju?i, ali ne ograni?avaju?i se na FDA i USDA) i drugih izvora tre?ih strana. Ne garantujemo ta?nost, potpunost ili a?urnost pru?enih informacija.\n\nOva aplikacija ne zamjenjuje zvani?na obavje?tenja o opozivu, komunikacije proizvo?a?a ili smjernice regulatornih organa. Korisnicima se preporu?uje da informacije o opozivu provjere direktno iz zvani?nih izvora.\n\nProizvod koji nije ozna?en kao opozvan u ovoj aplikaciji ne garantuje da je proizvod bezbjedan ili da nije predmet aktuelnog ili budu?eg opoziva.\n\nOva aplikacija ne pru?a medicinske, nutritivne ili zdravstvene savjete. Ako imate zabrinutosti u vezi sa bezbjedno??u hrane, kontaminacijom, alergijama ili bole??u, konsultujte kvalifikovanog zdravstvenog stru?njaka ili slijedite zvani?ne smjernice javnih zdravstvenih vlasti.\n\nOva aplikacija ne provjerava rokove trajanja niti svje?inu proizvoda.\n\nSkeniranje bar-kodova, prepoznavanje brojeva lota i glasovni ili vizuelni izlazi mogu biti podlo?ni tehni?kim ograni?enjima ili gre?kama. Korisnici ostaju odgovorni za provjeru detalja proizvoda i statusa opoziva.\n\nU najve?oj mjeri dozvoljenoj zakonom, developer ne?e biti odgovoran za bilo kakvu direktnu ili indirektnu ?tetu, povrede ili gubitke nastale upotrebom ili oslanjanjem na informacije koje pru?a ova aplikacija.\n\nObuhvat opoziva je ograni?en na prehrambene proizvode koji se prodaju u Sjedinjenim Dr?avama i mo?da se ne odnosi na proizvode koji se prodaju u drugim zemljama."
+    "body": "Ova aplikacija pruea informacije o opozivima hrane za proizvode koji se prodaju u Sjedinjenim Dreavama, samo u informativne svrhe.\n\nInformacije prikazane u ovoj aplikaciji zasnovane su na javno dostupnim podacima vladinih agencija (ukljueujuei, ali ne ogranieavajuei se na FDA i USDA) i drugih izvora treeih strana. Ne garantujemo taenost, potpunost ili aeurnost prueenih informacija.\n\nOva aplikacija ne zamjenjuje zvaniena obavjeetenja o opozivu, komunikacije proizvoeaea ili smjernice regulatornih organa. Korisnicima se preporueuje da informacije o opozivu provjere direktno iz zvanienih izvora.\n\nProizvod koji nije oznaeen kao opozvan u ovoj aplikaciji ne garantuje da je proizvod bezbjedan ili da nije predmet aktuelnog ili budueeg opoziva.\n\nOva aplikacija ne pruea medicinske, nutritivne ili zdravstvene savjete. Ako imate zabrinutosti u vezi sa bezbjedno??u hrane, kontaminacijom, alergijama ili bole??u, konsultujte kvalifikovanog zdravstvenog struenjaka ili slijedite zvaniene smjernice javnih zdravstvenih vlasti.\n\nOva aplikacija ne provjerava rokove trajanja niti svjeeinu proizvoda.\n\nSkeniranje bar-kodova, prepoznavanje brojeva lota i glasovni ili vizuelni izlazi mogu biti podloeni tehniekim ogranieenjima ili greekama. Korisnici ostaju odgovorni za provjeru detalja proizvoda i statusa opoziva.\n\nU najveeoj mjeri dozvoljenoj zakonom, developer neee biti odgovoran za bilo kakvu direktnu ili indirektnu etetu, povrede ili gubitke nastale upotrebom ili oslanjanjem na informacije koje pruea ova aplikacija.\n\nObuhvat opoziva je ogranieen na prehrambene proizvode koji se prodaju u Sjedinjenim Dreavama i moeda se ne odnosi na proizvode koji se prodaju u drugim zemljama."
   },
   "dataSources": {
     "title": "Izvori podataka",
-    "description": "Zvani?ni izvori informacija o opozivima u SAD:",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
+    "description": "Zvanieni izvori informacija o opozivima u SAD:",
+    "fda": "FDA - Food and Drug Administration",
+    "usda": "USDA - Food Safety and Inspection Service"
   }
 }
+
+
+
+

@@ -1,19 +1,19 @@
-# Condizioni d'Uso - Eats OK
+﻿# Condizioni d'Uso - Numeline
 
 *Ultimo aggiornamento: 13 dicembre 2025*
 
-**IMPORTANTE**: Scaricando, installando o utilizzando l'applicazione Eats OK, accetti incondizionatamente queste Condizioni d'Uso.
+**IMPORTANTE**: Scaricando, installando o utilizzando l'applicazione Numeline, accetti incondizionatamente queste Condizioni d'Uso.
 
-Questa applicazione e le sue funzionalità sono protette da copyright e anteriorità.
+Questa applicazione e le sue funzionalitÃ  sono protette da copyright e anterioritÃ .
 This application and its functionalities are protected by copyright and prior art.
 
 ---
 
 ## 1. Servizio
 
-Eats OK è un'applicazione mobile gratuita che ti permette di scansionare prodotti alimentari e verificare se sono soggetti a richiamo.
+Numeline Ã¨ un'applicazione mobile gratuita che ti permette di scansionare prodotti alimentari e verificare se sono soggetti a richiamo.
 
-## 2. Funzionalità
+## 2. FunzionalitÃ 
 
 - Scansione tramite fotocamera
 - Riconoscimento automatico (marca e lotto)
@@ -23,9 +23,9 @@ Eats OK è un'applicazione mobile gratuita che ti permette di scansionare prodot
 
 ## 3. Precisione OCR
 
-Il riconoscimento del testo può contenere errori. Devi sempre verificare visivamente le informazioni rilevate.
+Il riconoscimento del testo puÃ² contenere errori. Devi sempre verificare visivamente le informazioni rilevate.
 
-## 4. Responsabilità
+## 4. ResponsabilitÃ 
 
 L'editore non garantisce l'accuratezza delle informazioni. In caso di richiamo, consulta le fonti ufficiali.
 
@@ -38,3 +38,4 @@ Tutti i tuoi dati sono memorizzati localmente sul tuo dispositivo. Nessuna foto 
 ## 6. Contatto
 
 Email : legal@eatsok.app
+

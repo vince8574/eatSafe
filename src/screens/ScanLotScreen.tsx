@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
+﻿import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -14,6 +14,8 @@ import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
 import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
+import { useSubscription } from '../hooks/useSubscription';
+import { decrementScanCounter } from '../services/subscriptionService';
 
 function normalizeLotValue(lot: string) {
   return lot.replace(/\s+/g, '').replace(/[-_\.]/g, '').toUpperCase();
@@ -30,6 +32,7 @@ export function ScanLotScreen() {
   }>();
   const { addProduct, updateRecall } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
+  const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
 
   const [ocrText, setOcrText] = useState('');
   const [ocrSource, setOcrSource] = useState<string>('');
@@ -48,6 +51,35 @@ export function ScanLotScreen() {
   const [verifiedAt, setVerifiedAt] = useState<number | null>(null);
   const [scannerResetToken, setScannerResetToken] = useState(0);
 
+  const ensureScanQuota = useCallback(async (): Promise<boolean> => {
+    const remaining = subscription?.scansRemaining ?? 0;
+    if (remaining > 0) return true;
+
+    return new Promise((resolve) => {
+      Alert.alert(
+        'Quota de scans atteint',
+        'Ajoute un pack de scans pour continuer.',
+        [
+          { text: 'Annuler', style: 'cancel', onPress: () => resolve(false) },
+          {
+            text: 'Pack +500 scans',
+            onPress: async () => {
+              try {
+                await buyPack(500);
+                await refresh();
+                resolve(true);
+              } catch (error) {
+                Alert.alert('Erreur', 'Impossible d'ajouter le pack pour le moment.');
+                resolve(false);
+              }
+            }
+          }
+        ],
+        { cancelable: true }
+      );
+    });
+  }, [subscription?.scansRemaining, buyPack, refresh]);
+
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
       setErrorMessage('');
@@ -57,7 +89,7 @@ export function ScanLotScreen() {
       setLotNumber(lot);
       setLotCandidates(candidates || []);
 
-      // Ne pas exiger qu'un lot soit détecté - on affiche tout le texte OCR
+      // Ne pas exiger qu'un lot soit dÃ©tectÃ© - on affiche tout le texte OCR
       // if (!lot) {
       //   throw new Error(t('scan.errors.lotExtractFailed'));
       // }
@@ -68,7 +100,7 @@ export function ScanLotScreen() {
         console.warn('Failed to delete lot photo', error);
       }
 
-      // Vérifier les rappels en arrière-plan
+      // VÃ©rifier les rappels en arriÃ¨re-plan
       if (candidates && candidates.length > 0) {
         setIsCheckingRecall(true);
         setHasRecall(null);
@@ -84,7 +116,7 @@ export function ScanLotScreen() {
           }
           if (matchResult.hasRecall && matchResult.matchedRecall) {
             setMatchedRecall(matchResult.matchedRecall);
-            // Afficher immédiatement l'alerte de rappel
+            // Afficher immÃ©diatement l'alerte de rappel
             setShowRecallAlert(true);
           }
         } catch (error) {
@@ -149,6 +181,12 @@ export function ScanLotScreen() {
       return;
     }
 
+    const hasQuota = await ensureScanQuota();
+    if (!hasQuota) {
+      setConfirmModalVisible(false);
+      return;
+    }
+
     setIsFinalizing(true);
 
     try {
@@ -197,6 +235,8 @@ export function ScanLotScreen() {
         await updateRecall(product, matchingRecalls);
       }
 
+      await decrementScanCounter();
+
       resetFlow();
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {
@@ -216,6 +256,10 @@ export function ScanLotScreen() {
     editedLot,
     ocrText,
     lotCandidates,
+    productName,
+    productImage,
+    ensureScanQuota,
+    decrementScanCounter,
     resetFlow,
     router,
     t,
@@ -236,7 +280,7 @@ export function ScanLotScreen() {
   }, []);
 
   const handleEditLot = useCallback(() => {
-    // Utiliser le texte OCR brut au lieu du lot détecté
+    // Utiliser le texte OCR brut au lieu du lot dÃ©tectÃ©
     setEditedLot(ocrText);
     setIsEditingLot(true);
   }, [ocrText]);
@@ -356,7 +400,7 @@ export function ScanLotScreen() {
 
         <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
           <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-            ⚠️ {t('common.appDisclaimer')}
+            âš ï¸ {t('common.appDisclaimer')}
           </Text>
         </View>
 
@@ -397,7 +441,7 @@ export function ScanLotScreen() {
                   style={[styles.editInput, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
                   value={editedLot}
                   onChangeText={setEditedLot}
-                  placeholder="Entrez le numéro de lot"
+                  placeholder="Entrez le numÃ©ro de lot"
                   placeholderTextColor={colors.textSecondary}
                   autoCapitalize="characters"
                   autoFocus
@@ -429,18 +473,18 @@ export function ScanLotScreen() {
             ) : (
               <>
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                  Texte OCR détecté :
+                  Texte OCR dÃ©tectÃ© :
                 </Text>
                 <View style={[styles.ocrTextContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
                   <Text style={[styles.ocrText, { color: colors.textPrimary }]}>
-                    {ocrText || 'Aucun texte détecté'}
+                    {ocrText || 'Aucun texte dÃ©tectÃ©'}
                   </Text>
                 </View>
 
                 {ocrSource && (
                   <View style={[styles.ocrSourceContainer, { backgroundColor: ocrSource === 'vision-fallback' ? '#e8f5e9' : '#e3f2fd' }]}>
                     <Text style={[styles.ocrSourceText, { color: ocrSource === 'vision-fallback' ? '#2e7d32' : '#1565c0' }]}>
-                      {ocrSource === 'vision-fallback' ? '🤖 Google Vision API' : ocrSource === 'mlkit' ? '📱 ML Kit' : `📋 ${ocrSource}`}
+                      {ocrSource === 'vision-fallback' ? 'ðŸ¤– Google Vision API' : ocrSource === 'mlkit' ? 'ðŸ“± ML Kit' : `ðŸ“‹ ${ocrSource}`}
                     </Text>
                     {verifiedAt && (
                       <Text style={[styles.recallMeta, { color: colors.textSecondary }]}>
@@ -462,7 +506,7 @@ export function ScanLotScreen() {
                 {isCheckingRecall && (
                   <View style={styles.checkingContainer}>
                     <Text style={[styles.checkingText, { color: colors.textSecondary }]}>
-                      🔍 Vérification des rappels en cours...
+                      ðŸ” VÃ©rification des rappels en cours...
                     </Text>
                   </View>
                 )}
@@ -477,8 +521,8 @@ export function ScanLotScreen() {
                   ]}>
                     <Text style={[styles.recallStatusText, { color: hasRecall ? '#f44' : '#4a4' }]}>
                       {hasRecall
-                        ? `⚠️ RAPPEL DÉTECTÉ ${matchedLot ? `(${matchedLot})` : ''}`
-                        : '✅ PRODUIT SAFE - Aucun rappel'}
+                        ? `âš ï¸ RAPPEL DÃ‰TECTÃ‰ ${matchedLot ? `(${matchedLot})` : ''}`
+                        : 'âœ… PRODUIT SAFE - Aucun rappel'}
                     </Text>
                   </View>
                 )}
@@ -489,7 +533,7 @@ export function ScanLotScreen() {
                   onPress={handleEditLot}
                 >
                   <Text style={[styles.editButtonText, { color: colors.accent }]}>
-                    ✏️ Modifier
+                    âœï¸ Modifier
                   </Text>
                 </TouchableOpacity>
 

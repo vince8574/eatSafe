@@ -1,6 +1,6 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
+    "appName": "Numeline",
     "loading": "Laden...",
     "save": "Opslaan",
     "cancel": "Annuleren",
@@ -11,13 +11,13 @@
     "refresh": "Vernieuwen",
     "unknown": "Onbekend",
     "dataDisclaimer": "Op basis van beschikbare gegevens op dit moment",
-    "appDisclaimer": "Deze app biedt recall-informatie op basis van officiële openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
+    "appDisclaimer": "Deze app biedt recall-informatie op basis van officiÃ«le openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
     "noRecallDisclaimer": "De afwezigheid van een recall garandeert niet de veiligheid van het product.",
-    "verifyWithSources": "Verifieer terugroepinformatie altijd met officiële bronnen van de FDA of USDA.",
-    "governmentInfoDisclaimer": "Deze app vervangt geen officiële overheidsinformatie."
+    "verifyWithSources": "Verifieer terugroepinformatie altijd met officiÃ«le bronnen van de FDA of USDA.",
+    "governmentInfoDisclaimer": "Deze app vervangt geen officiÃ«le overheidsinformatie."
   },
   "home": {
-    "title": "Eats OK",
+    "title": "Numeline",
     "subtitle": "Monitor uw gescande producten en ontvang realtime waarschuwingen over terugroepacties.",
     "stats": {
       "scanned": "Gescande producten",
@@ -64,7 +64,7 @@
     "lotLabel": "Lotnummer",
     "lotPlaceholder": "Bijv: L12345",
     "save": "Opslaan",
-    "verifying": "Verifiëren…",
+    "verifying": "VerifiÃ«renâ€¦",
     "errors": {
       "lotRequired": "Lotnummer vereist",
       "lotRequiredMessage": "Voer een lotnummer in om door te gaan.",
@@ -110,18 +110,18 @@
   "recallAlert": {
     "title": "BESMET PRODUCT",
     "doNotConsume": "NIET CONSUMEREN",
-    "warning": "Dit product is onderworpen aan een officiële terugroepactie en mag niet worden geconsumeerd.",
+    "warning": "Dit product is onderworpen aan een officiÃ«le terugroepactie en mag niet worden geconsumeerd.",
     "reasonLabel": "Reden voor terugroepactie:",
     "emergencyTitle": "Bij consumptie",
     "emergencyText": "Als u dit product hebt geconsumeerd en symptomen ervaart, neem dan onmiddellijk contact op met de hulpdiensten.",
     "callSamu": "Bel 112 (Noodgeval)",
     "callEmergency": "Bel 112 (Noodgeval)",
-    "viewOfficialNotice": "Bekijk officiële terugroepmededeling",
+    "viewOfficialNotice": "Bekijk officiÃ«le terugroepmededeling",
     "returnForRefund": "Breng het product terug naar de winkel voor een terugbetaling",
     "reportedBy": "Recall gemeld door FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Geen terugroeping gevonden in officiële databases op dit moment",
+    "safe": "Geen terugroeping gevonden in officiÃ«le databases op dit moment",
     "recalled": "Teruggeroepen",
     "unknown": "In beoordeling",
     "warning": "In de gaten houden"
@@ -138,11 +138,11 @@
   },
   "notifications": {
     "alert": {
-      "title": "🚨 WAARSCHUWING BESMET PRODUCT",
-      "body": "⚠️ {{brand}} - Lot {{lot}}\nReden: {{reason}}\n\n🚫 NIET CONSUMEREN\nIndien geconsumeerd, neem contact op met hulpdiensten (112)"
+      "title": "ðŸš¨ WAARSCHUWING BESMET PRODUCT",
+      "body": "âš ï¸ {{brand}} - Lot {{lot}}\nReden: {{reason}}\n\nðŸš« NIET CONSUMEREN\nIndien geconsumeerd, neem contact op met hulpdiensten (112)"
     },
     "dailyCheck": {
-      "title": "Eats OK Verificatie",
+      "title": "Numeline Verificatie",
       "body": "Dagelijkse update van terugroepacties is bezig."
     }
   },
@@ -155,26 +155,26 @@
     "about": "Over"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Hallo {{name}}",
     "question": "Welk product wilt u vandaag controleren?",
     "startScanning": "Begin met scannen",
-    "namePromptTitle": "Welkom bij Eats OK",
+    "namePromptTitle": "Welkom bij Numeline",
     "namePromptMessage": "Om uw ervaring te personaliseren, voer uw voornaam in:",
     "namePromptPlaceholder": "Uw voornaam",
     "namePromptSave": "Doorgaan",
@@ -191,12 +191,16 @@
   },
   "disclaimer": {
     "title": "Disclaimer voor voedselterugroepingen",
-    "body": "Deze toepassing biedt informatie over voedselterugroepingen voor producten die in de Verenigde Staten worden verkocht, uitsluitend ter informatie.\n\nDe informatie die in deze app wordt weergegeven is gebaseerd op openbaar beschikbare gegevens van overheidsinstanties (waaronder, maar niet beperkt tot, de FDA en USDA) en andere bronnen van derden. Wij garanderen niet de juistheid, volledigheid of actualiteit van de verstrekte informatie.\n\nDeze app vervangt geen offici?le terugroepmeldingen, communicatie van fabrikanten of richtlijnen van toezichthoudende instanties. Gebruikers worden aangemoedigd terugroepinformatie rechtstreeks bij offici?le bronnen te verifi?ren.\n\nEen product dat in deze app niet als teruggeroepen wordt ge?dentificeerd, garandeert niet dat het product veilig is of niet onder een huidige of toekomstige terugroepactie valt.\n\nDeze app geeft geen medisch, voedings- of gezondheidsadvies. Als u zich zorgen maakt over voedselveiligheid, besmetting, allergie?n of ziekte, raadpleeg dan een gekwalificeerde zorgverlener of volg offici?le richtlijnen van volksgezondheidsinstanties.\n\nDeze app controleert geen houdbaarheidsdata of de versheid van producten.\n\nHet scannen van barcodes, het herkennen van lotnummers en spraak- of visuele output kan onderhevig zijn aan technische beperkingen of fouten. Gebruikers blijven verantwoordelijk voor het verifi?ren van productdetails en terugroepstatus.\n\nVoor zover wettelijk toegestaan is de ontwikkelaar niet aansprakelijk voor directe of indirecte schade, letsel of verliezen die voortvloeien uit het gebruik van of het vertrouwen op de informatie die door deze app wordt verstrekt.\n\nDe recall-dekking is beperkt tot voedselproducten die in de Verenigde Staten worden verkocht en is mogelijk niet van toepassing op producten die in andere landen worden verkocht."
+    "body": "Deze toepassing biedt informatie over voedselterugroepingen voor producten die in de Verenigde Staten worden verkocht, uitsluitend ter informatie.\n\nDe informatie die in deze app wordt weergegeven is gebaseerd op openbaar beschikbare gegevens van overheidsinstanties (waaronder, maar niet beperkt tot, de FDA en USDA) en andere bronnen van derden. Wij garanderen niet de juistheid, volledigheid of actualiteit van de verstrekte informatie.\n\nDeze app vervangt geen officiele terugroepmeldingen, communicatie van fabrikanten of richtlijnen van toezichthoudende instanties. Gebruikers worden aangemoedigd terugroepinformatie rechtstreeks bij officiele bronnen te verifieren.\n\nEen product dat in deze app niet als teruggeroepen wordt geedentificeerd, garandeert niet dat het product veilig is of niet onder een huidige of toekomstige terugroepactie valt.\n\nDeze app geeft geen medisch, voedings- of gezondheidsadvies. Als u zich zorgen maakt over voedselveiligheid, besmetting, allergieen of ziekte, raadpleeg dan een gekwalificeerde zorgverlener of volg officiele richtlijnen van volksgezondheidsinstanties.\n\nDeze app controleert geen houdbaarheidsdata of de versheid van producten.\n\nHet scannen van barcodes, het herkennen van lotnummers en spraak- of visuele output kan onderhevig zijn aan technische beperkingen of fouten. Gebruikers blijven verantwoordelijk voor het verifieren van productdetails en terugroepstatus.\n\nVoor zover wettelijk toegestaan is de ontwikkelaar niet aansprakelijk voor directe of indirecte schade, letsel of verliezen die voortvloeien uit het gebruik van of het vertrouwen op de informatie die door deze app wordt verstrekt.\n\nDe recall-dekking is beperkt tot voedselproducten die in de Verenigde Staten worden verkocht en is mogelijk niet van toepassing op producten die in andere landen worden verkocht."
   },
   "dataSources": {
     "title": "Databronnen",
-    "description": "Offici?le bronnen voor terugroepinformatie in de VS:",
-    "fda": "FDA ? Food and Drug Administration",
-    "usda": "USDA ? Food Safety and Inspection Service"
+    "description": "Officiele bronnen voor terugroepinformatie in de VS:",
+    "fda": "FDA - Food and Drug Administration",
+    "usda": "USDA - Food Safety and Inspection Service"
   }
 }
+
+
+
+

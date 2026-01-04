@@ -1,6 +1,6 @@
-{
+﻿{
   "common": {
-    "appName": "Eats OK",
+    "appName": "Numeline",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -17,7 +17,7 @@
     "governmentInfoDisclaimer": "This app does not replace official government information."
   },
   "home": {
-    "title": "Eats OK",
+    "title": "Numeline",
     "subtitle": "Monitor your scanned products and receive real-time recall alerts.",
     "stats": {
       "scanned": "Scanned products",
@@ -52,8 +52,8 @@
     "detectedLot": "Detected lot number",
     "restart": "Restart",
     "manualEntry": "Manual entry",
-    "switchToOcr": "📸 Scan brand text",
-    "switchToBarcode": "📊 Scan barcode",
+    "switchToOcr": "ðŸ“¸ Scan brand text",
+    "switchToBarcode": "ðŸ“Š Scan barcode",
     "waitingForCapture": "Waiting for capture...",
     "aiPrecision": "AI used for better accuracy",
     "productNotPubliclyListed": "This product is not publicly listed.\nScan the label to check the lot number and recalls.",
@@ -74,7 +74,7 @@
     "lotLabel": "Lot number",
     "lotPlaceholder": "Ex: L12345",
     "save": "Save",
-    "verifying": "Verifying…",
+    "verifying": "Verifyingâ€¦",
     "errors": {
       "lotRequired": "Lot number required",
       "lotRequiredMessage": "Please enter a lot number to continue.",
@@ -94,10 +94,10 @@
     "privacyInfo": "Photos taken during scanning are processed locally and immediately deleted. Only the brand and lot number are kept on this device.",
     "recallStatusLabel": "Recall status",
     "status": {
-      "safe": "✅ SAFE",
-      "recalled": "🚨 RECALLED - DO NOT CONSUME",
-      "unknown": "❓ UNKNOWN",
-      "warning": "⚠️ WARNING"
+      "safe": "âœ… SAFE",
+      "recalled": "ðŸš¨ RECALLED - DO NOT CONSUME",
+      "unknown": "â“ UNKNOWN",
+      "warning": "âš ï¸ WARNING"
     },
     "recallInfo": "Recall information",
     "actions": {
@@ -155,14 +155,14 @@
   },
   "notifications": {
     "alert": {
-      "title": "🚨 CONTAMINATED PRODUCT ALERT",
-      "body": "⚠️ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\n🚫 DO NOT CONSUME\nIf consumed, contact emergency services (911)"
+      "title": "ðŸš¨ CONTAMINATED PRODUCT ALERT",
+      "body": "âš ï¸ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\nðŸš« DO NOT CONSUME\nIf consumed, contact emergency services (911)"
     },
     "dailyCheck": {
-      "title": "Eats OK Verification",
+      "title": "Numeline Verification",
       "body": "Daily recall update in progress."
     },
-    "newRecallTitle": "⚠️ New recall detected",
+    "newRecallTitle": "âš ï¸ New recall detected",
     "newRecallBody": "Product {{brand}} - Lot {{lot}} is now subject to a recall. Do not consume."
   },
   "settings": {
@@ -174,26 +174,26 @@
     "about": "About"
   },
   "languages": {
-    "fr": "Français",
+    "fr": "FranÃ§ais",
     "en": "English",
     "de": "Deutsch",
-    "es": "Español",
+    "es": "EspaÃ±ol",
     "it": "Italiano",
-    "ar": "العربية",
-    "zh": "中文",
-    "ja": "日本語",
+    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
+    "zh": "ä¸­æ–‡",
+    "ja": "æ—¥æœ¬èªž",
     "nl": "Nederlands",
-    "pt": "Português",
-    "ru": "Русский",
+    "pt": "PortuguÃªs",
+    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
     "sq": "Shqip",
-    "sr": "Српски",
+    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Hello {{name}}",
     "question": "What product would you like to check today?",
     "startScanning": "Start scanning",
-    "namePromptTitle": "Welcome to Eats OK",
+    "namePromptTitle": "Welcome to Numeline",
     "namePromptMessage": "To personalize your experience, please enter your first name:",
     "namePromptPlaceholder": "Your first name",
     "namePromptSave": "Continue",
@@ -215,7 +215,10 @@
   "dataSources": {
     "title": "Data Sources",
     "description": "Official sources for U.S. recall information:",
-    "fda": "FDA – Food and Drug Administration",
-    "usda": "USDA – Food Safety and Inspection Service"
+    "fda": "FDA - Food and Drug Administration",
+    "usda": "USDA - Food Safety and Inspection Service"
   }
 }
+
+
+

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState, useCallback } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
@@ -10,6 +10,8 @@ import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
 import { GradientBackground } from '../components/GradientBackground';
+import { useSubscription } from '../hooks/useSubscription';
+import { decrementScanCounter } from '../services/subscriptionService';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
@@ -20,6 +22,36 @@ export function ManualEntryScreen() {
   const [brand, setBrand] = useState('');
   const [lotNumber, setLotNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
+
+  const ensureScanQuota = useCallback(async (): Promise<boolean> => {
+    const remaining = subscription?.scansRemaining ?? 0;
+    if (remaining > 0) return true;
+
+    return new Promise((resolve) => {
+      Alert.alert(
+        'Quota de scans atteint',
+        'Ajoute un pack de scans pour continuer.',
+        [
+          { text: 'Annuler', style: 'cancel', onPress: () => resolve(false) },
+          {
+            text: 'Pack +500 scans',
+            onPress: async () => {
+              try {
+                await buyPack(500);
+                await refresh();
+                resolve(true);
+              } catch (error) {
+                Alert.alert('Erreur', 'Impossible d'ajouter le pack pour le moment.');
+                resolve(false);
+              }
+            }
+          }
+        ],
+        { cancelable: true }
+      );
+    });
+  }, [subscription?.scansRemaining, buyPack, refresh]);
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
@@ -29,6 +61,11 @@ export function ManualEntryScreen() {
 
     try {
       setIsSubmitting(true);
+      const hasQuota = await ensureScanQuota();
+      if (!hasQuota) {
+        setIsSubmitting(false);
+        return;
+      }
       const finalBrand = brand.trim() || t('common.unknown');
 
       const product = await addProduct({
@@ -36,7 +73,7 @@ export function ManualEntryScreen() {
         lotNumber: lotNumber.trim()
       });
 
-      // Incrémenter le compteur d'utilisation si c'est une marque personnalisée
+      // IncrÃ©menter le compteur d'utilisation si c'est une marque personnalisÃ©e
       if (brand.trim()) {
         await incrementBrandUsage(brand.trim());
       }
@@ -51,6 +88,8 @@ export function ManualEntryScreen() {
           await scheduleRecallNotification(product, recall);
         }
       }
+
+      await decrementScanCounter();
 
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {
@@ -92,7 +131,12 @@ export function ManualEntryScreen() {
 
       <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
         <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-          ⚠️ {t('common.appDisclaimer')}
+          âš ï¸ {t('common.appDisclaimer')}
+        </Text>
+        <Text style={[styles.appDisclaimerText, { color: colors.textSecondary, marginTop: 4 }]}>
+          {subLoading
+            ? 'Chargement du quota...'
+            : `Scans restants (simulation) : ${subscription?.scansRemaining ?? 0}`}
         </Text>
       </View>
 
