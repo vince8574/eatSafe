@@ -42,7 +42,7 @@ export function ManualEntryScreen() {
                 await refresh();
                 resolve(true);
               } catch (error) {
-                Alert.alert('Erreur', 'Impossible d'ajouter le pack pour le moment.');
+                Alert.alert('Erreur', "Impossible d'ajouter le pack pour le moment.");
                 resolve(false);
               }
             }

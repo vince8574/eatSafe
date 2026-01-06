@@ -310,10 +310,24 @@ export function ScanLotScreen() {
         isProcessing={isProcessing}
         mode="band"
         resetToken={scannerResetToken}
-        aiMessage={!lotNumber ? t('scan.aiPrecision') : undefined}
+        flashPosition="top-right"
+        onBack={handleGoBack}
+        onRestart={handleRestart}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
+        {/* Compteur de scans */}
+        {subscription && (
+          <View style={[styles.scanCounter, { backgroundColor: colors.surface, borderColor: colors.accent }]}>
+            <Text style={[styles.scanCounterLabel, { color: colors.textSecondary }]}>
+              Scans restants
+            </Text>
+            <Text style={[styles.scanCounterValue, { color: colors.accent }]}>
+              {subscription.scansRemaining} / {subscription.scansIncluded}
+            </Text>
+          </View>
+        )}
+
         <View
           style={[
             styles.instructions,
@@ -391,8 +405,12 @@ export function ScanLotScreen() {
           </View>
         </View>
 
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('scan.detectedLot')}</Text>
-        <Text style={[styles.lotText, { color: colors.accent }]}>{lotNumber || '--'}</Text>
+        {lotNumber && (
+          <>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('scan.detectedLot')}</Text>
+            <Text style={[styles.lotText, { color: colors.accent }]}>{lotNumber}</Text>
+          </>
+        )}
 
         {errorMessage ? (
           <Text style={[styles.errorText, { color: colors.danger }]}>{errorMessage}</Text>
@@ -580,6 +598,7 @@ const styles = StyleSheet.create({
   },
   feedbackContent: {
     paddingVertical: 16,
+    paddingBottom: 48,
     gap: 16
   },
   instructions: {
@@ -836,5 +855,25 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 20,
     textAlign: 'center'
+  },
+  scanCounter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    marginBottom: 12
+  },
+  scanCounterLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5
+  },
+  scanCounterValue: {
+    fontSize: 18,
+    fontWeight: '800'
   }
 });

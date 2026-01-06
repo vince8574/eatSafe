@@ -1,5 +1,5 @@
-import { useMemo, useState, useCallback } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
@@ -10,8 +10,11 @@ import { GradientBackground } from '../components/GradientBackground';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { checkAllProductsForRecalls } from '../services/recallCheckService';
 import * as Notifications from 'expo-notifications';
-import * as FileSystem from 'expo-file-system';
 import { useSubscription } from '../hooks/useSubscription';
+import { enableExportForTesting } from '../services/subscriptionService';
+import { exportProducts, canExport as canExportFormat, ExportFormat } from '../services/exportService';
+import { Ionicons } from '@expo/vector-icons';
+import { cleanOldScans } from '../services/historyRetentionService';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
@@ -25,6 +28,27 @@ export function HistoryScreen() {
   const [filter, setFilter] = useState<Filter>('all');
   const [isCheckingRecalls, setIsCheckingRecalls] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  // Enable export for testing on mount
+  useEffect(() => {
+    enableExportForTesting().catch(console.error);
+  }, []);
+
+  // Nettoyage automatique de l'historique selon le plan
+  useEffect(() => {
+    if (subscription) {
+      cleanOldScans(subscription)
+        .then((deletedCount) => {
+          if (deletedCount > 0) {
+            console.log(`[HistoryScreen] Cleaned ${deletedCount} expired scan(s)`);
+          }
+        })
+        .catch((error) => {
+          console.error('[HistoryScreen] Error cleaning old scans:', error);
+        });
+    }
+  }, [subscription]);
 
   const formatDate = useCallback(
     (value: string | number) => {
@@ -110,51 +134,47 @@ export function HistoryScreen() {
   }, [filter, products]);
 
   const canExport = subscription?.exportEnabled === true;
+  const exportFormats = subscription?.exportFormats || [];
+  const regulatoryFormat = subscription?.regulatoryFormat || false;
 
-  const escapeCsv = (value: string | number | null | undefined) => {
-    const str = value === null || value === undefined ? '' : String(value);
-    const escaped = str.replace(/"/g, '""');
-    return `"${escaped}"`;
-  };
-
-  const handleExport = useCallback(async () => {
+  const handleOpenExportModal = useCallback(() => {
     if (!canExport) {
-      Alert.alert('Export réservé', 'L’export est disponible avec un forfait incluant l’option export.');
+      Alert.alert('Export réservé', 'L\'export est disponible avec un forfait incluant l\'option export.');
       return;
     }
 
     if (filtered.length === 0) {
-      Alert.alert('Aucune donnée', 'Il n’y a rien à exporter pour l’instant.');
+      Alert.alert('Aucune donnée', 'Il n\'y a rien à exporter pour l\'instant.');
+      return;
+    }
+
+    setShowExportModal(true);
+  }, [canExport, filtered]);
+
+  const handleExport = useCallback(async (format: ExportFormat) => {
+    if (!canExportFormat(format, exportFormats)) {
+      Alert.alert('Format non disponible', `Le format ${format.toUpperCase()} n'est pas inclus dans votre forfait.`);
       return;
     }
 
     try {
       setIsExporting(true);
-      const headers = ['Date', 'Heure', 'Marque', 'Lot', 'Produit', 'Statut rappel'];
-      const rows = filtered.map((item) => {
-        const dt = formatDate(item.scannedAt);
-        return [
-          escapeCsv(dt.date),
-          escapeCsv(dt.time),
-          escapeCsv(item.brand),
-          escapeCsv(item.lotNumber),
-          escapeCsv(item.productName ?? ''),
-          escapeCsv(statusLabels[item.recallStatus])
-        ].join(',');
+      setShowExportModal(false);
+
+      await exportProducts({
+        products: filtered,
+        format,
+        regulatoryFormat
       });
 
-      const csv = [headers.map(escapeCsv).join(','), ...rows].join('\n');
-      const fileUri = `${FileSystem.cacheDirectory}history_export_${Date.now()}.csv`;
-      await FileSystem.writeAsStringAsync(fileUri, csv, { encoding: FileSystem.EncodingType.UTF8 });
-
-      Alert.alert('Export créé', `Fichier CSV généré (ouvrable dans Excel) :\n${fileUri}`);
+      Alert.alert('Export réussi', `Le fichier ${format.toUpperCase()} a été généré et est prêt à être partagé.`);
     } catch (error) {
       console.error('[HistoryScreen] Export error', error);
-      Alert.alert('Erreur', 'Impossible de générer le fichier export.');
+      Alert.alert('Erreur', error instanceof Error ? error.message : 'Impossible de générer le fichier export.');
     } finally {
       setIsExporting(false);
     }
-  }, [canExport, filtered, formatDate, statusLabels]);
+  }, [filtered, exportFormats, regulatoryFormat]);
 
   const renderItem = ({ item }: { item: ScannedProduct }) => {
     const scannedAt = formatDate(item.scannedAt);
@@ -235,20 +255,23 @@ export function HistoryScreen() {
                     opacity: isExporting ? 0.6 : 1
                   }
                 ]}
-                onPress={handleExport}
+                onPress={handleOpenExportModal}
                 disabled={!canExport || isExporting || subLoading}
               >
                 {isExporting ? (
                   <ActivityIndicator size="small" color={colors.accent} />
                 ) : (
-                  <Text style={[styles.exportButtonText, { color: canExport ? colors.accent : colors.textSecondary }]}>
-                    Export CSV (Excel)
-                  </Text>
+                  <>
+                    <Ionicons name="download-outline" size={20} color={canExport ? colors.accent : colors.textSecondary} />
+                    <Text style={[styles.exportButtonText, { color: canExport ? colors.accent : colors.textSecondary }]}>
+                      Exporter l'historique
+                    </Text>
+                  </>
                 )}
               </TouchableOpacity>
               {!canExport && !subLoading ? (
                 <Text style={[styles.exportInfo, { color: colors.textSecondary }]}>
-                  Disponible avec un forfait incluant l’export
+                  Disponible avec un forfait incluant l'export
                 </Text>
               ) : null}
             </View>
@@ -295,6 +318,109 @@ export function HistoryScreen() {
           </View>
         }
       />
+
+      {/* Modale d'export */}
+      <Modal
+        visible={showExportModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowExportModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              Choisir le format d'export
+            </Text>
+
+            <Text style={[styles.modalSubtitle, { color: colors.textSecondary }]}>
+              {regulatoryFormat ? 'Format réglementaire activé' : `${filtered.length} produits à exporter`}
+            </Text>
+
+            <View style={styles.exportFormats}>
+              {/* Bouton PDF */}
+              <TouchableOpacity
+                style={[
+                  styles.formatButton,
+                  {
+                    backgroundColor: canExportFormat('pdf', exportFormats) ? colors.accentSoft : colors.surfaceAlt,
+                    borderColor: canExportFormat('pdf', exportFormats) ? colors.accent : colors.border,
+                    opacity: canExportFormat('pdf', exportFormats) ? 1 : 0.5
+                  }
+                ]}
+                onPress={() => handleExport('pdf')}
+                disabled={!canExportFormat('pdf', exportFormats)}
+              >
+                <Ionicons name="document-text" size={32} color={canExportFormat('pdf', exportFormats) ? colors.accent : colors.textSecondary} />
+                <Text style={[styles.formatButtonLabel, { color: canExportFormat('pdf', exportFormats) ? colors.accent : colors.textSecondary }]}>
+                  PDF
+                </Text>
+                {!canExportFormat('pdf', exportFormats) && (
+                  <Text style={[styles.formatLocked, { color: colors.textSecondary }]}>
+                    Non inclus
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              {/* Bouton XLSX */}
+              <TouchableOpacity
+                style={[
+                  styles.formatButton,
+                  {
+                    backgroundColor: canExportFormat('xlsx', exportFormats) ? colors.accentSoft : colors.surfaceAlt,
+                    borderColor: canExportFormat('xlsx', exportFormats) ? colors.accent : colors.border,
+                    opacity: canExportFormat('xlsx', exportFormats) ? 1 : 0.5
+                  }
+                ]}
+                onPress={() => handleExport('xlsx')}
+                disabled={!canExportFormat('xlsx', exportFormats)}
+              >
+                <Ionicons name="grid" size={32} color={canExportFormat('xlsx', exportFormats) ? colors.accent : colors.textSecondary} />
+                <Text style={[styles.formatButtonLabel, { color: canExportFormat('xlsx', exportFormats) ? colors.accent : colors.textSecondary }]}>
+                  Excel
+                </Text>
+                {!canExportFormat('xlsx', exportFormats) && (
+                  <Text style={[styles.formatLocked, { color: colors.textSecondary }]}>
+                    Non inclus
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              {/* Bouton CSV */}
+              <TouchableOpacity
+                style={[
+                  styles.formatButton,
+                  {
+                    backgroundColor: canExportFormat('csv', exportFormats) ? colors.accentSoft : colors.surfaceAlt,
+                    borderColor: canExportFormat('csv', exportFormats) ? colors.accent : colors.border,
+                    opacity: canExportFormat('csv', exportFormats) ? 1 : 0.5
+                  }
+                ]}
+                onPress={() => handleExport('csv')}
+                disabled={!canExportFormat('csv', exportFormats)}
+              >
+                <Ionicons name="list" size={32} color={canExportFormat('csv', exportFormats) ? colors.accent : colors.textSecondary} />
+                <Text style={[styles.formatButtonLabel, { color: canExportFormat('csv', exportFormats) ? colors.accent : colors.textSecondary }]}>
+                  CSV
+                </Text>
+                {!canExportFormat('csv', exportFormats) && (
+                  <Text style={[styles.formatLocked, { color: colors.textSecondary }]}>
+                    Non inclus
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.cancelButton, { backgroundColor: colors.surfaceAlt }]}
+              onPress={() => setShowExportModal(false)}
+            >
+              <Text style={[styles.cancelButtonText, { color: colors.textPrimary }]}>
+                Annuler
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </GradientBackground>
   );
 }
@@ -338,7 +464,10 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    alignItems: 'center'
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8
   },
   exportButtonText: {
     fontSize: 14,
@@ -436,5 +565,61 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 20,
     textAlign: 'center'
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
+    padding: 28,
+    gap: 20
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    textAlign: 'center'
+  },
+  modalSubtitle: {
+    fontSize: 15,
+    textAlign: 'center',
+    marginTop: -10
+  },
+  exportFormats: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 8
+  },
+  formatButton: {
+    flex: 1,
+    borderWidth: 2,
+    borderRadius: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    gap: 8
+  },
+  formatButtonLabel: {
+    fontSize: 14,
+    fontWeight: '700'
+  },
+  formatLocked: {
+    fontSize: 11,
+    fontStyle: 'italic'
+  },
+  cancelButton: {
+    paddingVertical: 14,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginTop: 8
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '700'
   }
 });

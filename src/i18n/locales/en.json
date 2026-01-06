@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
     "loading": "Loading...",
@@ -51,9 +51,10 @@
     "ocrExtraction": "OCR Extraction",
     "detectedLot": "Detected lot number",
     "restart": "Restart",
+    "skipToLot": "Skip to lot scan",
     "manualEntry": "Manual entry",
-    "switchToOcr": "ðŸ“¸ Scan brand text",
-    "switchToBarcode": "ðŸ“Š Scan barcode",
+    "switchToOcr": "📸 Scan brand text",
+    "switchToBarcode": "📊 Scan barcode",
     "waitingForCapture": "Waiting for capture...",
     "aiPrecision": "AI used for better accuracy",
     "productNotPubliclyListed": "This product is not publicly listed.\nScan the label to check the lot number and recalls.",
@@ -74,7 +75,7 @@
     "lotLabel": "Lot number",
     "lotPlaceholder": "Ex: L12345",
     "save": "Save",
-    "verifying": "Verifyingâ€¦",
+    "verifying": "Verifying…",
     "errors": {
       "lotRequired": "Lot number required",
       "lotRequiredMessage": "Please enter a lot number to continue.",
@@ -94,10 +95,10 @@
     "privacyInfo": "Photos taken during scanning are processed locally and immediately deleted. Only the brand and lot number are kept on this device.",
     "recallStatusLabel": "Recall status",
     "status": {
-      "safe": "âœ… SAFE",
-      "recalled": "ðŸš¨ RECALLED - DO NOT CONSUME",
-      "unknown": "â“ UNKNOWN",
-      "warning": "âš ï¸ WARNING"
+      "safe": "✅ SAFE",
+      "recalled": "🚨 RECALLED - DO NOT CONSUME",
+      "unknown": "❓ UNKNOWN",
+      "warning": "⚠️ WARNING"
     },
     "recallInfo": "Recall information",
     "actions": {
@@ -155,14 +156,14 @@
   },
   "notifications": {
     "alert": {
-      "title": "ðŸš¨ CONTAMINATED PRODUCT ALERT",
-      "body": "âš ï¸ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\nðŸš« DO NOT CONSUME\nIf consumed, contact emergency services (911)"
+      "title": "🚨 CONTAMINATED PRODUCT ALERT",
+      "body": "⚠️ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\n🚫 DO NOT CONSUME\nIf consumed, contact emergency services (911)"
     },
     "dailyCheck": {
       "title": "Numeline Verification",
       "body": "Daily recall update in progress."
     },
-    "newRecallTitle": "âš ï¸ New recall detected",
+    "newRecallTitle": "⚠️ New recall detected",
     "newRecallBody": "Product {{brand}} - Lot {{lot}} is now subject to a recall. Do not consume."
   },
   "settings": {
@@ -174,19 +175,19 @@
     "about": "About"
   },
   "languages": {
-    "fr": "FranÃ§ais",
+    "fr": "Français",
     "en": "English",
     "de": "Deutsch",
-    "es": "EspaÃ±ol",
+    "es": "Español",
     "it": "Italiano",
-    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
-    "zh": "ä¸­æ–‡",
-    "ja": "æ—¥æœ¬èªž",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
     "nl": "Nederlands",
-    "pt": "PortuguÃªs",
-    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
+    "pt": "Português",
+    "ru": "Русский",
     "sq": "Shqip",
-    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
+    "sr": "Српски",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
@@ -219,6 +220,3 @@
     "usda": "USDA - Food Safety and Inspection Service"
   }
 }
-
-
-

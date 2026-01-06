@@ -65,6 +65,15 @@ export function useScannedProducts() {
     }
   });
 
+  const updateProductMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<ScannedProduct> }) => {
+      await db.update(id, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+    }
+  });
+
   const addProduct = useCallback(
     (payload: Omit<ScannedProduct, 'id' | 'scannedAt' | 'recallStatus'>) => addMutation.mutateAsync(payload),
     [addMutation]
@@ -78,6 +87,11 @@ export function useScannedProducts() {
 
   const removeProduct = useCallback((id: string) => removeMutation.mutateAsync(id), [removeMutation]);
 
+  const updateProduct = useCallback(
+    (id: string, updates: Partial<ScannedProduct>) => updateProductMutation.mutateAsync({ id, updates }),
+    [updateProductMutation]
+  );
+
   return {
     products: query.data ?? [],
     isLoading: query.isLoading,
@@ -85,6 +99,7 @@ export function useScannedProducts() {
     refetch: query.refetch,
     addProduct,
     updateRecall,
-    removeProduct
+    removeProduct,
+    updateProduct
   };
 }

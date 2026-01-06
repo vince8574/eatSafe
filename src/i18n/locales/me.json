@@ -1,191 +1,192 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
-    "loading": "Ð£Ñ‡Ð¸Ñ‚Ð°Ð²Ð°ÑšÐµ...",
-    "save": "Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜",
-    "cancel": "ÐžÑ‚ÐºÐ°Ð¶Ð¸",
-    "confirm": "ÐŸÐ¾Ñ‚Ð²Ñ€Ð´Ð¸",
-    "delete": "ÐžÐ±Ñ€Ð¸ÑˆÐ¸",
-    "edit": "Ð˜Ð·Ð¼Ð¸Ñ˜ÐµÐ½Ð¸",
-    "back": "ÐÐ°Ð·Ð°Ð´",
-    "refresh": "ÐžÑÐ²Ñ˜ÐµÐ¶Ð¸",
-    "unknown": "ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¾",
+    "loading": "Учитавање...",
+    "save": "Сачувај",
+    "cancel": "Откажи",
+    "confirm": "Потврди",
+    "delete": "Обриши",
+    "edit": "Измијени",
+    "back": "Назад",
+    "refresh": "Освјежи",
+    "unknown": "Непознато",
     "dataDisclaimer": "Na osnovu dostupnih podataka u ovom trenutku",
-    "appDisclaimer": "Ova aplikacija pruÅ¾a informacije o opozivu na osnovu zvaniÄnih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svjeÅ¾inu proizvoda.",
+    "appDisclaimer": "Ova aplikacija pruža informacije o opozivu na osnovu zvaničnih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svježinu proizvoda.",
     "noRecallDisclaimer": "Izostanak opoziva ne garantuje bezbjednost proizvoda.",
-    "verifyWithSources": "Uvijek provjeravajte informacije o opozivu sa zvaniÄnim izvorima FDA ili USDA.",
+    "verifyWithSources": "Uvijek provjeravajte informacije o opozivu sa zvaničnim izvorima FDA ili USDA.",
     "governmentInfoDisclaimer": "Ova aplikacija ne zamjenjuje zvaniene vladine informacije."
   },
   "home": {
     "title": "Numeline",
-    "subtitle": "ÐŸÑ€Ð°Ñ‚Ð¸Ñ‚Ðµ ÑÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ðµ Ð¸ Ð´Ð¾Ð±Ð¸Ñ˜Ð°Ñ˜Ñ‚Ðµ Ð°Ð»Ð°Ñ€Ð¼Ðµ Ð¾ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÑƒ Ñƒ Ñ€ÐµÐ°Ð»Ð½Ð¾Ð¼ Ð²Ñ€ÐµÐ¼ÐµÐ½Ñƒ.",
+    "subtitle": "Пратите скениране производе и добијајте аларме о повлачењу у реалном времену.",
     "stats": {
-      "scanned": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð¸",
-      "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð¸",
-      "pending": "Ð£ Ð°Ð½Ð°Ð»Ð¸Ð·Ð¸"
+      "scanned": "Скенирани производи",
+      "recalled": "Повучени производи",
+      "pending": "У анализи"
     },
-    "historyTitle": "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð° ÑÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐ°",
-    "emptyState": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ ÑÐ²Ð¾Ñ˜ Ð¿Ñ€Ð²Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ð´Ð° Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ðµ ÑÑ‚Ð°Ñ‚ÑƒÑ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°."
+    "historyTitle": "Историја скенирања",
+    "emptyState": "Скенирајте свој први производ да пратите статус повлачења."
   },
   "scan": {
-    "step": "ÐšÐ¾Ñ€Ð°Ðº {{current}}/{{total}}",
-    "brandStep": "ÐšÐ¾Ñ€Ð°Ðº 1/2",
-    "lotStep": "ÐšÐ¾Ñ€Ð°Ðº 2/2",
-    "brandInstruction": "ÐšÐ°Ð´Ñ€Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ð¼Ð°Ñ€ÐºÑƒ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð° (Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ˜Ð° Ñ›Ðµ Ð±Ð¸Ñ‚Ð¸ Ð¾Ð±Ñ€Ð¸ÑÐ°Ð½Ð° Ð½Ð°ÐºÐ¾Ð½ ÑÐ½Ð¸Ð¼ÐºÐ°).",
-    "lotInstruction": "ÐˆÐ°ÑÐ½Ð¾ ÐºÐ°Ð´Ñ€Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð° Ð¸ Ð½Ð°Ð¿Ñ€Ð°Ð²Ð¸Ñ‚Ðµ ÑÐ½Ð¸Ð¼Ð°Ðº.",
-    "brandAnalyzing": "ÐÐ½Ð°Ð»Ð¸Ð·Ð° Ð¼Ð°Ñ€ÐºÐµ Ñƒ Ñ‚Ð¾ÐºÑƒ...",
-    "lotAnalyzing": "ÐÐ½Ð°Ð»Ð¸Ð·Ð° Ð±Ñ€Ð¾Ñ˜Ð° Ð»Ð¾Ñ‚Ð° Ñƒ Ñ‚Ð¾ÐºÑƒ...",
-    "privacyInfo": "Ð¤Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ˜Ðµ ÑÐµ Ð¾Ð±Ñ€Ð°Ñ’ÑƒÑ˜Ñƒ ÑÐ°Ð¼Ð¾ Ð»Ð¾ÐºÐ°Ð»Ð½Ð¾ Ð¸ Ð·Ð°Ñ‚Ð¸Ð¼ ÑÐµ Ð¾Ð´Ð¼Ð°Ñ… Ð±Ñ€Ð¸ÑˆÑƒ. ÐÐ¸Ñ˜ÐµÐ´Ð½Ð° ÑÐ»Ð¸ÐºÐ° ÑÐµ Ð½Ðµ Ñ‡ÑƒÐ²Ð°.",
-    "brandLabel": "ÐœÐ°Ñ€ÐºÐ°",
-    "lotLabel": "Ð›Ð¾Ñ‚",
-    "analyzing": "ÐÐ½Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð°ÑšÐµ...",
-    "waiting": "Ð§ÐµÐºÐ°ÑšÐµ",
-    "confidence": "ÐŸÐ¾ÑƒÐ·Ð´Ð°Ð½Ð¾ÑÑ‚: {{value}}%",
+    "step": "Корак {{current}}/{{total}}",
+    "brandStep": "Корак 1/2",
+    "lotStep": "Корак 2/2",
+    "brandInstruction": "Кадрирајте марку производа (фотографија ће бити обрисана након снимка).",
+    "lotInstruction": "Јасно кадрирајте број лота и направите снимак.",
+    "brandAnalyzing": "Анализа марке у току...",
+    "lotAnalyzing": "Анализа броја лота у току...",
+    "privacyInfo": "Фотографије се обрађују само локално и затим се одмах бришу. Ниједна слика се не чува.",
+    "brandLabel": "Марка",
+    "lotLabel": "Лот",
+    "analyzing": "Анализирање...",
+    "waiting": "Чекање",
+    "confidence": "Поузданост: {{value}}%",
     "suggestions": "Da li ste mislili ?",
-    "ocrExtraction": "OCR ÐµÐºÑÑ‚Ñ€Ð°ÐºÑ†Ð¸Ñ˜Ð°",
-    "detectedLot": "ÐžÑ‚ÐºÑ€Ð¸Ð²ÐµÐ½ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°",
-    "restart": "ÐŸÐ¾Ñ‡Ð½Ð¸ Ð¿Ð¾Ð½Ð¾Ð²Ð¾",
-    "manualEntry": "Ð ÑƒÑ‡Ð½Ð¸ ÑƒÐ½Ð¾Ñ",
-    "waitingForCapture": "Ð§ÐµÐºÐ°ÑšÐµ Ð½Ð° ÑÐ½Ð¸Ð¼Ð°ÑšÐµ...",
-    "aiPrecision": "AI se koristi za veÄ‡u preciznost",
+    "ocrExtraction": "OCR екстракција",
+    "detectedLot": "Откривен број лота",
+    "restart": "Почни поново",
+    "skipToLot": "Pređi na skeniranje lota",
+    "manualEntry": "Ручни унос",
+    "waitingForCapture": "Чекање на снимање...",
+    "aiPrecision": "AI se koristi za veću preciznost",
     "productNotPubliclyListed": "Ovaj proizvod nije javno registrovan.\nSkenirajte etiketu da biste provjerili broj lota i opozive.",
     "errors": {
-      "brandCaptureFailed": "Ð¡Ð½Ð¸Ð¼Ð°ÑšÐµ Ð¼Ð°Ñ€ÐºÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿Ñ˜ÐµÐ»Ð¾.",
-      "scanFailed": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿Ñ˜ÐµÐ»Ð¾.",
-      "lotExtractFailed": "ÐÐ¸Ñ˜Ðµ Ð¼Ð¾Ð³ÑƒÑ›Ðµ Ð°ÑƒÑ‚Ð¾Ð¼Ð°Ñ‚ÑÐºÐ¸ Ð¸Ð·Ð²ÑƒÑ›Ð¸ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°.",
-      "brandFirst": "Ð¡Ð½Ð¸Ð¼Ð¸Ñ‚Ðµ Ð¼Ð°Ñ€ÐºÑƒ Ð¿Ñ€Ð¸Ñ˜Ðµ Ð±Ñ€Ð¾Ñ˜Ð° Ð»Ð¾Ñ‚Ð°."
+      "brandCaptureFailed": "Снимање марке није успјело.",
+      "scanFailed": "Скенирање није успјело.",
+      "lotExtractFailed": "Није могуће аутоматски извући број лота.",
+      "brandFirst": "Снимите марку прије броја лота."
     }
   },
   "manualEntry": {
-    "title": "Ð ÑƒÑ‡Ð½Ð¸ ÑƒÐ½Ð¾Ñ",
-    "subtitle": "Ð”Ð¾Ð´Ð°Ñ˜Ñ‚Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ ÑƒÐ½Ð¾ÑÐ¾Ð¼ Ð±Ñ€Ð¾Ñ˜Ð° Ð»Ð¾Ñ‚Ð° Ð¸ Ð¼Ð°Ñ€ÐºÐµ.",
-    "brandLabel": "ÐœÐ°Ñ€ÐºÐ°",
-    "brandPlaceholder": "ÐÐ¿Ñ€: ÐœÐ°Ñ€ÐºÐ° X",
-    "lotLabel": "Ð‘Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°",
-    "lotPlaceholder": "ÐÐ¿Ñ€: L12345",
-    "save": "Ð¡Ð°Ñ‡ÑƒÐ²Ð°Ñ˜",
-    "verifying": "ÐŸÑ€Ð¾Ð²Ñ˜ÐµÑ€Ð°â€¦",
+    "title": "Ручни унос",
+    "subtitle": "Додајте производ уносом броја лота и марке.",
+    "brandLabel": "Марка",
+    "brandPlaceholder": "Нпр: Марка X",
+    "lotLabel": "Број лота",
+    "lotPlaceholder": "Нпр: L12345",
+    "save": "Сачувај",
+    "verifying": "Провјера…",
     "errors": {
-      "lotRequired": "Ð‘Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð° Ñ˜Ðµ Ð¿Ð¾Ñ‚Ñ€ÐµÐ±Ð°Ð½",
-      "lotRequiredMessage": "ÐœÐ¾Ð»Ð¸Ð¼Ð¾ ÑƒÐ½ÐµÑÐ¸Ñ‚Ðµ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð° Ð´Ð° Ð½Ð°ÑÑ‚Ð°Ð²Ð¸Ñ‚Ðµ.",
-      "saveFailed": "Ð§ÑƒÐ²Ð°ÑšÐµ Ð½Ð¸Ñ˜Ðµ ÑƒÑÐ¿Ñ˜ÐµÐ»Ð¾",
-      "checkFailed": "Ð¢Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð½Ð¸Ñ˜Ðµ Ð¼Ð¾Ð³ÑƒÑ›Ðµ Ð¿Ñ€Ð¾Ð²Ñ˜ÐµÑ€Ð¸Ñ‚Ð¸ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°."
+      "lotRequired": "Број лота је потребан",
+      "lotRequiredMessage": "Молимо унесите број лота да наставите.",
+      "saveFailed": "Чување није успјело",
+      "checkFailed": "Тренутно није могуће провјерити повлачења."
     }
   },
   "details": {
-    "title": "Ð”ÐµÑ‚Ð°Ñ™Ð¸ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð°",
-    "brand": "ÐœÐ°Ñ€ÐºÐ°",
-    "lot": "Ð›Ð¾Ñ‚",
-    "scannedAt": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ð¾",
+    "title": "Детаљи производа",
+    "brand": "Марка",
+    "lot": "Лот",
+    "scannedAt": "Скенирано",
     "status": {
-      "safe": "Ð‘ÐµÐ·Ð±Ñ˜ÐµÐ´Ð°Ð½",
-      "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½",
-      "unknown": "ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚ ÑÑ‚Ð°Ñ‚ÑƒÑ"
+      "safe": "Безбједан",
+      "recalled": "Повучен",
+      "unknown": "Непознат статус"
     },
-    "recallInfo": "Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ˜Ðµ Ð¾ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÑƒ",
+    "recallInfo": "Информације о повлачењу",
     "actions": {
-      "delete": "ÐžÐ±Ñ€Ð¸ÑˆÐ¸",
-      "viewRecall": "ÐŸÐ¾Ð³Ð»ÐµÐ´Ð°Ñ˜ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐµ"
+      "delete": "Обриши",
+      "viewRecall": "Погледај повлачење"
     }
   },
   "history": {
-    "title": "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð°",
-    "fullTitle": "ÐŸÐ¾Ñ‚Ð¿ÑƒÐ½Ð° Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð°",
-    "subtitle": "Ð¤Ð¸Ð»Ñ‚Ñ€Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ ÑÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐ° Ð¿Ñ€ÐµÐ¼Ð° ÑÑ‚Ð°Ñ‚ÑƒÑÑƒ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°.",
+    "title": "Историја",
+    "fullTitle": "Потпуна историја",
+    "subtitle": "Филтрирајте скенирања према статусу повлачења.",
     "filters": {
-      "all": "Ð¡Ð²Ðµ",
-      "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½Ð¸",
+      "all": "Све",
+      "recalled": "Повучени",
       "safe": "Bez opoziva",
-      "unknown": "ÐÐµÐ¿Ð¾Ð·Ð½Ð°Ñ‚Ð¸"
+      "unknown": "Непознати"
     },
-    "emptyState": "Ð¢Ñ€ÐµÐ½ÑƒÑ‚Ð½Ð¾ Ð½ÐµÐ¼Ð° ÑÐºÐµÐ½Ð¸Ñ€Ð°Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´Ð°.",
-    "emptyStateDetailed": "ÐÐµÐ¼Ð° Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð¸Ñ… Ð¿Ð¾Ð´Ð°Ñ‚Ð°ÐºÐ°. ÐŸÐ¾ÐºÑ€ÐµÐ½Ð¸Ñ‚Ðµ ÑÐºÐµÐ½Ð¸Ñ€Ð°ÑšÐµ Ð´Ð° Ð¿Ð¾Ð¿ÑƒÐ½Ð¸Ñ‚Ðµ Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ñƒ."
+    "emptyState": "Тренутно нема скенираних производа.",
+    "emptyStateDetailed": "Нема доступних података. Покрените скенирање да попуните историју."
   },
   "productCard": {
-    "lot": "Ð›Ð¾Ñ‚ {{lot}}",
+    "lot": "Лот {{lot}}",
     "scannedAt": "Skenirano {{date}} u {{time}}",
-    "privacy": "ÐÐ¸Ñ˜ÐµÐ´Ð½Ð° Ñ„Ð¾Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ˜Ð° Ð½Ð¸Ñ˜Ðµ ÑÐ°Ñ‡ÑƒÐ²Ð°Ð½Ð°; Ñ‡ÑƒÐ²Ð°Ñ˜Ñƒ ÑÐµ ÑÐ°Ð¼Ð¾ Ð¼Ð°Ñ€ÐºÐ° Ð¸ Ð±Ñ€Ð¾Ñ˜ Ð»Ð¾Ñ‚Ð°.",
-    "delete": "ÐžÐ±Ñ€Ð¸ÑˆÐ¸"
+    "privacy": "Ниједна фотографија није сачувана; чувају се само марка и број лота.",
+    "delete": "Обриши"
   },
   "recallAlert": {
-    "title": "ÐšÐžÐÐ¢ÐÐœÐ˜ÐÐ˜Ð ÐÐ ÐŸÐ ÐžÐ˜Ð—Ð’ÐžÐ”",
-    "doNotConsume": "ÐÐ• ÐšÐžÐÐ—Ð£ÐœÐ˜Ð ÐÐ¢Ð˜",
-    "warning": "ÐžÐ²Ð°Ñ˜ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ñ˜Ðµ Ð¿Ñ€ÐµÐ´Ð¼ÐµÑ‚ Ð·Ð²Ð°Ð½Ð¸Ñ‡Ð½Ð¾Ð³ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ° Ð¸ Ð½Ðµ ÑÐ¼Ð¸Ñ˜Ðµ ÑÐµ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð¸Ñ€Ð°Ñ‚Ð¸.",
-    "reasonLabel": "Ð Ð°Ð·Ð»Ð¾Ð³ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ°:",
-    "emergencyTitle": "ÐÐºÐ¾ Ñ˜Ðµ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð¸Ñ€Ð°Ð½Ð¾",
-    "emergencyText": "ÐÐºÐ¾ ÑÑ‚Ðµ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð¸Ñ€Ð°Ð»Ð¸ Ð¾Ð²Ð°Ñ˜ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ð¸ Ð¸Ð¼Ð°Ñ‚Ðµ ÑÐ¸Ð¼Ð¿Ñ‚Ð¾Ð¼Ðµ, Ð¾Ð´Ð¼Ð°Ñ… ÐºÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ñ…Ð¸Ñ‚Ð½Ñƒ ÑÐ»ÑƒÐ¶Ð±Ñƒ.",
-    "callSamu": "ÐŸÐ¾Ð·Ð¾Ð²Ð¸Ñ‚Ðµ 112 (Ð¥Ð¸Ñ‚Ð½Ð° Ð¿Ð¾Ð¼Ð¾Ñ›)",
-    "callEmergency": "ÐŸÐ¾Ð·Ð¾Ð²Ð¸Ñ‚Ðµ 112 (Ð¥Ð¸Ñ‚Ð½Ð° Ð¿Ð¾Ð¼Ð¾Ñ›)",
-    "viewOfficialNotice": "ÐŸÐ¾Ð³Ð»ÐµÐ´Ð°Ñ˜Ñ‚Ðµ Ð·Ð²Ð°Ð½Ð¸Ñ‡Ð½Ð¾ Ð¾Ð±Ð°Ð²Ñ˜ÐµÑˆÑ‚ÐµÑšÐµ Ð¾ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÑƒ",
-    "returnForRefund": "Ð’Ñ€Ð°Ñ‚Ð¸Ñ‚Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð´ Ñƒ Ð¿Ñ€Ð¾Ð´Ð°Ð²Ð½Ð¸Ñ†Ñƒ Ð·Ð° Ð¿Ð¾Ð²Ñ€Ð°Ñ›Ð°Ñ˜ Ð½Ð¾Ð²Ñ†Ð°",
+    "title": "КОНТАМИНИРАН ПРОИЗВОД",
+    "doNotConsume": "НЕ КОНЗУМИРАТИ",
+    "warning": "Овај производ је предмет званичног повлачења и не смије се конзумирати.",
+    "reasonLabel": "Разлог повлачења:",
+    "emergencyTitle": "Ако је конзумирано",
+    "emergencyText": "Ако сте конзумирали овај производ и имате симптоме, одмах контактирајте хитну службу.",
+    "callSamu": "Позовите 112 (Хитна помоћ)",
+    "callEmergency": "Позовите 112 (Хитна помоћ)",
+    "viewOfficialNotice": "Погледајте званично обавјештење о повлачењу",
+    "returnForRefund": "Вратите производ у продавницу за повраћај новца",
     "reportedBy": "Opoziv prijavljen od FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Nije pronaÄ‘en opoziv u zvaniÄnim bazama podataka u ovom trenutku",
-    "recalled": "ÐŸÐ¾Ð²ÑƒÑ‡ÐµÐ½",
-    "unknown": "ÐÐ½Ð°Ð»Ð¸Ð·Ð° Ñƒ Ñ‚Ð¾ÐºÑƒ",
-    "warning": "Ð¢Ñ€ÐµÐ±Ð° Ð¿Ñ€Ð°Ñ‚Ð¸Ñ‚Ð¸"
+    "safe": "Nije pronađen opoziv u zvaničnim bazama podataka u ovom trenutku",
+    "recalled": "Повучен",
+    "unknown": "Анализа у току",
+    "warning": "Треба пратити"
   },
   "navigation": {
-    "home": "ÐŸÐ¾Ñ‡ÐµÑ‚Ð½Ð°",
-    "scan": "Ð¡ÐºÐµÐ½Ð¸Ñ€Ð°Ñ˜",
-    "history": "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ˜Ð°",
-    "language": "ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°"
+    "home": "Почетна",
+    "scan": "Скенирај",
+    "history": "Историја",
+    "language": "Подешавања"
   },
   "language": {
-    "title": "ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°",
-    "subtitle": "Ð˜Ð·Ð°Ð±ÐµÑ€Ð¸Ñ‚Ðµ Ñ˜ÐµÐ·Ð¸Ðº Ð¿Ñ€Ð¸ÐºÐ°Ð·Ð° Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ðµ."
+    "title": "Подешавања",
+    "subtitle": "Изаберите језик приказа апликације."
   },
   "notifications": {
     "alert": {
-      "title": "ðŸš¨ Ð£Ð—Ð‘Ð£ÐÐ ÐšÐžÐÐ¢ÐÐœÐ˜ÐÐ˜Ð ÐÐÐ˜ ÐŸÐ ÐžÐ˜Ð—Ð’ÐžÐ”",
-      "body": "âš ï¸ {{brand}} - Ð›Ð¾Ñ‚ {{lot}}\nÐ Ð°Ð·Ð»Ð¾Ð³: {{reason}}\n\nðŸš« ÐÐ• ÐšÐžÐÐ—Ð£ÐœÐ˜Ð ÐÐˆÐ¢Ð•\nÐ£ ÑÐ»ÑƒÑ‡Ð°Ñ˜Ñƒ ÐºÐ¾Ð½Ð·ÑƒÐ¼Ð°Ñ†Ð¸Ñ˜Ðµ, ÐºÐ¾Ð½Ñ‚Ð°ÐºÑ‚Ð¸Ñ€Ð°Ñ˜Ñ‚Ðµ Ñ…Ð¸Ñ‚Ð½Ñƒ Ð¿Ð¾Ð¼Ð¾Ñ› (15 Ð¸Ð»Ð¸ 112)"
+      "title": "🚨 УЗБУНА КОНТАМИНИРАНИ ПРОИЗВОД",
+      "body": "⚠️ {{brand}} - Лот {{lot}}\nРазлог: {{reason}}\n\n🚫 НЕ КОНЗУМИРАЈТЕ\nУ случају конзумације, контактирајте хитну помоћ (15 или 112)"
     },
     "dailyCheck": {
-      "title": "Numeline Ð¿Ñ€Ð¾Ð²Ñ˜ÐµÑ€Ð°",
-      "body": "Ð”Ð½ÐµÐ²Ð½Ð¾ Ð°Ð¶ÑƒÑ€Ð¸Ñ€Ð°ÑšÐµ Ð¿Ð¾Ð²Ð»Ð°Ñ‡ÐµÑšÐ° Ñƒ Ñ‚Ð¾ÐºÑƒ."
+      "title": "Numeline провјера",
+      "body": "Дневно ажурирање повлачења у току."
     }
   },
   "settings": {
-    "title": "ÐŸÐ¾Ð´ÐµÑˆÐ°Ð²Ð°ÑšÐ°",
-    "language": "ÐˆÐµÐ·Ð¸Ðº",
-    "country": "Ð—ÐµÐ¼Ñ™Ð°",
-    "theme": "Ð¢ÐµÐ¼Ð°",
-    "notifications": "ÐžÐ±Ð°Ð²Ñ˜ÐµÑˆÑ‚ÐµÑšÐ°",
-    "about": "Ðž Ð°Ð¿Ð»Ð¸ÐºÐ°Ñ†Ð¸Ñ˜Ð¸"
+    "title": "Подешавања",
+    "language": "Језик",
+    "country": "Земља",
+    "theme": "Тема",
+    "notifications": "Обавјештења",
+    "about": "О апликацији"
   },
   "languages": {
-    "fr": "FranÃ§ais",
+    "fr": "Français",
     "en": "English",
     "de": "Deutsch",
-    "es": "EspaÃ±ol",
+    "es": "Español",
     "it": "Italiano",
-    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
-    "zh": "ä¸­æ–‡",
-    "ja": "æ—¥æœ¬èªž",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
     "nl": "Nederlands",
-    "pt": "PortuguÃªs",
-    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
+    "pt": "Português",
+    "ru": "Русский",
     "sq": "Shqip",
-    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
+    "sr": "Српски",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
     "greeting": "Zdravo {{name}}",
-    "question": "Koji proizvod Å¾elite da provjerite danas?",
-    "startScanning": "PoÄni skeniranje",
-    "namePromptTitle": "DobrodoÅ¡li u Numeline",
+    "question": "Koji proizvod želite da provjerite danas?",
+    "startScanning": "Počni skeniranje",
+    "namePromptTitle": "Dobrodošli u Numeline",
     "namePromptMessage": "Da biste personalizovali iskustvo, unesite svoje ime:",
-    "namePromptPlaceholder": "VaÅ¡e ime",
+    "namePromptPlaceholder": "Vaše ime",
     "namePromptSave": "Nastavi",
-    "namePromptSkip": "PreskoÄi"
+    "namePromptSkip": "Preskoči"
   },
   "legal": {
     "sectionTitle": "Pravni dokumenti",
     "privacyPolicy": "Politika privatnosti",
-    "terms": "Uslovi koriÅ¡Ä‡enja",
-    "legalNotice": "Pravna obavjeÅ¡tenja",
-    "errorLoading": "GreÅ¡ka pri uÄitavanju dokumenta",
+    "terms": "Uslovi korišćenja",
+    "legalNotice": "Pravna obavještenja",
+    "errorLoading": "Greška pri učitavanju dokumenta",
     "disclaimer": "Odricanje od odgovornosti",
     "dataSources": "Izvori podataka (FDA / USDA)"
   },
@@ -200,7 +201,3 @@
     "usda": "USDA - Food Safety and Inspection Service"
   }
 }
-
-
-
-

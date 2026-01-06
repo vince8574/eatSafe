@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
     "loading": "Cargando...",
@@ -11,10 +11,10 @@
     "refresh": "Actualizar",
     "unknown": "Desconocido",
     "dataDisclaimer": "Basado en datos disponibles en este momento",
-    "appDisclaimer": "Esta app proporciona informaciÃ³n de retiros basada en bases de datos pÃºblicas oficiales. No garantiza la seguridad del producto. Esta app no verifica las fechas de caducidad ni la frescura de los productos.",
+    "appDisclaimer": "Esta app proporciona información de retiros basada en bases de datos públicas oficiales. No garantiza la seguridad del producto. Esta app no verifica las fechas de caducidad ni la frescura de los productos.",
     "noRecallDisclaimer": "La ausencia de un retiro no garantiza la seguridad del producto.",
-    "verifyWithSources": "Siempre verifique la informaciÃ³n de retiros con fuentes oficiales de la FDA o USDA.",
-    "governmentInfoDisclaimer": "Esta aplicaciÃ³n no reemplaza la informaciÃ³n oficial del gobierno."
+    "verifyWithSources": "Siempre verifique la información de retiros con fuentes oficiales de la FDA o USDA.",
+    "governmentInfoDisclaimer": "Esta aplicación no reemplaza la información oficial del gobierno."
   },
   "home": {
     "title": "Numeline",
@@ -22,7 +22,7 @@
     "stats": {
       "scanned": "Productos escaneados",
       "recalled": "Productos retirados",
-      "pending": "En anÃ¡lisis"
+      "pending": "En análisis"
     },
     "historyTitle": "Historial de escaneos",
     "emptyState": "Escanee su primer producto para rastrear su estado de retiro."
@@ -31,43 +31,44 @@
     "step": "Paso {{current}}/{{total}}",
     "brandStep": "Paso 1/2",
     "lotStep": "Paso 2/2",
-    "brandInstruction": "Encuadre la marca del producto (foto eliminada despuÃ©s de capturar).",
-    "lotInstruction": "Encuadre claramente el nÃºmero de lote y capture la foto.",
+    "brandInstruction": "Encuadre la marca del producto (foto eliminada después de capturar).",
+    "lotInstruction": "Encuadre claramente el número de lote y capture la foto.",
     "brandAnalyzing": "Analizando marca...",
-    "lotAnalyzing": "Analizando nÃºmero de lote...",
-    "privacyInfo": "Las fotos se procesan solo localmente y se eliminan inmediatamente. No se almacenan imÃ¡genes.",
+    "lotAnalyzing": "Analizando número de lote...",
+    "privacyInfo": "Las fotos se procesan solo localmente y se eliminan inmediatamente. No se almacenan imágenes.",
     "brandLabel": "Marca",
     "lotLabel": "Lote",
     "analyzing": "Analizando...",
     "waiting": "Esperando",
     "confidence": "Confianza: {{value}}%",
     "suggestions": "Quiso decir ?",
-    "ocrExtraction": "ExtracciÃ³n OCR",
-    "detectedLot": "NÃºmero de lote detectado",
+    "ocrExtraction": "Extracción OCR",
+    "detectedLot": "Número de lote detectado",
     "restart": "Reiniciar",
+    "skipToLot": "Saltar al escaneo de lote",
     "manualEntry": "Entrada manual",
     "waitingForCapture": "Esperando captura...",
-    "aiPrecision": "IA utilizada para mayor precisiÃ³n",
-    "productNotPubliclyListed": "Este producto no estÃ¡ registrado pÃºblicamente.\nEscanee la etiqueta para verificar el nÃºmero de lote y los retiros.",
+    "aiPrecision": "IA utilizada para mayor precisión",
+    "productNotPubliclyListed": "Este producto no está registrado públicamente.\nEscanee la etiqueta para verificar el número de lote y los retiros.",
     "errors": {
       "brandCaptureFailed": "Fallo en la captura de marca.",
       "scanFailed": "Escaneo fallido.",
-      "lotExtractFailed": "No se puede extraer el nÃºmero de lote automÃ¡ticamente.",
-      "brandFirst": "Capture la marca antes del nÃºmero de lote."
+      "lotExtractFailed": "No se puede extraer el número de lote automáticamente.",
+      "brandFirst": "Capture la marca antes del número de lote."
     }
   },
   "manualEntry": {
     "title": "Entrada manual",
-    "subtitle": "Agregue un producto ingresando su nÃºmero de lote y marca.",
+    "subtitle": "Agregue un producto ingresando su número de lote y marca.",
     "brandLabel": "Marca",
     "brandPlaceholder": "Ej: Marca X",
-    "lotLabel": "NÃºmero de lote",
+    "lotLabel": "Número de lote",
     "lotPlaceholder": "Ej: L12345",
     "save": "Guardar",
-    "verifying": "Verificandoâ€¦",
+    "verifying": "Verificando…",
     "errors": {
-      "lotRequired": "NÃºmero de lote requerido",
-      "lotRequiredMessage": "Por favor ingrese un nÃºmero de lote para continuar.",
+      "lotRequired": "Número de lote requerido",
+      "lotRequiredMessage": "Por favor ingrese un número de lote para continuar.",
       "saveFailed": "Fallo al guardar",
       "checkFailed": "No se pueden verificar los retiros en este momento."
     }
@@ -82,7 +83,7 @@
       "recalled": "Retirado",
       "unknown": "Estado desconocido"
     },
-    "recallInfo": "InformaciÃ³n del retiro",
+    "recallInfo": "Información del retiro",
     "actions": {
       "delete": "Eliminar",
       "viewRecall": "Ver retiro"
@@ -91,29 +92,29 @@
   "history": {
     "title": "Historial",
     "fullTitle": "Historial completo",
-    "subtitle": "Filtra tus escaneos segÃºn su estado de retirada.",
+    "subtitle": "Filtra tus escaneos según su estado de retirada.",
     "filters": {
       "all": "Todo",
       "recalled": "Retirados",
       "safe": "Sin retiro",
       "unknown": "Desconocido"
     },
-    "emptyState": "AÃºn no hay productos escaneados.",
+    "emptyState": "Aún no hay productos escaneados.",
     "emptyStateDetailed": "No hay datos. Escanea un producto para llenar el historial."
   },
   "productCard": {
     "lot": "Lote {{lot}}",
     "scannedAt": "Escaneado el {{date}} a las {{time}}",
-    "privacy": "No se guarda ninguna foto; solo se conservan la marca y el nÃºmero de lote.",
+    "privacy": "No se guarda ninguna foto; solo se conservan la marca y el número de lote.",
     "delete": "Eliminar"
   },
   "recallAlert": {
     "title": "PRODUCTO CONTAMINADO",
     "doNotConsume": "NO CONSUMIR",
-    "warning": "Este producto estÃ¡ sujeto a un retiro oficial y no debe ser consumido.",
-    "reasonLabel": "RazÃ³n del retiro:",
-    "emergencyTitle": "Si se consumiÃ³",
-    "emergencyText": "Si ha consumido este producto y experimenta sÃ­ntomas, contacte inmediatamente a los servicios de emergencia.",
+    "warning": "Este producto está sujeto a un retiro oficial y no debe ser consumido.",
+    "reasonLabel": "Razón del retiro:",
+    "emergencyTitle": "Si se consumió",
+    "emergencyText": "Si ha consumido este producto y experimenta síntomas, contacte inmediatamente a los servicios de emergencia.",
     "callSamu": "Llamar al 112 (Emergencia)",
     "callEmergency": "Llamar al 112 (Emergencia)",
     "viewOfficialNotice": "Ver aviso oficial del retiro",
@@ -121,53 +122,53 @@
     "reportedBy": "Retiro informado por la FDA / USDA"
   },
   "recallStatus": {
-    "safe": "No se encontrÃ³ ningÃºn retiro en las bases de datos oficiales en este momento",
+    "safe": "No se encontró ningún retiro en las bases de datos oficiales en este momento",
     "recalled": "Retirado",
-    "unknown": "En revisiÃ³n",
+    "unknown": "En revisión",
     "warning": "A vigilar"
   },
   "navigation": {
     "home": "Inicio",
     "scan": "Escanear",
     "history": "Historial",
-    "language": "ConfiguraciÃ³n"
+    "language": "Configuración"
   },
   "language": {
-    "title": "ConfiguraciÃ³n",
-    "subtitle": "Elige tu idioma preferido para la aplicaciÃ³n."
+    "title": "Configuración",
+    "subtitle": "Elige tu idioma preferido para la aplicación."
   },
   "notifications": {
     "alert": {
-      "title": "ðŸš¨ ALERTA PRODUCTO CONTAMINADO",
-      "body": "âš ï¸ {{brand}} - Lote {{lot}}\nRazÃ³n: {{reason}}\n\nðŸš« NO CONSUMIR\nSi se consume, contacte servicios de emergencia (112)"
+      "title": "🚨 ALERTA PRODUCTO CONTAMINADO",
+      "body": "âš ï¸ {{brand}} - Lote {{lot}}\nRazón: {{reason}}\n\n🚫 NO CONSUMIR\nSi se consume, contacte servicios de emergencia (112)"
     },
     "dailyCheck": {
-      "title": "VerificaciÃ³n Numeline",
-      "body": "ActualizaciÃ³n diaria de retiros en curso."
+      "title": "Verificación Numeline",
+      "body": "Actualización diaria de retiros en curso."
     }
   },
   "settings": {
-    "title": "ConfiguraciÃ³n",
+    "title": "Configuración",
     "language": "Idioma",
-    "country": "PaÃ­s",
+    "country": "País",
     "theme": "Tema",
     "notifications": "Notificaciones",
     "about": "Acerca de"
   },
   "languages": {
-    "fr": "FranÃ§ais",
+    "fr": "Français",
     "en": "English",
     "de": "Deutsch",
-    "es": "EspaÃ±ol",
+    "es": "Español",
     "it": "Italiano",
-    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
-    "zh": "ä¸­æ–‡",
-    "ja": "æ—¥æœ¬èªž",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
     "nl": "Nederlands",
-    "pt": "PortuguÃªs",
-    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
+    "pt": "Português",
+    "ru": "Русский",
     "sq": "Shqip",
-    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
+    "sr": "Српски",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
@@ -182,8 +183,8 @@
   },
   "legal": {
     "sectionTitle": "Documentos Legales",
-    "privacyPolicy": "PolÃ­tica de Privacidad",
-    "terms": "TÃ©rminos y Condiciones",
+    "privacyPolicy": "Política de Privacidad",
+    "terms": "Términos y Condiciones",
     "legalNotice": "Aviso Legal",
     "errorLoading": "Error al cargar el documento",
     "disclaimer": "Descargo de responsabilidad",
@@ -193,12 +194,10 @@
     "title": "Descargo de responsabilidad sobre retiros de alimentos",
     "body": "Esta aplicacien proporciona informacien sobre retiros de alimentos para productos vendidos en los Estados Unidos solo con fines informativos.\n\nLa informacien mostrada en esta app se basa en datos disponibles peblicamente de agencias gubernamentales (incluidas, entre otras, la FDA y el USDA) y otras fuentes de terceros. No garantizamos la exactitud, integridad ni actualidad de la informacien proporcionada.\n\nEsta app no reemplaza las notificaciones oficiales de retiro, las comunicaciones de los fabricantes ni la orientacien de las autoridades regulatorias. Se recomienda a los usuarios verificar la informacien de retiro directamente con fuentes oficiales.\n\nEl hecho de que un producto no sea identificado como retirado en esta app no garantiza que el producto sea seguro ni que no este sujeto a un retiro actual o futuro.\n\nEsta app no proporciona asesoramiento medico, nutricional ni de salud. Si tiene inquietudes sobre seguridad alimentaria, contaminacien, alergias o enfermedad, consulte a un profesional de la salud calificado o siga la orientacien oficial de las autoridades de salud peblica.\n\nEsta app no verifica las fechas de caducidad ni la frescura de los productos.\n\nEl escaneo de cedigos de barras, el reconocimiento de nemeros de lote y las salidas de voz o visuales pueden estar sujetos a limitaciones tecnicas o errores. Los usuarios siguen siendo responsables de verificar los detalles del producto y el estado del retiro.\n\nEn la mexima medida permitida por la ley, el desarrollador no sere responsable de daeos, lesiones o perdidas directas o indirectas derivados del uso o la confianza en la informacien proporcionada por esta app.\n\nLa cobertura de retiros se limita a productos alimentarios vendidos en los Estados Unidos y puede no aplicarse a productos vendidos en otros paeses."
   },
-  "dataSources": {"title": "Fuentes de datos","description": "Fuentes oficiales de informacion sobre retiros en EE. UU.","fda": "FDA - Food and Drug Administration","usda": "USDA - Food Safety and Inspection Service"}
+  "dataSources": {
+    "title": "Fuentes de datos",
+    "description": "Fuentes oficiales de informacion sobre retiros en EE. UU.",
+    "fda": "FDA - Food and Drug Administration",
+    "usda": "USDA - Food Safety and Inspection Service"
+  }
 }
-
-
-
-
-
-
-

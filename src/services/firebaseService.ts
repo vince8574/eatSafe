@@ -1,25 +1,28 @@
-import { initializeApp } from '@react-native-firebase/app';
+import firebaseApp from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 
-const firebaseConfig = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_STORAGE_BUCKET',
-  messagingSenderId: 'YOUR_SENDER_ID',
-  appId: 'YOUR_APP_ID'
-};
-
-let appInitialized = false;
+/**
+ * Firebase is automatically initialized from google-services.json (Android)
+ * and GoogleService-Info.plist (iOS) via @react-native-firebase/app.
+ *
+ * No manual initialization is needed. This service just provides
+ * a convenient interface to access Firebase services.
+ */
 
 export function ensureFirebase() {
-  if (!appInitialized) {
-    initializeApp(firebaseConfig);
-    appInitialized = true;
+  // Check if Firebase is already initialized
+  if (!firebaseApp.apps || firebaseApp.apps.length === 0) {
+    console.warn('[Firebase] No Firebase app initialized. Make sure google-services.json exists.');
+    console.warn('[Firebase] Firebase features (subscriptions, auth) will not work until properly configured.');
   }
 }
 
 export function getFirestore() {
   ensureFirebase();
-  return firestore();
+  try {
+    return firestore();
+  } catch (error) {
+    console.error('[Firebase] Failed to get Firestore instance:', error);
+    throw new Error('Firebase is not properly configured. Please add google-services.json to android/app/ directory.');
+  }
 }

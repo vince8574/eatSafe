@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
     "loading": "Caricamento...",
@@ -45,10 +45,11 @@
     "ocrExtraction": "Estrazione OCR",
     "detectedLot": "Numero di lotto rilevato",
     "restart": "Ricomincia",
+    "skipToLot": "Passa alla scansione del lotto",
     "manualEntry": "Inserimento manuale",
     "waitingForCapture": "In attesa di acquisizione...",
     "aiPrecision": "IA utilizzata per maggiore precisione",
-    "productNotPubliclyListed": "Questo prodotto non Ã¨ pubblicamente registrato.\nScansionare l'etichetta per verificare il numero di lotto e i richiami.",
+    "productNotPubliclyListed": "Questo prodotto non è pubblicamente registrato.\nScansionare l'etichetta per verificare il numero di lotto e i richiami.",
     "errors": {
       "brandCaptureFailed": "Acquisizione del marchio non riuscita.",
       "scanFailed": "Scansione non riuscita.",
@@ -64,7 +65,7 @@
     "lotLabel": "Numero di lotto",
     "lotPlaceholder": "Es: L12345",
     "save": "Salva",
-    "verifying": "Verificaâ€¦",
+    "verifying": "Verifica…",
     "errors": {
       "lotRequired": "Numero di lotto richiesto",
       "lotRequiredMessage": "Inserisci un numero di lotto per continuare.",
@@ -110,7 +111,7 @@
   "recallAlert": {
     "title": "PRODOTTO CONTAMINATO",
     "doNotConsume": "NON CONSUMARE",
-    "warning": "Questo prodotto Ã¨ oggetto di un richiamo ufficiale e non deve essere consumato.",
+    "warning": "Questo prodotto è oggetto di un richiamo ufficiale e non deve essere consumato.",
     "reasonLabel": "Motivo del richiamo:",
     "emergencyTitle": "Se consumato",
     "emergencyText": "Se hai consumato questo prodotto e avverti sintomi, contatta immediatamente i servizi di emergenza.",
@@ -138,8 +139,8 @@
   },
   "notifications": {
     "alert": {
-      "title": "ðŸš¨ ALLARME PRODOTTO CONTAMINATO",
-      "body": "âš ï¸ {{brand}} - Lotto {{lot}}\nMotivo: {{reason}}\n\nðŸš« NON CONSUMARE\nIn caso di consumo, contattare i servizi di emergenza (112)"
+      "title": "🚨 ALLARME PRODOTTO CONTAMINATO",
+      "body": "âš ï¸ {{brand}} - Lotto {{lot}}\nMotivo: {{reason}}\n\n🚫 NON CONSUMARE\nIn caso di consumo, contattare i servizi di emergenza (112)"
     },
     "dailyCheck": {
       "title": "Verifica Numeline",
@@ -155,19 +156,19 @@
     "about": "Informazioni"
   },
   "languages": {
-    "fr": "FranÃ§ais",
+    "fr": "Français",
     "en": "English",
     "de": "Deutsch",
-    "es": "EspaÃ±ol",
+    "es": "Español",
     "it": "Italiano",
-    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
-    "zh": "ä¸­æ–‡",
-    "ja": "æ—¥æœ¬èªž",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
     "nl": "Nederlands",
-    "pt": "PortuguÃªs",
-    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
+    "pt": "Português",
+    "ru": "Русский",
     "sq": "Shqip",
-    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
+    "sr": "Српски",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
@@ -200,7 +201,3 @@
     "usda": "USDA - Food Safety and Inspection Service"
   }
 }
-
-
-
-

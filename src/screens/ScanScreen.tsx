@@ -125,6 +125,9 @@ export function ScanScreen() {
         isProcessing={false}
         mode="barcode"
         resetToken={scannerResetToken}
+        onSkip={() => router.push('/scan-lot' as any)}
+        onReload={resetFlow}
+        onManualEntry={() => router.push('/manual-entry')}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
@@ -183,20 +186,6 @@ export function ScanScreen() {
             ⚠️ {t('common.appDisclaimer')}
           </Text>
         </View>
-
-        <TouchableOpacity
-          style={[styles.resetButton, { backgroundColor: colors.surface }]}
-          onPress={resetFlow}
-        >
-          <Text style={[styles.resetText, { color: colors.textPrimary }]}>{t('scan.restart')}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.manualButton, { backgroundColor: colors.surface }]}
-          onPress={() => router.push('/manual-entry')}
-        >
-          <Text style={[styles.manualButtonText, { color: colors.textPrimary }]}>{t('scan.manualEntry')}</Text>
-        </TouchableOpacity>
       </ScrollView>
 
       <Modal
@@ -260,16 +249,17 @@ export function ScanScreen() {
                 ) : null}
 
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                  {t('scan.confirmBrandMessage', { brand: brandText || t('common.unknown') })}
+                  Marque détectée :
                 </Text>
 
                 <TouchableOpacity
-                  style={[styles.editButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
+                  style={[styles.brandDisplayContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
                   onPress={handleEditBrand}
                 >
-                  <Text style={[styles.editButtonText, { color: colors.accent }]}>
-                    ✏️ Modifier
+                  <Text style={[styles.brandDisplayText, { color: colors.textPrimary }]}>
+                    {brandText || t('common.unknown')}
                   </Text>
+                  <Text style={[styles.brandEditIcon, { color: colors.accent }]}>✏️</Text>
                 </TouchableOpacity>
 
                 <View style={styles.modalButtons}>
@@ -455,6 +445,25 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginTop: 8
+  },
+  brandDisplayContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 2,
+    marginTop: 8
+  },
+  brandDisplayText: {
+    fontSize: 18,
+    fontWeight: '700',
+    flex: 1
+  },
+  brandEditIcon: {
+    fontSize: 20,
+    marginLeft: 12
   },
   appDisclaimerBox: {
     borderRadius: 16,

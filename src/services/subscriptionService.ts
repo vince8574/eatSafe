@@ -1,6 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
 import { getCurrentUserId } from './authService';
+import { getCurrentOrganization } from './organizationService';
+import { SUBSCRIPTION_PLANS, SCAN_PACKS, getPlanById as getSubscriptionPlanById } from '../constants/subscriptionPlans';
 
 export type SubscriptionStatus = 'none' | 'active' | 'expired';
 
@@ -13,101 +15,52 @@ export type Subscription = {
   scansRemaining: number;
   historyRetentionDays: number | 'unlimited';
   exportEnabled: boolean;
+  exportFormats: ('pdf' | 'csv' | 'xlsx')[];
+  regulatoryFormat: boolean;
   employeesLimit: number | null;
   sitesLimit: number | null;
   updatedAt: number;
 };
 
-export type Plan = {
-  id: string;
-  label: string;
-  price: string;
-  scansIncluded: number;
-  historyRetentionDays: number | 'unlimited';
-  exportEnabled: boolean;
-  employeesLimit: number | null;
-  sitesLimit: number | null;
-  description: string[];
-};
+// Exporter les plans et packs pour useSubscription
+export const PLANS = SUBSCRIPTION_PLANS.map(plan => ({
+  id: plan.id,
+  label: plan.label,
+  price: plan.price,
+  scansIncluded: plan.scansIncluded,
+  historyRetentionDays: plan.historyRetentionDays,
+  exportEnabled: plan.exportEnabled,
+  employeesLimit: plan.employeesLimit,
+  sitesLimit: plan.sitesLimit,
+  description: plan.description
+}));
 
-export const PLANS: Plan[] = [
-  {
-    id: 'plan_foodtruck_starter',
-    label: 'Food trucks • Starter',
-    price: '$19 / mois',
-    scansIncluded: 500,
-    historyRetentionDays: 30,
-    exportEnabled: false,
-    employeesLimit: 1,
-    sitesLimit: null,
-    description: ['500 scans inclus', 'Historique 30 jours', '+ packs pour les scans supplémentaires']
-  },
-  {
-    id: 'plan_foodtruck_pro',
-    label: 'Food trucks • Pro',
-    price: '$29 / mois',
-    scansIncluded: 1000,
-    historyRetentionDays: 90,
-    exportEnabled: true,
-    employeesLimit: 1,
-    sitesLimit: null,
-    description: ['1000 scans inclus', 'Export PDF / CSV', 'Historique 90 jours', '+ packs pour les scans supplémentaires']
-  },
-  {
-    id: 'plan_restaurant_standard',
-    label: 'Restaurants • Standard',
-    price: '$39 / mois',
-    scansIncluded: 1500,
-    historyRetentionDays: 365,
-    exportEnabled: true,
-    employeesLimit: 3,
-    sitesLimit: null,
-    description: ['1500 scans inclus', 'Alertes + historique 1 an', 'Export PDF/Excel', 'Multi-employés (jusqu’à 3)', '+ packs pour les scans supplémentaires']
-  },
-  {
-    id: 'plan_restaurant_premium',
-    label: 'Restaurants • Premium',
-    price: '$69 / mois',
-    scansIncluded: 5000,
-    historyRetentionDays: 365,
-    exportEnabled: true,
-    employeesLimit: 10,
-    sitesLimit: null,
-    description: ['5000 scans inclus', 'Multi-employés (jusqu’à 10)', '+ packs pour les scans supplémentaires']
-  },
-  {
-    id: 'plan_ecole_standard',
-    label: 'Crèches / Écoles • Sécurité',
-    price: '$59 / mois',
-    scansIncluded: 2000,
-    historyRetentionDays: 'unlimited',
-    exportEnabled: true,
-    employeesLimit: 10,
-    sitesLimit: null,
-    description: ['2000 scans inclus', 'Alertes + historique illimité', 'PDF/CSV réglementaire', 'Multi-employés (jusqu’à 10)', '+ packs pour les scans supplémentaires']
-  },
-  {
-    id: 'plan_ecole_premium',
-    label: 'Écoles • Premium',
-    price: '$99 / mois',
-    scansIncluded: 5000,
-    historyRetentionDays: 'unlimited',
-    exportEnabled: true,
-    employeesLimit: 10,
-    sitesLimit: 3,
-    description: ['5000 scans inclus', 'Multi-sites (jusqu’à 3 établissements)', 'Multi-employés (jusqu’à 10)', '+ packs pour les scans supplémentaires']
-  }
-];
-
-export const SCAN_PACKS = [
-  { id: 'pack_scans_500', label: 'Pack 500 scans', quantity: 500 },
-  { id: 'pack_scans_1000', label: 'Pack 1000 scans', quantity: 1000 },
-  { id: 'pack_scans_5000', label: 'Pack 5000 scans', quantity: 5000 }
-];
+export { SCAN_PACKS };
 
 const COLLECTION = 'subscriptions';
 
-function buildSubscriptionFromPlan(plan: Plan): Subscription {
+/**
+ * Récupère l'ID de scope pour l'abonnement
+ * Si l'utilisateur fait partie d'une organisation, retourne l'ID de l'organisation
+ * Sinon, retourne l'ID de l'utilisateur (pour les utilisateurs individuels)
+ */
+async function getSubscriptionScopeId(): Promise<string> {
+  const organization = await getCurrentOrganization();
+
+  if (organization) {
+    return organization.id; // Abonnement au niveau organisation
+  }
+
+  // Fallback: abonnement au niveau utilisateur
+  return await getCurrentUserId();
+}
+
+function buildSubscriptionFromPlan(planId: string): Subscription {
+  const plan = getSubscriptionPlanById(planId);
+  if (!plan) {
+    throw new Error('Plan inconnu');
+  }
+
   return {
     planId: plan.id,
     planName: plan.label,
@@ -118,21 +71,18 @@ function buildSubscriptionFromPlan(plan: Plan): Subscription {
     scansRemaining: plan.scansIncluded,
     historyRetentionDays: plan.historyRetentionDays,
     exportEnabled: plan.exportEnabled,
+    exportFormats: plan.exportFormats,
+    regulatoryFormat: plan.regulatoryFormat,
     employeesLimit: plan.employeesLimit,
     sitesLimit: plan.sitesLimit,
     updatedAt: Date.now()
   };
 }
 
-function getPlanById(planId: string | null): Plan | null {
-  if (!planId) return null;
-  return PLANS.find((plan) => plan.id === planId) ?? null;
-}
-
 export async function fetchSubscription(): Promise<Subscription> {
   const db = getFirestore();
-  const uid = await getCurrentUserId();
-  const docRef = db.collection(COLLECTION).doc(uid);
+  const scopeId = await getSubscriptionScopeId();
+  const docRef = db.collection(COLLECTION).doc(scopeId);
   const snap = await docRef.get();
 
   if (!snap.exists) {
@@ -144,7 +94,9 @@ export async function fetchSubscription(): Promise<Subscription> {
       scansIncluded: 0,
       scansRemaining: 0,
       historyRetentionDays: 0,
-      exportEnabled: false,
+      exportEnabled: true,  // Activé pour les tests
+      exportFormats: [],
+      regulatoryFormat: false,
       employeesLimit: null,
       sitesLimit: null,
       updatedAt: Date.now()
@@ -163,7 +115,9 @@ export async function fetchSubscription(): Promise<Subscription> {
     scansIncluded: data.scansIncluded ?? 0,
     scansRemaining: data.scansRemaining ?? 0,
     historyRetentionDays: (data as any).historyRetentionDays ?? 0,
-    exportEnabled: data.exportEnabled ?? false,
+    exportEnabled: data.exportEnabled ?? true,  // Activé par défaut pour les tests
+    exportFormats: data.exportFormats ?? [],
+    regulatoryFormat: data.regulatoryFormat ?? false,
     employeesLimit: data.employeesLimit ?? null,
     sitesLimit: data.sitesLimit ?? null,
     updatedAt: data.updatedAt ?? Date.now()
@@ -171,23 +125,20 @@ export async function fetchSubscription(): Promise<Subscription> {
 }
 
 export async function selectPlan(planId: string): Promise<Subscription> {
-  const plan = getPlanById(planId);
-  if (!plan) {
-    throw new Error('Plan inconnu');
-  }
-
   const db = getFirestore();
-  const uid = await getCurrentUserId();
-  const docRef = db.collection(COLLECTION).doc(uid);
-  const payload = buildSubscriptionFromPlan(plan);
+  const scopeId = await getSubscriptionScopeId();
+  const docRef = db.collection(COLLECTION).doc(scopeId);
+  const payload = buildSubscriptionFromPlan(planId);
   await docRef.set(payload, { merge: true });
+
+  console.log(`[subscriptionService] Plan ${planId} selected for scope ${scopeId}`);
   return payload;
 }
 
 export async function addScanPack(quantity: number): Promise<Subscription> {
   const db = getFirestore();
-  const uid = await getCurrentUserId();
-  const docRef = db.collection(COLLECTION).doc(uid);
+  const scopeId = await getSubscriptionScopeId();
+  const docRef = db.collection(COLLECTION).doc(scopeId);
 
   await db.runTransaction(async (transaction) => {
     const snap = await transaction.get(docRef);
@@ -208,10 +159,21 @@ export async function addScanPack(quantity: number): Promise<Subscription> {
 
 export async function decrementScanCounter(count: number = 1): Promise<void> {
   const db = getFirestore();
-  const uid = await getCurrentUserId();
-  const docRef = db.collection(COLLECTION).doc(uid);
+  const scopeId = await getSubscriptionScopeId();
+  const docRef = db.collection(COLLECTION).doc(scopeId);
   await docRef.update({
     scansRemaining: firestore.FieldValue.increment(-count),
     updatedAt: Date.now()
   });
+}
+
+export async function enableExportForTesting(): Promise<void> {
+  const db = getFirestore();
+  const scopeId = await getSubscriptionScopeId();
+  const docRef = db.collection(COLLECTION).doc(scopeId);
+  await docRef.set({
+    exportEnabled: true,
+    updatedAt: Date.now()
+  }, { merge: true });
+  console.log(`[subscriptionService] Export enabled for testing (scope: ${scopeId})`);
 }

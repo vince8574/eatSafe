@@ -10,7 +10,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<string>('fr');
+  const [locale, setLocaleState] = useState<string>('en');
 
   useEffect(() => {
     const init = async () => {

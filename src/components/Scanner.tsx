@@ -14,6 +14,12 @@ type ScannerProps = {
   resetToken?: number; // change pour forcer un remount de la caméra
   enableFlashToggle?: boolean;
   aiMessage?: string; // Message à afficher quand l'IA est utilisée
+  onSkip?: () => void; // Fonction appelée quand le bouton Skip est pressé
+  onReload?: () => void; // Fonction appelée quand le bouton Reload est pressé
+  onManualEntry?: () => void; // Fonction appelée quand le bouton de saisie manuelle est pressé
+  onBack?: () => void; // Fonction appelée quand le bouton retour est pressé
+  onRestart?: () => void; // Fonction appelée quand le bouton recommencer est pressé
+  flashPosition?: 'top-left' | 'top-right'; // Position du bouton flash
 };
 
 export function Scanner({
@@ -24,7 +30,13 @@ export function Scanner({
   mode = 'photo',
   resetToken,
   enableFlashToggle = true,
-  aiMessage
+  aiMessage,
+  onSkip,
+  onReload,
+  onManualEntry,
+  onBack,
+  onRestart,
+  flashPosition = 'top-left'
 }: ScannerProps) {
   const { colors } = useTheme();
   const [permission, requestPermission] = useCameraPermissions();
@@ -142,10 +154,25 @@ export function Scanner({
           }
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
-        {/* Bouton Flash en haut à gauche */}
+        {/* Bouton Back en haut à gauche */}
+        {onBack && (
+          <TouchableOpacity
+            style={[
+              styles.backButtonTop,
+              {
+                backgroundColor: colors.accent
+              }
+            ]}
+            onPress={onBack}
+          >
+            <Text style={[styles.backIcon, { color: colors.surface }]}>←</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Bouton Flash */}
         {enableFlashToggle && (
           <TouchableOpacity
-            style={styles.flashButtonTop}
+            style={flashPosition === 'top-right' ? styles.flashButtonTopRight : styles.flashButtonTop}
             onPress={() => setFlashOn((prev) => !prev)}
             disabled={!cameraReady}
           >
@@ -155,6 +182,67 @@ export function Scanner({
               </Text>
               {flashOn && <View style={styles.flashActiveDot} />}
             </View>
+          </TouchableOpacity>
+        )}
+
+        {/* Bouton Reload en bas à gauche */}
+        {onReload && (
+          <TouchableOpacity
+            style={[
+              styles.reloadButtonCamera,
+              {
+                backgroundColor: colors.accent
+              }
+            ]}
+            onPress={onReload}
+          >
+            <Text style={[styles.reloadIcon, { color: colors.surface }]}>🔄</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Bouton Manual Entry en bas à gauche (à côté du reload) */}
+        {onManualEntry && (
+          <TouchableOpacity
+            style={[
+              styles.manualEntryButtonCamera,
+              {
+                backgroundColor: colors.accent
+              }
+            ]}
+            onPress={onManualEntry}
+          >
+            <Text style={[styles.manualEntryIcon, { color: colors.surface }]}>✏️</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Bouton Restart en bas à gauche */}
+        {onRestart && (
+          <TouchableOpacity
+            style={[
+              styles.restartButtonCamera,
+              {
+                backgroundColor: colors.accent
+              }
+            ]}
+            onPress={onRestart}
+          >
+            <Text style={[styles.restartIcon, { color: colors.surface }]}>↻</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Bouton Skip en bas à droite */}
+        {onSkip && (
+          <TouchableOpacity
+            style={[
+              styles.skipButtonCamera,
+              {
+                backgroundColor: colors.accent
+              }
+            ]}
+            onPress={onSkip}
+          >
+            <Text style={[styles.skipButtonText, { color: colors.surface }]}>Skip</Text>
+            <Text style={[styles.skipIcon, { color: colors.surface }]}>⏭</Text>
           </TouchableOpacity>
         )}
 
@@ -344,6 +432,117 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: '#FFD700'
+  },
+  flashButtonTopRight: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 10
+  },
+  backButtonTop: {
+    position: 'absolute',
+    top: 16,
+    left: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 8,
+    zIndex: 10
+  },
+  backIcon: {
+    fontSize: 28,
+    fontWeight: '700'
+  },
+  restartButtonCamera: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 8,
+    zIndex: 10
+  },
+  restartIcon: {
+    fontSize: 28,
+    fontWeight: '700'
+  },
+  skipButtonCamera: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 8,
+    zIndex: 10
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.5
+  },
+  skipIcon: {
+    fontSize: 18,
+    fontWeight: '700'
+  },
+  reloadButtonCamera: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 8,
+    zIndex: 10
+  },
+  reloadIcon: {
+    fontSize: 24
+  },
+  manualEntryButtonCamera: {
+    position: 'absolute',
+    bottom: 20,
+    left: 88,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 8,
+    zIndex: 10
+  },
+  manualEntryIcon: {
+    fontSize: 20
   },
   cameraIcon: {
     fontSize: 16,

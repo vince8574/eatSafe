@@ -51,7 +51,7 @@ export function useSubscription() {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Impossible d'ajouter le pack'
+        error: error instanceof Error ? error.message : "Impossible d'ajouter le pack"
       }));
     }
   }, []);

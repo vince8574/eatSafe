@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
     "loading": "Laden...",
@@ -11,10 +11,10 @@
     "refresh": "Vernieuwen",
     "unknown": "Onbekend",
     "dataDisclaimer": "Op basis van beschikbare gegevens op dit moment",
-    "appDisclaimer": "Deze app biedt recall-informatie op basis van officiÃ«le openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
+    "appDisclaimer": "Deze app biedt recall-informatie op basis van officiële openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
     "noRecallDisclaimer": "De afwezigheid van een recall garandeert niet de veiligheid van het product.",
-    "verifyWithSources": "Verifieer terugroepinformatie altijd met officiÃ«le bronnen van de FDA of USDA.",
-    "governmentInfoDisclaimer": "Deze app vervangt geen officiÃ«le overheidsinformatie."
+    "verifyWithSources": "Verifieer terugroepinformatie altijd met officiële bronnen van de FDA of USDA.",
+    "governmentInfoDisclaimer": "Deze app vervangt geen officiële overheidsinformatie."
   },
   "home": {
     "title": "Numeline",
@@ -45,6 +45,7 @@
     "ocrExtraction": "OCR-extractie",
     "detectedLot": "Gedetecteerd lotnummer",
     "restart": "Opnieuw beginnen",
+    "skipToLot": "Naar lotnummerscan",
     "manualEntry": "Handmatige invoer",
     "waitingForCapture": "Wachten op opname...",
     "aiPrecision": "AI gebruikt voor betere nauwkeurigheid",
@@ -64,7 +65,7 @@
     "lotLabel": "Lotnummer",
     "lotPlaceholder": "Bijv: L12345",
     "save": "Opslaan",
-    "verifying": "VerifiÃ«renâ€¦",
+    "verifying": "Verifiëren…",
     "errors": {
       "lotRequired": "Lotnummer vereist",
       "lotRequiredMessage": "Voer een lotnummer in om door te gaan.",
@@ -110,18 +111,18 @@
   "recallAlert": {
     "title": "BESMET PRODUCT",
     "doNotConsume": "NIET CONSUMEREN",
-    "warning": "Dit product is onderworpen aan een officiÃ«le terugroepactie en mag niet worden geconsumeerd.",
+    "warning": "Dit product is onderworpen aan een officiële terugroepactie en mag niet worden geconsumeerd.",
     "reasonLabel": "Reden voor terugroepactie:",
     "emergencyTitle": "Bij consumptie",
     "emergencyText": "Als u dit product hebt geconsumeerd en symptomen ervaart, neem dan onmiddellijk contact op met de hulpdiensten.",
     "callSamu": "Bel 112 (Noodgeval)",
     "callEmergency": "Bel 112 (Noodgeval)",
-    "viewOfficialNotice": "Bekijk officiÃ«le terugroepmededeling",
+    "viewOfficialNotice": "Bekijk officiële terugroepmededeling",
     "returnForRefund": "Breng het product terug naar de winkel voor een terugbetaling",
     "reportedBy": "Recall gemeld door FDA / USDA"
   },
   "recallStatus": {
-    "safe": "Geen terugroeping gevonden in officiÃ«le databases op dit moment",
+    "safe": "Geen terugroeping gevonden in officiële databases op dit moment",
     "recalled": "Teruggeroepen",
     "unknown": "In beoordeling",
     "warning": "In de gaten houden"
@@ -138,8 +139,8 @@
   },
   "notifications": {
     "alert": {
-      "title": "ðŸš¨ WAARSCHUWING BESMET PRODUCT",
-      "body": "âš ï¸ {{brand}} - Lot {{lot}}\nReden: {{reason}}\n\nðŸš« NIET CONSUMEREN\nIndien geconsumeerd, neem contact op met hulpdiensten (112)"
+      "title": "🚨 WAARSCHUWING BESMET PRODUCT",
+      "body": "âš ï¸ {{brand}} - Lot {{lot}}\nReden: {{reason}}\n\n🚫 NIET CONSUMEREN\nIndien geconsumeerd, neem contact op met hulpdiensten (112)"
     },
     "dailyCheck": {
       "title": "Numeline Verificatie",
@@ -155,19 +156,19 @@
     "about": "Over"
   },
   "languages": {
-    "fr": "FranÃ§ais",
+    "fr": "Français",
     "en": "English",
     "de": "Deutsch",
-    "es": "EspaÃ±ol",
+    "es": "Español",
     "it": "Italiano",
-    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
-    "zh": "ä¸­æ–‡",
-    "ja": "æ—¥æœ¬èªž",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
     "nl": "Nederlands",
-    "pt": "PortuguÃªs",
-    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
+    "pt": "Português",
+    "ru": "Русский",
     "sq": "Shqip",
-    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
+    "sr": "Српски",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
@@ -200,7 +201,3 @@
     "usda": "USDA - Food Safety and Inspection Service"
   }
 }
-
-
-
-

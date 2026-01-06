@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
     "loading": "Carregando...",
@@ -10,11 +10,11 @@
     "back": "Voltar",
     "refresh": "Atualizar",
     "unknown": "Desconhecido",
-    "dataDisclaimer": "Com base nos dados disponÃ­veis neste momento",
-    "appDisclaimer": "Este app fornece informaÃ§Ãµes de recall com base em bancos de dados pÃºblicos oficiais. NÃ£o garante a seguranÃ§a do produto. Este app nÃ£o verifica datas de validade ou o frescor dos produtos.",
-    "noRecallDisclaimer": "A ausÃªncia de recall nÃ£o garante a seguranÃ§a do produto.",
-    "verifyWithSources": "Sempre verifique as informaÃ§Ãµes de recall com fontes oficiais da FDA ou USDA.",
-    "governmentInfoDisclaimer": "Este aplicativo nÃ£o substitui as informaÃ§Ãµes oficiais do governo."
+    "dataDisclaimer": "Com base nos dados disponíveis neste momento",
+    "appDisclaimer": "Este app fornece informações de recall com base em bancos de dados públicos oficiais. Não garante a segurança do produto. Este app não verifica datas de validade ou o frescor dos produtos.",
+    "noRecallDisclaimer": "A ausência de recall não garante a segurança do produto.",
+    "verifyWithSources": "Sempre verifique as informações de recall com fontes oficiais da FDA ou USDA.",
+    "governmentInfoDisclaimer": "Este aplicativo não substitui as informações oficiais do governo."
   },
   "home": {
     "title": "Numeline",
@@ -22,54 +22,55 @@
     "stats": {
       "scanned": "Produtos escaneados",
       "recalled": "Produtos recolhidos",
-      "pending": "Em anÃ¡lise"
+      "pending": "Em análise"
     },
-    "historyTitle": "HistÃ³rico de escaneamentos",
+    "historyTitle": "Histórico de escaneamentos",
     "emptyState": "Escaneie seu primeiro produto para rastrear seu status de recall."
   },
   "scan": {
     "step": "Passo {{current}}/{{total}}",
     "brandStep": "Passo 1/2",
     "lotStep": "Passo 2/2",
-    "brandInstruction": "Enquadre a marca do produto (foto excluÃ­da apÃ³s captura).",
-    "lotInstruction": "Enquadre claramente o nÃºmero do lote e capture a foto.",
+    "brandInstruction": "Enquadre a marca do produto (foto excluída após captura).",
+    "lotInstruction": "Enquadre claramente o número do lote e capture a foto.",
     "brandAnalyzing": "Analisando marca...",
-    "lotAnalyzing": "Analisando nÃºmero do lote...",
-    "privacyInfo": "As fotos sÃ£o processadas apenas localmente e excluÃ­das imediatamente. Nenhuma imagem Ã© armazenada.",
+    "lotAnalyzing": "Analisando número do lote...",
+    "privacyInfo": "As fotos são processadas apenas localmente e excluídas imediatamente. Nenhuma imagem é armazenada.",
     "brandLabel": "Marca",
     "lotLabel": "Lote",
     "analyzing": "Analisando...",
     "waiting": "Aguardando",
-    "confidence": "ConfianÃ§a: {{value}}%",
+    "confidence": "Confiança: {{value}}%",
     "suggestions": "Voce quis dizer ?",
-    "ocrExtraction": "ExtraÃ§Ã£o OCR",
-    "detectedLot": "NÃºmero de lote detectado",
+    "ocrExtraction": "Extração OCR",
+    "detectedLot": "Número de lote detectado",
     "restart": "Reiniciar",
+    "skipToLot": "Pular para escaneamento de lote",
     "manualEntry": "Entrada manual",
     "waitingForCapture": "Aguardando captura...",
-    "aiPrecision": "IA usada para maior precisÃ£o",
-    "productNotPubliclyListed": "Este produto nÃ£o estÃ¡ registrado publicamente.\nEscaneie o rÃ³tulo para verificar o nÃºmero do lote e recalls.",
+    "aiPrecision": "IA usada para maior precisão",
+    "productNotPubliclyListed": "Este produto não está registrado publicamente.\nEscaneie o rótulo para verificar o número do lote e recalls.",
     "errors": {
       "brandCaptureFailed": "Captura da marca falhou.",
       "scanFailed": "Escaneamento falhou.",
-      "lotExtractFailed": "NÃ£o foi possÃ­vel extrair o nÃºmero do lote automaticamente.",
-      "brandFirst": "Capture a marca antes do nÃºmero do lote."
+      "lotExtractFailed": "Não foi possível extrair o número do lote automaticamente.",
+      "brandFirst": "Capture a marca antes do número do lote."
     }
   },
   "manualEntry": {
     "title": "Entrada manual",
-    "subtitle": "Adicione um produto inserindo o nÃºmero do lote e a marca.",
+    "subtitle": "Adicione um produto inserindo o número do lote e a marca.",
     "brandLabel": "Marca",
     "brandPlaceholder": "Ex: Marca X",
-    "lotLabel": "NÃºmero do lote",
+    "lotLabel": "Número do lote",
     "lotPlaceholder": "Ex: L12345",
     "save": "Salvar",
     "verifying": "Verificando...",
     "errors": {
-      "lotRequired": "NÃºmero do lote obrigatÃ³rio",
-      "lotRequiredMessage": "Por favor, insira um nÃºmero de lote para continuar.",
+      "lotRequired": "Número do lote obrigatório",
+      "lotRequiredMessage": "Por favor, insira um número de lote para continuar.",
       "saveFailed": "Falha ao salvar",
-      "checkFailed": "NÃ£o Ã© possÃ­vel verificar recalls no momento."
+      "checkFailed": "Não é possível verificar recalls no momento."
     }
   },
   "details": {
@@ -82,15 +83,15 @@
       "recalled": "Recolhido",
       "unknown": "Status desconhecido"
     },
-    "recallInfo": "InformaÃ§Ãµes do recall",
+    "recallInfo": "Informações do recall",
     "actions": {
       "delete": "Excluir",
       "viewRecall": "Ver recall"
     }
   },
   "history": {
-    "title": "HistÃ³rico",
-    "fullTitle": "HistÃ³rico completo",
+    "title": "Histórico",
+    "fullTitle": "Histórico completo",
     "subtitle": "Filtre seus scans pelo status de recall.",
     "filters": {
       "all": "Todos",
@@ -98,24 +99,24 @@
       "safe": "Sem recall",
       "unknown": "Desconhecido"
     },
-    "emptyState": "Ainda nÃ£o hÃ¡ produtos escaneados.",
-    "emptyStateDetailed": "Nenhum dado. Escaneie um produto para preencher o histÃ³rico."
+    "emptyState": "Ainda não há produtos escaneados.",
+    "emptyStateDetailed": "Nenhum dado. Escaneie um produto para preencher o histórico."
   },
   "productCard": {
     "lot": "Lote {{lot}}",
     "scannedAt": "Escaneado em {{date}} es {{time}}",
-    "privacy": "Nenhuma foto Ã© armazenada; apenas marca e nÃºmero do lote sÃ£o mantidos.",
+    "privacy": "Nenhuma foto é armazenada; apenas marca e número do lote são mantidos.",
     "delete": "Excluir"
   },
   "recallAlert": {
     "title": "PRODUTO CONTAMINADO",
-    "doNotConsume": "NÃƒO CONSUMIR",
-    "warning": "Este produto estÃ¡ sujeito a um recall oficial e nÃ£o deve ser consumido.",
+    "doNotConsume": "NÃO CONSUMIR",
+    "warning": "Este produto está sujeito a um recall oficial e não deve ser consumido.",
     "reasonLabel": "Motivo do recall:",
     "emergencyTitle": "Se consumido",
-    "emergencyText": "Se vocÃª consumiu este produto e apresenta sintomas, entre em contato imediatamente com os serviÃ§os de emergÃªncia.",
-    "callSamu": "Ligar para 112 (EmergÃªncia)",
-    "callEmergency": "Ligar para 112 (EmergÃªncia)",
+    "emergencyText": "Se você consumiu este produto e apresenta sintomas, entre em contato imediatamente com os serviços de emergência.",
+    "callSamu": "Ligar para 112 (Emergência)",
+    "callEmergency": "Ligar para 112 (Emergência)",
     "viewOfficialNotice": "Ver aviso oficial do recall",
     "returnForRefund": "Devolva o produto Ã  loja para reembolso",
     "reportedBy": "Recall informado por FDA / USDA"
@@ -123,67 +124,67 @@
   "recallStatus": {
     "safe": "Nenhum recall encontrado nas bases de dados oficiais no momento",
     "recalled": "Recolhido",
-    "unknown": "Em anÃ¡lise",
+    "unknown": "Em análise",
     "warning": "Monitorar"
   },
   "navigation": {
-    "home": "InÃ­cio",
+    "home": "Início",
     "scan": "Scanner",
-    "history": "HistÃ³rico",
-    "language": "ConfiguraÃ§Ãµes"
+    "history": "Histórico",
+    "language": "Configurações"
   },
   "language": {
-    "title": "ConfiguraÃ§Ãµes",
+    "title": "Configurações",
     "subtitle": "Escolha o idioma preferido do aplicativo."
   },
   "notifications": {
     "alert": {
       "title": "âš ï¸ ALERTA PRODUTO CONTAMINADO",
-      "body": "ðŸš« {{brand}} - Lote {{lot}}\nMotivo: {{reason}}\n\nâš ï¸ NÃƒO CONSUMIR\nSe consumido, entre em contato com serviÃ§os de emergÃªncia (192)"
+      "body": "🚫 {{brand}} - Lote {{lot}}\nMotivo: {{reason}}\n\nâš ï¸ NÃO CONSUMIR\nSe consumido, entre em contato com serviços de emergência (192)"
     },
     "dailyCheck": {
-      "title": "VerificaÃ§Ã£o Numeline",
-      "body": "AtualizaÃ§Ã£o diÃ¡ria de recalls em andamento."
+      "title": "Verificação Numeline",
+      "body": "Atualização diária de recalls em andamento."
     }
   },
   "settings": {
-    "title": "ConfiguraÃ§Ãµes",
+    "title": "Configurações",
     "language": "Idioma",
-    "country": "PaÃ­s",
+    "country": "País",
     "theme": "Tema",
-    "notifications": "NotificaÃ§Ãµes",
+    "notifications": "Notificações",
     "about": "Sobre"
   },
   "languages": {
-    "fr": "FranÃ§ais",
+    "fr": "Français",
     "en": "English",
     "de": "Deutsch",
-    "es": "EspaÃ±ol",
+    "es": "Español",
     "it": "Italiano",
-    "ar": "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
-    "zh": "ä¸­æ–‡",
-    "ja": "æ—¥æœ¬èªž",
+    "ar": "العربية",
+    "zh": "中文",
+    "ja": "日本語",
     "nl": "Nederlands",
-    "pt": "PortuguÃªs",
-    "ru": "Ð ÑƒÑÑÐºÐ¸Ð¹",
+    "pt": "Português",
+    "ru": "Русский",
     "sq": "Shqip",
-    "sr": "Ð¡Ñ€Ð¿ÑÐºÐ¸",
+    "sr": "Српски",
     "me": "Crnogorski"
   },
   "welcomeScreen": {
-    "greeting": "OlÃ¡ {{name}}",
+    "greeting": "Olá {{name}}",
     "question": "Que produto voce gostaria de verificar hoje ?",
-    "startScanning": "ComeÃ§ar a digitalizar",
+    "startScanning": "Começar a digitalizar",
     "namePromptTitle": "Bem-vindo ao Numeline",
-    "namePromptMessage": "Para personalizar sua experiÃªncia, digite seu primeiro nome:",
+    "namePromptMessage": "Para personalizar sua experiência, digite seu primeiro nome:",
     "namePromptPlaceholder": "Seu primeiro nome",
     "namePromptSave": "Continuar",
     "namePromptSkip": "Pular"
   },
   "legal": {
     "sectionTitle": "Documentos Legais",
-    "privacyPolicy": "PolÃ­tica de Privacidade",
-    "terms": "Termos de ServiÃ§o",
+    "privacyPolicy": "Política de Privacidade",
+    "terms": "Termos de Serviço",
     "legalNotice": "Aviso Legal",
     "errorLoading": "Erro ao carregar documento",
     "disclaimer": "Isencao de responsabilidade",
@@ -193,12 +194,10 @@
     "title": "Isencao de responsabilidade sobre recalls de alimentos",
     "body": "Este aplicativo fornece informacoes de recall de alimentos para produtos vendidos nos Estados Unidos apenas para fins informativos.\n\nAs informacoes exibidas neste app sao baseadas em dados publicamente disponiveis de agencias governamentais (incluindo FDA e USDA) e outras fontes de terceiros. Nao garantimos a precisao, integridade ou atualidade das informacoes fornecidas.\n\nEste app nao substitui notificacoes oficiais de recall, comunicacoes de fabricantes ou orientacoes de autoridades reguladoras. Os usuarios sao incentivados a verificar as informacoes de recall diretamente com fontes oficiais.\n\nA ausencia de recall nao garante que o produto seja seguro. Este app nao fornece aconselhamento medico, nutricional ou de saude. Se voce tiver preocupacoes sobre seguranca alimentar, contaminacao, alergias ou doenca, consulte um profissional de saude qualificado ou siga orientacoes oficiais das autoridades de saude publica.\n\nEste app nao verifica datas de validade ou o frescor dos produtos. A leitura de codigo de barras e reconhecimento de numeros de lote podem conter erros; verifique sempre os detalhes do produto e o status do recall.\n\nNa maxima extensao permitida por lei, o desenvolvedor nao sera responsavel por danos diretos ou indiretos decorrentes do uso destas informacoes.\n\nA cobertura de recalls se limita a produtos alimentares vendidos nos Estados Unidos e pode nao se aplicar a produtos vendidos em outros paises."
   },
-  "dataSources": {"title": "Fontes de dados","description": "Fontes oficiais de informacoes sobre recalls nos EUA:","fda": "FDA - Food and Drug Administration","usda": "USDA - Food Safety and Inspection Service"}
+  "dataSources": {
+    "title": "Fontes de dados",
+    "description": "Fontes oficiais de informacoes sobre recalls nos EUA:",
+    "fda": "FDA - Food and Drug Administration",
+    "usda": "USDA - Food Safety and Inspection Service"
+  }
 }
-
-
-
-
-
-
-

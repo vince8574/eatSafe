@@ -31,7 +31,11 @@
       "Bash(node scripts/splitBrands.js:*)",
       "Bash(node scripts/populateFirestoreBrands.js:*)",
       "Bash(npx expo install:*)",
-      "Bash(GRADLE_OPTS=\"-Xmx4096m\" ./gradlew:*)"
+      "Bash(GRADLE_OPTS=\"-Xmx4096m\" ./gradlew:*)",
+      "Bash(set:*)",
+      "Bash(gradlew assembleRelease:*)",
+      "Bash(gradlew.bat assembleRelease:*)",
+      "Bash(GRADLE_OPTS=\"-Xmx4096m\" ./gradlew assembleRelease:*)"
     ],
     "deny": [],
     "ask": []

@@ -25,7 +25,7 @@ export const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'de', 'es',
 
 export const LANGUAGE_FLAGS: Record<SupportedLanguage, string> = {
   fr: '🇫🇷',
-  en: '🇬🇧',
+  en: '🇺🇸',  // Drapeau américain pour l'anglais (app destinée au marché US)
   de: '🇩🇪',
   es: '🇪🇸',
   it: '🇮🇹',
@@ -58,7 +58,7 @@ const i18n = new I18n({
 });
 
 i18n.enableFallback = true;
-i18n.defaultLocale = 'fr';
+i18n.defaultLocale = 'en';  // Langue par défaut: anglais (marché US)
 
 export async function initializeI18n(): Promise<string> {
   try {
@@ -70,18 +70,18 @@ export async function initializeI18n(): Promise<string> {
       return savedLanguage;
     }
 
-    const deviceLanguage = Localization.getLocales()[0]?.languageCode || 'fr';
+    const deviceLanguage = Localization.getLocales()[0]?.languageCode || 'en';
     const matchedLanguage = SUPPORTED_LANGUAGES.includes(deviceLanguage as SupportedLanguage)
       ? deviceLanguage
-      : 'fr';
+      : 'en';
 
     i18n.locale = matchedLanguage;
     console.log(`✓ Language detected from device: ${matchedLanguage}`);
     return matchedLanguage;
   } catch (error) {
-    console.warn('Failed to initialize i18n, using default (fr)', error);
-    i18n.locale = 'fr';
-    return 'fr';
+    console.warn('Failed to initialize i18n, using default (en)', error);
+    i18n.locale = 'en';
+    return 'en';
   }
 }
 

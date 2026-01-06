@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { useMemo, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
@@ -15,7 +15,9 @@ export function DetailScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { products, removeProduct } = useScannedProducts();
+  const { products, removeProduct, updateProduct } = useScannedProducts();
+  const [isEditingLot, setIsEditingLot] = useState(false);
+  const [editedLot, setEditedLot] = useState('');
   const { data: recalls } = useQuery({
     queryKey: ['recalls'],
     queryFn: fetchAllRecalls
@@ -61,11 +63,64 @@ export function DetailScreen() {
           <View style={[styles.card, { backgroundColor: colors.surface }]}>
             <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
             <Text style={[styles.label, { color: colors.textSecondary }]}>{t('details.lotNumber')}</Text>
-            <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
+            {isEditingLot ? (
+              <View style={styles.lotEditContainer}>
+                <TextInput
+                  style={[styles.lotInput, { color: colors.accent, borderColor: colors.accent, backgroundColor: colors.surfaceAlt }]}
+                  value={editedLot}
+                  onChangeText={setEditedLot}
+                  autoCapitalize="characters"
+                  autoFocus
+                />
+                <View style={styles.lotEditButtons}>
+                  <TouchableOpacity
+                    style={[styles.lotEditButton, { backgroundColor: colors.surfaceAlt }]}
+                    onPress={() => {
+                      setIsEditingLot(false);
+                      setEditedLot('');
+                    }}
+                  >
+                    <Text style={[styles.lotEditButtonText, { color: colors.textPrimary }]}>Annuler</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.lotEditButton, { backgroundColor: colors.accent }]}
+                    onPress={async () => {
+                      if (editedLot.trim() && editedLot.trim() !== product.lotNumber) {
+                        await updateProduct(product.id, { lotNumber: editedLot.trim().toUpperCase() });
+                        Alert.alert('Numéro de lot modifié', `Le lot a été mis à jour vers: ${editedLot.trim().toUpperCase()}`);
+                      }
+                      setIsEditingLot(false);
+                      setEditedLot('');
+                    }}
+                  >
+                    <Text style={[styles.lotEditButtonText, { color: colors.surface }]}>Enregistrer</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.lotContainer}
+                onPress={() => {
+                  setEditedLot(product.lotNumber);
+                  setIsEditingLot(true);
+                }}
+              >
+                <Text style={[styles.lot, { color: colors.accent }]}>{product.lotNumber}</Text>
+                <Text style={[styles.editIcon, { color: colors.textSecondary }]}>✏️</Text>
+              </TouchableOpacity>
+            )}
             <Text style={[styles.label, { color: colors.textSecondary, marginTop: 16 }]}>{t('details.recallStatusLabel')}</Text>
-            <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
-              {getStatusLabel(product.recallStatus, t)}
-            </Text>
+            {product.recallStatus === 'recalled' ? (
+              <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
+                {t('details.status.recalled')}
+              </Text>
+            ) : (
+              <View style={[styles.noRecallBadge, { backgroundColor: colors.success + '15', borderColor: colors.success }]}>
+                <Text style={[styles.noRecallText, { color: colors.success }]}>
+                  {t('recallStatus.safe')}
+                </Text>
+              </View>
+            )}
             <Text style={[styles.disclaimer, { color: colors.textSecondary, marginTop: 8 }]}>
               {t('common.dataDisclaimer')}
             </Text>
@@ -175,10 +230,56 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginTop: 8
   },
+  lotContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 8
+  },
+  editIcon: {
+    fontSize: 18
+  },
+  lotEditContainer: {
+    marginTop: 8,
+    gap: 12
+  },
+  lotInput: {
+    fontSize: 18,
+    fontWeight: '700',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 2
+  },
+  lotEditButtons: {
+    flexDirection: 'row',
+    gap: 12
+  },
+  lotEditButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: 'center'
+  },
+  lotEditButtonText: {
+    fontSize: 14,
+    fontWeight: '700'
+  },
   status: {
     fontSize: 20,
     fontWeight: '700',
     marginTop: 8
+  },
+  noRecallBadge: {
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 8,
+    borderWidth: 2
+  },
+  noRecallText: {
+    fontSize: 15,
+    fontWeight: '600',
+    lineHeight: 22
   },
   disclaimer: {
     fontSize: 12,
