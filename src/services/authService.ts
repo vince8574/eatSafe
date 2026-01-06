@@ -2,20 +2,37 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { ensureFirebase } from './firebaseService';
 
 /**
- * Retourne l'utilisateur Firebase courant ou réalise un sign-in anonyme pour garantir un uid.
- * À remplacer plus tard par un vrai flux de connexion (email/Google) si nécessaire.
+ * Retourne l'utilisateur Firebase courant.
+ * Lance une erreur si l'utilisateur n'est pas authentifié.
  */
 export async function ensureAuthUser(): Promise<FirebaseAuthTypes.User> {
   ensureFirebase();
   const current = auth().currentUser;
-  if (current) return current;
 
-  // Fallback : connexion anonyme pour disposer d'un uid unique
-  const credential = await auth().signInAnonymously();
-  return credential.user;
+  if (!current) {
+    throw new Error('User not authenticated');
+  }
+
+  // Ne pas autoriser les utilisateurs anonymes
+  if (current.isAnonymous) {
+    await auth().signOut();
+    throw new Error('Anonymous users not allowed');
+  }
+
+  return current;
 }
 
 export async function getCurrentUserId(): Promise<string> {
   const user = await ensureAuthUser();
   return user.uid;
+}
+
+export function getCurrentUser(): FirebaseAuthTypes.User | null {
+  ensureFirebase();
+  return auth().currentUser;
+}
+
+export function isUserAuthenticated(): boolean {
+  const user = getCurrentUser();
+  return user !== null && !user.isAnonymous;
 }

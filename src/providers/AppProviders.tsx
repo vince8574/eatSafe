@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '../theme/ThemeProvider';
 import { I18nProvider } from '../i18n/I18nContext';
+import { AuthProvider } from '../contexts/AuthContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +26,9 @@ export function AppProviders({ children }: PropsWithChildren) {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClientInstance}>
           <I18nProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <AuthProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </AuthProvider>
           </I18nProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

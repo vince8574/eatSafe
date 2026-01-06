@@ -1,4 +1,4 @@
-﻿{
+{
   "common": {
     "appName": "Numeline",
     "loading": "加载中...",
@@ -199,7 +199,57 @@
     "description": "美国召回信息的官方来源:",
     "fda": "FDA — Food and Drug Administration",
     "usda": "USDA — Food Safety and Inspection Service"
+  },
+  "auth": {
+    "welcomeBack": "欢迎回来!",
+    "loginSubtitle": "登录以访问您的帐户",
+    "email": "电子邮件",
+    "emailPlaceholder": "your@email.com",
+    "password": "密码",
+    "passwordPlaceholder": "您的密码",
+    "confirmPassword": "确认密码",
+    "confirmPasswordPlaceholder": "确认您的密码",
+    "forgotPassword": "忘记密码?",
+    "login": "登录",
+    "signUp": "注册",
+    "orContinueWith": "或继续使用",
+    "continueWithGoogle": "使用Google继续",
+    "dontHaveAccount": "没有帐户?",
+    "alreadyHaveAccount": "已经有帐户?",
+    "createAccount": "创建帐户",
+    "signupSubtitle": "加入我们开始",
+    "passwordHint": "最少6个字符",
+    "forgotPasswordSubtitle": "输入您的电子邮件以接收重置链接",
+    "sendResetEmail": "发送重置链接",
+    "backToLogin": "返回登录",
+    "resetEmailSent": "重置电子邮件已发送",
+    "emailSent": "电子邮件已发送!",
+    "account": "帐户",
+    "loggedInAs": "登录身份",
+    "signOut": "登出",
+    "signOutConfirm": "登出",
+    "signOutMessage": "您确定要登出吗?",
+    "cancel": "取消",
+    "ok": "确定",
+    "success": "成功",
+    "error": "错误",
+    "fillAllFields": "请填写所有字段",
+    "invalidEmail": "无效的电子邮件地址",
+    "userNotFound": "未找到用户",
+    "wrongPassword": "密码错误",
+    "invalidCredentials": "无效的电子邮件或密码",
+    "loginFailed": "登录失败",
+    "emailAlreadyInUse": "此电子邮件已在使用中",
+    "weakPassword": "密码太弱",
+    "signupFailed": "注册失败",
+    "googleSignInFailed": "Google登录失败",
+    "enterEmail": "请输入您的电子邮件",
+    "resetPasswordFailed": "发送重置电子邮件失败",
+    "signOutFailed": "登出失败",
+    "passwordTooShort": "密码至少必须为6个字符",
+    "passwordsDoNotMatch": "密码不匹配"
+  },
+  "team": {
+    "title": "团队管理"
   }
 }
-
-

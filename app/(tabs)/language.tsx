@@ -1,15 +1,41 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LanguageSelector } from '../../src/components/LanguageSelector';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientBackground } from '../../src/components/GradientBackground';
+import { useAuth } from '../../src/contexts/AuthContext';
 
 export default function LanguageScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = () => {
+    Alert.alert(
+      t('auth.signOutConfirm'),
+      t('auth.signOutMessage'),
+      [
+        {
+          text: t('auth.cancel'),
+          style: 'cancel'
+        },
+        {
+          text: t('auth.signOut'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await signOut();
+            } catch (error) {
+              Alert.alert(t('auth.error'), t('auth.signOutFailed'));
+            }
+          }
+        }
+      ]
+    );
+  };
 
   return (
     <GradientBackground>
@@ -83,6 +109,55 @@ export default function LanguageScreen() {
             <Ionicons name="pricetag-outline" size={24} color={colors.accent} />
             <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
               Abonnement & forfaits
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.legalButton, { backgroundColor: colors.surface }]}
+          onPress={() => router.push('/team')}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="people-outline" size={24} color={colors.accent} />
+            <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+              {t('team.title') || 'Team Management'}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Section Compte */}
+      <View style={styles.legalSection}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+          {t('auth.account')}
+        </Text>
+
+        {/* User Email Display */}
+        {user?.email && (
+          <View style={[styles.userInfoBox, { backgroundColor: colors.surface }]}>
+            <Ionicons name="person-circle-outline" size={40} color={colors.accent} />
+            <View style={styles.userInfoText}>
+              <Text style={[styles.userEmailLabel, { color: colors.textSecondary }]}>
+                {t('auth.loggedInAs')}
+              </Text>
+              <Text style={[styles.userEmail, { color: colors.textPrimary }]}>
+                {user.email}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Logout Button */}
+        <TouchableOpacity
+          style={[styles.logoutButton, { backgroundColor: colors.surface }]}
+          onPress={handleSignOut}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="log-out-outline" size={24} color="#FF6B6B" />
+            <Text style={[styles.logoutButtonText, { color: '#FF6B6B' }]}>
+              {t('auth.signOut')}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
@@ -198,5 +273,46 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 20,
     textAlign: 'center'
+  },
+  userInfoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3
+  },
+  userInfoText: {
+    marginLeft: 12,
+    flex: 1
+  },
+  userEmailLabel: {
+    fontSize: 12,
+    marginBottom: 2
+  },
+  userEmail: {
+    fontSize: 16,
+    fontWeight: '600'
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    fontWeight: '600'
   }
 });
