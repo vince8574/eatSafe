@@ -45,7 +45,8 @@
       "Bash(echo:*)",
       "Bash(do echo -n \"Checking $file... \")",
       "Bash(do echo -n \"$file: \")",
-      "Bash(GRADLE_OPTS=\"-Xmx4096m -XX:MaxMetaspaceSize=512m\" ./gradlew assembleDebug:*)"
+      "Bash(GRADLE_OPTS=\"-Xmx4096m -XX:MaxMetaspaceSize=512m\" ./gradlew assembleDebug:*)",
+      "Bash(exit 0)"
     ],
     "deny": [],
     "ask": []

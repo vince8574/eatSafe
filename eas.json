@@ -32,11 +32,6 @@
       }
     }
   },
-  "hooks": {
-    "postinstall": {
-      "ios": "bash scripts/eas-build-pre-install.sh"
-    }
-  },
   "submit": {
     "production": {}
   }
