@@ -244,7 +244,13 @@ async function generatePDF(products: ScannedProduct[], regulatoryFormat: boolean
     directory: 'Documents'
   };
 
-  const file = await RNHTMLtoPDF.convert(options);
+  // Some environments expose convert directly, others under default
+  const convert = (RNHTMLtoPDF as any)?.convert ?? (RNHTMLtoPDF as any);
+  if (typeof convert !== 'function') {
+    throw new Error('Export PDF indisponible : module react-native-html-to-pdf non chargé. Rebuild le dev client avec cette dépendance.');
+  }
+
+  const file = await convert(options);
   return file.filePath || '';
 }
 

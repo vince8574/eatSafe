@@ -24,6 +24,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     // Configure Google Sign-In
     GoogleSignin.configure({
       webClientId: '577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com',
+      offlineAccess: true,
+      forceCodeForRefreshToken: true
     });
 
     // Listen for auth state changes
@@ -59,8 +61,27 @@ export function AuthProvider({ children }: PropsWithChildren) {
       // Check if your device supports Google Play
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-      // Get the users ID token
-      const { idToken } = await GoogleSignin.signIn();
+      // Clear stale session to force a fresh token
+      await GoogleSignin.signOut().catch(() => undefined);
+
+      const signInResult = await GoogleSignin.signIn();
+      let idToken = signInResult?.idToken;
+      let tokens: any = null;
+
+      // Fallback: some devices return tokens via getTokens only
+      if (!idToken) {
+        tokens = await GoogleSignin.getTokens().catch(() => null);
+        idToken = tokens?.idToken;
+      }
+
+      if (!idToken) {
+        console.log('[AuthContext] Google sign-in returned no idToken', tokens);
+        throw {
+          code: 'NO_ID_TOKEN',
+          message: 'Google Sign-In did not return an idToken. Check SHA-1 / OAuth config / Play Services.',
+          tokens
+        };
+      }
 
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -68,8 +89,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       // Sign-in the user with the credential
       await auth().signInWithCredential(googleCredential);
     } catch (error: any) {
-      console.error('[AuthContext] Google sign in error:', error);
-      throw error;
+      const e = error ?? {};
+      const code = e?.code ?? e?.status?.statusCode ?? 'UNKNOWN';
+      const message = e?.message ?? JSON.stringify(e);
+      console.log('Google sign-in error', code, message, e);
+      console.error('[AuthContext] Google sign in error:', { code, message });
+      throw { code, message };
     }
   };
 

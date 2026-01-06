@@ -95,8 +95,8 @@ export async function fetchSubscription(): Promise<Subscription> {
       scansRemaining: 0,
       historyRetentionDays: 0,
       exportEnabled: true,  // Activé pour les tests
-      exportFormats: [],
-      regulatoryFormat: false,
+      exportFormats: ['pdf', 'csv', 'xlsx'],
+      regulatoryFormat: true,
       employeesLimit: null,
       sitesLimit: null,
       updatedAt: Date.now()
@@ -116,8 +116,8 @@ export async function fetchSubscription(): Promise<Subscription> {
     scansRemaining: data.scansRemaining ?? 0,
     historyRetentionDays: (data as any).historyRetentionDays ?? 0,
     exportEnabled: data.exportEnabled ?? true,  // Activé par défaut pour les tests
-    exportFormats: data.exportFormats ?? [],
-    regulatoryFormat: data.regulatoryFormat ?? false,
+    exportFormats: data.exportFormats ?? ['pdf', 'csv', 'xlsx'],
+    regulatoryFormat: data.regulatoryFormat ?? true,
     employeesLimit: data.employeesLimit ?? null,
     sitesLimit: data.sitesLimit ?? null,
     updatedAt: data.updatedAt ?? Date.now()

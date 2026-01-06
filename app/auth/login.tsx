@@ -61,7 +61,8 @@ export default function LoginScreen() {
     try {
       await signInWithGoogle();
     } catch (error: any) {
-      if (error.code !== 'SIGN_IN_CANCELLED') {
+      console.log('[Login] Google sign-in error', error?.code, error?.message, error);
+      if (error?.code !== 'SIGN_IN_CANCELLED') {
         Alert.alert(t('auth.error'), t('auth.googleSignInFailed'));
       }
     } finally {
