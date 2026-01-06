@@ -10,17 +10,20 @@ import firestore from '@react-native-firebase/firestore';
  */
 
 export function ensureFirebase() {
-  // Check if Firebase is already initialized
-  if (!firebaseApp.apps || firebaseApp.apps.length === 0) {
-    console.warn('[Firebase] No Firebase app initialized. Make sure google-services.json exists.');
+  try {
+    // Uses native config from google-services.json / GoogleService-Info.plist
+    return firebaseApp.app();
+  } catch (error) {
+    console.warn('[Firebase] No Firebase app initialized. Make sure google-services.json / GoogleService-Info.plist exist and match the package/bundle id.');
     console.warn('[Firebase] Firebase features (subscriptions, auth) will not work until properly configured.');
+    throw error;
   }
 }
 
 export function getFirestore() {
-  ensureFirebase();
+  const app = ensureFirebase();
   try {
-    return firestore();
+    return firestore(app);
   } catch (error) {
     console.error('[Firebase] Failed to get Firestore instance:', error);
     throw new Error('Firebase is not properly configured. Please add google-services.json to android/app/ directory.');

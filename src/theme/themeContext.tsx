@@ -8,10 +8,13 @@ type Palette = {
   accentSoft: string;
   textPrimary: string;
   textSecondary: string;
+  text: string;
   danger: string;
   warning: string;
   success: string;
   border: string;
+  glass?: string;
+  glassAlt?: string;
 };
 
 type Typography = {
@@ -37,10 +40,13 @@ const defaultTheme: ThemeType = {
     accentSoft: 'rgba(53, 242, 169, 0.2)',
     textPrimary: '#F7FBFA',
     textSecondary: '#A5C9C7',
+    text: '#F7FBFA',
     danger: '#FF647C',
     warning: '#FFC857',
     success: '#10B981',
-    border: '#1E4948'
+    border: '#1E4948',
+    glass: 'rgba(255, 255, 255, 0.08)',
+    glassAlt: 'rgba(255, 255, 255, 0.16)'
   },
   typography: {
     title: 28,
