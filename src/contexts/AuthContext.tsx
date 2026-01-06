@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, PropsWithChildren } from 'react';
+import '@react-native-firebase/app'; // Initialize Firebase app
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
