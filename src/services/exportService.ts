@@ -1,6 +1,6 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import * as Print from 'expo-print';
 import * as XLSX from 'xlsx';
 import { ScannedProduct } from '../types';
 
@@ -13,6 +13,10 @@ interface ExportOptions {
   companyName?: string;
   siteName?: string;
 }
+
+// Expo SDK 54: certaines builds retournent EncodingType undefined.
+// On fournit un fallback pour éviter les erreurs "Cannot read property 'Base64' of undefined".
+const Encoding = (FileSystem as any)?.EncodingType ?? { UTF8: 'utf8', Base64: 'base64' };
 
 /**
  * Génère un CSV à partir des produits scannés
@@ -93,7 +97,7 @@ async function generateExcel(products: ScannedProduct[], regulatoryFormat: boole
   const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
   await FileSystem.writeAsStringAsync(fileUri, wbout, {
-    encoding: FileSystem.EncodingType.Base64
+    encoding: Encoding.Base64
   });
 
   return fileUri;
@@ -111,6 +115,7 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
       <html>
       <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
           body { font-family: Arial, sans-serif; padding: 20px; }
           h1 { color: #0A1F1F; border-bottom: 3px solid #0A1F1F; padding-bottom: 10px; }
@@ -182,6 +187,7 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
       <html>
       <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
           body { font-family: Arial, sans-serif; padding: 20px; }
           h1 { color: #0A1F1F; }
@@ -234,24 +240,23 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
 
 /**
  * Génère un PDF à partir des produits scannés
+ * Utilise expo-print au lieu de react-native-html-to-pdf
  */
 async function generatePDF(products: ScannedProduct[], regulatoryFormat: boolean = false, companyName?: string, siteName?: string): Promise<string> {
   const html = generateHTMLForPDF(products, regulatoryFormat, companyName, siteName);
 
-  const options = {
-    html,
-    fileName: `historique_${Date.now()}`,
-    directory: 'Documents'
-  };
+  try {
+    // Générer le PDF avec expo-print
+    const { uri } = await Print.printToFileAsync({
+      html,
+      base64: false
+    });
 
-  // Some environments expose convert directly, others under default
-  const convert = (RNHTMLtoPDF as any)?.convert ?? (RNHTMLtoPDF as any);
-  if (typeof convert !== 'function') {
-    throw new Error('Export PDF indisponible : module react-native-html-to-pdf non chargé. Rebuild le dev client avec cette dépendance.');
+    return uri;
+  } catch (error) {
+    console.error('Erreur lors de la génération du PDF:', error);
+    throw new Error('Impossible de générer le PDF. Vérifiez que expo-print est bien installé.');
   }
-
-  const file = await convert(options);
-  return file.filePath || '';
 }
 
 /**
@@ -273,7 +278,7 @@ export async function exportProducts(options: ExportOptions): Promise<void> {
       fileUri = `${FileSystem.documentDirectory}${fileName}`;
       const csvContent = generateCSV(products, regulatoryFormat);
       await FileSystem.writeAsStringAsync(fileUri, csvContent, {
-        encoding: FileSystem.EncodingType.UTF8
+        encoding: Encoding.UTF8
       });
       break;
 

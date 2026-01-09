@@ -77,10 +77,10 @@ export async function createOrganization(name: string): Promise<Organization> {
  * Récupérer l'organisation courante de l'utilisateur
  */
 export async function getCurrentOrganization(): Promise<Organization | null> {
-  const db = getFirestore();
-  const userId = await getCurrentUserId();
-
   try {
+    const db = getFirestore();
+    const userId = await getCurrentUserId();
+
     // Chercher dans toutes les organisations où l'utilisateur est membre
     const membershipQuery = await db
       .collectionGroup('members')
@@ -106,7 +106,15 @@ export async function getCurrentOrganization(): Promise<Organization | null> {
       ...data
     } as Organization;
   } catch (error) {
-    console.error('[organizationService] Error getting current organization:', error);
+    // Ne pas supposer que "error" a une propriété code/message
+    const hasCode = error && typeof error === 'object' && 'code' in (error as any);
+    const hasMessage = error && typeof error === 'object' && 'message' in (error as any);
+    const code = hasCode ? (error as any).code : 'UNKNOWN';
+    const message = hasMessage ? (error as any).message : String(error);
+    console.error(
+      `[organizationService] Error getting current organization (${code}):`,
+      message
+    );
     return null;
   }
 }

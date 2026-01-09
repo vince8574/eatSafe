@@ -35,11 +35,11 @@ export async function fetchFranceRecalls(): Promise<RecallRecord[]> {
   const response = await fetch(FRANCE_ENDPOINT);
 
   if (!response.ok) {
-    const err: ApiError = {
-      status: response.status,
-      message: 'Impossible de récupérer les rappels RappelConso.'
-    };
-    throw err;
+    // If the public endpoint is down or throttling, do not break the app.
+    console.warn(
+      `[RappelConso] API returned status ${response.status} - ignoring and continuing`
+    );
+    return [];
   }
 
   const data = await response.json();
