@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Teambeheer"
+  },
+  "subscription": {
+    "header": "Abonnement",
+    "mySubscription": "Mijn abonnement",
+    "status": {
+      "none": "Geen actief plan",
+      "expired": "Verlopen plan",
+      "active": "Actief plan (gesimuleerd)"
+    },
+    "plan": "Plan",
+    "none": "Geen",
+    "expiration": "Vervaldatum (gesimuleerd)",
+    "scansRemaining": "Resterende scans",
+    "history": "Geschiedenis",
+    "unlimited": "Onbeperkt",
+    "days": "dagen",
+    "exports": "Exporteren",
+    "enabled": "Ingeschakeld",
+    "notIncluded": "Niet inbegrepen",
+    "multiEmployees": "Meerdere medewerkers",
+    "upTo": "Tot",
+    "sites": "Sites",
+    "plansTitle": "Plannen",
+    "plansHelper": "Aankopen worden gesimuleerd (Firestore). Daadwerkelijke facturering (App Store / Google Play) wordt later verbonden.",
+    "planSelected": "Plan geselecteerd",
+    "choosePlan": "Kies dit plan",
+    "scanPacksTitle": "Scanpakketten",
+    "scanPacksHelper": "Voeg scans toe als uw maandelijkse quotum is bereikt. Firestore-simulatie in afwachting van in-app facturering."
+  },
+  "quota": {
+    "reached": "Scanquotum bereikt",
+    "addPack": "Voeg een scanpakket toe om door te gaan.",
+    "pack500": "+500 scans pakket",
+    "cannotAdd": "Kan pakket momenteel niet toevoegen.",
+    "loading": "Quotum laden...",
+    "remaining": "Resterende scans (simulatie):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Lotnummer gedetecteerd:",
+    "recallInfo": "Terugroepinformatie",
+    "product": "Product:",
+    "brand": "Merk:",
+    "understood": "IK BEGRIJP HET"
+  },
+  "scanLot": {
+    "editManually": "Of handmatig bewerken:",
+    "enterLot": "Voer lotnummer in",
+    "ocrDetected": "OCR gedetecteerde tekst:",
+    "noText": "Geen tekst gedetecteerd",
+    "checkingRecalls": "🔍 Controleren op terugroepacties...",
+    "recallDetected": "⚠️ TERUGROEPACTIE GEDETECTEERD",
+    "productSafe": "✅ PRODUCT VEILIG - Geen terugroepactie",
+    "edit": "✏️ Bewerken",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ TERUGROEPACTIE GEDETECTEERD ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Lotnummer gewijzigd",
+    "lotUpdated": "Lot bijgewerkt naar:"
+  },
+  "scanScreen": {
+    "editBrand": "Gedetecteerd merk bewerken:",
+    "enterBrand": "Voer merk in",
+    "brandDetected": "Merk gedetecteerd:"
+  },
+  "historyScreen": {
+    "exportReserved": "Export gereserveerd",
+    "exportAvailable": "Export is beschikbaar met een plan dat de exportoptie bevat.",
+    "noData": "Geen gegevens",
+    "nothingToExport": "Momenteel niets te exporteren.",
+    "formatNotAvailable": "Formaat niet beschikbaar",
+    "formatNotIncluded": "Het formaat {{format}} is niet inbegrepen in uw plan.",
+    "exportSuccess": "Export succesvol",
+    "fileGenerated": "Het {{format}}-bestand is gegenereerd en klaar om te delen.",
+    "cannotGenerate": "Kan exportbestand niet genereren.",
+    "exportHistory": "Geschiedenis exporteren",
+    "exportAvailableWith": "Beschikbaar met een plan dat export bevat",
+    "chooseFormat": "Kies exportformaat",
+    "regulatoryEnabled": "Regelgevend formaat ingeschakeld",
+    "productsToExport": "{{count}} producten om te exporteren",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "TERUGROEPWAARSCHUWING",
+    "warningTextSingle": "Een product dat u heeft gescand is nu onderhevig aan een terugroepactie:",
+    "warningTextMultiple": "{{count}} producten die u heeft gescand zijn nu onderhevig aan terugroepacties:",
+    "recalled": "TERUGGEROEPEN",
+    "lot": "Lot {{lotNumber}}",
+    "viewDetails": "Tik om details te bekijken →",
+    "importantTitle": "⚠️ BELANGRIJK",
+    "importantText": "• Consumeer deze producten niet\n• Breng ze terug naar de winkel voor terugbetaling\n• Als er symptomen optreden, neem dan contact op met de hulpdiensten",
+    "understood": "Ik begrijp het"
   }
 }

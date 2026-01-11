@@ -30,19 +30,19 @@ export function ManualEntryScreen() {
 
     return new Promise((resolve) => {
       Alert.alert(
-        'Quota de scans atteint',
-        'Ajoute un pack de scans pour continuer.',
+        t('quota.reached'),
+        t('quota.addPack'),
         [
-          { text: 'Annuler', style: 'cancel', onPress: () => resolve(false) },
+          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
           {
-            text: 'Pack +500 scans',
+            text: t('quota.pack500'),
             onPress: async () => {
               try {
                 await buyPack(500);
                 await refresh();
                 resolve(true);
               } catch (error) {
-                Alert.alert('Erreur', "Impossible d'ajouter le pack pour le moment.");
+                Alert.alert(t('auth.error'), t('quota.cannotAdd'));
                 resolve(false);
               }
             }
@@ -51,7 +51,7 @@ export function ManualEntryScreen() {
         { cancelable: true }
       );
     });
-  }, [subscription?.scansRemaining, buyPack, refresh]);
+  }, [subscription?.scansRemaining, buyPack, refresh, t]);
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
@@ -135,8 +135,8 @@ export function ManualEntryScreen() {
         </Text>
         <Text style={[styles.appDisclaimerText, { color: colors.textSecondary, marginTop: 4 }]}>
           {subLoading
-            ? 'Chargement du quota...'
-            : `Scans restants (simulation) : ${subscription?.scansRemaining ?? 0}`}
+            ? t('quota.loading')
+            : `${t('quota.remaining')} ${subscription?.scansRemaining ?? 0}`}
         </Text>
       </View>
 

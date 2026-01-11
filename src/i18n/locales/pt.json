@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Gestão de equipe"
+  },
+  "subscription": {
+    "header": "Assinatura",
+    "mySubscription": "Minha assinatura",
+    "status": {
+      "none": "Nenhum plano ativo",
+      "expired": "Plano expirado",
+      "active": "Plano ativo (simulado)"
+    },
+    "plan": "Plano",
+    "none": "Nenhum",
+    "expiration": "Expiração (simulada)",
+    "scansRemaining": "Digitalizações restantes",
+    "history": "Histórico",
+    "unlimited": "Ilimitado",
+    "days": "dias",
+    "exports": "Exportações",
+    "enabled": "Ativado",
+    "notIncluded": "Não incluído",
+    "multiEmployees": "Vários funcionários",
+    "upTo": "Até",
+    "sites": "Sites",
+    "plansTitle": "Planos",
+    "plansHelper": "As compras são simuladas (Firestore). A cobrança real (App Store / Google Play) será conectada mais tarde.",
+    "planSelected": "Plano selecionado",
+    "choosePlan": "Escolher este plano",
+    "scanPacksTitle": "Pacotes de digitalização",
+    "scanPacksHelper": "Adicione digitalizações se sua cota mensal for atingida. Simulação Firestore pendente de cobrança no aplicativo."
+  },
+  "quota": {
+    "reached": "Cota de digitalização atingida",
+    "addPack": "Adicione um pacote de digitalização para continuar.",
+    "pack500": "Pacote de +500 digitalizações",
+    "cannotAdd": "Não é possível adicionar o pacote no momento.",
+    "loading": "Carregando cota...",
+    "remaining": "Digitalizações restantes (simulação):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Número de lote detectado:",
+    "recallInfo": "Informações de recall",
+    "product": "Produto:",
+    "brand": "Marca:",
+    "understood": "EU ENTENDO"
+  },
+  "scanLot": {
+    "editManually": "Ou edite manualmente:",
+    "enterLot": "Digite o número do lote",
+    "ocrDetected": "Texto detectado por OCR:",
+    "noText": "Nenhum texto detectado",
+    "checkingRecalls": "🔍 Verificando recalls...",
+    "recallDetected": "⚠️ RECALL DETECTADO",
+    "productSafe": "✅ PRODUTO SEGURO - Sem recall",
+    "edit": "✏️ Editar",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ RECALL DETECTADO ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Número de lote modificado",
+    "lotUpdated": "Lote atualizado para:"
+  },
+  "scanScreen": {
+    "editBrand": "Editar marca detectada:",
+    "enterBrand": "Digite a marca",
+    "brandDetected": "Marca detectada:"
+  },
+  "historyScreen": {
+    "exportReserved": "Exportação reservada",
+    "exportAvailable": "A exportação está disponível com um plano que inclui a opção de exportação.",
+    "noData": "Sem dados",
+    "nothingToExport": "Nada para exportar no momento.",
+    "formatNotAvailable": "Formato não disponível",
+    "formatNotIncluded": "O formato {{format}} não está incluído no seu plano.",
+    "exportSuccess": "Exportação bem-sucedida",
+    "fileGenerated": "O arquivo {{format}} foi gerado e está pronto para compartilhar.",
+    "cannotGenerate": "Não é possível gerar o arquivo de exportação.",
+    "exportHistory": "Exportar histórico",
+    "exportAvailableWith": "Disponível com um plano que inclui exportação",
+    "chooseFormat": "Escolha o formato de exportação",
+    "regulatoryEnabled": "Formato regulatório ativado",
+    "productsToExport": "{{count}} produtos para exportar",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "ALERTA DE RECALL",
+    "warningTextSingle": "Um produto que você digitalizou agora está sujeito a um recall:",
+    "warningTextMultiple": "{{count}} produtos que você digitalizou agora estão sujeitos a recalls:",
+    "recalled": "RECALLED",
+    "lot": "Lote {{lotNumber}}",
+    "viewDetails": "Toque para ver detalhes →",
+    "importantTitle": "⚠️ IMPORTANTE",
+    "importantText": "• Não consuma esses produtos\n• Devolva-os à loja para reembolso\n• Se surgirem sintomas, entre em contato com os serviços de emergência",
+    "understood": "Eu entendo"
   }
 }

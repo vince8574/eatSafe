@@ -128,6 +128,7 @@ export function ScanScreen() {
         onSkip={() => router.push('/scan-lot' as any)}
         onReload={resetFlow}
         onManualEntry={() => router.push('/manual-entry')}
+        flashPosition="top-right"
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
@@ -203,13 +204,13 @@ export function ScanScreen() {
             {isEditingBrand ? (
               <>
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                  Modifier la marque détectée :
+                  {t('scanScreen.editBrand')}
                 </Text>
                 <TextInput
                   style={[styles.editInput, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
                   value={editedBrand}
                   onChangeText={setEditedBrand}
-                  placeholder="Entrez la marque"
+                  placeholder={t('scanScreen.enterBrand')}
                   placeholderTextColor={colors.textSecondary}
                   autoFocus
                 />
@@ -219,7 +220,7 @@ export function ScanScreen() {
                     onPress={handleCancelEdit}
                   >
                     <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
-                      Annuler
+                      {t('common.cancel')}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -249,7 +250,7 @@ export function ScanScreen() {
                 ) : null}
 
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                  Marque détectée :
+                  {t('scanScreen.brandDetected')}
                 </Text>
 
                 <TouchableOpacity

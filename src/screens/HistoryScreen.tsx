@@ -139,21 +139,21 @@ export function HistoryScreen() {
 
   const handleOpenExportModal = useCallback(() => {
     if (!canExport) {
-      Alert.alert('Export réservé', 'L\'export est disponible avec un forfait incluant l\'option export.');
+      Alert.alert(t('historyScreen.exportReserved'), t('historyScreen.exportAvailable'));
       return;
     }
 
     if (filtered.length === 0) {
-      Alert.alert('Aucune donnée', 'Il n\'y a rien à exporter pour l\'instant.');
+      Alert.alert(t('historyScreen.noData'), t('historyScreen.nothingToExport'));
       return;
     }
 
     setShowExportModal(true);
-  }, [canExport, filtered]);
+  }, [canExport, filtered, t]);
 
   const handleExport = useCallback(async (format: ExportFormat) => {
     if (!canExportFormat(format, exportFormats)) {
-      Alert.alert('Format non disponible', `Le format ${format.toUpperCase()} n'est pas inclus dans votre forfait.`);
+      Alert.alert(t('historyScreen.formatNotAvailable'), t('historyScreen.formatNotIncluded', { format: format.toUpperCase() }));
       return;
     }
 
@@ -167,14 +167,14 @@ export function HistoryScreen() {
         regulatoryFormat
       });
 
-      Alert.alert('Export réussi', `Le fichier ${format.toUpperCase()} a été généré et est prêt à être partagé.`);
+      Alert.alert(t('historyScreen.exportSuccess'), t('historyScreen.fileGenerated', { format: format.toUpperCase() }));
     } catch (error) {
       console.error('[HistoryScreen] Export error', error);
-      Alert.alert('Erreur', error instanceof Error ? error.message : 'Impossible de générer le fichier export.');
+      Alert.alert(t('auth.error'), error instanceof Error ? error.message : t('historyScreen.cannotGenerate'));
     } finally {
       setIsExporting(false);
     }
-  }, [filtered, exportFormats, regulatoryFormat]);
+  }, [filtered, exportFormats, regulatoryFormat, t]);
 
   const renderItem = ({ item }: { item: ScannedProduct }) => {
     const scannedAt = formatDate(item.scannedAt);
@@ -264,14 +264,14 @@ export function HistoryScreen() {
                   <>
                     <Ionicons name="download-outline" size={20} color={canExport ? colors.accent : colors.textSecondary} />
                     <Text style={[styles.exportButtonText, { color: canExport ? colors.accent : colors.textSecondary }]}>
-                      Exporter l'historique
+                      {t('historyScreen.exportHistory')}
                     </Text>
                   </>
                 )}
               </TouchableOpacity>
               {!canExport && !subLoading ? (
                 <Text style={[styles.exportInfo, { color: colors.textSecondary }]}>
-                  Disponible avec un forfait incluant l'export
+                  {t('historyScreen.exportAvailableWith')}
                 </Text>
               ) : null}
             </View>
@@ -329,11 +329,11 @@ export function HistoryScreen() {
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
-              Choisir le format d'export
+              {t('historyScreen.chooseFormat')}
             </Text>
 
             <Text style={[styles.modalSubtitle, { color: colors.textSecondary }]}>
-              {regulatoryFormat ? 'Format réglementaire activé' : `${filtered.length} produits à exporter`}
+              {regulatoryFormat ? t('historyScreen.regulatoryEnabled') : t('historyScreen.productsToExport', { count: filtered.length })}
             </Text>
 
             <View style={styles.exportFormats}>
@@ -352,11 +352,11 @@ export function HistoryScreen() {
               >
                 <Ionicons name="document-text" size={32} color={canExportFormat('pdf', exportFormats) ? colors.accent : colors.textSecondary} />
                 <Text style={[styles.formatButtonLabel, { color: canExportFormat('pdf', exportFormats) ? colors.accent : colors.textSecondary }]}>
-                  PDF
+                  {t('historyScreen.pdf')}
                 </Text>
                 {!canExportFormat('pdf', exportFormats) && (
                   <Text style={[styles.formatLocked, { color: colors.textSecondary }]}>
-                    Non inclus
+                    {t('subscription.notIncluded')}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -376,11 +376,11 @@ export function HistoryScreen() {
               >
                 <Ionicons name="grid" size={32} color={canExportFormat('xlsx', exportFormats) ? colors.accent : colors.textSecondary} />
                 <Text style={[styles.formatButtonLabel, { color: canExportFormat('xlsx', exportFormats) ? colors.accent : colors.textSecondary }]}>
-                  Excel
+                  {t('historyScreen.excel')}
                 </Text>
                 {!canExportFormat('xlsx', exportFormats) && (
                   <Text style={[styles.formatLocked, { color: colors.textSecondary }]}>
-                    Non inclus
+                    {t('subscription.notIncluded')}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -400,11 +400,11 @@ export function HistoryScreen() {
               >
                 <Ionicons name="list" size={32} color={canExportFormat('csv', exportFormats) ? colors.accent : colors.textSecondary} />
                 <Text style={[styles.formatButtonLabel, { color: canExportFormat('csv', exportFormats) ? colors.accent : colors.textSecondary }]}>
-                  CSV
+                  {t('historyScreen.csv')}
                 </Text>
                 {!canExportFormat('csv', exportFormats) && (
                   <Text style={[styles.formatLocked, { color: colors.textSecondary }]}>
-                    Non inclus
+                    {t('subscription.notIncluded')}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -415,7 +415,7 @@ export function HistoryScreen() {
               onPress={() => setShowExportModal(false)}
             >
               <Text style={[styles.cancelButtonText, { color: colors.textPrimary }]}>
-                Annuler
+                {t('common.cancel')}
               </Text>
             </TouchableOpacity>
           </View>

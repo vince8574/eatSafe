@@ -17,7 +17,7 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
 
   const handleViewProduct = (productId: string) => {
     onClose();
-    router.push(`/details?productId=${productId}`);
+    router.push({ pathname: '/details/[id]', params: { id: productId } });
   };
 
   if (products.length === 0) {
@@ -36,15 +36,15 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
           <View style={[styles.header, { backgroundColor: colors.danger }]}>
             <Text style={styles.headerIcon}>🚨</Text>
             <Text style={[styles.headerTitle, { color: colors.surface }]}>
-              ALERTE RAPPEL
+              {t('recallAlertModal.alertTitle')}
             </Text>
           </View>
 
           <ScrollView style={styles.scrollContent}>
             <Text style={[styles.warningText, { color: colors.textPrimary }]}>
               {products.length === 1
-                ? 'Un produit que vous avez scanné fait maintenant l\'objet d\'un rappel :'
-                : `${products.length} produits que vous avez scannés font maintenant l'objet d'un rappel :`}
+                ? t('recallAlertModal.warningTextSingle')
+                : t('recallAlertModal.warningTextMultiple', { count: products.length })}
             </Text>
 
             {products.map((product) => (
@@ -59,27 +59,25 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
                   </Text>
                   <View style={[styles.dangerBadge, { backgroundColor: colors.danger }]}>
                     <Text style={[styles.dangerBadgeText, { color: colors.surface }]}>
-                      RAPPELÉ
+                      {t('recallAlertModal.recalled')}
                     </Text>
                   </View>
                 </View>
                 <Text style={[styles.productLot, { color: colors.textSecondary }]}>
-                  Lot {product.lotNumber}
+                  {t('recallAlertModal.lot', { lotNumber: product.lotNumber })}
                 </Text>
                 <Text style={[styles.viewDetailsText, { color: colors.accent }]}>
-                  Toucher pour voir les détails →
+                  {t('recallAlertModal.viewDetails')}
                 </Text>
               </TouchableOpacity>
             ))}
 
             <View style={[styles.importantNotice, { backgroundColor: 'rgba(255, 59, 48, 0.1)', borderColor: colors.danger }]}>
               <Text style={[styles.importantTitle, { color: colors.danger }]}>
-                ⚠️ IMPORTANT
+                {t('recallAlertModal.importantTitle')}
               </Text>
               <Text style={[styles.importantText, { color: colors.textPrimary }]}>
-                • Ne consommez pas ces produits{'\n'}
-                • Rapportez-les au magasin pour remboursement{'\n'}
-                • En cas de symptômes, contactez les urgences (15 ou 112)
+                {t('recallAlertModal.importantText')}
               </Text>
             </View>
           </ScrollView>
@@ -89,7 +87,7 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
             onPress={onClose}
           >
             <Text style={[styles.closeButtonText, { color: colors.surface }]}>
-              J'ai compris
+              {t('recallAlertModal.understood')}
             </Text>
           </TouchableOpacity>
         </View>

@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Gestione del team"
+  },
+  "subscription": {
+    "header": "Abbonamento",
+    "mySubscription": "Il mio abbonamento",
+    "status": {
+      "none": "Nessun piano attivo",
+      "expired": "Piano scaduto",
+      "active": "Piano attivo (simulato)"
+    },
+    "plan": "Piano",
+    "none": "Nessuno",
+    "expiration": "Scadenza (simulata)",
+    "scansRemaining": "Scansioni rimanenti",
+    "history": "Cronologia",
+    "unlimited": "Illimitato",
+    "days": "giorni",
+    "exports": "Esportazioni",
+    "enabled": "Abilitato",
+    "notIncluded": "Non incluso",
+    "multiEmployees": "Multi-dipendente",
+    "upTo": "Fino a",
+    "sites": "Siti",
+    "plansTitle": "Piani",
+    "plansHelper": "Gli acquisti sono simulati (Firestore). La fatturazione effettiva (App Store / Google Play) verrà collegata in seguito.",
+    "planSelected": "Piano selezionato",
+    "choosePlan": "Scegli questo piano",
+    "scanPacksTitle": "Pacchetti di scansione",
+    "scanPacksHelper": "Aggiungi scansioni se viene raggiunta la quota mensile. Simulazione Firestore in attesa di fatturazione in-app."
+  },
+  "quota": {
+    "reached": "Quota di scansione raggiunta",
+    "addPack": "Aggiungi un pacchetto di scansione per continuare.",
+    "pack500": "Pacchetto +500 scansioni",
+    "cannotAdd": "Impossibile aggiungere il pacchetto al momento.",
+    "loading": "Caricamento quota...",
+    "remaining": "Scansioni rimanenti (simulazione):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Numero di lotto rilevato:",
+    "recallInfo": "Informazioni sul richiamo",
+    "product": "Prodotto:",
+    "brand": "Marchio:",
+    "understood": "HO CAPITO"
+  },
+  "scanLot": {
+    "editManually": "O modifica manualmente:",
+    "enterLot": "Inserisci il numero di lotto",
+    "ocrDetected": "Testo rilevato da OCR:",
+    "noText": "Nessun testo rilevato",
+    "checkingRecalls": "🔍 Verifica richiami in corso...",
+    "recallDetected": "⚠️ RICHIAMO RILEVATO",
+    "productSafe": "✅ PRODOTTO SICURO - Nessun richiamo",
+    "edit": "✏️ Modifica",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ RICHIAMO RILEVATO ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Numero di lotto modificato",
+    "lotUpdated": "Lotto aggiornato a:"
+  },
+  "scanScreen": {
+    "editBrand": "Modifica marchio rilevato:",
+    "enterBrand": "Inserisci il marchio",
+    "brandDetected": "Marchio rilevato:"
+  },
+  "historyScreen": {
+    "exportReserved": "Esportazione riservata",
+    "exportAvailable": "L'esportazione è disponibile con un piano che include l'opzione di esportazione.",
+    "noData": "Nessun dato",
+    "nothingToExport": "Niente da esportare al momento.",
+    "formatNotAvailable": "Formato non disponibile",
+    "formatNotIncluded": "Il formato {{format}} non è incluso nel tuo piano.",
+    "exportSuccess": "Esportazione riuscita",
+    "fileGenerated": "Il file {{format}} è stato generato ed è pronto per essere condiviso.",
+    "cannotGenerate": "Impossibile generare il file di esportazione.",
+    "exportHistory": "Esporta cronologia",
+    "exportAvailableWith": "Disponibile con un piano che include l'esportazione",
+    "chooseFormat": "Scegli il formato di esportazione",
+    "regulatoryEnabled": "Formato normativo abilitato",
+    "productsToExport": "{{count}} prodotti da esportare",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "ALLARME RICHIAMO",
+    "warningTextSingle": "Un prodotto che hai scansionato è ora soggetto a un richiamo:",
+    "warningTextMultiple": "{{count}} prodotti che hai scansionato sono ora soggetti a richiami:",
+    "recalled": "RICHIAMATO",
+    "lot": "Lotto {{lotNumber}}",
+    "viewDetails": "Tocca per visualizzare i dettagli →",
+    "importantTitle": "⚠️ IMPORTANTE",
+    "importantText": "• Non consumare questi prodotti\n• Restituiscili al negozio per un rimborso\n• Se compaiono sintomi, contattare i servizi di emergenza",
+    "understood": "Ho capito"
   }
 }

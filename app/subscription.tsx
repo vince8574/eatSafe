@@ -3,19 +3,21 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../src/theme/themeContext';
+import { useI18n } from '../src/i18n/I18nContext';
 import { useSubscription } from '../src/hooks/useSubscription';
 import { GradientBackground } from '../src/components/GradientBackground';
 
 export default function SubscriptionScreen() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const { subscription, plans, packs, loading, error, choosePlan, buyPack, refresh } = useSubscription();
 
   const statusLabel = useMemo(() => {
-    if (!subscription || subscription.status === 'none') return 'Aucun forfait actif';
-    if (subscription.status === 'expired') return 'Forfait expiré';
-    return 'Forfait actif (simulation)';
-  }, [subscription]);
+    if (!subscription || subscription.status === 'none') return t('subscription.status.none');
+    if (subscription.status === 'expired') return t('subscription.status.expired');
+    return t('subscription.status.active');
+  }, [subscription, t]);
 
   const expiresLabel = useMemo(() => {
     if (!subscription || !subscription.expiresAt) return '—';
@@ -29,66 +31,66 @@ export default function SubscriptionScreen() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Abonnement & forfaits</Text>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{t('subscription.header')}</Text>
           <TouchableOpacity onPress={refresh} style={styles.refreshButton} disabled={loading}>
             <Ionicons name="refresh" size={22} color={colors.textSecondary} />
           </TouchableOpacity>
         </View>
 
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Mon abonnement</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.mySubscription')}</Text>
           <Text style={[styles.status, { color: colors.accent }]}>{statusLabel}</Text>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Plan</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.plan')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
-              {subscription?.planName || 'Aucun'}
+              {subscription?.planName || t('subscription.none')}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Expiration (simulée)</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.expiration')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>{expiresLabel}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Scans restants</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.scansRemaining')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
               {subscription?.scansRemaining ?? 0} / {subscription?.scansIncluded ?? 0}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Historique</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.history')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
               {subscription?.historyRetentionDays === 'unlimited'
-                ? 'Illimité'
-                : `${subscription?.historyRetentionDays ?? 0} jours`}
+                ? t('subscription.unlimited')
+                : `${subscription?.historyRetentionDays ?? 0} ${t('subscription.days')}`}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Exports</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.exports')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
-              {subscription?.exportEnabled ? 'Activés' : 'Non inclus'}
+              {subscription?.exportEnabled ? t('subscription.enabled') : t('subscription.notIncluded')}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Multi-employés</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.multiEmployees')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
-              {subscription?.employeesLimit ? `Jusqu’à ${subscription.employeesLimit}` : '1'}
+              {subscription?.employeesLimit ? `${t('subscription.upTo')} ${subscription.employeesLimit}` : '1'}
             </Text>
           </View>
           <View style={styles.row}>
-            <Text style={[styles.label, { color: colors.textSecondary }]}>Sites</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.sites')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
-              {subscription?.sitesLimit ? `Jusqu’à ${subscription.sitesLimit}` : '1'}
+              {subscription?.sitesLimit ? `${t('subscription.upTo')} ${subscription.sitesLimit}` : '1'}
             </Text>
           </View>
         </View>
 
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
           <View style={styles.cardHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Forfaits</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.plansTitle')}</Text>
             {loading && <ActivityIndicator color={colors.accent} />}
           </View>
           <Text style={[styles.helper, { color: colors.textSecondary }]}>
-            Les achats sont simulés (Firestore). La facturation réelle (App Store / Google Play) sera branchée plus tard.
+            {t('subscription.plansHelper')}
           </Text>
           {plans.map((plan) => {
             const selected = subscription?.planId === plan.id;
@@ -126,7 +128,7 @@ export default function SubscriptionScreen() {
                       { color: selected ? colors.accent : colors.surface }
                     ]}
                   >
-                    {selected ? 'Plan sélectionné' : 'Choisir ce plan'}
+                    {selected ? t('subscription.planSelected') : t('subscription.choosePlan')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -135,9 +137,9 @@ export default function SubscriptionScreen() {
         </View>
 
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Packs de scans</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.scanPacksTitle')}</Text>
           <Text style={[styles.helper, { color: colors.textSecondary }]}>
-            Ajoute des scans si ton quota mensuel est atteint. Simulation Firestore en attendant la facturation in‑app.
+            {t('subscription.scanPacksHelper')}
           </Text>
           <View style={styles.packs}>
             {packs.map((pack) => (

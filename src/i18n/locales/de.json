@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Teamverwaltung"
+  },
+  "subscription": {
+    "header": "Abonnement",
+    "mySubscription": "Mein Abonnement",
+    "status": {
+      "none": "Kein aktiver Plan",
+      "expired": "Abgelaufener Plan",
+      "active": "Aktiver Plan (simuliert)"
+    },
+    "plan": "Plan",
+    "none": "Keine",
+    "expiration": "Ablauf (simuliert)",
+    "scansRemaining": "Verbleibende Scans",
+    "history": "Verlauf",
+    "unlimited": "Unbegrenzt",
+    "days": "Tage",
+    "exports": "Exporte",
+    "enabled": "Aktiviert",
+    "notIncluded": "Nicht enthalten",
+    "multiEmployees": "Mehrere Mitarbeiter",
+    "upTo": "Bis zu",
+    "sites": "Standorte",
+    "plansTitle": "Pläne",
+    "plansHelper": "Käufe werden simuliert (Firestore). Die tatsächliche Abrechnung (App Store / Google Play) wird später verbunden.",
+    "planSelected": "Plan ausgewählt",
+    "choosePlan": "Diesen Plan wählen",
+    "scanPacksTitle": "Scan-Pakete",
+    "scanPacksHelper": "Fügen Sie Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist. Firestore-Simulation für In-App-Abrechnung ausstehend."
+  },
+  "quota": {
+    "reached": "Scan-Kontingent erreicht",
+    "addPack": "Fügen Sie ein Scan-Paket hinzu, um fortzufahren.",
+    "pack500": "+500 Scans Paket",
+    "cannotAdd": "Paket kann derzeit nicht hinzugefügt werden.",
+    "loading": "Kontingent wird geladen...",
+    "remaining": "Verbleibende Scans (Simulation):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Chargennummer erkannt:",
+    "recallInfo": "Rückrufinformationen",
+    "product": "Produkt:",
+    "brand": "Marke:",
+    "understood": "ICH VERSTEHE"
+  },
+  "scanLot": {
+    "editManually": "Oder manuell bearbeiten:",
+    "enterLot": "Chargennummer eingeben",
+    "ocrDetected": "OCR erkannter Text:",
+    "noText": "Kein Text erkannt",
+    "checkingRecalls": "🔍 Überprüfung auf Rückrufe...",
+    "recallDetected": "⚠️ RÜCKRUF ERKANNT",
+    "productSafe": "✅ PRODUKT SICHER - Kein Rückruf",
+    "edit": "✏️ Bearbeiten",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ RÜCKRUF ERKANNT ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Chargennummer geändert",
+    "lotUpdated": "Charge aktualisiert auf:"
+  },
+  "scanScreen": {
+    "editBrand": "Erkannte Marke bearbeiten:",
+    "enterBrand": "Marke eingeben",
+    "brandDetected": "Marke erkannt:"
+  },
+  "historyScreen": {
+    "exportReserved": "Export reserviert",
+    "exportAvailable": "Export ist verfügbar mit einem Plan, der die Export-Option enthält.",
+    "noData": "Keine Daten",
+    "nothingToExport": "Derzeit nichts zu exportieren.",
+    "formatNotAvailable": "Format nicht verfügbar",
+    "formatNotIncluded": "Das Format {{format}} ist nicht in Ihrem Plan enthalten.",
+    "exportSuccess": "Export erfolgreich",
+    "fileGenerated": "Die {{format}}-Datei wurde generiert und ist zum Teilen bereit.",
+    "cannotGenerate": "Export-Datei kann nicht generiert werden.",
+    "exportHistory": "Verlauf exportieren",
+    "exportAvailableWith": "Verfügbar mit einem Plan, der Export enthält",
+    "chooseFormat": "Exportformat wählen",
+    "regulatoryEnabled": "Regulatorisches Format aktiviert",
+    "productsToExport": "{{count}} Produkte zu exportieren",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "RÜCKRUF-WARNUNG",
+    "warningTextSingle": "Ein von Ihnen gescanntes Produkt unterliegt jetzt einem Rückruf:",
+    "warningTextMultiple": "{{count}} von Ihnen gescannte Produkte unterliegen jetzt Rückrufen:",
+    "recalled": "ZURÜCKGERUFEN",
+    "lot": "Charge {{lotNumber}}",
+    "viewDetails": "Tippen Sie, um Details anzuzeigen →",
+    "importantTitle": "⚠️ WICHTIG",
+    "importantText": "• Konsumieren Sie diese Produkte nicht\n• Bringen Sie sie zur Rückerstattung ins Geschäft zurück\n• Bei Symptomen kontaktieren Sie den Notdienst",
+    "understood": "Ich verstehe"
   }
 }

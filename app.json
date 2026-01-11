@@ -1,9 +1,9 @@
-﻿{
+{
   "expo": {
     "name": "Numeline",
     "slug": "eatsok",
     "scheme": "eatsafe",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.eatsafe.app"
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A1F1F"
@@ -62,11 +63,9 @@
     },
     "extra": {
       "router": {},
-      "vision": {
-        "endpoint": "https://vision.googleapis.com/v1/images:annotate",
-        "apiKey": "AIzaSyA3cIHYbn2otFdS8DGsq5mi_VgzLYBJbq0"
+      "eas": {
+        "projectId": "3d17326d-6c82-4b80-8f4d-9ea1e120fd85"
       }
     }
   }
 }
-

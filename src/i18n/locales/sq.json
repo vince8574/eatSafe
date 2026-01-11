@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Menaxhimi i ekipit"
+  },
+  "subscription": {
+    "header": "Abonimi",
+    "mySubscription": "Abonimi im",
+    "status": {
+      "none": "Asnjë plan aktiv",
+      "expired": "Plan i skaduar",
+      "active": "Plan aktiv (i simuluar)"
+    },
+    "plan": "Plani",
+    "none": "Asnjë",
+    "expiration": "Skadenca (e simuluar)",
+    "scansRemaining": "Skanimet e mbetura",
+    "history": "Historiku",
+    "unlimited": "I pakufizuar",
+    "days": "ditë",
+    "exports": "Eksportet",
+    "enabled": "I aktivizuar",
+    "notIncluded": "Nuk përfshihet",
+    "multiEmployees": "Shumë punonjës",
+    "upTo": "Deri në",
+    "sites": "Faqet",
+    "plansTitle": "Planet",
+    "plansHelper": "Blerjet janë të simuluara (Firestore). Faturimi aktual (App Store / Google Play) do të lidhet më vonë.",
+    "planSelected": "Plani u zgjodh",
+    "choosePlan": "Zgjidhni këtë plan",
+    "scanPacksTitle": "Paketat e skanimit",
+    "scanPacksHelper": "Shtoni skanime nëse kuota juaj mujore është arritur. Simulimi Firestore në pritje të faturimit në aplikacion."
+  },
+  "quota": {
+    "reached": "Kuota e skanimit u arrit",
+    "addPack": "Shtoni një paketë skanimi për të vazhduar.",
+    "pack500": "Paketë +500 skanime",
+    "cannotAdd": "Nuk mund të shtohet paketa në këtë moment.",
+    "loading": "Duke ngarkuar kuotën...",
+    "remaining": "Skanimet e mbetura (simulim):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Numri i lotit u zbulua:",
+    "recallInfo": "Informacioni i tërheqjes",
+    "product": "Produkti:",
+    "brand": "Marka:",
+    "understood": "E KUPTOJ"
+  },
+  "scanLot": {
+    "editManually": "Ose redaktoni manualisht:",
+    "enterLot": "Vendosni numrin e lotit",
+    "ocrDetected": "Teksti i zbuluar nga OCR:",
+    "noText": "Nuk u zbulua tekst",
+    "checkingRecalls": "🔍 Duke kontrolluar tërheqjet...",
+    "recallDetected": "⚠️ TËRHEQJE E ZBULUAR",
+    "productSafe": "✅ PRODUKTI I SIGURT - Pa tërheqje",
+    "edit": "✏️ Redakto",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ TËRHEQJE E ZBULUAR ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Numri i lotit u modifikua",
+    "lotUpdated": "Loti u përditësua në:"
+  },
+  "scanScreen": {
+    "editBrand": "Redaktoni markën e zbuluar:",
+    "enterBrand": "Vendosni markën",
+    "brandDetected": "Marka u zbulua:"
+  },
+  "historyScreen": {
+    "exportReserved": "Eksporti i rezervuar",
+    "exportAvailable": "Eksporti është i disponueshëm me një plan që përfshin opsionin e eksportit.",
+    "noData": "Asnjë të dhënë",
+    "nothingToExport": "Asgjë për të eksportuar në këtë moment.",
+    "formatNotAvailable": "Formati nuk është i disponueshëm",
+    "formatNotIncluded": "Formati {{format}} nuk përfshihet në planin tuaj.",
+    "exportSuccess": "Eksporti u krye me sukses",
+    "fileGenerated": "Skedari {{format}} është gjeneruar dhe është gati për të ndare.",
+    "cannotGenerate": "Nuk mund të gjenerohet skedari i eksportit.",
+    "exportHistory": "Eksporto historikun",
+    "exportAvailableWith": "I disponueshëm me një plan që përfshin eksportin",
+    "chooseFormat": "Zgjidhni formatin e eksportit",
+    "regulatoryEnabled": "Formati rregullator i aktivizuar",
+    "productsToExport": "{{count}} produkte për të eksportuar",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "ALARM TËRHEQJEJE",
+    "warningTextSingle": "Një produkt që keni skanuar tani është subjekt i një tërheqjeje:",
+    "warningTextMultiple": "{{count}} produkte që keni skanuar tani janë subjekt i tërheqjeve:",
+    "recalled": "I TËRHEQUR",
+    "lot": "Loti {{lotNumber}}",
+    "viewDetails": "Prekni për të parë detajet →",
+    "importantTitle": "⚠️ E RËNDËSISHME",
+    "importantText": "• Mos i konsumoni këto produkte\n• Kthejini në dyqan për rimbursim\n• Nëse shfaqen simptoma, kontaktoni shërbimet e urgjencës",
+    "understood": "E kuptoj"
   }
 }

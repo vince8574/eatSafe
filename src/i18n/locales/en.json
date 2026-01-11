@@ -270,5 +270,101 @@
   },
   "team": {
     "title": "Team Management"
+  },
+  "subscription": {
+    "header": "Subscription",
+    "mySubscription": "My Subscription",
+    "status": {
+      "none": "No active plan",
+      "expired": "Expired plan",
+      "active": "Active plan (simulated)"
+    },
+    "plan": "Plan",
+    "none": "None",
+    "expiration": "Expiration (simulated)",
+    "scansRemaining": "Scans remaining",
+    "history": "History",
+    "unlimited": "Unlimited",
+    "days": "days",
+    "exports": "Exports",
+    "enabled": "Enabled",
+    "notIncluded": "Not included",
+    "multiEmployees": "Multi-employee",
+    "upTo": "Up to",
+    "sites": "Sites",
+    "plansTitle": "Plans",
+    "plansHelper": "Purchases are simulated (Firestore). Actual billing (App Store / Google Play) will be connected later.",
+    "planSelected": "Plan selected",
+    "choosePlan": "Choose this plan",
+    "scanPacksTitle": "Scan packs",
+    "scanPacksHelper": "Add scans if your monthly quota is reached. Firestore simulation pending in-app billing."
+  },
+  "quota": {
+    "reached": "Scan quota reached",
+    "addPack": "Add a scan pack to continue.",
+    "pack500": "+500 scans pack",
+    "cannotAdd": "Cannot add pack at this time.",
+    "loading": "Loading quota...",
+    "remaining": "Scans remaining (simulation):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Lot number detected:",
+    "recallInfo": "Recall information",
+    "product": "Product:",
+    "brand": "Brand:",
+    "understood": "I UNDERSTAND"
+  },
+  "scanLot": {
+    "editManually": "Or edit manually:",
+    "enterLot": "Enter lot number",
+    "ocrDetected": "OCR detected text:",
+    "noText": "No text detected",
+    "checkingRecalls": "🔍 Checking for recalls...",
+    "recallDetected": "⚠️ RECALL DETECTED",
+    "productSafe": "✅ PRODUCT SAFE - No recall",
+    "edit": "✏️ Edit",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ RECALL DETECTED ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Lot number modified",
+    "lotUpdated": "Lot updated to:"
+  },
+  "scanScreen": {
+    "editBrand": "Edit detected brand:",
+    "enterBrand": "Enter brand",
+    "brandDetected": "Brand detected:"
+  },
+  "historyScreen": {
+    "exportReserved": "Export reserved",
+    "exportAvailable": "Export is available with a plan that includes export option.",
+    "noData": "No data",
+    "nothingToExport": "Nothing to export at this time.",
+    "formatNotAvailable": "Format not available",
+    "formatNotIncluded": "{{format}} format is not included in your plan.",
+    "exportSuccess": "Export successful",
+    "fileGenerated": "{{format}} file has been generated and is ready to share.",
+    "cannotGenerate": "Cannot generate export file.",
+    "exportHistory": "Export history",
+    "exportAvailableWith": "Available with a plan that includes export",
+    "chooseFormat": "Choose export format",
+    "regulatoryEnabled": "Regulatory format enabled",
+    "productsToExport": "{{count}} products to export",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "RECALL ALERT",
+    "warningTextSingle": "A product you scanned is now subject to a recall:",
+    "warningTextMultiple": "{{count}} products you scanned are now subject to recalls:",
+    "recalled": "RECALLED",
+    "lot": "Lot {{lotNumber}}",
+    "viewDetails": "Tap to view details →",
+    "importantTitle": "⚠️ IMPORTANT",
+    "importantText": "• Do not consume these products\n• Return them to the store for refund\n• If symptoms appear, contact emergency services (911 or 112)",
+    "understood": "I understand"
   }
 }

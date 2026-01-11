@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Upravlja ekipa"
+  },
+  "subscription": {
+    "header": "Pretplata",
+    "mySubscription": "Moja pretplata",
+    "status": {
+      "none": "Nema aktivnog plana",
+      "expired": "Istekli plan",
+      "active": "Aktivan plan (simuliran)"
+    },
+    "plan": "Plan",
+    "none": "Nijedan",
+    "expiration": "Isticanje (simulirano)",
+    "scansRemaining": "Preostala skeniranja",
+    "history": "Istorija",
+    "unlimited": "Neograničeno",
+    "days": "dana",
+    "exports": "Izvozi",
+    "enabled": "Omogućeno",
+    "notIncluded": "Nije uključeno",
+    "multiEmployees": "Više zaposlenih",
+    "upTo": "Do",
+    "sites": "Lokacije",
+    "plansTitle": "Planovi",
+    "plansHelper": "Kupovine su simulirane (Firestore). Stvarna naplata (App Store / Google Play) biće povezana kasnije.",
+    "planSelected": "Plan izabran",
+    "choosePlan": "Izaberite ovaj plan",
+    "scanPacksTitle": "Paketi skeniranja",
+    "scanPacksHelper": "Dodajte skeniranja ako je dostignut mjesečni kvota. Firestore simulacija na čekanju naplate u aplikaciji."
+  },
+  "quota": {
+    "reached": "Kvota skeniranja dostignuta",
+    "addPack": "Dodajte paket skeniranja da nastavite.",
+    "pack500": "Paket +500 skeniranja",
+    "cannotAdd": "Ne može se dodati paket u ovom trenutku.",
+    "loading": "Učitavanje kvote...",
+    "remaining": "Preostala skeniranja (simulacija):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Broj serije otkriven:",
+    "recallInfo": "Informacije o opozivanju",
+    "product": "Proizvod:",
+    "brand": "Brend:",
+    "understood": "RAZUMIJEM"
+  },
+  "scanLot": {
+    "editManually": "Ili uredite ručno:",
+    "enterLot": "Unesite broj serije",
+    "ocrDetected": "OCR otkriven tekst:",
+    "noText": "Nije otkriven tekst",
+    "checkingRecalls": "🔍 Provjera opoziva...",
+    "recallDetected": "⚠️ OPOZIV OTKRIVEN",
+    "productSafe": "✅ PROIZVOD BEZBIJEDAN - Nema opoziva",
+    "edit": "✏️ Uredi",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ OPOZIV OTKRIVEN ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Broj serije izmijenjen",
+    "lotUpdated": "Serija ažurirana na:"
+  },
+  "scanScreen": {
+    "editBrand": "Uredite otkriveni brend:",
+    "enterBrand": "Unesite brend",
+    "brandDetected": "Brend otkriven:"
+  },
+  "historyScreen": {
+    "exportReserved": "Izvoz rezervisan",
+    "exportAvailable": "Izvoz je dostupan sa planom koji uključuje opciju izvoza.",
+    "noData": "Nema podataka",
+    "nothingToExport": "Nema ništa za izvoz u ovom trenutku.",
+    "formatNotAvailable": "Format nije dostupan",
+    "formatNotIncluded": "Format {{format}} nije uključen u vaš plan.",
+    "exportSuccess": "Izvoz uspješan",
+    "fileGenerated": "{{format}} datoteka je generisana i spremna za dijeljenje.",
+    "cannotGenerate": "Nije moguće generisati datoteku za izvoz.",
+    "exportHistory": "Izvezi istoriju",
+    "exportAvailableWith": "Dostupno sa planom koji uključuje izvoz",
+    "chooseFormat": "Izaberite format izvoza",
+    "regulatoryEnabled": "Regulatorni format omogućen",
+    "productsToExport": "{{count}} proizvoda za izvoz",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "UPOZORENJE O OPOZIVU",
+    "warningTextSingle": "Proizvod koji ste skenirali sada podliježe opozivu:",
+    "warningTextMultiple": "{{count}} proizvoda koje ste skenirali sada podliježe opozivima:",
+    "recalled": "OPOZVAN",
+    "lot": "Serija {{lotNumber}}",
+    "viewDetails": "Dodirnite za detalje →",
+    "importantTitle": "⚠️ VAŽNO",
+    "importantText": "• Ne konzumirajte ove proizvode\n• Vratite ih u prodavnicu za povraćaj novca\n• Ako se pojave simptomi, kontaktirajte hitnu pomoć",
+    "understood": "Razumijem"
   }
 }

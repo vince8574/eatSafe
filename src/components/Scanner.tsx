@@ -160,7 +160,7 @@ export function Scanner({
             style={[
               styles.backButtonTop,
               {
-                backgroundColor: colors.accent
+                backgroundColor: 'rgba(0,0,0,0.5)'
               }
             ]}
             onPress={onBack}
@@ -191,7 +191,7 @@ export function Scanner({
             style={[
               styles.reloadButtonCamera,
               {
-                backgroundColor: colors.accent
+                backgroundColor: 'rgba(0,0,0,0.5)'
               }
             ]}
             onPress={onReload}
@@ -206,7 +206,7 @@ export function Scanner({
             style={[
               styles.manualEntryButtonCamera,
               {
-                backgroundColor: colors.accent
+                backgroundColor: 'rgba(0,0,0,0.5)'
               }
             ]}
             onPress={onManualEntry}
@@ -221,7 +221,7 @@ export function Scanner({
             style={[
               styles.restartButtonCamera,
               {
-                backgroundColor: colors.accent
+                backgroundColor: 'rgba(0,0,0,0.5)'
               }
             ]}
             onPress={onRestart}

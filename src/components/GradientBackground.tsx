@@ -1,9 +1,9 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface GradientBackgroundProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function GradientBackground({ children }: GradientBackgroundProps) {

@@ -80,20 +80,20 @@ export function DetailScreen() {
                       setEditedLot('');
                     }}
                   >
-                    <Text style={[styles.lotEditButtonText, { color: colors.textPrimary }]}>Annuler</Text>
+                    <Text style={[styles.lotEditButtonText, { color: colors.textPrimary }]}>{t('common.cancel')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.lotEditButton, { backgroundColor: colors.accent }]}
                     onPress={async () => {
                       if (editedLot.trim() && editedLot.trim() !== product.lotNumber) {
                         await updateProduct(product.id, { lotNumber: editedLot.trim().toUpperCase() });
-                        Alert.alert('Numéro de lot modifié', `Le lot a été mis à jour vers: ${editedLot.trim().toUpperCase()}`);
+                        Alert.alert(t('detailsScreen.lotModified'), `${t('detailsScreen.lotUpdated')} ${editedLot.trim().toUpperCase()}`);
                       }
                       setIsEditingLot(false);
                       setEditedLot('');
                     }}
                   >
-                    <Text style={[styles.lotEditButtonText, { color: colors.surface }]}>Enregistrer</Text>
+                    <Text style={[styles.lotEditButtonText, { color: colors.surface }]}>{t('common.save')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>

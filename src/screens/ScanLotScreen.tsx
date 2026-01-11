@@ -57,19 +57,19 @@ export function ScanLotScreen() {
 
     return new Promise((resolve) => {
       Alert.alert(
-        'Quota de scans atteint',
-        'Ajoute un pack de scans pour continuer.',
+        t('quota.reached'),
+        t('quota.addPack'),
         [
-          { text: 'Annuler', style: 'cancel', onPress: () => resolve(false) },
+          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
           {
-            text: 'Pack +500 scans',
+            text: t('quota.pack500'),
             onPress: async () => {
               try {
                 await buyPack(500);
                 await refresh();
                 resolve(true);
               } catch (error) {
-                Alert.alert('Erreur', "Impossible d'ajouter le pack pour le moment.");
+                Alert.alert(t('auth.error'), t('quota.cannotAdd'));
                 resolve(false);
               }
             }
@@ -78,7 +78,7 @@ export function ScanLotScreen() {
         { cancelable: true }
       );
     });
-  }, [subscription?.scansRemaining, buyPack, refresh]);
+  }, [subscription?.scansRemaining, buyPack, refresh, t]);
 
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
@@ -294,6 +294,12 @@ export function ScanLotScreen() {
     router.back();
   }, [router]);
 
+  const handleManualEntry = useCallback(() => {
+    setEditedLot('');
+    setIsEditingLot(true);
+    setConfirmModalVisible(true);
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       setScannerResetToken((token) => token + 1);
@@ -313,6 +319,7 @@ export function ScanLotScreen() {
         flashPosition="top-right"
         onBack={handleGoBack}
         onRestart={handleRestart}
+        onManualEntry={handleManualEntry}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
@@ -320,7 +327,7 @@ export function ScanLotScreen() {
         {subscription && (
           <View style={[styles.scanCounter, { backgroundColor: colors.surface, borderColor: colors.accent }]}>
             <Text style={[styles.scanCounterLabel, { color: colors.textSecondary }]}>
-              Scans restants
+              {t('subscription.scansRemaining')}
             </Text>
             <Text style={[styles.scanCounterValue, { color: colors.accent }]}>
               {subscription.scansRemaining} / {subscription.scansIncluded}
@@ -418,24 +425,9 @@ export function ScanLotScreen() {
 
         <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
           <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-            âš ï¸ {t('common.appDisclaimer')}
+            ⚠️ {t('common.appDisclaimer')}
           </Text>
         </View>
-
-        <TouchableOpacity
-          style={[styles.resetButton, { backgroundColor: colors.surface, opacity: isProcessing ? 0.5 : 1 }]}
-          onPress={resetFlow}
-          disabled={isProcessing}
-        >
-          <Text style={[styles.resetText, { color: colors.textPrimary }]}>{t('scan.restart')}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.backButton, { backgroundColor: colors.surface, borderColor: colors.accent }]}
-          onPress={handleGoBack}
-        >
-          <Text style={[styles.backButtonText, { color: colors.accent }]}>{t('common.back')}</Text>
-        </TouchableOpacity>
       </ScrollView>
 
       <Modal
@@ -453,13 +445,13 @@ export function ScanLotScreen() {
             {isEditingLot ? (
               <>
                 <Text style={[styles.modalMessage, { color: colors.textSecondary, marginTop: 12 }]}>
-                  Ou modifier manuellement :
+                  {t('scanLot.editManually')}
                 </Text>
                 <TextInput
                   style={[styles.editInput, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
                   value={editedLot}
                   onChangeText={setEditedLot}
-                  placeholder="Entrez le numÃ©ro de lot"
+                  placeholder={t('scanLot.enterLot')}
                   placeholderTextColor={colors.textSecondary}
                   autoCapitalize="characters"
                   autoFocus
@@ -474,7 +466,7 @@ export function ScanLotScreen() {
                     disabled={isFinalizing}
                   >
                     <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
-                      Annuler
+                      {t('common.cancel')}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -491,18 +483,18 @@ export function ScanLotScreen() {
             ) : (
               <>
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                  Texte OCR dÃ©tectÃ© :
+                  {t('scanLot.ocrDetected')}
                 </Text>
                 <View style={[styles.ocrTextContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
                   <Text style={[styles.ocrText, { color: colors.textPrimary }]}>
-                    {ocrText || 'Aucun texte dÃ©tectÃ©'}
+                    {ocrText || t('scanLot.noText')}
                   </Text>
                 </View>
 
                 {ocrSource && (
                   <View style={[styles.ocrSourceContainer, { backgroundColor: ocrSource === 'vision-fallback' ? '#e8f5e9' : '#e3f2fd' }]}>
                     <Text style={[styles.ocrSourceText, { color: ocrSource === 'vision-fallback' ? '#2e7d32' : '#1565c0' }]}>
-                      {ocrSource === 'vision-fallback' ? 'ðŸ¤– Google Vision API' : ocrSource === 'mlkit' ? 'ðŸ“± ML Kit' : `ðŸ“‹ ${ocrSource}`}
+                      {ocrSource === 'vision-fallback' ? t('scanLot.ocrSourceVision') : ocrSource === 'mlkit' ? t('scanLot.ocrSourceMlKit') : t('scanLot.ocrSource', { source: ocrSource })}
                     </Text>
                     {verifiedAt && (
                       <Text style={[styles.recallMeta, { color: colors.textSecondary }]}>
@@ -524,7 +516,7 @@ export function ScanLotScreen() {
                 {isCheckingRecall && (
                   <View style={styles.checkingContainer}>
                     <Text style={[styles.checkingText, { color: colors.textSecondary }]}>
-                      ðŸ” VÃ©rification des rappels en cours...
+                      ðŸ” {t('scanLot.checkingRecalls')}
                     </Text>
                   </View>
                 )}
@@ -539,8 +531,8 @@ export function ScanLotScreen() {
                   ]}>
                     <Text style={[styles.recallStatusText, { color: hasRecall ? '#f44' : '#4a4' }]}>
                       {hasRecall
-                        ? `âš ï¸ RAPPEL DÃ‰TECTÃ‰ ${matchedLot ? `(${matchedLot})` : ''}`
-                        : 'âœ… PRODUIT SAFE - Aucun rappel'}
+                        ? matchedLot ? t('scanLot.recallDetectedWithLot', { lot: matchedLot }) : t('scanLot.recallDetected')
+                        : t('scanLot.productSafe')}
                     </Text>
                   </View>
                 )}
@@ -551,30 +543,10 @@ export function ScanLotScreen() {
                   onPress={handleEditLot}
                 >
                   <Text style={[styles.editButtonText, { color: colors.accent }]}>
-                    âœï¸ Modifier
+                    {t('scanLot.edit')}
                   </Text>
                 </TouchableOpacity>
 
-                <View style={styles.modalButtons}>
-                  <TouchableOpacity
-                    style={[styles.modalButton, { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border }]}
-                    onPress={handleRestart}
-                    disabled={isFinalizing}
-                  >
-                    <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
-                      {t('scan.restart')}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.modalButton, { backgroundColor: colors.accent }]}
-                    onPress={handleConfirm}
-                    disabled={isFinalizing}
-                  >
-                    <Text style={[styles.modalButtonText, { color: colors.surface }]}>
-                      {t('scan.validate')}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
               </>
             )}
           </View>

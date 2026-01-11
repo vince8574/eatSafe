@@ -108,7 +108,7 @@ export default function LanguageScreen() {
           <View style={styles.legalButtonContent}>
             <Ionicons name="pricetag-outline" size={24} color={colors.accent} />
             <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
-              Abonnement & forfaits
+              {t('subscription.header')}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />

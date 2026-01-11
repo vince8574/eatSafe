@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -113,24 +113,24 @@ export function ImmediateRecallAlert({
 
           {/* Numéro de lot détecté */}
           <View style={styles.lotContainer}>
-            <Text style={styles.lotLabel}>Numéro de lot détecté :</Text>
+            <Text style={styles.lotLabel}>{t('immediateRecallAlert.lotDetected')}</Text>
             <Text style={styles.lotNumber}>{matchedLot}</Text>
           </View>
 
           {/* Informations du rappel */}
           <View style={styles.infoContainer}>
-            <Text style={styles.infoTitle}>Informations du rappel</Text>
+            <Text style={styles.infoTitle}>{t('immediateRecallAlert.recallInfo')}</Text>
 
             {recall.title && (
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Produit :</Text>
+                <Text style={styles.infoLabel}>{t('immediateRecallAlert.product')}</Text>
                 <Text style={styles.infoValue}>{recall.title}</Text>
               </View>
             )}
 
             {recall.brand && (
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Marque :</Text>
+                <Text style={styles.infoLabel}>{t('immediateRecallAlert.brand')}</Text>
                 <Text style={styles.infoValue}>{recall.brand}</Text>
               </View>
             )}
@@ -168,7 +168,7 @@ export function ImmediateRecallAlert({
             style={styles.closeButton}
             onPress={onClose}
           >
-            <Text style={styles.closeButtonText}>J'AI COMPRIS</Text>
+            <Text style={styles.closeButtonText}>{t('immediateRecallAlert.understood')}</Text>
           </Pressable>
         </ScrollView>
       </View>

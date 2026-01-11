@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "チーム管理"
+  },
+  "subscription": {
+    "header": "サブスクリプション",
+    "mySubscription": "マイサブスクリプション",
+    "status": {
+      "none": "アクティブなプランがありません",
+      "expired": "期限切れのプラン",
+      "active": "アクティブなプラン（シミュレート）"
+    },
+    "plan": "プラン",
+    "none": "なし",
+    "expiration": "有効期限（シミュレート）",
+    "scansRemaining": "残りのスキャン",
+    "history": "履歴",
+    "unlimited": "無制限",
+    "days": "日",
+    "exports": "エクスポート",
+    "enabled": "有効",
+    "notIncluded": "含まれていません",
+    "multiEmployees": "複数の従業員",
+    "upTo": "最大",
+    "sites": "サイト",
+    "plansTitle": "プラン",
+    "plansHelper": "購入はシミュレートされています（Firestore）。実際の請求（App Store / Google Play）は後で接続されます。",
+    "planSelected": "プランが選択されました",
+    "choosePlan": "このプランを選択",
+    "scanPacksTitle": "スキャンパック",
+    "scanPacksHelper": "月間割り当てに達した場合はスキャンを追加します。アプリ内課金保留中のFirestoreシミュレーション。"
+  },
+  "quota": {
+    "reached": "スキャン割り当てに達しました",
+    "addPack": "続行するにはスキャンパックを追加してください。",
+    "pack500": "+500スキャンパック",
+    "cannotAdd": "現在パックを追加できません。",
+    "loading": "割り当てを読み込み中...",
+    "remaining": "残りのスキャン（シミュレーション）："
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "ロット番号が検出されました：",
+    "recallInfo": "リコール情報",
+    "product": "製品：",
+    "brand": "ブランド：",
+    "understood": "理解しました"
+  },
+  "scanLot": {
+    "editManually": "または手動で編集：",
+    "enterLot": "ロット番号を入力",
+    "ocrDetected": "OCR検出テキスト：",
+    "noText": "テキストが検出されませんでした",
+    "checkingRecalls": "🔍 リコールを確認中...",
+    "recallDetected": "⚠️ リコール検出",
+    "productSafe": "✅ 製品安全 - リコールなし",
+    "edit": "✏️ 編集",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ リコール検出（{{lot}}）",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "ロット番号が変更されました",
+    "lotUpdated": "ロットが更新されました："
+  },
+  "scanScreen": {
+    "editBrand": "検出されたブランドを編集：",
+    "enterBrand": "ブランドを入力",
+    "brandDetected": "ブランドが検出されました："
+  },
+  "historyScreen": {
+    "exportReserved": "エクスポート予約済み",
+    "exportAvailable": "エクスポートはエクスポートオプションを含むプランで利用できます。",
+    "noData": "データなし",
+    "nothingToExport": "現在エクスポートするものはありません。",
+    "formatNotAvailable": "フォーマットが利用できません",
+    "formatNotIncluded": "{{format}}フォーマットはあなたのプランに含まれていません。",
+    "exportSuccess": "エクスポート成功",
+    "fileGenerated": "{{format}}ファイルが生成され、共有の準備ができました。",
+    "cannotGenerate": "エクスポートファイルを生成できません。",
+    "exportHistory": "履歴をエクスポート",
+    "exportAvailableWith": "エクスポートを含むプランで利用可能",
+    "chooseFormat": "エクスポート形式を選択",
+    "regulatoryEnabled": "規制形式が有効",
+    "productsToExport": "エクスポートする{{count}}製品",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "リコール警告",
+    "warningTextSingle": "スキャンした製品がリコールの対象になりました：",
+    "warningTextMultiple": "スキャンした{{count}}製品がリコールの対象になりました：",
+    "recalled": "リコール済み",
+    "lot": "ロット{{lotNumber}}",
+    "viewDetails": "タップして詳細を表示 →",
+    "importantTitle": "⚠️ 重要",
+    "importantText": "• これらの製品を消費しないでください\n• 店舗に返品して払い戻しを受けてください\n• 症状が現れた場合は緊急サービスに連絡してください",
+    "understood": "理解しました"
   }
 }

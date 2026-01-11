@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "Gestión de equipo"
+  },
+  "subscription": {
+    "header": "Suscripción",
+    "mySubscription": "Mi suscripción",
+    "status": {
+      "none": "Sin plan activo",
+      "expired": "Plan caducado",
+      "active": "Plan activo (simulado)"
+    },
+    "plan": "Plan",
+    "none": "Ninguno",
+    "expiration": "Vencimiento (simulado)",
+    "scansRemaining": "Escaneos restantes",
+    "history": "Historial",
+    "unlimited": "Ilimitado",
+    "days": "días",
+    "exports": "Exportaciones",
+    "enabled": "Habilitado",
+    "notIncluded": "No incluido",
+    "multiEmployees": "Multi-empleado",
+    "upTo": "Hasta",
+    "sites": "Sitios",
+    "plansTitle": "Planes",
+    "plansHelper": "Las compras están simuladas (Firestore). La facturación real (App Store / Google Play) se conectará más tarde.",
+    "planSelected": "Plan seleccionado",
+    "choosePlan": "Elegir este plan",
+    "scanPacksTitle": "Paquetes de escaneo",
+    "scanPacksHelper": "Agregue escaneos si se alcanza su cuota mensual. Simulación de Firestore pendiente de facturación en la aplicación."
+  },
+  "quota": {
+    "reached": "Cuota de escaneo alcanzada",
+    "addPack": "Agregue un paquete de escaneo para continuar.",
+    "pack500": "Paquete de +500 escaneos",
+    "cannotAdd": "No se puede agregar el paquete en este momento.",
+    "loading": "Cargando cuota...",
+    "remaining": "Escaneos restantes (simulación):"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Número de lote detectado:",
+    "recallInfo": "Información del retiro",
+    "product": "Producto:",
+    "brand": "Marca:",
+    "understood": "ENTIENDO"
+  },
+  "scanLot": {
+    "editManually": "O editar manualmente:",
+    "enterLot": "Ingrese el número de lote",
+    "ocrDetected": "Texto detectado por OCR:",
+    "noText": "No se detectó texto",
+    "checkingRecalls": "🔍 Verificando retiros...",
+    "recallDetected": "⚠️ RETIRO DETECTADO",
+    "productSafe": "✅ PRODUCTO SEGURO - Sin retiro",
+    "edit": "✏️ Editar",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ RETIRO DETECTADO ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Número de lote modificado",
+    "lotUpdated": "Lote actualizado a:"
+  },
+  "scanScreen": {
+    "editBrand": "Editar marca detectada:",
+    "enterBrand": "Ingrese la marca",
+    "brandDetected": "Marca detectada:"
+  },
+  "historyScreen": {
+    "exportReserved": "Exportación reservada",
+    "exportAvailable": "La exportación está disponible con un plan que incluye la opción de exportación.",
+    "noData": "Sin datos",
+    "nothingToExport": "Nada que exportar en este momento.",
+    "formatNotAvailable": "Formato no disponible",
+    "formatNotIncluded": "El formato {{format}} no está incluido en su plan.",
+    "exportSuccess": "Exportación exitosa",
+    "fileGenerated": "El archivo {{format}} se ha generado y está listo para compartir.",
+    "cannotGenerate": "No se puede generar el archivo de exportación.",
+    "exportHistory": "Exportar historial",
+    "exportAvailableWith": "Disponible con un plan que incluye exportación",
+    "chooseFormat": "Elija el formato de exportación",
+    "regulatoryEnabled": "Formato regulatorio habilitado",
+    "productsToExport": "{{count}} productos para exportar",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "ALERTA DE RETIRO",
+    "warningTextSingle": "Un producto que escaneó ahora está sujeto a un retiro:",
+    "warningTextMultiple": "{{count}} productos que escaneó ahora están sujetos a retiros:",
+    "recalled": "RETIRADO",
+    "lot": "Lote {{lotNumber}}",
+    "viewDetails": "Toque para ver detalles →",
+    "importantTitle": "⚠️ IMPORTANTE",
+    "importantText": "• No consumir estos productos\n• Devuélvalos a la tienda para obtener un reembolso\n• Si aparecen síntomas, contacte a los servicios de emergencia",
+    "understood": "Entiendo"
   }
 }

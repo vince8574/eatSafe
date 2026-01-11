@@ -313,5 +313,101 @@
     "invitationCancelled": "Invitation annulée",
     "cancelFailed": "Échec de l'annulation de l'invitation",
     "members": "membres"
+  },
+  "subscription": {
+    "header": "Abonnement",
+    "mySubscription": "Mon abonnement",
+    "status": {
+      "none": "Aucun plan actif",
+      "expired": "Plan expiré",
+      "active": "Plan actif (simulation)"
+    },
+    "plan": "Plan",
+    "none": "Aucun",
+    "expiration": "Expiration (simulée)",
+    "scansRemaining": "Scans restants",
+    "history": "Historique",
+    "unlimited": "Illimité",
+    "days": "jours",
+    "exports": "Exports",
+    "enabled": "Activés",
+    "notIncluded": "Non inclus",
+    "multiEmployees": "Multi-employés",
+    "upTo": "Jusqu'à",
+    "sites": "Sites",
+    "plansTitle": "Plans",
+    "plansHelper": "Les achats sont simulés (Firestore). La facturation réelle (App Store / Google Play) sera branchée plus tard.",
+    "planSelected": "Plan sélectionné",
+    "choosePlan": "Choisir ce plan",
+    "scanPacksTitle": "Packs de scans",
+    "scanPacksHelper": "Ajoute des scans si ton quota mensuel est atteint. Simulation Firestore en attendant la facturation in‑app."
+  },
+  "quota": {
+    "reached": "Quota de scans atteint",
+    "addPack": "Ajoute un pack de scans pour continuer.",
+    "pack500": "Pack +500 scans",
+    "cannotAdd": "Impossible d'ajouter le pack pour le moment.",
+    "loading": "Chargement du quota...",
+    "remaining": "Scans restants (simulation) :"
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "Numéro de lot détecté :",
+    "recallInfo": "Informations du rappel",
+    "product": "Produit :",
+    "brand": "Marque :",
+    "understood": "J'AI COMPRIS"
+  },
+  "scanLot": {
+    "editManually": "Ou modifier manuellement :",
+    "enterLot": "Entrez le numéro de lot",
+    "ocrDetected": "Texte OCR détecté :",
+    "noText": "Aucun texte détecté",
+    "checkingRecalls": "🔍 Vérification des rappels en cours...",
+    "recallDetected": "⚠️ RAPPEL DÉTECTÉ",
+    "productSafe": "✅ PRODUIT SAFE - Aucun rappel",
+    "edit": "✏️ Modifier",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ RAPPEL DÉTECTÉ ({{lot}})",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "Numéro de lot modifié",
+    "lotUpdated": "Le lot a été mis à jour vers:"
+  },
+  "scanScreen": {
+    "editBrand": "Modifier la marque détectée :",
+    "enterBrand": "Entrez la marque",
+    "brandDetected": "Marque détectée :"
+  },
+  "historyScreen": {
+    "exportReserved": "Export réservé",
+    "exportAvailable": "L'export est disponible avec un plan incluant l'option export.",
+    "noData": "Aucune donnée",
+    "nothingToExport": "Il n'y a rien à exporter pour l'instant.",
+    "formatNotAvailable": "Format non disponible",
+    "formatNotIncluded": "Le format {{format}} n'est pas inclus dans votre plan.",
+    "exportSuccess": "Export réussi",
+    "fileGenerated": "Le fichier {{format}} a été généré et est prêt à être partagé.",
+    "cannotGenerate": "Impossible de générer le fichier export.",
+    "exportHistory": "Exporter l'historique",
+    "exportAvailableWith": "Disponible avec un plan incluant l'export",
+    "chooseFormat": "Choisir le format d'export",
+    "regulatoryEnabled": "Format réglementaire activé",
+    "productsToExport": "{{count}} produits à exporter",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "ALERTE RAPPEL",
+    "warningTextSingle": "Un produit que vous avez scanné fait maintenant l'objet d'un rappel :",
+    "warningTextMultiple": "{{count}} produits que vous avez scannés font maintenant l'objet d'un rappel :",
+    "recalled": "RAPPELÉ",
+    "lot": "Lot {{lotNumber}}",
+    "viewDetails": "Toucher pour voir les détails →",
+    "importantTitle": "⚠️ IMPORTANT",
+    "importantText": "• Ne consommez pas ces produits\n• Rapportez-les au magasin pour remboursement\n• En cas de symptômes, contactez les urgences (15 ou 112)",
+    "understood": "J'ai compris"
   }
 }

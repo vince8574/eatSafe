@@ -251,5 +251,101 @@
   },
   "team": {
     "title": "团队管理"
+  },
+  "subscription": {
+    "header": "订阅",
+    "mySubscription": "我的订阅",
+    "status": {
+      "none": "无活动计划",
+      "expired": "已过期计划",
+      "active": "活动计划（模拟）"
+    },
+    "plan": "计划",
+    "none": "无",
+    "expiration": "过期（模拟）",
+    "scansRemaining": "剩余扫描次数",
+    "history": "历史记录",
+    "unlimited": "无限制",
+    "days": "天",
+    "exports": "导出",
+    "enabled": "已启用",
+    "notIncluded": "未包含",
+    "multiEmployees": "多员工",
+    "upTo": "最多",
+    "sites": "站点",
+    "plansTitle": "计划",
+    "plansHelper": "购买为模拟（Firestore）。实际计费（App Store / Google Play）将在稍后连接。",
+    "planSelected": "已选择计划",
+    "choosePlan": "选择此计划",
+    "scanPacksTitle": "扫描包",
+    "scanPacksHelper": "如果达到月度配额，请添加扫描。待应用内计费的Firestore模拟。"
+  },
+  "quota": {
+    "reached": "已达到扫描配额",
+    "addPack": "添加扫描包以继续。",
+    "pack500": "+500次扫描包",
+    "cannotAdd": "目前无法添加包。",
+    "loading": "正在加载配额...",
+    "remaining": "剩余扫描次数（模拟）："
+  },
+  "immediateRecallAlert": {
+    "lotDetected": "检测到批号：",
+    "recallInfo": "召回信息",
+    "product": "产品：",
+    "brand": "品牌：",
+    "understood": "我明白"
+  },
+  "scanLot": {
+    "editManually": "或手动编辑：",
+    "enterLot": "输入批号",
+    "ocrDetected": "OCR检测到的文本：",
+    "noText": "未检测到文本",
+    "checkingRecalls": "🔍 正在检查召回...",
+    "recallDetected": "⚠️ 检测到召回",
+    "productSafe": "✅ 产品安全 - 无召回",
+    "edit": "✏️ 编辑",
+    "ocrSourceVision": "🤖 Google Vision API",
+    "ocrSourceMlKit": "📱 ML Kit",
+    "recallDetectedWithLot": "⚠️ 检测到召回（{{lot}}）",
+    "ocrSource": "📋 {{source}}"
+  },
+  "detailsScreen": {
+    "lotModified": "批号已修改",
+    "lotUpdated": "批号已更新为："
+  },
+  "scanScreen": {
+    "editBrand": "编辑检测到的品牌：",
+    "enterBrand": "输入品牌",
+    "brandDetected": "检测到品牌："
+  },
+  "historyScreen": {
+    "exportReserved": "导出已预留",
+    "exportAvailable": "导出功能需要包含导出选项的计划。",
+    "noData": "无数据",
+    "nothingToExport": "目前无内容可导出。",
+    "formatNotAvailable": "格式不可用",
+    "formatNotIncluded": "{{format}}格式未包含在您的计划中。",
+    "exportSuccess": "导出成功",
+    "fileGenerated": "{{format}}文件已生成并准备共享。",
+    "cannotGenerate": "无法生成导出文件。",
+    "exportHistory": "导出历史记录",
+    "exportAvailableWith": "需要包含导出功能的计划",
+    "chooseFormat": "选择导出格式",
+    "regulatoryEnabled": "已启用监管格式",
+    "productsToExport": "{{count}}个产品待导出",
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV"
+  },
+  "recallAlertModal": {
+    "alertTitle": "召回警报",
+    "warningTextSingle": "您扫描的产品现已受到召回：",
+    "warningTextMultiple": "您扫描的{{count}}个产品现已受到召回：",
+    "recalled": "已召回",
+    "lot": "批号{{lotNumber}}",
+    "viewDetails": "点击查看详情 →",
+    "importantTitle": "⚠️ 重要",
+    "importantText": "• 请勿食用这些产品\n• 将它们退回商店以获得退款\n• 如果出现症状，请联系紧急服务",
+    "understood": "我明白"
   }
 }
