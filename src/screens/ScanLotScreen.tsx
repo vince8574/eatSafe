@@ -175,11 +175,14 @@ export function ScanLotScreen() {
       .filter(Boolean)
       .map((candidate) => normalizeLotValue(candidate));
 
-    if (!finalLot || !brand) {
+    if (!finalLot) {
       setErrorMessage(t('scan.errors.lotExtractFailed'));
       setConfirmModalVisible(false);
       return;
     }
+
+    // Allow empty brand (user skipped brand step) - will be set to "Unknown"
+    const finalBrand = brand && brand.trim() ? brand.trim() : t('common.unknown');
 
     const hasQuota = await ensureScanQuota();
     if (!hasQuota) {
@@ -190,25 +193,25 @@ export function ScanLotScreen() {
     setIsFinalizing(true);
 
     try {
-      const validation = await validateLotAgainstBrandPatterns(brand, finalLot);
+      const validation = await validateLotAgainstBrandPatterns(finalBrand, finalLot);
 
       if (validation.isValid) {
-        console.log(`[ScanLotScreen] Lot ${finalLot} validated against existing patterns for ${brand}`);
+        console.log(`[ScanLotScreen] Lot ${finalLot} validated against existing patterns for ${finalBrand}`);
       } else {
-        console.log(`[ScanLotScreen] New lot pattern detected for ${brand}: ${finalLot}`);
-        await saveLotPattern(brand, finalLot);
+        console.log(`[ScanLotScreen] New lot pattern detected for ${finalBrand}: ${finalLot}`);
+        await saveLotPattern(finalBrand, finalLot);
       }
 
       const recallList = await fetchRecallsByCountry(country);
       const product = await addProduct({
-        brand,
+        brand: finalBrand,
         lotNumber: finalLot,
         ...(productName && { productName }),
         ...(productImage && { productImage })
       });
 
       const matchingRecalls = recallList.filter((recall) => {
-        const brandMatch = recall.brand ? recall.brand.toLowerCase() === brand.toLowerCase() : true;
+        const brandMatch = recall.brand ? recall.brand.toLowerCase() === finalBrand.toLowerCase() : true;
         if (!recall.lotNumbers || recall.lotNumbers.length === 0) {
           return brandMatch;
         }
