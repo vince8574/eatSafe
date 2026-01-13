@@ -4,23 +4,35 @@ type RecallResponse = {
   results: RecallRecord[];
 };
 
-const FRANCE_ENDPOINT =
-  'https://data.economie.gouv.fr/api/records/1.0/search/?dataset=rappelconso0&rows=50&sort=date_de_publication';
-
-const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=50';
+const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=1000&sort=report_date:desc';
 const USDA_ENDPOINT = 'https://www.fsis.usda.gov/fsis/api/recall';
 
-function extractLotNumbers(identificationText: string | undefined): string[] {
-  if (!identificationText) return [];
+/**
+ * Extrait les numéros de lot du champ code_info de la FDA
+ * Gère des formats comme "Lot: 58041" ou "Lot #12345" ou juste des numéros
+ */
+function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
+  if (!codeInfo) return [];
 
-  // Split by common separators and extract potential lot numbers
-  const parts = identificationText.split(/[\n,;]/);
   const lotNumbers: string[] = [];
 
-  // Add the full identification text as one potential lot match
-  lotNumbers.push(identificationText);
+  // Add the full text as one potential match
+  lotNumbers.push(codeInfo);
 
-  // Also add individual parts
+  // Pattern 1: "Lot: XXXXX" ou "Lot #XXXXX" ou "LOT XXXXX"
+  const lotPatterns = codeInfo.match(/\bLot[:\s#]*([A-Za-z0-9-]+)/gi);
+  if (lotPatterns) {
+    lotPatterns.forEach(match => {
+      // Extract lot number and remove any trailing punctuation
+      const lotNum = match.replace(/\bLot[:\s#]*/i, '').replace(/[;:,\.\s]+$/, '').trim();
+      if (lotNum) {
+        lotNumbers.push(lotNum);
+      }
+    });
+  }
+
+  // Pattern 2: Split by common separators (comma, semicolon, newline, "1)", "2)", etc.)
+  const parts = codeInfo.split(/[,;\n]|(?:\d+\))/);
   parts.forEach(part => {
     const trimmed = part.trim();
     if (trimmed.length > 0) {
@@ -28,34 +40,25 @@ function extractLotNumbers(identificationText: string | undefined): string[] {
     }
   });
 
-  return lotNumbers;
-}
-
-export async function fetchFranceRecalls(): Promise<RecallRecord[]> {
-  const response = await fetch(FRANCE_ENDPOINT);
-
-  if (!response.ok) {
-    // If the public endpoint is down or throttling, do not break the app.
-    console.warn(
-      `[RappelConso] API returned status ${response.status} - ignoring and continuing`
-    );
-    return [];
+  // Pattern 3: Extract standalone numbers/codes (alphanumeric sequences of 4+ chars)
+  const codes = codeInfo.match(/\b[A-Z0-9]{4,}\b/g);
+  if (codes) {
+    codes.forEach(code => {
+      // Exclude common words like "BEST", "USED", "DATE", etc.
+      if (!/^(BEST|USED|DATE|CODE|PROD|INTERNAL|PRODUCT)$/i.test(code)) {
+        lotNumbers.push(code);
+      }
+    });
   }
 
-  const data = await response.json();
+  // Remove duplicates (case-insensitive)
+  const uniqueLots = Array.from(new Set(lotNumbers.map(l => l.toUpperCase())))
+    .map(upper => {
+      // Find the original case version
+      return lotNumbers.find(l => l.toUpperCase() === upper) || upper;
+    });
 
-  return (data.records ?? []).map((record: any) => ({
-    id: record.recordid,
-    title: record.fields?.noms_des_modeles_ou_references || record.fields?.libelle || 'Produit rappelé',
-    description: record.fields?.motif_du_rappel,
-    lotNumbers: extractLotNumbers(record.fields?.identification_des_produits),
-    brand: record.fields?.nom_de_la_marque_du_produit,
-    productCategory: record.fields?.categorie_de_produit,
-    country: 'FR' as const,
-    publishedAt: record.fields?.date_de_publication,
-    link: record.fields?.lien_vers_la_fiche_rappel,
-    imageUrl: record.fields?.liens_vers_les_images?.[0] || undefined
-  }));
+  return uniqueLots;
 }
 
 /**
@@ -71,18 +74,33 @@ export async function fetchFdaRecalls(): Promise<RecallRecord[]> {
 
   const data = await response.json();
 
-  return (data.results ?? []).map((item: any) => ({
-    id: item.recall_number,
-    title: item.product_description,
-    description: item.reason_for_recall,
-    lotNumbers: item.code_info ? item.code_info.split(',').map((lot: string) => lot.trim()) : [],
-    brand: item.recalling_firm,
-    productCategory: item.product_description,
-    country: 'US' as const,
-    publishedAt: item.report_date,
-    link: item.more_details,
-    imageUrl: undefined
-  }));
+  const results = (data.results ?? []).map((item: any) => {
+    const extracted = extractFdaLotNumbers(item.code_info);
+
+    // Log H-0337-2026 specifically for debugging
+    if (item.recall_number === 'H-0337-2026') {
+      console.log('[FDA] ⭐ Found H-0337-2026!');
+      console.log('[FDA] Raw code_info:', item.code_info);
+      console.log('[FDA] Extracted lots:', extracted);
+      console.log('[FDA] Brand:', item.recalling_firm);
+    }
+
+    return {
+      id: item.recall_number,
+      title: item.product_description,
+      description: item.reason_for_recall,
+      lotNumbers: extracted,
+      brand: item.recalling_firm,
+      productCategory: item.product_description,
+      country: 'US' as const,
+      publishedAt: item.report_date,
+      link: item.more_details,
+      imageUrl: undefined
+    };
+  });
+
+  console.log(`[FDA] Total recalls fetched: ${results.length}`);
+  return results;
 }
 
 /**
@@ -103,7 +121,7 @@ export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
       id: item.recallNumber || item.id || `usda-${Date.now()}`,
       title: item.productName || item.description || 'Meat/Poultry Recall',
       description: item.recallReason || item.reason || '',
-      lotNumbers: item.lotNumbers ? item.lotNumbers.split(',').map((lot: string) => lot.trim()) : [],
+      lotNumbers: extractFdaLotNumbers(item.lotNumbers),
       brand: item.establishment || item.company || '',
       productCategory: 'Meat/Poultry',
       country: 'US' as const,
@@ -142,31 +160,11 @@ export async function fetchUsRecalls(): Promise<RecallRecord[]> {
 }
 
 export async function fetchRecallsByCountry(country: CountryCode) {
-  switch (country) {
-    case 'FR':
-      return fetchFranceRecalls();
-    case 'US':
-      return fetchUsRecalls();
-    case 'CH':
-      // Placeholder: no official API, return empty array.
-      return [];
-    default:
-      return [];
-  }
+  // Only US recalls are supported (FDA + USDA)
+  return fetchUsRecalls();
 }
 
 export async function fetchAllRecalls(): Promise<RecallRecord[]> {
-  const [fr, us] = await Promise.allSettled([fetchFranceRecalls(), fetchUsRecalls()]);
-
-  const results: RecallRecord[] = [];
-
-  if (fr.status === 'fulfilled') {
-    results.push(...fr.value);
-  }
-
-  if (us.status === 'fulfilled') {
-    results.push(...us.value);
-  }
-
-  return results;
+  // Only US recalls are supported (FDA + USDA)
+  return fetchUsRecalls();
 }

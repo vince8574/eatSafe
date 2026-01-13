@@ -16,6 +16,18 @@ function matchCandidate(candidate: string, recallLot: string): boolean {
   const normalized = normalizeLot(candidate);
   const recallNormalized = normalizeLot(recallLot);
 
+  // Log for lot 58041 specifically
+  if (candidate.includes('58041') || recallLot.includes('58041')) {
+    console.log('[matchCandidate] Comparing 58041:', {
+      candidate,
+      normalized,
+      recallLot,
+      recallNormalized,
+      exactMatch: normalized === recallNormalized,
+      partialMatch: normalized.includes(recallNormalized) || recallNormalized.includes(normalized)
+    });
+  }
+
   // Match exact
   if (normalized === recallNormalized) {
     return true;
@@ -50,20 +62,18 @@ export async function checkAllCandidates(
     // Récupérer les rappels du pays
     const allRecalls = await fetchRecallsByCountry(country as any);
 
-    // Filtrer par marque
-    const brandRecalls = allRecalls.filter(recall =>
-      recall.brand?.toLowerCase() === brand.toLowerCase()
-    );
+    console.log(`[checkAllCandidates] Checking ${allRecalls.length} total recalls`);
 
-    console.log(`[checkAllCandidates] Found ${brandRecalls.length} recalls for brand ${brand}`);
-
-    // Vérifier chaque candidat contre chaque rappel
+    // Vérifier chaque candidat contre TOUS les rappels (pas seulement ceux de la marque)
+    // Car le nom de la marque peut varier (nom de produit vs fabricant)
     for (const candidate of candidates) {
-      for (const recall of brandRecalls) {
+      for (const recall of allRecalls) {
         // Vérifier si ce candidat matche avec un des numéros de lot du rappel
         for (const recallLot of recall.lotNumbers) {
           if (matchCandidate(candidate, recallLot)) {
-            console.log(`[checkAllCandidates] ✅ MATCH FOUND! Candidate "${candidate}" matches recall lot "${recallLot}"`);
+            // Bonus: vérifier si la marque correspond aussi (pour privilégier les bons matches)
+            const brandMatch = recall.brand?.toLowerCase() === brand.toLowerCase();
+            console.log(`[checkAllCandidates] ✅ MATCH FOUND! Candidate "${candidate}" matches recall lot "${recallLot}" (brand match: ${brandMatch})`);
             return {
               hasRecall: true,
               matchedCandidate: candidate,

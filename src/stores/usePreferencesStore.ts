@@ -18,7 +18,7 @@ type PreferencesState = {
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
-      country: 'FR',
+      country: 'US',
       notificationsEnabled: true,
       darkMode: 'system',
       firstName: '',

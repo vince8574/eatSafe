@@ -14,6 +14,30 @@ function normalizeBrand(brand: string) {
     .toUpperCase();
 }
 
+function isUnknownBrand(brand: string) {
+  const normalized = normalizeBrand(brand);
+
+  // Empty, N/A or translated "unknown" placeholders should not block matches
+  if (!normalized) {
+    return true;
+  }
+
+  const unknownTokens = [
+    'UNKNOWN',
+    'INCONNU',
+    'DESCONOCIDO',
+    'DESCONHECIDO',
+    'SCONOSCIUTO',
+    'UNBEKANNT',
+    'ONBEKEND',
+    'UNK',
+    'NA',
+    'NONE'
+  ];
+
+  return unknownTokens.includes(normalized);
+}
+
 function levenshteinDistance(a: string, b: string) {
   const matrix: number[][] = [];
 
@@ -46,7 +70,7 @@ function levenshteinDistance(a: string, b: string) {
 }
 
 function matchBrands(productBrand: string, recallBrand: string | undefined) {
-  if (!recallBrand || !productBrand) {
+  if (!recallBrand || !productBrand || isUnknownBrand(productBrand) || isUnknownBrand(recallBrand)) {
     return true;
   }
 
@@ -71,7 +95,7 @@ function matchBrands(productBrand: string, recallBrand: string | undefined) {
 export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   const normalized = normalizeLot(product.lotNumber);
 
-  const matches = recall.lotNumbers.some((lot) => {
+  const matches = (recall.lotNumbers ?? []).some((lot) => {
     const candidate = normalizeLot(lot);
 
     if (candidate === normalized) {
@@ -97,7 +121,15 @@ export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]
   const relevant = recalls.filter((recall) => {
     const brandMatches = matchBrands(product.brand, recall.brand);
     const lotMatches = matchLots(product, recall);
-    return brandMatches && lotMatches;
+
+    // If the lot matches, accept the recall even when the brand differs
+    if (lotMatches) {
+      return true;
+    }
+
+    // For recalls without explicit lot codes, fall back to brand matching
+    const hasNoLots = !recall.lotNumbers || recall.lotNumbers.length === 0;
+    return hasNoLots && brandMatches;
   });
 
   if (relevant.length === 0) {

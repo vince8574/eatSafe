@@ -211,9 +211,10 @@ export function ScanLotScreen() {
       });
 
       const matchingRecalls = recallList.filter((recall) => {
-        const brandMatch = recall.brand ? recall.brand.toLowerCase() === finalBrand.toLowerCase() : true;
+        // Check lot match first (most reliable indicator)
         if (!recall.lotNumbers || recall.lotNumbers.length === 0) {
-          return brandMatch;
+          // If no lot numbers in recall, fallback to brand match only
+          return recall.brand ? recall.brand.toLowerCase() === finalBrand.toLowerCase() : false;
         }
 
         const lotMatch = recall.lotNumbers.some((lot) => {
@@ -231,7 +232,13 @@ export function ScanLotScreen() {
           return candidateHit || inFullText;
         });
 
-        return brandMatch && lotMatch;
+        // If lot matches, accept the recall regardless of brand
+        // (brand names can vary: product name vs manufacturer name)
+        if (lotMatch) {
+          return true;
+        }
+
+        return false;
       });
 
       if (matchingRecalls.length > 0) {

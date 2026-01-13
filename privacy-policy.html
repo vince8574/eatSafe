@@ -1,168 +1,85 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Politique de Confidentialité - Numeline</title>
+    <title>Privacy Policy - Numeline</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             line-height: 1.6;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background: #f5f5f5;
             color: #333;
         }
-        h1 {
-            color: #0BAE86;
-            border-bottom: 3px solid #0BAE86;
-            padding-bottom: 10px;
-        }
-        h2 {
-            color: #0A1F1F;
-            margin-top: 30px;
-        }
-        .last-updated {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-        .section {
-            margin-bottom: 25px;
-        }
-        ul {
-            margin-left: 20px;
-        }
-        li {
-            margin-bottom: 8px;
-        }
-        .contact {
-            background-color: #f5f5f5;
-            padding: 15px;
+        .container {
+            background: white;
+            padding: 40px;
             border-radius: 8px;
-            margin-top: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+        h1 { color: #0A1F1F; font-size: 28px; }
+        h3 { color: #0A1F1F; font-size: 20px; margin-top: 24px; }
+        .last-updated { color: #666; font-style: italic; }
+        .lang-selector { margin-bottom: 30px; text-align: center; }
+        .lang-selector a { margin: 0 10px; text-decoration: none; color: #0A1F1F; font-weight: 500; }
+        .content { display: none; }
+        .content.active { display: block; }
     </style>
 </head>
 <body>
-    <h1>Politique de Confidentialité</h1>
-    <p class="last-updated">Dernière mise à jour : 11 janvier 2026</p>
-
-    <div class="section">
-        <p>Numeline ("nous", "notre" ou "l'application") s'engage à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos informations personnelles lorsque vous utilisez notre application mobile de vérification de rappels de produits alimentaires.</p>
+    <div class="container">
+        <div class="lang-selector">
+            <a href="#" onclick="showLanguage('en'); return false;">English</a> |
+            <a href="#" onclick="showLanguage('fr'); return false;">Français</a>
+        </div>
+        <div id="en" class="content active">
+            <h1>Privacy Policy - Numeline</h1>
+            <p class="last-updated"><strong>Last updated: December 12, 2025</strong></p>
+            <p>Numeline protects your personal data. We collect only what is necessary to run the app and keep you informed about recalls.</p>
+            <h3>Data we do not keep</h3>
+            <ul>
+                <li>Product photos (deleted right after analysis)</li>
+                <li>Navigation history, contacts, precise location, or payment data</li>
+            </ul>
+            <h3>Data stored</h3>
+            <ul>
+                <li>Language preference</li>
+                <li>Scan history on your device</li>
+                <li>Optional profile information you provide</li>
+            </ul>
+            <h3>Your rights</h3>
+            <p>You can request access, correction, deletion, or portability of your data.</p>
+            <p>Contact: <a href="mailto:privacy@eatsok.app">privacy@eatsok.app</a></p>
+        </div>
+        <div id="fr" class="content">
+            <h1>Politique de confidentialité - Numeline</h1>
+            <p class="last-updated"><strong>Dernière mise à jour : 12 décembre 2025</strong></p>
+            <p>Numeline protège vos données personnelles et collecte uniquement ce qui est nécessaire.</p>
+            <h3>Données non conservées</h3>
+            <ul>
+                <li>Photos de produits (supprimées après analyse)</li>
+                <li>Historique de navigation, contacts, localisation précise, données bancaires</li>
+            </ul>
+            <h3>Données stockées</h3>
+            <ul>
+                <li>Préférence de langue</li>
+                <li>Historique des scans sur votre appareil</li>
+            </ul>
+            <h3>Vos droits</h3>
+            <p>Accès, rectification, suppression : <a href="mailto:privacy@eatsok.app">privacy@eatsok.app</a></p>
+        </div>
     </div>
-
-    <h2>1. Informations que nous collectons</h2>
-    <div class="section">
-        <h3>1.1 Informations de compte</h3>
-        <ul>
-            <li>Adresse e-mail (pour l'authentification)</li>
-            <li>Mot de passe (stocké de manière sécurisée et cryptée via Firebase Authentication)</li>
-        </ul>
-
-        <h3>1.2 Données de scan</h3>
-        <ul>
-            <li>Codes-barres de produits scannés</li>
-            <li>Numéros de lot scannés</li>
-            <li>Marques de produits</li>
-            <li>Dates et heures de scan</li>
-            <li>Historique de vos scans</li>
-        </ul>
-
-        <h3>1.3 Informations d'abonnement</h3>
-        <ul>
-            <li>Type d'abonnement (gratuit, pack 500, illimité)</li>
-            <li>Nombre de scans effectués</li>
-            <li>Date d'expiration de l'abonnement</li>
-        </ul>
-
-        <h3>1.4 Données d'utilisation</h3>
-        <ul>
-            <li>Préférences linguistiques</li>
-            <li>Informations sur l'appareil (type, système d'exploitation)</li>
-            <li>Données de performance de l'application</li>
-        </ul>
-    </div>
-
-    <h2>2. Comment nous utilisons vos informations</h2>
-    <div class="section">
-        <p>Nous utilisons vos informations personnelles uniquement pour :</p>
-        <ul>
-            <li><strong>Fournir le service</strong> : Vérifier les rappels de produits alimentaires via l'API OpenFDA</li>
-            <li><strong>Gérer votre compte</strong> : Authentification et gestion de votre profil utilisateur</li>
-            <li><strong>Historique des scans</strong> : Stocker et afficher l'historique de vos produits scannés</li>
-            <li><strong>Notifications</strong> : Vous alerter en cas de rappel d'un produit que vous avez scanné</li>
-            <li><strong>Gérer les abonnements</strong> : Suivre votre utilisation et vos limites de scan</li>
-            <li><strong>Améliorer l'application</strong> : Analyser l'utilisation pour améliorer nos services</li>
-        </ul>
-    </div>
-
-    <h2>3. Partage des données</h2>
-    <div class="section">
-        <p>Nous ne vendons, n'échangeons ni ne louons vos informations personnelles à des tiers. Vos données peuvent être partagées uniquement avec :</p>
-        <ul>
-            <li><strong>Firebase/Google Cloud</strong> : Pour l'authentification et le stockage sécurisé des données (Firebase Authentication, Firestore)</li>
-            <li><strong>Google Cloud Vision API</strong> : Pour la reconnaissance optique de caractères (OCR) des numéros de lot</li>
-            <li><strong>OpenFDA API</strong> : Pour obtenir les informations publiques sur les rappels de produits</li>
-            <li><strong>OpenFoodFacts API</strong> : Pour obtenir les informations publiques sur les produits alimentaires</li>
-        </ul>
-        <p>Ces services tiers sont conformes aux normes de sécurité et de confidentialité des données.</p>
-    </div>
-
-    <h2>4. Sécurité des données</h2>
-    <div class="section">
-        <p>Nous prenons la sécurité de vos données très au sérieux :</p>
-        <ul>
-            <li>Les mots de passe sont cryptés via Firebase Authentication</li>
-            <li>Les communications sont sécurisées par HTTPS</li>
-            <li>Les données sont stockées sur les serveurs sécurisés de Google Cloud (Firebase)</li>
-            <li>Accès limité aux données par des mécanismes d'authentification robustes</li>
-        </ul>
-    </div>
-
-    <h2>5. Conservation des données</h2>
-    <div class="section">
-        <p>Nous conservons vos données personnelles aussi longtemps que votre compte est actif. Vous pouvez demander la suppression de votre compte et de toutes vos données à tout moment en nous contactant.</p>
-    </div>
-
-    <h2>6. Vos droits</h2>
-    <div class="section">
-        <p>Conformément au RGPD et aux lois sur la protection des données, vous avez le droit de :</p>
-        <ul>
-            <li><strong>Accéder</strong> à vos données personnelles</li>
-            <li><strong>Rectifier</strong> vos données si elles sont inexactes</li>
-            <li><strong>Supprimer</strong> votre compte et vos données</li>
-            <li><strong>Exporter</strong> vos données (historique de scans)</li>
-            <li><strong>Vous opposer</strong> au traitement de vos données</li>
-            <li><strong>Retirer votre consentement</strong> à tout moment</li>
-        </ul>
-    </div>
-
-    <h2>7. Cookies et technologies similaires</h2>
-    <div class="section">
-        <p>L'application n'utilise pas de cookies. Cependant, Firebase peut utiliser des identificateurs d'appareil pour l'authentification et la gestion de session.</p>
-    </div>
-
-    <h2>8. Utilisation par des mineurs</h2>
-    <div class="section">
-        <p>Notre application est adaptée à tous les âges. Cependant, pour créer un compte, vous devez avoir au moins 16 ans ou avoir l'autorisation d'un parent ou tuteur légal.</p>
-    </div>
-
-    <h2>9. Modifications de cette politique</h2>
-    <div class="section">
-        <p>Nous pouvons mettre à jour cette politique de confidentialité de temps en temps. Nous vous informerons de tout changement important en publiant la nouvelle politique sur cette page et en mettant à jour la date de "dernière mise à jour".</p>
-    </div>
-
-    <h2>10. Données de localisation</h2>
-    <div class="section">
-        <p>Nous ne collectons PAS de données de géolocalisation. L'application ne suit pas votre position géographique.</p>
-    </div>
-
-    <div class="contact">
-        <h2>Nous contacter</h2>
-        <p>Pour toute question concernant cette politique de confidentialité ou pour exercer vos droits, veuillez nous contacter à :</p>
-        <p><strong>Email :</strong> [VOTRE_EMAIL_DE_CONTACT]</p>
-        <p><strong>Adresse :</strong> [VOTRE_ADRESSE_POSTALE]</p>
-    </div>
+    <script>
+        function showLanguage(lang) {
+            var contents = document.getElementsByClassName('content');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            document.getElementById(lang).classList.add('active');
+        }
+    </script>
 </body>
 </html>
