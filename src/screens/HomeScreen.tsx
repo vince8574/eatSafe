@@ -1,16 +1,18 @@
-import { useMemo } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { useMemo, useState } from 'react';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
+import { manualRecallCheck, sendTestNotification, getNotificationStatus } from '../services/testNotificationService';
 
 export function HomeScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
   const { products } = useScannedProducts();
+  const [isChecking, setIsChecking] = useState(false);
 
   const stats = useMemo(() => {
     const total = products.length;
@@ -19,6 +21,54 @@ export function HomeScreen() {
 
     return { total, recalled, pending };
   }, [products]);
+
+  const handleTestNotification = async () => {
+    const status = await getNotificationStatus();
+
+    if (!status.granted) {
+      Alert.alert(
+        'Notifications désactivées',
+        'Les notifications ne sont pas autorisées. Activez-les dans les paramètres de l\'application.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    const success = await sendTestNotification();
+    if (!success) {
+      Alert.alert('Erreur', 'Impossible d\'envoyer la notification de test', [{ text: 'OK' }]);
+    }
+  };
+
+  const handleManualCheck = async () => {
+    const status = await getNotificationStatus();
+
+    if (!status.granted) {
+      Alert.alert(
+        'Notifications désactivées',
+        'Les notifications ne sont pas autorisées. Activez-les dans les paramètres de l\'application pour recevoir les alertes de rappel.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    setIsChecking(true);
+    const result = await manualRecallCheck();
+    setIsChecking(false);
+
+    if (!result.success) {
+      Alert.alert('Erreur', result.error || 'Échec de la vérification', [{ text: 'OK' }]);
+      return;
+    }
+
+    if (result.newRecallsFound > 0) {
+      Alert.alert(
+        '⚠️ Rappels détectés!',
+        `${result.newRecallsFound} rappel(s) trouvé(s) sur ${result.productsChecked} produit(s). Vous recevrez des notifications.`,
+        [{ text: 'Voir', onPress: () => router.push('/history') }]
+      );
+    }
+  };
 
   return (
     <GradientBackground>
@@ -76,6 +126,34 @@ export function HomeScreen() {
               <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
                 ⚠️ {t('common.appDisclaimer')}
               </Text>
+            </View>
+
+            {/* Debug/Test Buttons */}
+            <View style={styles.testButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.testButton, { backgroundColor: colors.accent }]}
+                onPress={handleTestNotification}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.testButtonText, { color: colors.surface }]}>
+                  🔔 Tester notification
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.testButton, { backgroundColor: colors.primary }]}
+                onPress={handleManualCheck}
+                activeOpacity={0.8}
+                disabled={isChecking}
+              >
+                {isChecking ? (
+                  <ActivityIndicator color={colors.surface} />
+                ) : (
+                  <Text style={[styles.testButtonText, { color: colors.surface }]}>
+                    🔍 Vérifier rappels
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
 
           </View>
@@ -171,5 +249,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 20,
     textAlign: 'center'
+  },
+  testButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16
+  },
+  testButton: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 48
+  },
+  testButtonText: {
+    fontSize: 14,
+    fontWeight: '700'
   }
 });

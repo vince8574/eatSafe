@@ -3,31 +3,36 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type PreferencesState = {
-  country: 'FR' | 'US' | 'CH';
+  // Country is always 'US' and cannot be changed
+  country: 'US';
   notificationsEnabled: boolean;
   darkMode: 'system' | 'light' | 'dark';
   firstName: string;
   hasSeenWelcome: boolean;
-  setCountry: (country: 'FR' | 'US' | 'CH') => void;
+  hasSeenNotificationPrompt: boolean;
+  // setCountry removed - country is always 'US'
   setNotificationsEnabled: (value: boolean) => void;
   setDarkMode: (mode: 'system' | 'light' | 'dark') => void;
   setFirstName: (name: string) => void;
   setHasSeenWelcome: (value: boolean) => void;
+  setHasSeenNotificationPrompt: (value: boolean) => void;
 };
 
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
-      country: 'US',
+      country: 'US' as const, // Always 'US', cannot be changed
       notificationsEnabled: true,
       darkMode: 'system',
       firstName: '',
       hasSeenWelcome: false,
-      setCountry: (country) => set({ country }),
+      hasSeenNotificationPrompt: false,
+      // setCountry removed - country is always 'US'
       setNotificationsEnabled: (notificationsEnabled) => set({ notificationsEnabled }),
       setDarkMode: (darkMode) => set({ darkMode }),
       setFirstName: (firstName) => set({ firstName }),
-      setHasSeenWelcome: (hasSeenWelcome) => set({ hasSeenWelcome })
+      setHasSeenWelcome: (hasSeenWelcome) => set({ hasSeenWelcome }),
+      setHasSeenNotificationPrompt: (hasSeenNotificationPrompt) => set({ hasSeenNotificationPrompt })
     }),
     {
       name: 'preferences',

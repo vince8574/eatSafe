@@ -1,14 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { nanoid } from 'nanoid/non-secure';
-import { useCallback } from 'react';
-import { db } from '../services/dbService';
+import { useCallback, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  getAllProducts as getFirestoreProducts,
+  addProduct as addFirestoreProduct,
+  updateProduct as updateFirestoreProduct,
+  removeProduct as removeFirestoreProduct,
+  subscribeToProducts
+} from '../services/firebaseProductsService';
 import { ScannedProduct, RecallRecord } from '../types';
 import { getRecallStatus } from '../utils/lotMatcher';
 
 const QUERY_KEY = ['scanned-products'];
+const ASYNC_STORAGE_KEY = 'scanned-products';
 
 async function loadProducts() {
-  return db.getAll();
+  return getFirestoreProducts();
+}
+
+/**
+ * Synchronize Firestore products to AsyncStorage for background task access
+ */
+export async function syncProductsToAsyncStorage() {
+  try {
+    const products = await getFirestoreProducts();
+    await AsyncStorage.setItem(ASYNC_STORAGE_KEY, JSON.stringify(products));
+    console.log(`[useScannedProducts] Synced ${products.length} products to AsyncStorage`);
+  } catch (error) {
+    console.error('[useScannedProducts] Failed to sync to AsyncStorage:', error);
+  }
 }
 
 export function useScannedProducts() {
@@ -19,19 +39,27 @@ export function useScannedProducts() {
     queryFn: loadProducts
   });
 
+  // Subscribe to real-time updates from Firestore
+  useEffect(() => {
+    const unsubscribe = subscribeToProducts((products) => {
+      queryClient.setQueryData(QUERY_KEY, products);
+      // Also sync to AsyncStorage for background tasks
+      void syncProductsToAsyncStorage();
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [queryClient]);
+
   const addMutation = useMutation({
     mutationFn: async (payload: Omit<ScannedProduct, 'id' | 'scannedAt' | 'recallStatus'>) => {
-      const product: ScannedProduct = {
-        ...payload,
-        id: nanoid(),
-        scannedAt: Date.now(),
-        recallStatus: 'unknown'
-      };
-      await db.insert(product);
+      const product = await addFirestoreProduct(payload);
       return product;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+      await syncProductsToAsyncStorage();
     }
   });
 
@@ -44,33 +72,36 @@ export function useScannedProducts() {
       recalls: RecallRecord[];
     }) => {
       const recallStatus = getRecallStatus(product, recalls);
-      await db.update(product.id, {
+      await updateFirestoreProduct(product.id, {
         recallStatus: recallStatus.status,
         recallReference: recallStatus.recallReference,
         lastCheckedAt: Date.now()
       });
       return recallStatus;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+      await syncProductsToAsyncStorage();
     }
   });
 
   const removeMutation = useMutation({
     mutationFn: async (id: string) => {
-      await db.remove(id);
+      await removeFirestoreProduct(id);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+      await syncProductsToAsyncStorage();
     }
   });
 
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<ScannedProduct> }) => {
-      await db.update(id, updates);
+      await updateFirestoreProduct(id, updates);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+      await syncProductsToAsyncStorage();
     }
   });
 

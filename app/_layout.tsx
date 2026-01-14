@@ -22,6 +22,7 @@ function RootStack() {
         <Stack.Screen name="scan-lot" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="notification-permissions" options={{ headerShown: false }} />
         <Stack.Screen name="welcome-daily" options={{ headerShown: false }} />
         <Stack.Screen name="legal/privacy-policy" options={{ headerShown: false }} />
         <Stack.Screen name="legal/terms" options={{ headerShown: false }} />

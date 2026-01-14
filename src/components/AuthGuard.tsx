@@ -12,9 +12,15 @@ export function AuthGuard({ children }: PropsWithChildren) {
     if (loading) return;
 
     const inAuthGroup = segments[0] === 'auth';
+    const inOnboardingFlow =
+      segments[0] === 'onboarding' ||
+      segments[0] === 'welcome' ||
+      segments[0] === 'notification-permissions' ||
+      segments[0] === 'welcome-daily' ||
+      segments.length === 0; // Root redirect (index.tsx)
 
-    if (!isAuthenticated && !inAuthGroup) {
-      // Redirect to login if not authenticated and not already in auth screens
+    if (!isAuthenticated && !inAuthGroup && !inOnboardingFlow) {
+      // Redirect to login if not authenticated and not in auth screens or onboarding flow
       router.replace('/auth/login');
     } else if (isAuthenticated && inAuthGroup) {
       // Redirect to main app if authenticated and in auth screens

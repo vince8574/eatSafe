@@ -16,6 +16,7 @@ import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
 import { useSubscription } from '../hooks/useSubscription';
 import { decrementScanCounter } from '../services/subscriptionService';
+import * as Notifications from 'expo-notifications';
 
 function normalizeLotValue(lot: string) {
   return lot.replace(/\s+/g, '').replace(/[-_\.]/g, '').toUpperCase();
@@ -243,6 +244,25 @@ export function ScanLotScreen() {
 
       if (matchingRecalls.length > 0) {
         await updateRecall(product, matchingRecalls);
+
+        // Send immediate notification when recall is detected
+        console.log(`[ScanLotScreen] Recall detected! Sending notification for ${finalBrand} - ${finalLot}`);
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: '🚨 ALERTE PRODUIT RAPPELÉ',
+            body: `⚠️ ${finalBrand} - Lot ${finalLot}\n\n🚫 NE PAS CONSOMMER\nCe produit fait l'objet d'un rappel sanitaire.`,
+            sound: true,
+            priority: Notifications.AndroidNotificationPriority.MAX,
+            vibrate: [0, 250, 250, 250],
+            data: {
+              productId: product.id,
+              type: 'immediate-recall-alert',
+              brand: finalBrand,
+              lotNumber: finalLot
+            }
+          },
+          trigger: null // Send immediately
+        });
       }
 
       await decrementScanCounter();

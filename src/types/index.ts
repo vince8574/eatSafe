@@ -12,6 +12,7 @@ export type ScannedProduct = {
   lastCheckedAt?: number;
   productName?: string;
   productImage?: string;
+  scannedBy?: string; // User ID who scanned this product
 };
 
 export type RecallRecord = {

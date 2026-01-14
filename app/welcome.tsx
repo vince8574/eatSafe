@@ -8,19 +8,29 @@ export default function WelcomeScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const firstName = usePreferencesStore((state) => state.firstName);
+  const hasSeenNotificationPrompt = usePreferencesStore((state) => state.hasSeenNotificationPrompt);
   const setHasSeenWelcome = usePreferencesStore((state) => state.setHasSeenWelcome);
 
   useEffect(() => {
     setHasSeenWelcome(true);
     const timer = setTimeout(() => {
-      router.replace('/(tabs)/home');
-    }, 1000);
+      // Redirect to notification permissions if not seen yet, otherwise to login
+      if (!hasSeenNotificationPrompt) {
+        router.replace('/notification-permissions');
+      } else {
+        router.replace('/auth/login');
+      }
+    }, 2000);
     return () => clearTimeout(timer);
-  }, [router, setHasSeenWelcome]);
+  }, [router, setHasSeenWelcome, hasSeenNotificationPrompt]);
 
   const handleGoToHome = () => {
     setHasSeenWelcome(true);
-    router.replace('/(tabs)/home');
+    if (!hasSeenNotificationPrompt) {
+      router.replace('/notification-permissions');
+    } else {
+      router.replace('/auth/login');
+    }
   };
 
   return (

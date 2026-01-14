@@ -6,7 +6,8 @@ import { useDatabaseWarmup } from '../services/dbService';
 import { purgeExpiredScans } from '../utils/dataCleanup';
 import { registerBackgroundRecallCheck, getAndClearNewRecalls } from '../services/backgroundRecallCheck';
 import { RecallAlertModal } from '../components/RecallAlertModal';
-import { useScannedProducts } from '../hooks/useScannedProducts';
+import { useScannedProducts, syncProductsToAsyncStorage } from '../hooks/useScannedProducts';
+import { migrateLocalScansToFirestore } from '../services/productMigrationService';
 import type { ScannedProduct } from '../types';
 
 export function AppInitializer() {
@@ -17,8 +18,18 @@ export function AppInitializer() {
 
   useEffect(() => {
     void registerBackgroundTask();
-    void requestNotificationPermissions();
+    // Notification permissions are now requested via dedicated screen
     void registerBackgroundRecallCheck();
+
+    // Migrer les produits SQLite vers Firestore (une seule fois)
+    void migrateLocalScansToFirestore().then((result) => {
+      if (result.success && result.migrated > 0) {
+        console.log(`[AppInitializer] Migration complete: ${result.migrated} products migrated`);
+      }
+    });
+
+    // Synchroniser les produits Firestore vers AsyncStorage au démarrage
+    void syncProductsToAsyncStorage();
 
     // Vérifier s'il y a de nouveaux rappels au démarrage
     const checkNewRecalls = async () => {
@@ -55,6 +66,7 @@ export function AppInitializer() {
     const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
         void purgeExpiredScans();
+        void syncProductsToAsyncStorage();
         void checkNewRecalls();
       }
     });

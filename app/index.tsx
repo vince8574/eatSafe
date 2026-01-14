@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
 
 export default function RootRedirect() {
-  const { firstName, hasSeenWelcome } = usePreferencesStore();
+  const { firstName, hasSeenWelcome, hasSeenNotificationPrompt } = usePreferencesStore();
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -29,6 +29,8 @@ export default function RootRedirect() {
     path = '/onboarding';
   } else if (!hasSeenWelcome) {
     path = '/welcome';
+  } else if (!hasSeenNotificationPrompt) {
+    path = '/notification-permissions';
   }
 
   return <Redirect href={path as any} />;
