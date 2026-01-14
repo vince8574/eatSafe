@@ -166,6 +166,15 @@
     "newRecallTitle": "⚠️ Nouveau rappel détecté",
     "newRecallBody": "Le produit {{brand}} - Lot {{lot}} fait maintenant l'objet d'un rappel. Ne pas consommer."
   },
+  "notificationPermissions": {
+    "title": "Restez informé des rappels",
+    "subtitle": "Recevez des notifications en temps réel lorsqu'un produit que vous avez scanné fait l'objet d'un rappel sanitaire.",
+    "benefit1": "Alertes de sécurité immédiates",
+    "benefit2": "Vérifications automatiques toutes les heures",
+    "benefit3": "Partagez avec votre équipe (organisations)",
+    "enableButton": "Activer les notifications",
+    "skipButton": "Plus tard"
+  },
   "settings": {
     "title": "Paramètres",
     "language": "Langue",
@@ -189,6 +198,14 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "onboarding": {
+    "title": "Bienvenue !",
+    "disclaimer": "L'application fournit des alertes préventives mais ne garantit pas la consommabilité des produits. Vous restez seul responsable en cas d'ingestion d'un produit contaminé.",
+    "firstNameLabel": "Votre prénom",
+    "firstNamePlaceholder": "Ex : Marie",
+    "firstNameError": "Merci de renseigner votre prénom pour continuer.",
+    "continue": "Continuer"
   },
   "welcomeScreen": {
     "greeting": "Bonjour {{name}}",

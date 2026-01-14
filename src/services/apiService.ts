@@ -7,6 +7,11 @@ type RecallResponse = {
 const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=1000&sort=report_date:desc';
 const USDA_ENDPOINT = 'https://www.fsis.usda.gov/fsis/api/recall';
 
+// Cache for recalls data (5 minutes TTL)
+let recallsCache: RecallRecord[] | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 /**
  * Extrait les numéros de lot du champ code_info de la FDA
  * Gère des formats comme "Lot: 58041" ou "Lot #12345" ou juste des numéros
@@ -139,6 +144,14 @@ export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
  * Récupère tous les rappels américains (FDA + USDA combinés)
  */
 export async function fetchUsRecalls(): Promise<RecallRecord[]> {
+  // Check cache first
+  const now = Date.now();
+  if (recallsCache && (now - cacheTimestamp < CACHE_TTL)) {
+    console.log('[US Recalls] Using cached data');
+    return recallsCache;
+  }
+
+  console.log('[US Recalls] Fetching fresh data from APIs...');
   const [fdaRecalls, usdaRecalls] = await Promise.allSettled([
     fetchFdaRecalls(),
     fetchUsdaRecalls()
@@ -155,6 +168,10 @@ export async function fetchUsRecalls(): Promise<RecallRecord[]> {
   }
 
   console.log(`[US Recalls] Total: ${results.length} (FDA: ${fdaRecalls.status === 'fulfilled' ? fdaRecalls.value.length : 0}, USDA: ${usdaRecalls.status === 'fulfilled' ? usdaRecalls.value.length : 0})`);
+
+  // Update cache
+  recallsCache = results;
+  cacheTimestamp = now;
 
   return results;
 }

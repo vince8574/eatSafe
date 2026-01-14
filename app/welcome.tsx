@@ -2,10 +2,13 @@ import { useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../src/theme/themeContext';
+import { useI18n } from '../src/i18n/I18nContext';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
+import { GradientBackground } from '../src/components/GradientBackground';
 
 export default function WelcomeScreen() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const firstName = usePreferencesStore((state) => state.firstName);
   const hasSeenNotificationPrompt = usePreferencesStore((state) => state.hasSeenNotificationPrompt);
@@ -34,33 +37,41 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.center}>
-        <Image source={require('../assets/pomme.png')} style={styles.logo} resizeMode="contain" />
-        <Text style={[styles.greeting, { color: colors.textPrimary }]}>Bonjour {firstName || ''}</Text>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Quel produit voulez-vous vérifier aujourd'hui ?</Text>
+    <GradientBackground>
+      <View style={styles.container}>
+        <View style={styles.center}>
+          <Image source={require('../assets/pomme.png')} style={styles.logo} resizeMode="contain" />
+          <Text style={[styles.greeting, { color: colors.textPrimary }]}>
+            {t('welcomeScreen.greeting', { name: firstName || '' })}
+          </Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            {t('welcomeScreen.question')}
+          </Text>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.accent }]}
-          onPress={handleGoToHome}
-        >
-          <Text style={[styles.buttonText, { color: colors.surface }]}>Accéder à l'application</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.accent }]}
+            onPress={handleGoToHome}
+          >
+            <Text style={[styles.buttonText, { color: colors.surface }]}>
+              {t('welcomeScreen.startScanning')}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  center: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 14,
     padding: 24
-  },
-  center: {
-    alignItems: 'center',
-    gap: 14
   },
   logo: {
     width: 120,

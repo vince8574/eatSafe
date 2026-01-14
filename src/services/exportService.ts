@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system/legacy';
+import { EncodingType } from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 import * as XLSX from 'xlsx';
@@ -13,10 +14,6 @@ interface ExportOptions {
   companyName?: string;
   siteName?: string;
 }
-
-// Expo SDK 54: certaines builds retournent EncodingType undefined.
-// On fournit un fallback pour éviter les erreurs "Cannot read property 'Base64' of undefined".
-const Encoding = (FileSystem as any)?.EncodingType ?? { UTF8: 'utf8', Base64: 'base64' };
 
 /**
  * Génère un CSV à partir des produits scannés
@@ -97,7 +94,7 @@ async function generateExcel(products: ScannedProduct[], regulatoryFormat: boole
   const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
   await FileSystem.writeAsStringAsync(fileUri, wbout, {
-    encoding: Encoding.Base64
+    encoding: EncodingType.Base64
   });
 
   return fileUri;
@@ -278,7 +275,7 @@ export async function exportProducts(options: ExportOptions): Promise<void> {
       fileUri = `${FileSystem.documentDirectory}${fileName}`;
       const csvContent = generateCSV(products, regulatoryFormat);
       await FileSystem.writeAsStringAsync(fileUri, csvContent, {
-        encoding: Encoding.UTF8
+        encoding: EncodingType.UTF8
       });
       break;
 

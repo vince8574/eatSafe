@@ -3,11 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'rea
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../src/theme/themeContext';
+import { useI18n } from '../src/i18n/I18nContext';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
 import { requestNotificationPermissions } from '../src/services/notificationService';
+import { GradientBackground } from '../src/components/GradientBackground';
 
 export default function NotificationPermissionsScreen() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const setNotificationsEnabled = usePreferencesStore((state) => state.setNotificationsEnabled);
@@ -41,89 +44,91 @@ export default function NotificationPermissionsScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.content}>
-        {/* Notification Icon */}
-        <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
-          <Ionicons name="notifications" size={64} color={colors.accent} />
-        </View>
-
-        {/* Title */}
-        <Text style={[styles.title, { color: colors.textPrimary }]}>
-          Restez informé des rappels
-        </Text>
-
-        {/* Subtitle */}
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          Recevez des notifications en temps réel lorsqu'un produit que vous avez scanné fait l'objet d'un rappel sanitaire.
-        </Text>
-
-        {/* Benefits List */}
-        <View style={styles.benefitsList}>
-          <View style={styles.benefitItem}>
-            <Ionicons name="shield-checkmark" size={24} color={colors.success} />
-            <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
-              Alertes de sécurité immédiates
-            </Text>
+    <GradientBackground>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {/* Notification Icon */}
+          <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+            <Ionicons name="notifications" size={64} color={colors.accent} />
           </View>
 
-          <View style={styles.benefitItem}>
-            <Ionicons name="time" size={24} color={colors.accent} />
-            <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
-              Vérifications automatiques toutes les heures
-            </Text>
-          </View>
-
-          <View style={styles.benefitItem}>
-            <Ionicons name="people" size={24} color={colors.primary} />
-            <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
-              Partagez avec votre équipe (organisations)
-            </Text>
-          </View>
-        </View>
-
-        {/* Primary Button */}
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.accent }]}
-          onPress={handleEnableNotifications}
-          activeOpacity={0.85}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color={colors.surface} />
-          ) : (
-            <Text style={[styles.buttonText, { color: colors.surface }]}>
-              Activer les notifications
-            </Text>
-          )}
-        </TouchableOpacity>
-
-        {/* Secondary Button */}
-        <TouchableOpacity
-          style={styles.skipButton}
-          onPress={handleSkip}
-          activeOpacity={0.7}
-          disabled={isLoading}
-        >
-          <Text style={[styles.skipButtonText, { color: colors.textSecondary }]}>
-            Plus tard
+          {/* Title */}
+          <Text style={[styles.title, { color: colors.textPrimary }]}>
+            {t('notificationPermissions.title')}
           </Text>
-        </TouchableOpacity>
+
+          {/* Subtitle */}
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            {t('notificationPermissions.subtitle')}
+          </Text>
+
+          {/* Benefits List */}
+          <View style={styles.benefitsList}>
+            <View style={styles.benefitItem}>
+              <Ionicons name="shield-checkmark" size={24} color={colors.success} />
+              <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
+                {t('notificationPermissions.benefit1')}
+              </Text>
+            </View>
+
+            <View style={styles.benefitItem}>
+              <Ionicons name="time" size={24} color={colors.accent} />
+              <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
+                {t('notificationPermissions.benefit2')}
+              </Text>
+            </View>
+
+            <View style={styles.benefitItem}>
+              <Ionicons name="people" size={24} color={colors.primary} />
+              <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
+                {t('notificationPermissions.benefit3')}
+              </Text>
+            </View>
+          </View>
+
+          {/* Primary Button */}
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.accent }]}
+            onPress={handleEnableNotifications}
+            activeOpacity={0.85}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color={colors.surface} />
+            ) : (
+              <Text style={[styles.buttonText, { color: colors.surface }]}>
+                {t('notificationPermissions.enableButton')}
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          {/* Secondary Button */}
+          <TouchableOpacity
+            style={styles.skipButton}
+            onPress={handleSkip}
+            activeOpacity={0.7}
+            disabled={isLoading}
+          >
+            <Text style={[styles.skipButtonText, { color: colors.textSecondary }]}>
+              {t('notificationPermissions.skipButton')}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 24
+    flex: 1
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 20
+    gap: 20,
+    padding: 24
   },
   iconContainer: {
     width: 120,

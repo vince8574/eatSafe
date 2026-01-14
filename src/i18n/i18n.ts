@@ -70,14 +70,11 @@ export async function initializeI18n(): Promise<string> {
       return savedLanguage;
     }
 
-    const deviceLanguage = Localization.getLocales()[0]?.languageCode || 'en';
-    const matchedLanguage = SUPPORTED_LANGUAGES.includes(deviceLanguage as SupportedLanguage)
-      ? deviceLanguage
-      : 'en';
-
-    i18n.locale = matchedLanguage;
-    console.log(`✓ Language detected from device: ${matchedLanguage}`);
-    return matchedLanguage;
+    // Force English as default language (US market)
+    i18n.locale = 'en';
+    await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, 'en');
+    console.log(`✓ Language set to default: en (US market)`);
+    return 'en';
   } catch (error) {
     console.warn('Failed to initialize i18n, using default (en)', error);
     i18n.locale = 'en';

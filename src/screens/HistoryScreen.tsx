@@ -1,15 +1,12 @@
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal } from 'react-native';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { ScannedProduct } from '../types';
 import { useI18n } from '../i18n/I18nContext';
 import { StatusTag } from '../components/StatusTag';
 import { GradientBackground } from '../components/GradientBackground';
-import { usePreferencesStore } from '../stores/usePreferencesStore';
-import { checkAllProductsForRecalls } from '../services/recallCheckService';
-import * as Notifications from 'expo-notifications';
 import { useSubscription } from '../hooks/useSubscription';
 import { enableExportForTesting } from '../services/subscriptionService';
 import { exportProducts, canExport as canExportFormat, ExportFormat } from '../services/exportService';
@@ -22,11 +19,9 @@ export function HistoryScreen() {
   const { colors } = useTheme();
   const { t, locale } = useI18n();
   const router = useRouter();
-  const { products, updateRecall } = useScannedProducts();
+  const { products } = useScannedProducts();
   const { subscription, loading: subLoading } = useSubscription();
-  const country = usePreferencesStore((state) => state.country);
   const [filter, setFilter] = useState<Filter>('all');
-  const [isCheckingRecalls, setIsCheckingRecalls] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
@@ -68,63 +63,10 @@ export function HistoryScreen() {
     warning: t('recallStatus.warning')
   };
 
-  // Automatic recall checking when screen is focused
-  useFocusEffect(
-    useCallback(() => {
-      async function checkForNewRecalls() {
-        if (products.length === 0) return;
-
-        setIsCheckingRecalls(true);
-        console.log('[HistoryScreen] Checking for new recalls...');
-
-        try {
-          const results = await checkAllProductsForRecalls(products, country);
-
-          if (results.length > 0) {
-            console.log(`[HistoryScreen] Found ${results.length} products with status changes`);
-
-            // Update each product with new recalls
-            for (const result of results) {
-              if (result.newRecalls.length > 0) {
-                // Product now has recalls
-                const product = products.find((p) => p.id === result.productId);
-                if (product) {
-                  updateRecall(product, result.newRecalls);
-                }
-
-                // Send notification
-                if (product) {
-                  await Notifications.scheduleNotificationAsync({
-                    content: {
-                      title: t('notifications.newRecallTitle'),
-                      body: t('notifications.newRecallBody', {
-                        brand: product.brand,
-                        lot: product.lotNumber
-                      })
-                    },
-                    trigger: null
-                  });
-                }
-              } else {
-                // Product no longer recalled (rare case)
-                console.log(
-                  `[HistoryScreen] Product ${result.productId} is no longer recalled`
-                );
-              }
-            }
-          } else {
-            console.log('[HistoryScreen] No status changes detected');
-          }
-        } catch (error) {
-          console.error('[HistoryScreen] Error checking recalls:', error);
-        } finally {
-          setIsCheckingRecalls(false);
-        }
-      }
-
-      checkForNewRecalls();
-    }, [products, country, updateRecall, t])
-  );
+  // Note: Automatic recall checking is handled by:
+  // 1. Background task (every hour)
+  // 2. At each product scan
+  // No need to re-check when opening history screen
 
   const filtered = useMemo(() => {
     if (filter === 'all') {
@@ -237,9 +179,6 @@ export function HistoryScreen() {
               <Text style={[styles.title, { color: colors.textPrimary }]}>
                 {t('history.fullTitle')}
               </Text>
-              {isCheckingRecalls && (
-                <ActivityIndicator size="small" color={colors.accent} style={styles.spinner} />
-              )}
             </View>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('history.subtitle')}
@@ -442,9 +381,6 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 10,
     overflow: 'hidden'
-  },
-  spinner: {
-    marginLeft: 8
   },
   title: {
     fontSize: 26,

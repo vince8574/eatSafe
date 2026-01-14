@@ -166,6 +166,15 @@
     "newRecallTitle": "⚠️ New recall detected",
     "newRecallBody": "Product {{brand}} - Lot {{lot}} is now subject to a recall. Do not consume."
   },
+  "notificationPermissions": {
+    "title": "Stay informed about recalls",
+    "subtitle": "Receive real-time notifications when a product you scanned is subject to a food recall.",
+    "benefit1": "Immediate safety alerts",
+    "benefit2": "Automatic checks every hour",
+    "benefit3": "Share with your team (organizations)",
+    "enableButton": "Enable notifications",
+    "skipButton": "Later"
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",
@@ -189,6 +198,14 @@
     "sq": "Shqip",
     "sr": "Српски",
     "me": "Crnogorski"
+  },
+  "onboarding": {
+    "title": "Welcome!",
+    "disclaimer": "This app provides preventive alerts but does not guarantee product safety. You remain solely responsible in case of consuming a contaminated product.",
+    "firstNameLabel": "Your first name",
+    "firstNamePlaceholder": "e.g. Marie",
+    "firstNameError": "Please enter your first name to continue.",
+    "continue": "Continue"
   },
   "welcomeScreen": {
     "greeting": "Hello {{name}}",
