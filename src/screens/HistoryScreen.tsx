@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useScannedProducts } from '../hooks/useScannedProducts';
