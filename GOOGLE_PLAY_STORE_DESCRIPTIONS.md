@@ -152,7 +152,7 @@ Vous DEVEZ héberger une politique de confidentialité en ligne. Google Play l'e
 **Option 2 :** Héberger sur GitHub Pages (gratuit)
 - Créer un dépôt GitHub
 - Activer GitHub Pages
-- URL type: https://votrecompte.github.io/numeline-privacy-policy
+- URL type: https://numeline.vercel.app/privacy-policy
 
 **Option 3 :** Utiliser Firebase Hosting (gratuit)
 

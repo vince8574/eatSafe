@@ -172,7 +172,7 @@ Version 1.0.0 - Lancement initial
 1. Créer fichier privacy-policy.html
 2. Créer dépôt GitHub public
 3. Activer GitHub Pages
-4. URL : https://[votrecompte].github.io/numeline-privacy/privacy-policy.html
+4. URL : https://numeline.vercel.app/privacy-policy
 ```
 
 **Option C : Template inclus**

@@ -134,16 +134,14 @@ Cette application fournit des informations sur les rappels de produits alimentai
 📞 SUPPORT
 
 Questions ? Contactez-nous à [VOTRE_EMAIL]
-Politique de confidentialité : [URL_PRIVACY_POLICY]
-Conditions d'utilisation : [URL_TERMS]
+Politique de confidentialité : https://numeline.vercel.app/privacy-policy
+Conditions d'utilisation : https://numeline.vercel.app/terms-of-service
 
 🚀 Téléchargez Numeline dès maintenant et protégez votre santé !
 ```
 
 **Actions requises**:
 - Remplacer `[VOTRE_EMAIL]` par votre email de contact
-- Remplacer `[URL_PRIVACY_POLICY]` par l'URL de votre politique de confidentialité
-- Remplacer `[URL_TERMS]` par l'URL de vos conditions d'utilisation
 
 ---
 
@@ -164,7 +162,7 @@ Téléphone: [VOTRE_NUMERO] (optionnel)
 
 #### Confidentialité
 ```
-URL de la politique de confidentialité: [URL_VERS_PRIVACY_POLICY.HTML]
+URL de la politique de confidentialité: https://numeline.vercel.app/privacy-policy
 ```
 
 **Note**: Vous devrez héberger [privacy-policy.html](privacy-policy.html) sur un serveur web accessible publiquement.
@@ -447,6 +445,10 @@ firebase deploy --only hosting
 2. Connecter votre repo GitHub
 3. Déployer automatiquement
 
+**URLs actuelles (Vercel)** :
+- Privacy Policy: https://numeline.vercel.app/privacy-policy
+- Terms of Service: https://numeline.vercel.app/terms-of-service
+
 ### 6.2 Ajouter l'URL dans app.json
 
 Après hébergement, mettez à jour:
@@ -456,7 +458,7 @@ Après hébergement, mettez à jour:
 {
   "expo": {
     "privacy": "public",
-    "privacyPolicyUrl": "https://VOTRE_URL/privacy-policy.html"
+    "privacyPolicyUrl": "https://numeline.vercel.app/privacy-policy"
   }
 }
 ```

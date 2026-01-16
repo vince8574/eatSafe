@@ -108,11 +108,11 @@
    # Repo Settings → Pages → Source: main → Save
    ```
 
-   **URL finale**:
-   ```
-   https://VOTRE_USERNAME.github.io/VOTRE_REPO/privacy-policy.html
-   https://VOTRE_USERNAME.github.io/VOTRE_REPO/terms-of-service.html
-   ```
+**URL finale**:
+```
+https://numeline.vercel.app/privacy-policy
+https://numeline.vercel.app/terms-of-service
+```
 
    **Option B: Firebase Hosting**
    ```bash

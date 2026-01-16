@@ -13,6 +13,10 @@
 
 ### 1. Héberger les documents légaux
 
+**Production actuelle (Vercel)**
+- Privacy Policy: https://numeline.vercel.app/privacy-policy
+- Terms of Service: https://numeline.vercel.app/terms-of-service
+
 **Option A - GitHub Pages (Gratuit):**
 1. Créer un repo GitHub public
 2. Activer GitHub Pages dans Settings
@@ -52,8 +56,8 @@ eas build --platform android --profile production
 
 ## URLs à fournir à Google Play
 
-- Privacy Policy: https://VOTRE_URL/privacy-policy.html
-- Terms of Service: https://VOTRE_URL/terms-of-service.html
+- Privacy Policy: https://numeline.vercel.app/privacy-policy
+- Terms of Service: https://numeline.vercel.app/terms-of-service
 
 ## Commandes EAS utiles
 

@@ -79,7 +79,7 @@ git push
 
 **URL finale**:
 ```
-https://VOTRE_USERNAME.github.io/VOTRE_REPO/privacy-policy.html
+https://numeline.vercel.app/privacy-policy
 ```
 
 #### Option B: Firebase Hosting
@@ -117,7 +117,7 @@ firebase deploy --only hosting
 - [ ] Tags: santé, alimentation, rappels
 
 ### Politique
-- [ ] URL Politique de confidentialité: https://...
+- [ ] URL Politique de confidentialité: https://numeline.vercel.app/privacy-policy
 - [ ] Email de contact: votre@email.com
 - [ ] Questionnaire de contenu: Complété
 

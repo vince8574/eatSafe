@@ -13,6 +13,11 @@ Votre application Numeline est prête à être soumise au Google Play Store.
 5. **terms-of-service.html** - Conditions d'utilisation
 6. **GOOGLE_PLAY_DEPLOYMENT.md** - Guide complet de déploiement
 
+## URLs en production
+
+- Privacy Policy: https://numeline.vercel.app/privacy-policy
+- Terms of Service: https://numeline.vercel.app/terms-of-service
+
 ## Action requise: Compléter les documents
 
 Avant de publier les documents HTML en ligne, remplacez:
