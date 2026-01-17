@@ -77,7 +77,7 @@ Protégez votre famille dès aujourd'hui. Téléchargez Numeline gratuitement !
 
 🛡️ **Numeline - Your Food Safety Guardian**
 
-Numeline helps you protect your health and your family's by instantly checking if your food products are subject to safety recalls.
+Numeline helps you protect your health, your family's and your customers by instantly checking if your food products are subject to safety recalls.
 
 **🔍 KEY FEATURES**
 
@@ -157,7 +157,6 @@ Everyone - Suitable for all ages
 
 ## Contact Information
 
-**Website:** [À compléter - URL de votre site web ou GitHub Pages]
-**Email:** [À compléter - votre adresse email de support]
-**Privacy Policy:** [À créer - voir section suivante]
-
+**Website:** https://numeline.vercel.app/
+**Email:** vgaillard85@gmail.com
+**Privacy Policy:** https://numeline.vercel.app/privacy-policy
