@@ -28,3 +28,5 @@ android/app/*.jks
 expo-env.d.ts
 # @end expo-cli
 nul
+keystore_base64.txt
+.claude/
