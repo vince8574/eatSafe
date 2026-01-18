@@ -127,27 +127,6 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     sitesLimit: null,
     regulatoryFormat: true
   },
-  {
-    id: 'school_premium',
-    labelKey: 'subscription.plans.schoolPremium.label',
-    category: 'school',
-    price: '$99 / mo',
-    pricePerMonth: 99,
-    descriptionKeys: [
-      'subscription.plans.schoolPremium.desc1',
-      'subscription.plans.schoolPremium.desc2',
-      'subscription.plans.schoolPremium.desc3',
-      'subscription.plans.schoolPremium.desc4',
-      'subscription.plans.schoolPremium.desc5'
-    ],
-    scansIncluded: 5000,
-    historyRetentionDays: 'unlimited',
-    exportEnabled: true,
-    exportFormats: ['pdf', 'xlsx', 'csv'],
-    employeesLimit: 10,
-    sitesLimit: 3,
-    regulatoryFormat: true
-  }
 ];
 
 // Packs de scans supplémentaires (comme recommandé pour App Store / Google Play)
