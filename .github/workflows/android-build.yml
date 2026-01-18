@@ -46,6 +46,9 @@ jobs:
           echo "EXPO_PUBLIC_VISION_ENDPOINT=${{ secrets.EXPO_PUBLIC_VISION_ENDPOINT }}" >> .env
           echo "EXPO_PUBLIC_VISION_API_KEY=${{ secrets.EXPO_PUBLIC_VISION_API_KEY }}" >> .env
 
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
       - name: Build AAB (Google Play)
         if: ${{ github.event.inputs.build_type == 'aab' }}
         working-directory: android
