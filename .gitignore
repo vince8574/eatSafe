@@ -4,7 +4,6 @@ node_modules/
 dist/
 build/
 *.log
-package-lock.json
 yarn.lock
 firebase/functions/lib/
 firebase/functions/node_modules/
