@@ -1,15 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
 import { getCurrentUser } from './authService';
 
-async function deleteSubcollectionDocs(path: firestore.FirebaseFirestoreTypes.CollectionReference): Promise<void> {
+async function deleteSubcollectionDocs(path: FirebaseFirestoreTypes.CollectionReference): Promise<void> {
   const snapshot = await path.get();
   if (snapshot.empty) return;
 
   const batch = getFirestore().batch();
-  snapshot.docs.forEach(doc => batch.delete(doc.ref));
+  snapshot.docs.forEach((doc: FirebaseFirestoreTypes.QueryDocumentSnapshot) => batch.delete(doc.ref));
   await batch.commit();
 }
 

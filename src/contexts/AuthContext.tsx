@@ -67,7 +67,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
       await GoogleSignin.signOut().catch(() => undefined);
 
       const signInResult = await GoogleSignin.signIn();
-      let idToken = signInResult?.idToken;
+      // New API (v13+): data contains user and idToken
+      let idToken = signInResult?.data?.idToken;
       let tokens: any = null;
 
       // Fallback: some devices return tokens via getTokens only
@@ -104,8 +105,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
     try {
       // Try to clear Google session, but never block Firebase sign-out if this fails
       try {
-        const isSignedIn = await GoogleSignin.isSignedIn();
-        if (isSignedIn) {
+        // New API (v13+): getCurrentUser() is synchronous
+        const currentUser = GoogleSignin.getCurrentUser();
+        if (currentUser) {
           await GoogleSignin.signOut();
         }
       } catch (googleError) {
@@ -135,9 +137,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
       await deleteCurrentUserAccount();
 
       // Nettoyage session Google si l'utilisateur venait de Google
-      await GoogleSignin.isSignedIn()
-        .then((isSignedIn) => (isSignedIn ? GoogleSignin.signOut() : undefined))
-        .catch(() => undefined);
+      // New API (v13+): getCurrentUser() is synchronous and returns User | null
+      try {
+        const currentUser = GoogleSignin.getCurrentUser();
+        if (currentUser) {
+          await GoogleSignin.signOut();
+        }
+      } catch {
+        // Ignore Google sign-out errors
+      }
 
       await auth().signOut().catch(() => undefined);
       setUser(null);

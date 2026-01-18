@@ -1,9 +1,7 @@
 // src/services/brandMatcher.ts
 import { getAllCustomBrands } from './customBrandsService';
-import * as FileSystem from 'expo-file-system';
-import { Asset } from 'expo-asset';
 
-// Empty array initially - brands will be loaded from assets
+// Empty array initially - brands will be loaded from Firestore
 const brandsData: string[] = [];
 
 function levenshteinDistance(str1: string, str2: string): number {
@@ -182,12 +180,8 @@ export class BrandMatcher {
 let brandMatcherInstance: BrandMatcher | null = null;
 let baseBrandsCache: string[] | null = null;
 
-// URL where brands.json is hosted (Firebase Storage or CDN)
-const BRANDS_URL = 'https://storage.googleapis.com/YOUR_BUCKET/brands/brands.json';
-const LOCAL_BRANDS_PATH = `${FileSystem.documentDirectory}brands.json`;
-
 /**
- * Charge les marques depuis Firebase Storage ou cache local
+ * Charge les marques depuis Firestore (le fichier local n'est plus utilisé)
  */
 async function loadBrandsFromAssets(): Promise<string[]> {
   // Firestore est désormais la source des marques : on ne tente plus de lire les split/apk.

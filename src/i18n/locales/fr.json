@@ -412,7 +412,15 @@
       "medium": "Pack Moyen",
       "large": "Pack Grand",
       "xlarge": "Pack XL"
-    }
+    },
+    "restoreTitle": "Restaurer les achats",
+    "restoreHelper": "Restaurez vos achats précédents si vous avez changé d'appareil ou réinstallé l'application.",
+    "restoreButton": "Restaurer mes achats",
+    "restoreSuccess": "Restauration réussie",
+    "restoreSuccessMessage": "Vos achats ont été restaurés avec succès.",
+    "restoreError": "Erreur de restauration",
+    "restoreErrorMessage": "Impossible de restaurer vos achats. Veuillez réessayer.",
+    "devMode": "Mode développement - Les achats sont simulés"
   },
   "quota": {
     "reached": "Quota de scans atteint",

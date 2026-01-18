@@ -5,6 +5,8 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@components/*": [

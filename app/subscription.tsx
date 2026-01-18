@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../src/theme/themeContext';
@@ -11,7 +11,28 @@ export default function SubscriptionScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
-  const { subscription, plans, packs, loading, error, choosePlan, buyPack, refresh } = useSubscription();
+  const {
+    subscription,
+    plans,
+    packs,
+    loading,
+    purchasing,
+    error,
+    storeAvailable,
+    choosePlan,
+    buyPack,
+    restorePurchases,
+    refresh
+  } = useSubscription();
+
+  const handleRestorePurchases = async () => {
+    try {
+      await restorePurchases();
+      Alert.alert(t('subscription.restoreSuccess'), t('subscription.restoreSuccessMessage'));
+    } catch (err) {
+      Alert.alert(t('subscription.restoreError'), t('subscription.restoreErrorMessage'));
+    }
+  };
 
   const statusLabel = useMemo(() => {
     if (!subscription || subscription.status === 'none') return t('subscription.status.none');
@@ -120,16 +141,20 @@ export default function SubscriptionScreen() {
                     { backgroundColor: selected ? colors.surface : colors.accent, borderColor: colors.accent }
                   ]}
                   onPress={() => choosePlan(plan.id)}
-                  disabled={loading}
+                  disabled={loading || purchasing}
                 >
-                  <Text
-                    style={[
-                      styles.planButtonText,
-                      { color: selected ? colors.accent : colors.surface }
-                    ]}
-                  >
-                    {selected ? t('subscription.planSelected') : t('subscription.choosePlan')}
-                  </Text>
+                  {purchasing ? (
+                    <ActivityIndicator color={selected ? colors.accent : colors.surface} size="small" />
+                  ) : (
+                    <Text
+                      style={[
+                        styles.planButtonText,
+                        { color: selected ? colors.accent : colors.surface }
+                      ]}
+                    >
+                      {selected ? t('subscription.planSelected') : t('subscription.choosePlan')}
+                    </Text>
+                  )}
                 </TouchableOpacity>
               </View>
             );
@@ -147,14 +172,44 @@ export default function SubscriptionScreen() {
                 key={pack.id}
                 style={[styles.packButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
                 onPress={() => buyPack(pack.quantity)}
-                disabled={loading}
+                disabled={loading || purchasing}
               >
-                <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
-                <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
+                {purchasing ? (
+                  <ActivityIndicator color={colors.accent} size="small" />
+                ) : (
+                  <>
+                    <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
+                    <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
+                  </>
+                )}
               </TouchableOpacity>
             ))}
           </View>
         </View>
+
+        {Platform.OS === 'android' && (
+          <View style={[styles.card, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.restoreTitle')}</Text>
+            <Text style={[styles.helper, { color: colors.textSecondary }]}>
+              {t('subscription.restoreHelper')}
+            </Text>
+            <TouchableOpacity
+              style={[styles.restoreButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
+              onPress={handleRestorePurchases}
+              disabled={loading || purchasing}
+            >
+              <Ionicons name="refresh-circle-outline" size={20} color={colors.accent} />
+              <Text style={[styles.restoreButtonText, { color: colors.accent }]}>
+                {t('subscription.restoreButton')}
+              </Text>
+            </TouchableOpacity>
+            {!storeAvailable && (
+              <Text style={[styles.devModeText, { color: colors.textSecondary }]}>
+                {t('subscription.devMode')}
+              </Text>
+            )}
+          </View>
+        )}
 
         {error ? (
           <View style={[styles.errorBox, { backgroundColor: '#FEE' }]}>
@@ -299,5 +354,24 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 13,
     fontWeight: '700'
+  },
+  restoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1.5
+  },
+  restoreButtonText: {
+    fontSize: 14,
+    fontWeight: '700'
+  },
+  devModeText: {
+    fontSize: 12,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: 8
   }
 });

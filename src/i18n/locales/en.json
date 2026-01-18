@@ -369,7 +369,15 @@
       "medium": "Medium Pack",
       "large": "Large Pack",
       "xlarge": "XL Pack"
-    }
+    },
+    "restoreTitle": "Restore Purchases",
+    "restoreHelper": "Restore your previous purchases if you changed device or reinstalled the app.",
+    "restoreButton": "Restore my purchases",
+    "restoreSuccess": "Restore successful",
+    "restoreSuccessMessage": "Your purchases have been restored successfully.",
+    "restoreError": "Restore error",
+    "restoreErrorMessage": "Unable to restore your purchases. Please try again.",
+    "devMode": "Development mode - Purchases are simulated"
   },
   "quota": {
     "reached": "Scan quota reached",

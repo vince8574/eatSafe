@@ -3,6 +3,19 @@ import { getFirestore } from './firebaseService';
 import { getCurrentUserId } from './authService';
 import { getCurrentOrganization } from './organizationService';
 import { SUBSCRIPTION_PLANS, SCAN_PACKS, getPlanById as getSubscriptionPlanById } from '../constants/subscriptionPlans';
+import {
+  initializeBilling,
+  endBilling,
+  setupPurchaseListeners,
+  getAvailableSubscriptions,
+  getAvailableScanPacks,
+  purchaseSubscription as billingPurchaseSubscription,
+  purchaseScanPack as billingPurchaseScanPack,
+  restorePurchases,
+  getScanPackQuantity,
+  isBillingAvailable,
+  type BillingProduct,
+} from './billingService';
 
 export type SubscriptionStatus = 'none' | 'active' | 'expired';
 
@@ -176,4 +189,182 @@ export async function enableExportForTesting(): Promise<void> {
     updatedAt: Date.now()
   }, { merge: true });
   console.log(`[subscriptionService] Export enabled for testing (scope: ${scopeId})`);
+}
+
+// ============= GOOGLE PLAY BILLING INTEGRATION =============
+
+let billingInitialized = false;
+
+/**
+ * Initialize the billing service and set up purchase listeners
+ */
+export async function initBilling(): Promise<boolean> {
+  if (billingInitialized) {
+    return true;
+  }
+
+  const success = await initializeBilling();
+  if (success) {
+    setupPurchaseListeners(handlePurchaseSuccess, handlePurchaseError);
+    billingInitialized = true;
+  }
+  return success;
+}
+
+/**
+ * Cleanup billing service
+ */
+export async function cleanupBilling(): Promise<void> {
+  await endBilling();
+  billingInitialized = false;
+}
+
+/**
+ * Handle successful purchase from Google Play
+ */
+async function handlePurchaseSuccess(purchase: any): Promise<void> {
+  const productId = purchase.productId;
+  console.log('[subscriptionService] Processing successful purchase:', productId);
+
+  // Check if it's a subscription or a scan pack
+  const plan = getSubscriptionPlanById(productId);
+  if (plan) {
+    // It's a subscription
+    await activateSubscription(productId, purchase.transactionId, purchase.purchaseToken);
+  } else {
+    // It's a scan pack
+    const quantity = getScanPackQuantity(productId);
+    if (quantity > 0) {
+      await addScanPack(quantity);
+      console.log(`[subscriptionService] Added ${quantity} scans from pack ${productId}`);
+    }
+  }
+}
+
+/**
+ * Handle purchase error
+ */
+function handlePurchaseError(error: any): void {
+  console.error('[subscriptionService] Purchase error:', error);
+  // Error handling is done in the UI layer via the hook
+}
+
+/**
+ * Activate a subscription after successful purchase
+ */
+async function activateSubscription(
+  planId: string,
+  transactionId?: string,
+  purchaseToken?: string
+): Promise<Subscription> {
+  const db = getFirestore();
+  const scopeId = await getSubscriptionScopeId();
+  const docRef = db.collection(COLLECTION).doc(scopeId);
+  const plan = getSubscriptionPlanById(planId);
+
+  if (!plan) {
+    throw new Error(`Unknown plan: ${planId}`);
+  }
+
+  const payload: Subscription & { googlePlayTransactionId?: string; googlePlayPurchaseToken?: string } = {
+    planId: plan.id,
+    planName: plan.labelKey,
+    status: 'active',
+    // Google Play manages the actual expiration, this is just for reference
+    expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
+    scansIncluded: plan.scansIncluded,
+    scansRemaining: plan.scansIncluded,
+    historyRetentionDays: plan.historyRetentionDays,
+    exportEnabled: plan.exportEnabled,
+    exportFormats: plan.exportFormats,
+    regulatoryFormat: plan.regulatoryFormat,
+    employeesLimit: plan.employeesLimit,
+    sitesLimit: plan.sitesLimit,
+    updatedAt: Date.now(),
+    ...(transactionId && { googlePlayTransactionId: transactionId }),
+    ...(purchaseToken && { googlePlayPurchaseToken: purchaseToken }),
+  };
+
+  await docRef.set(payload, { merge: true });
+  console.log(`[subscriptionService] Subscription ${planId} activated for scope ${scopeId}`);
+
+  return payload;
+}
+
+/**
+ * Start subscription purchase flow via Google Play
+ */
+export async function purchaseSubscriptionViaStore(planId: string): Promise<void> {
+  if (!billingInitialized) {
+    await initBilling();
+  }
+  await billingPurchaseSubscription(planId);
+  // The actual subscription activation happens in handlePurchaseSuccess
+}
+
+/**
+ * Purchase a scan pack via Google Play
+ */
+export async function purchaseScanPackViaStore(packId: string): Promise<void> {
+  if (!billingInitialized) {
+    await initBilling();
+  }
+  await billingPurchaseScanPack(packId);
+  // The actual scan addition happens in handlePurchaseSuccess
+}
+
+/**
+ * Restore purchases from Google Play
+ */
+export async function restorePreviousPurchases(): Promise<Subscription | null> {
+  if (!billingInitialized) {
+    await initBilling();
+  }
+
+  const purchases = await restorePurchases();
+  if (purchases.length === 0) {
+    console.log('[subscriptionService] No purchases to restore');
+    return null;
+  }
+
+  // Find the most recent subscription purchase
+  for (const purchase of purchases) {
+    const plan = getSubscriptionPlanById(purchase.productId);
+    if (plan) {
+      console.log('[subscriptionService] Restoring subscription:', purchase.productId);
+      return await activateSubscription(
+        purchase.productId,
+        purchase.transactionId ?? undefined,
+        purchase.purchaseToken ?? undefined
+      );
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Get available products from Google Play
+ */
+export async function getStoreProducts(): Promise<{
+  subscriptions: BillingProduct[];
+  scanPacks: BillingProduct[];
+}> {
+  if (!billingInitialized) {
+    await initBilling();
+  }
+
+  const [subscriptions, scanPacks] = await Promise.all([
+    getAvailableSubscriptions(),
+    getAvailableScanPacks(),
+  ]);
+
+  return { subscriptions, scanPacks };
+}
+
+/**
+ * Check if Google Play billing is available
+ */
+export function isStoreAvailable(): boolean {
+  return isBillingAvailable();
 }

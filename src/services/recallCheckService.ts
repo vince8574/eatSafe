@@ -6,10 +6,10 @@ export interface RecallCheckResult {
   wasUpdated: boolean;
   newRecalls: Array<{
     id: string;
-    risque: string;
-    motif: string;
-    marque: string;
-    lotNumber: string;
+    title: string;
+    description?: string;
+    brand?: string;
+    lotNumbers: string[];
   }>;
 }
 
@@ -39,10 +39,10 @@ export async function checkAllProductsForRecalls(
     for (const product of products) {
       // Chercher les rappels correspondants
       const matchingRecalls = recalls.filter((recall) => {
-        const brandMatch = recall.marque?.toLowerCase() === product.brand.toLowerCase();
-        const lotMatch =
-          recall.lotNumber?.toLowerCase() === product.lotNumber.toLowerCase() ||
-          recall.lotNumber === '';
+        const brandMatch = recall.brand?.toLowerCase() === product.brand.toLowerCase();
+        const lotMatch = recall.lotNumbers.some(
+          (lot) => lot.toLowerCase() === product.lotNumber.toLowerCase() || lot === ''
+        );
         return brandMatch && lotMatch;
       });
 
@@ -55,10 +55,10 @@ export async function checkAllProductsForRecalls(
           wasUpdated: true,
           newRecalls: matchingRecalls.map(recall => ({
             id: recall.id,
-            risque: recall.risque,
-            motif: recall.motif,
-            marque: recall.marque,
-            lotNumber: recall.lotNumber
+            title: recall.title,
+            description: recall.description,
+            brand: recall.brand,
+            lotNumbers: recall.lotNumbers
           }))
         });
       } else if (matchingRecalls.length === 0 && product.recallStatus !== 'safe') {
@@ -88,10 +88,10 @@ export async function checkProductForRecalls(
   country: CountryCode
 ): Promise<Array<{
   id: string;
-  risque: string;
-  motif: string;
-  marque: string;
-  lotNumber: string;
+  title: string;
+  description?: string;
+  brand?: string;
+  lotNumbers: string[];
 }>> {
   console.log(`[RecallCheck] Checking single product: ${brand} ${lotNumber}`);
 
@@ -101,12 +101,12 @@ export async function checkProductForRecalls(
     const matchingRecalls = recalls.filter((recall) => {
       // Si la marque est fournie, vérifier marque ET lot
       // Sinon, vérifier uniquement le lot (mode professionnel)
-      const lotMatch =
-        recall.lotNumber?.toLowerCase() === lotNumber.toLowerCase() ||
-        recall.lotNumber === '';
+      const lotMatch = recall.lotNumbers.some(
+        (lot) => lot.toLowerCase() === lotNumber.toLowerCase() || lot === ''
+      );
 
       if (brand && brand.trim() !== '') {
-        const brandMatch = recall.marque?.toLowerCase() === brand.toLowerCase();
+        const brandMatch = recall.brand?.toLowerCase() === brand.toLowerCase();
         return brandMatch && lotMatch;
       } else {
         // Mode sans marque : vérifier uniquement le lot
@@ -118,10 +118,10 @@ export async function checkProductForRecalls(
 
     return matchingRecalls.map(recall => ({
       id: recall.id,
-      risque: recall.risque,
-      motif: recall.motif,
-      marque: recall.marque,
-      lotNumber: recall.lotNumber
+      title: recall.title,
+      description: recall.description,
+      brand: recall.brand,
+      lotNumbers: recall.lotNumbers
     }));
   } catch (error) {
     console.error('[RecallCheck] Error checking product:', error);
