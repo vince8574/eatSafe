@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { LanguageSelector } from '../../src/components/LanguageSelector';
 import { useTheme } from '../../src/theme/themeContext';
@@ -11,7 +12,8 @@ export default function LanguageScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, signOut, deleteAccount } = useAuth();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSignOut = () => {
     Alert.alert(
@@ -30,6 +32,41 @@ export default function LanguageScreen() {
               await signOut();
             } catch (error) {
               Alert.alert(t('auth.error'), t('auth.signOutFailed'));
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      t('auth.deleteAccountTitle', 'Supprimer mon compte'),
+      t('auth.deleteAccountMessage', 'Cette action supprimera votre compte et vos données. Voulez-vous continuer ?'),
+      [
+        {
+          text: t('auth.cancel'),
+          style: 'cancel'
+        },
+        {
+          text: t('auth.deleteAccount', 'Supprimer'),
+          style: 'destructive',
+          onPress: async () => {
+            setIsDeleting(true);
+            try {
+              await deleteAccount();
+              router.replace('/auth/login');
+              Alert.alert(
+                t('auth.deleteAccount', 'Supprimer'),
+                t('auth.deleteAccountSuccess', 'Compte supprimé avec succès.')
+              );
+            } catch (error) {
+              Alert.alert(
+                t('auth.error'),
+                t('auth.deleteAccountFailed', 'Échec de la suppression du compte. Réessayez après vous être reconnecté.')
+              );
+            } finally {
+              setIsDeleting(false);
             }
           }
         }
@@ -158,6 +195,24 @@ export default function LanguageScreen() {
             <Ionicons name="log-out-outline" size={24} color="#FF6B6B" />
             <Text style={[styles.logoutButtonText, { color: '#FF6B6B' }]}>
               {t('auth.signOut')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        {/* Delete Account */}
+        <TouchableOpacity
+          style={[
+            styles.logoutButton,
+            { backgroundColor: colors.surface, opacity: isDeleting ? 0.6 : 1 }
+          ]}
+          onPress={handleDeleteAccount}
+          disabled={isDeleting}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="trash-outline" size={24} color="#D64545" />
+            <Text style={[styles.logoutButtonText, { color: '#D64545' }]}>
+              {t('auth.deleteAccount', 'Supprimer mon compte')}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />

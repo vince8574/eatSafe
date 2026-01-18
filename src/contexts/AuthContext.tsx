@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, PropsWithChildren } fro
 import '@react-native-firebase/app'; // Initialize Firebase app
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { deleteCurrentUserAccount } from '../services/accountDeletionService';
 
 export interface AuthContextValue {
   user: FirebaseAuthTypes.User | null;
@@ -11,6 +12,7 @@ export interface AuthContextValue {
   signUpWithEmail: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 }
 
@@ -100,16 +102,47 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const signOut = async () => {
     try {
-      // Sign out from Google if signed in
-      const isSignedIn = await GoogleSignin.isSignedIn();
-      if (isSignedIn) {
-        await GoogleSignin.signOut();
+      // Try to clear Google session, but never block Firebase sign-out if this fails
+      try {
+        const isSignedIn = await GoogleSignin.isSignedIn();
+        if (isSignedIn) {
+          await GoogleSignin.signOut();
+        }
+      } catch (googleError) {
+        console.log('[AuthContext] Google sign-out skipped (continuing):', googleError);
+        // Continue with Firebase sign-out even if Google sign-out fails
       }
 
-      // Sign out from Firebase
-      await auth().signOut();
+      // Always try to sign out from Firebase
+      try {
+        await auth().signOut();
+      } catch (firebaseError) {
+        console.log('[AuthContext] Firebase sign-out error (continuing):', firebaseError);
+        // Even if Firebase sign-out fails, reset local state
+      }
+
+      // Always reset local state to force UI redirect
+      setUser(null);
     } catch (error: any) {
       console.error('[AuthContext] Sign out error:', error);
+      // Still reset user state even on error to allow UI to redirect
+      setUser(null);
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      await deleteCurrentUserAccount();
+
+      // Nettoyage session Google si l'utilisateur venait de Google
+      await GoogleSignin.isSignedIn()
+        .then((isSignedIn) => (isSignedIn ? GoogleSignin.signOut() : undefined))
+        .catch(() => undefined);
+
+      await auth().signOut().catch(() => undefined);
+      setUser(null);
+    } catch (error: any) {
+      console.error('[AuthContext] Delete account error:', error);
       throw error;
     }
   };
@@ -131,6 +164,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     signUpWithEmail,
     signInWithGoogle,
     signOut,
+    deleteAccount,
     resetPassword,
   };
 
