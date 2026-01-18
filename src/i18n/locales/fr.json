@@ -362,7 +362,57 @@
     "planSelected": "Plan sélectionné",
     "choosePlan": "Choisir ce plan",
     "scanPacksTitle": "Packs de scans",
-    "scanPacksHelper": "Ajoute des scans si ton quota mensuel est atteint. Simulation Firestore en attendant la facturation in‑app."
+    "scanPacksHelper": "Ajoute des scans si ton quota mensuel est atteint. Simulation Firestore en attendant la facturation in‑app.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 scans inclus",
+        "desc2": "Historique 30 jours",
+        "desc3": "Alertes de rappel en temps réel"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "1000 scans inclus",
+        "desc2": "Export PDF / CSV",
+        "desc3": "Historique 90 jours",
+        "desc4": "Alertes de rappel en temps réel"
+      },
+      "restaurantStandard": {
+        "label": "Restaurant - Standard",
+        "desc1": "1500 scans inclus",
+        "desc2": "Alertes + historique 1 an",
+        "desc3": "Export PDF / Excel",
+        "desc4": "Multi-employés (jusqu'à 3)"
+      },
+      "restaurantPremium": {
+        "label": "Restaurant - Premium",
+        "desc1": "5000 scans inclus",
+        "desc2": "Alertes + historique 1 an",
+        "desc3": "Export PDF / Excel / CSV",
+        "desc4": "Multi-employés (jusqu'à 10)"
+      },
+      "schoolSecurity": {
+        "label": "Crèche / École - Sécurité",
+        "desc1": "2000 scans inclus",
+        "desc2": "Alertes + historique illimité",
+        "desc3": "Format réglementaire PDF / CSV",
+        "desc4": "Multi-employés (jusqu'à 10)"
+      },
+      "schoolPremium": {
+        "label": "Crèche / École - Premium",
+        "desc1": "5000 scans inclus",
+        "desc2": "Alertes + historique illimité",
+        "desc3": "Format réglementaire PDF / Excel / CSV",
+        "desc4": "Multi-employés (jusqu'à 10)",
+        "desc5": "Multi-sites (jusqu'à 3 établissements)"
+      }
+    },
+    "packs": {
+      "small": "Pack Petit",
+      "medium": "Pack Moyen",
+      "large": "Pack Grand",
+      "xlarge": "Pack XL"
+    }
   },
   "quota": {
     "reached": "Quota de scans atteint",

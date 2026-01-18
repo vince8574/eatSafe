@@ -25,14 +25,14 @@ export type Subscription = {
 // Exporter les plans et packs pour useSubscription
 export const PLANS = SUBSCRIPTION_PLANS.map(plan => ({
   id: plan.id,
-  label: plan.label,
+  labelKey: plan.labelKey,
   price: plan.price,
   scansIncluded: plan.scansIncluded,
   historyRetentionDays: plan.historyRetentionDays,
   exportEnabled: plan.exportEnabled,
   employeesLimit: plan.employeesLimit,
   sitesLimit: plan.sitesLimit,
-  description: plan.description
+  descriptionKeys: plan.descriptionKeys
 }));
 
 export { SCAN_PACKS };
@@ -63,7 +63,7 @@ function buildSubscriptionFromPlan(planId: string): Subscription {
 
   return {
     planId: plan.id,
-    planName: plan.label,
+    planName: plan.labelKey, // Store the translation key
     status: 'active',
     // Placeholder: 30 jours de validité simulée pour dev (les stores prendront le relais plus tard)
     expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,

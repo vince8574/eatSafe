@@ -1,10 +1,10 @@
 export interface SubscriptionPlan {
   id: string;
-  label: string;
+  labelKey: string; // Translation key for the label
   category: 'foodtruck' | 'restaurant' | 'school';
   price: string;
   pricePerMonth: number; // en USD
-  description: string[];
+  descriptionKeys: string[]; // Translation keys for description lines
   scansIncluded: number;
   historyRetentionDays: number | 'unlimited';
   exportEnabled: boolean;
@@ -16,7 +16,7 @@ export interface SubscriptionPlan {
 
 export interface ScanPack {
   id: string;
-  label: string;
+  labelKey: string; // Translation key for the label
   quantity: number;
   price: string;
   priceUSD: number;
@@ -26,14 +26,14 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   // FOOD TRUCKS
   {
     id: 'foodtruck_starter',
-    label: 'Food Truck - Starter',
+    labelKey: 'subscription.plans.foodtruckStarter.label',
     category: 'foodtruck',
-    price: '19$ / mois',
+    price: '$19 / mo',
     pricePerMonth: 19,
-    description: [
-      '500 scans inclus',
-      'Historique 30 jours',
-      'Alertes de rappel en temps réel'
+    descriptionKeys: [
+      'subscription.plans.foodtruckStarter.desc1',
+      'subscription.plans.foodtruckStarter.desc2',
+      'subscription.plans.foodtruckStarter.desc3'
     ],
     scansIncluded: 500,
     historyRetentionDays: 30,
@@ -45,15 +45,15 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'foodtruck_pro',
-    label: 'Food Truck - Pro',
+    labelKey: 'subscription.plans.foodtruckPro.label',
     category: 'foodtruck',
-    price: '29$ / mois',
+    price: '$29 / mo',
     pricePerMonth: 29,
-    description: [
-      '1000 scans inclus',
-      'Export PDF / CSV',
-      'Historique 90 jours',
-      'Alertes de rappel en temps réel'
+    descriptionKeys: [
+      'subscription.plans.foodtruckPro.desc1',
+      'subscription.plans.foodtruckPro.desc2',
+      'subscription.plans.foodtruckPro.desc3',
+      'subscription.plans.foodtruckPro.desc4'
     ],
     scansIncluded: 1000,
     historyRetentionDays: 90,
@@ -67,15 +67,15 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   // RESTAURANTS
   {
     id: 'restaurant_standard',
-    label: 'Restaurant - Standard',
+    labelKey: 'subscription.plans.restaurantStandard.label',
     category: 'restaurant',
-    price: '39$ / mois',
+    price: '$39 / mo',
     pricePerMonth: 39,
-    description: [
-      '1500 scans inclus',
-      'Alertes + historique 1 an',
-      'Export PDF / Excel',
-      'Multi-employés (jusqu\'à 3)'
+    descriptionKeys: [
+      'subscription.plans.restaurantStandard.desc1',
+      'subscription.plans.restaurantStandard.desc2',
+      'subscription.plans.restaurantStandard.desc3',
+      'subscription.plans.restaurantStandard.desc4'
     ],
     scansIncluded: 1500,
     historyRetentionDays: 365,
@@ -87,15 +87,15 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'restaurant_premium',
-    label: 'Restaurant - Premium',
+    labelKey: 'subscription.plans.restaurantPremium.label',
     category: 'restaurant',
-    price: '69$ / mois',
+    price: '$69 / mo',
     pricePerMonth: 69,
-    description: [
-      '5000 scans inclus',
-      'Alertes + historique 1 an',
-      'Export PDF / Excel / CSV',
-      'Multi-employés (jusqu\'à 10)'
+    descriptionKeys: [
+      'subscription.plans.restaurantPremium.desc1',
+      'subscription.plans.restaurantPremium.desc2',
+      'subscription.plans.restaurantPremium.desc3',
+      'subscription.plans.restaurantPremium.desc4'
     ],
     scansIncluded: 5000,
     historyRetentionDays: 365,
@@ -109,15 +109,15 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   // CRÈCHES / ÉCOLES
   {
     id: 'school_security',
-    label: 'Crèche / École - Sécurité',
+    labelKey: 'subscription.plans.schoolSecurity.label',
     category: 'school',
-    price: '59$ / mois',
+    price: '$59 / mo',
     pricePerMonth: 59,
-    description: [
-      '2000 scans inclus',
-      'Alertes + historique illimité',
-      'Format réglementaire PDF / CSV',
-      'Multi-employés (jusqu\'à 10)'
+    descriptionKeys: [
+      'subscription.plans.schoolSecurity.desc1',
+      'subscription.plans.schoolSecurity.desc2',
+      'subscription.plans.schoolSecurity.desc3',
+      'subscription.plans.schoolSecurity.desc4'
     ],
     scansIncluded: 2000,
     historyRetentionDays: 'unlimited',
@@ -129,16 +129,16 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'school_premium',
-    label: 'Crèche / École - Premium',
+    labelKey: 'subscription.plans.schoolPremium.label',
     category: 'school',
-    price: '99$ / mois',
+    price: '$99 / mo',
     pricePerMonth: 99,
-    description: [
-      '5000 scans inclus',
-      'Alertes + historique illimité',
-      'Format réglementaire PDF / Excel / CSV',
-      'Multi-employés (jusqu\'à 10)',
-      'Multi-sites (jusqu\'à 3 établissements)'
+    descriptionKeys: [
+      'subscription.plans.schoolPremium.desc1',
+      'subscription.plans.schoolPremium.desc2',
+      'subscription.plans.schoolPremium.desc3',
+      'subscription.plans.schoolPremium.desc4',
+      'subscription.plans.schoolPremium.desc5'
     ],
     scansIncluded: 5000,
     historyRetentionDays: 'unlimited',
@@ -154,30 +154,30 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
 export const SCAN_PACKS: ScanPack[] = [
   {
     id: 'pack_small',
-    label: 'Pack Petit',
+    labelKey: 'subscription.packs.small',
     quantity: 100,
-    price: '0.99$',
+    price: '$0.99',
     priceUSD: 0.99
   },
   {
     id: 'pack_medium',
-    label: 'Pack Moyen',
+    labelKey: 'subscription.packs.medium',
     quantity: 500,
-    price: '4.99$',
+    price: '$4.99',
     priceUSD: 4.99
   },
   {
     id: 'pack_large',
-    label: 'Pack Grand',
+    labelKey: 'subscription.packs.large',
     quantity: 1000,
-    price: '9.99$',
+    price: '$9.99',
     priceUSD: 9.99
   },
   {
     id: 'pack_xlarge',
-    label: 'Pack XL',
+    labelKey: 'subscription.packs.xlarge',
     quantity: 2500,
-    price: '19.99$',
+    price: '$19.99',
     priceUSD: 19.99
   }
 ];

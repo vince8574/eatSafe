@@ -278,7 +278,51 @@
     "planSelected": "已选择计划",
     "choosePlan": "选择此计划",
     "scanPacksTitle": "扫描包",
-    "scanPacksHelper": "如果达到月度配额，请添加扫描。待应用内计费的Firestore模拟。"
+    "scanPacksHelper": "如果达到月度配额，请添加扫描。待应用内计费的Firestore模拟。",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "餐车 - 入门版",
+        "desc1": "包含500次扫描",
+        "desc2": "30天历史记录",
+        "desc3": "实时召回提醒"
+      },
+      "foodtruckPro": {
+        "label": "餐车 - 专业版",
+        "desc1": "包含2000次扫描",
+        "desc2": "90天历史记录",
+        "desc3": "PDF/CSV导出"
+      },
+      "restaurantEssential": {
+        "label": "餐厅 - 基础版",
+        "desc1": "包含5000次扫描",
+        "desc2": "180天历史记录",
+        "desc3": "最多5名员工"
+      },
+      "restaurantPremium": {
+        "label": "餐厅 - 高级版",
+        "desc1": "包含15,000次扫描",
+        "desc2": "无限历史记录",
+        "desc3": "合规性导出"
+      },
+      "collectiveBasic": {
+        "label": "团餐 - 基础版",
+        "desc1": "包含30,000次扫描",
+        "desc2": "最多20名员工",
+        "desc3": "最多3个站点"
+      },
+      "collectiveEnterprise": {
+        "label": "团餐 - 企业版",
+        "desc1": "无限扫描",
+        "desc2": "无限员工",
+        "desc3": "无限站点"
+      }
+    },
+    "packs": {
+      "small": "小型包",
+      "medium": "中型包",
+      "large": "大型包",
+      "xlarge": "超大型包"
+    }
   },
   "quota": {
     "reached": "已达到扫描配额",

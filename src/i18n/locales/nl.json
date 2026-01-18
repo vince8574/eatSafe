@@ -283,7 +283,51 @@
     "planSelected": "Plan geselecteerd",
     "choosePlan": "Kies dit plan",
     "scanPacksTitle": "Scanpakketten",
-    "scanPacksHelper": "Voeg scans toe als uw maandelijkse quotum is bereikt. Firestore-simulatie in afwachting van in-app facturering."
+    "scanPacksHelper": "Voeg scans toe als uw maandelijkse quotum is bereikt. Firestore-simulatie in afwachting van in-app facturering.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 scans inbegrepen",
+        "desc2": "30 dagen geschiedenis",
+        "desc3": "Realtime terugroepwaarschuwingen"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "2000 scans inbegrepen",
+        "desc2": "90 dagen geschiedenis",
+        "desc3": "PDF/CSV-export"
+      },
+      "restaurantEssential": {
+        "label": "Restaurant - Essential",
+        "desc1": "5000 scans inbegrepen",
+        "desc2": "180 dagen geschiedenis",
+        "desc3": "Tot 5 medewerkers"
+      },
+      "restaurantPremium": {
+        "label": "Restaurant - Premium",
+        "desc1": "15.000 scans inbegrepen",
+        "desc2": "Onbeperkte geschiedenis",
+        "desc3": "Regelgevende export"
+      },
+      "collectiveBasic": {
+        "label": "Collectieve Catering - Basic",
+        "desc1": "30.000 scans inbegrepen",
+        "desc2": "Tot 20 medewerkers",
+        "desc3": "Tot 3 locaties"
+      },
+      "collectiveEnterprise": {
+        "label": "Collectieve Catering - Enterprise",
+        "desc1": "Onbeperkte scans",
+        "desc2": "Onbeperkte medewerkers",
+        "desc3": "Onbeperkte locaties"
+      }
+    },
+    "packs": {
+      "small": "Klein Pakket",
+      "medium": "Medium Pakket",
+      "large": "Groot Pakket",
+      "xlarge": "XL Pakket"
+    }
   },
   "quota": {
     "reached": "Scanquotum bereikt",

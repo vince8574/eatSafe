@@ -319,7 +319,57 @@
     "planSelected": "Plan selected",
     "choosePlan": "Choose this plan",
     "scanPacksTitle": "Scan packs",
-    "scanPacksHelper": "Add scans if your monthly quota is reached. Firestore simulation pending in-app billing."
+    "scanPacksHelper": "Add scans if your monthly quota is reached. Firestore simulation pending in-app billing.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 scans included",
+        "desc2": "30-day history",
+        "desc3": "Real-time recall alerts"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "1000 scans included",
+        "desc2": "PDF / CSV export",
+        "desc3": "90-day history",
+        "desc4": "Real-time recall alerts"
+      },
+      "restaurantStandard": {
+        "label": "Restaurant - Standard",
+        "desc1": "1500 scans included",
+        "desc2": "Alerts + 1-year history",
+        "desc3": "PDF / Excel export",
+        "desc4": "Multi-employee (up to 3)"
+      },
+      "restaurantPremium": {
+        "label": "Restaurant - Premium",
+        "desc1": "5000 scans included",
+        "desc2": "Alerts + 1-year history",
+        "desc3": "PDF / Excel / CSV export",
+        "desc4": "Multi-employee (up to 10)"
+      },
+      "schoolSecurity": {
+        "label": "Daycare / School - Security",
+        "desc1": "2000 scans included",
+        "desc2": "Alerts + unlimited history",
+        "desc3": "Regulatory format PDF / CSV",
+        "desc4": "Multi-employee (up to 10)"
+      },
+      "schoolPremium": {
+        "label": "Daycare / School - Premium",
+        "desc1": "5000 scans included",
+        "desc2": "Alerts + unlimited history",
+        "desc3": "Regulatory format PDF / Excel / CSV",
+        "desc4": "Multi-employee (up to 10)",
+        "desc5": "Multi-site (up to 3 locations)"
+      }
+    },
+    "packs": {
+      "small": "Small Pack",
+      "medium": "Medium Pack",
+      "large": "Large Pack",
+      "xlarge": "XL Pack"
+    }
   },
   "quota": {
     "reached": "Scan quota reached",

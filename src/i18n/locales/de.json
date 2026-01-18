@@ -283,7 +283,51 @@
     "planSelected": "Plan ausgewählt",
     "choosePlan": "Diesen Plan wählen",
     "scanPacksTitle": "Scan-Pakete",
-    "scanPacksHelper": "Fügen Sie Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist. Firestore-Simulation für In-App-Abrechnung ausstehend."
+    "scanPacksHelper": "Fügen Sie Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist. Firestore-Simulation für In-App-Abrechnung ausstehend.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 Scans inklusive",
+        "desc2": "30 Tage Verlauf",
+        "desc3": "Echtzeit-Rückrufwarnungen"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "2000 Scans inklusive",
+        "desc2": "90 Tage Verlauf",
+        "desc3": "PDF/CSV-Export"
+      },
+      "restaurantEssential": {
+        "label": "Restaurant - Essential",
+        "desc1": "5000 Scans inklusive",
+        "desc2": "180 Tage Verlauf",
+        "desc3": "Bis zu 5 Mitarbeiter"
+      },
+      "restaurantPremium": {
+        "label": "Restaurant - Premium",
+        "desc1": "15.000 Scans inklusive",
+        "desc2": "Unbegrenzter Verlauf",
+        "desc3": "Regulatorischer Export"
+      },
+      "collectiveBasic": {
+        "label": "Gemeinschaftsverpflegung - Basic",
+        "desc1": "30.000 Scans inklusive",
+        "desc2": "Bis zu 20 Mitarbeiter",
+        "desc3": "Bis zu 3 Standorte"
+      },
+      "collectiveEnterprise": {
+        "label": "Gemeinschaftsverpflegung - Enterprise",
+        "desc1": "Unbegrenzte Scans",
+        "desc2": "Unbegrenzte Mitarbeiter",
+        "desc3": "Unbegrenzte Standorte"
+      }
+    },
+    "packs": {
+      "small": "Kleines Paket",
+      "medium": "Mittleres Paket",
+      "large": "Großes Paket",
+      "xlarge": "XL Paket"
+    }
   },
   "quota": {
     "reached": "Scan-Kontingent erreicht",

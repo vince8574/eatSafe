@@ -278,7 +278,51 @@
     "planSelected": "Plan izabran",
     "choosePlan": "Izaberite ovaj plan",
     "scanPacksTitle": "Paketi skeniranja",
-    "scanPacksHelper": "Dodajte skeniranja ako je dostignut mjesečni kvota. Firestore simulacija na čekanju naplate u aplikaciji."
+    "scanPacksHelper": "Dodajte skeniranja ako je dostignut mjesečni kvota. Firestore simulacija na čekanju naplate u aplikaciji.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 skeniranja uključeno",
+        "desc2": "30 dana istorije",
+        "desc3": "Upozorenja o opozivu u realnom vremenu"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "2000 skeniranja uključeno",
+        "desc2": "90 dana istorije",
+        "desc3": "Izvoz PDF/CSV"
+      },
+      "restaurantEssential": {
+        "label": "Restoran - Osnovni",
+        "desc1": "5000 skeniranja uključeno",
+        "desc2": "180 dana istorije",
+        "desc3": "Do 5 zaposlenih"
+      },
+      "restaurantPremium": {
+        "label": "Restoran - Premium",
+        "desc1": "15.000 skeniranja uključeno",
+        "desc2": "Neograničena istorija",
+        "desc3": "Regulatorni izvoz"
+      },
+      "collectiveBasic": {
+        "label": "Kolektivni ketering - Osnovni",
+        "desc1": "30.000 skeniranja uključeno",
+        "desc2": "Do 20 zaposlenih",
+        "desc3": "Do 3 lokacije"
+      },
+      "collectiveEnterprise": {
+        "label": "Kolektivni ketering - Enterprise",
+        "desc1": "Neograničena skeniranja",
+        "desc2": "Neograničeni zaposleni",
+        "desc3": "Neograničene lokacije"
+      }
+    },
+    "packs": {
+      "small": "Mali paket",
+      "medium": "Srednji paket",
+      "large": "Veliki paket",
+      "xlarge": "XL paket"
+    }
   },
   "quota": {
     "reached": "Kvota skeniranja dostignuta",

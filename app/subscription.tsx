@@ -43,7 +43,7 @@ export default function SubscriptionScreen() {
           <View style={styles.row}>
             <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.plan')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
-              {subscription?.planName || t('subscription.none')}
+              {subscription?.planName ? t(subscription.planName) : t('subscription.none')}
             </Text>
           </View>
           <View style={styles.row}>
@@ -106,12 +106,12 @@ export default function SubscriptionScreen() {
                 ]}
               >
                 <View style={styles.planHeader}>
-                  <Text style={[styles.planTitle, { color: colors.textPrimary }]}>{plan.label}</Text>
+                  <Text style={[styles.planTitle, { color: colors.textPrimary }]}>{t(plan.labelKey)}</Text>
                   <Text style={[styles.planPrice, { color: colors.accent }]}>{plan.price}</Text>
                 </View>
-                {plan.description.map((line) => (
-                  <Text key={line} style={[styles.planDesc, { color: colors.textSecondary }]}>
-                    • {line}
+                {plan.descriptionKeys.map((key) => (
+                  <Text key={key} style={[styles.planDesc, { color: colors.textSecondary }]}>
+                    • {t(key)}
                   </Text>
                 ))}
                 <TouchableOpacity
@@ -149,7 +149,7 @@ export default function SubscriptionScreen() {
                 onPress={() => buyPack(pack.quantity)}
                 disabled={loading}
               >
-                <Text style={[styles.packText, { color: colors.textPrimary }]}>{pack.label}</Text>
+                <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
                 <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
               </TouchableOpacity>
             ))}

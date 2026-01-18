@@ -278,7 +278,51 @@
     "planSelected": "Plani u zgjodh",
     "choosePlan": "Zgjidhni këtë plan",
     "scanPacksTitle": "Paketat e skanimit",
-    "scanPacksHelper": "Shtoni skanime nëse kuota juaj mujore është arritur. Simulimi Firestore në pritje të faturimit në aplikacion."
+    "scanPacksHelper": "Shtoni skanime nëse kuota juaj mujore është arritur. Simulimi Firestore në pritje të faturimit në aplikacion.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 skanime të përfshira",
+        "desc2": "30 ditë historik",
+        "desc3": "Alarme tërheqjeje në kohë reale"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "2000 skanime të përfshira",
+        "desc2": "90 ditë historik",
+        "desc3": "Eksport PDF/CSV"
+      },
+      "restaurantEssential": {
+        "label": "Restorant - Essential",
+        "desc1": "5000 skanime të përfshira",
+        "desc2": "180 ditë historik",
+        "desc3": "Deri në 5 punonjës"
+      },
+      "restaurantPremium": {
+        "label": "Restorant - Premium",
+        "desc1": "15,000 skanime të përfshira",
+        "desc2": "Historik i pakufizuar",
+        "desc3": "Eksport rregullator"
+      },
+      "collectiveBasic": {
+        "label": "Katering Kolektiv - Basic",
+        "desc1": "30,000 skanime të përfshira",
+        "desc2": "Deri në 20 punonjës",
+        "desc3": "Deri në 3 faqe"
+      },
+      "collectiveEnterprise": {
+        "label": "Katering Kolektiv - Enterprise",
+        "desc1": "Skanime të pakufizuara",
+        "desc2": "Punonjës të pakufizuar",
+        "desc3": "Faqe të pakufizuara"
+      }
+    },
+    "packs": {
+      "small": "Paketë e vogël",
+      "medium": "Paketë e mesme",
+      "large": "Paketë e madhe",
+      "xlarge": "Paketë XL"
+    }
   },
   "quota": {
     "reached": "Kuota e skanimit u arrit",

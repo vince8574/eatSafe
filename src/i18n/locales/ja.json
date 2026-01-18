@@ -278,7 +278,51 @@
     "planSelected": "プランが選択されました",
     "choosePlan": "このプランを選択",
     "scanPacksTitle": "スキャンパック",
-    "scanPacksHelper": "月間割り当てに達した場合はスキャンを追加します。アプリ内課金保留中のFirestoreシミュレーション。"
+    "scanPacksHelper": "月間割り当てに達した場合はスキャンを追加します。アプリ内課金保留中のFirestoreシミュレーション。",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "フードトラック - スターター",
+        "desc1": "500スキャン含む",
+        "desc2": "30日間の履歴",
+        "desc3": "リアルタイムリコール警告"
+      },
+      "foodtruckPro": {
+        "label": "フードトラック - プロ",
+        "desc1": "2000スキャン含む",
+        "desc2": "90日間の履歴",
+        "desc3": "PDF/CSVエクスポート"
+      },
+      "restaurantEssential": {
+        "label": "レストラン - エッセンシャル",
+        "desc1": "5000スキャン含む",
+        "desc2": "180日間の履歴",
+        "desc3": "最大5人の従業員"
+      },
+      "restaurantPremium": {
+        "label": "レストラン - プレミアム",
+        "desc1": "15,000スキャン含む",
+        "desc2": "無制限の履歴",
+        "desc3": "規制対応エクスポート"
+      },
+      "collectiveBasic": {
+        "label": "団体給食 - ベーシック",
+        "desc1": "30,000スキャン含む",
+        "desc2": "最大20人の従業員",
+        "desc3": "最大3サイト"
+      },
+      "collectiveEnterprise": {
+        "label": "団体給食 - エンタープライズ",
+        "desc1": "無制限スキャン",
+        "desc2": "無制限の従業員",
+        "desc3": "無制限のサイト"
+      }
+    },
+    "packs": {
+      "small": "スモールパック",
+      "medium": "ミディアムパック",
+      "large": "ラージパック",
+      "xlarge": "XLパック"
+    }
   },
   "quota": {
     "reached": "スキャン割り当てに達しました",

@@ -1,17 +1,21 @@
 # Google Play Store - Descriptions pour Numeline
 
 ## DESCRIPTION COURTE (80 caractères max)
+
 **Option 1 (77 caractères):**
+
 ```
 Scannez vos produits et recevez des alertes rappel en temps réel
 ```
 
 **Option 2 (79 caractères):**
+
 ```
 Suivez vos produits alimentaires et soyez alerté en cas de rappel
 ```
 
 **Option 3 (72 caractères):**
+
 ```
 Protégez votre famille avec des alertes rappel alimentaire
 ```
@@ -68,7 +72,7 @@ Téléchargez Numeline maintenant et mangez l'esprit tranquille.
 
 **Numeline - Your Daily Food Safety Guardian**
 
-Protect your family from food recalls with Numeline, the intelligent app that monitors your scanned products in real-time.
+Protect your family and customers from food recalls with Numeline, the intelligent app that monitors your scanned products in real-time.
 
 **🔍 KEY FEATURES**
 
@@ -146,10 +150,12 @@ food safety, food recall, product scanner, barcode scanner, lot number, FDA reca
 Vous DEVEZ héberger une politique de confidentialité en ligne. Google Play l'exige.
 
 **Option 1 :** Utiliser un service gratuit comme:
+
 - https://www.freeprivacypolicy.com/
 - https://app-privacy-policy-generator.nisrulz.com/
 
 **Option 2 :** Héberger sur GitHub Pages (gratuit)
+
 - Créer un dépôt GitHub
 - Activer GitHub Pages
 - URL type: https://numeline.vercel.app/privacy-policy

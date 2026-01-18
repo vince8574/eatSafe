@@ -283,7 +283,51 @@
     "planSelected": "Plano selecionado",
     "choosePlan": "Escolher este plano",
     "scanPacksTitle": "Pacotes de digitalização",
-    "scanPacksHelper": "Adicione digitalizações se sua cota mensal for atingida. Simulação Firestore pendente de cobrança no aplicativo."
+    "scanPacksHelper": "Adicione digitalizações se sua cota mensal for atingida. Simulação Firestore pendente de cobrança no aplicativo.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 digitalizações incluídas",
+        "desc2": "30 dias de histórico",
+        "desc3": "Alertas de recall em tempo real"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "2000 digitalizações incluídas",
+        "desc2": "90 dias de histórico",
+        "desc3": "Exportação PDF/CSV"
+      },
+      "restaurantEssential": {
+        "label": "Restaurante - Essential",
+        "desc1": "5000 digitalizações incluídas",
+        "desc2": "180 dias de histórico",
+        "desc3": "Até 5 funcionários"
+      },
+      "restaurantPremium": {
+        "label": "Restaurante - Premium",
+        "desc1": "15.000 digitalizações incluídas",
+        "desc2": "Histórico ilimitado",
+        "desc3": "Exportação regulatória"
+      },
+      "collectiveBasic": {
+        "label": "Restauração Coletiva - Basic",
+        "desc1": "30.000 digitalizações incluídas",
+        "desc2": "Até 20 funcionários",
+        "desc3": "Até 3 sites"
+      },
+      "collectiveEnterprise": {
+        "label": "Restauração Coletiva - Enterprise",
+        "desc1": "Digitalizações ilimitadas",
+        "desc2": "Funcionários ilimitados",
+        "desc3": "Sites ilimitados"
+      }
+    },
+    "packs": {
+      "small": "Pacote Pequeno",
+      "medium": "Pacote Médio",
+      "large": "Pacote Grande",
+      "xlarge": "Pacote XL"
+    }
   },
   "quota": {
     "reached": "Cota de digitalização atingida",

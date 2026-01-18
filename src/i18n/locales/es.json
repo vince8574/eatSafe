@@ -283,7 +283,51 @@
     "planSelected": "Plan seleccionado",
     "choosePlan": "Elegir este plan",
     "scanPacksTitle": "Paquetes de escaneo",
-    "scanPacksHelper": "Agregue escaneos si se alcanza su cuota mensual. Simulación de Firestore pendiente de facturación en la aplicación."
+    "scanPacksHelper": "Agregue escaneos si se alcanza su cuota mensual. Simulación de Firestore pendiente de facturación en la aplicación.",
+    "plans": {
+      "foodtruckStarter": {
+        "label": "Food Truck - Starter",
+        "desc1": "500 escaneos incluidos",
+        "desc2": "30 días de historial",
+        "desc3": "Alertas de retiro en tiempo real"
+      },
+      "foodtruckPro": {
+        "label": "Food Truck - Pro",
+        "desc1": "2000 escaneos incluidos",
+        "desc2": "90 días de historial",
+        "desc3": "Exportación PDF/CSV"
+      },
+      "restaurantEssential": {
+        "label": "Restaurante - Essential",
+        "desc1": "5000 escaneos incluidos",
+        "desc2": "180 días de historial",
+        "desc3": "Hasta 5 empleados"
+      },
+      "restaurantPremium": {
+        "label": "Restaurante - Premium",
+        "desc1": "15.000 escaneos incluidos",
+        "desc2": "Historial ilimitado",
+        "desc3": "Exportación reglamentaria"
+      },
+      "collectiveBasic": {
+        "label": "Restauración Colectiva - Basic",
+        "desc1": "30.000 escaneos incluidos",
+        "desc2": "Hasta 20 empleados",
+        "desc3": "Hasta 3 sitios"
+      },
+      "collectiveEnterprise": {
+        "label": "Restauración Colectiva - Enterprise",
+        "desc1": "Escaneos ilimitados",
+        "desc2": "Empleados ilimitados",
+        "desc3": "Sitios ilimitados"
+      }
+    },
+    "packs": {
+      "small": "Paquete Pequeño",
+      "medium": "Paquete Mediano",
+      "large": "Paquete Grande",
+      "xlarge": "Paquete XL"
+    }
   },
   "quota": {
     "reached": "Cuota de escaneo alcanzada",
