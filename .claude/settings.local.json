@@ -48,7 +48,8 @@
       "Bash(GRADLE_OPTS=\"-Xmx4096m -XX:MaxMetaspaceSize=512m\" ./gradlew assembleDebug:*)",
       "Bash(exit 0)",
       "Bash(npx eas:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(export NODE_OPTIONS=\"--max-old-space-size=8192\")"
     ],
     "deny": [],
     "ask": []
