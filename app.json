@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.eatsafe.app"
+      "bundleIdentifier": "com.numeline.app"
     },
     "android": {
       "versionCode": 2,
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A1F1F"
       },
-      "package": "com.eatsafe.app",
+      "package": "com.numeline.app",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
