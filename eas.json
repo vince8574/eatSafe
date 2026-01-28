@@ -20,13 +20,15 @@
       "env": {
         "NODE_ENV": "production"
       },
+      "node": "18.18.0",
       "android": {
         "buildType": "app-bundle",
         "gradleCommand": ":app:bundleRelease",
         "image": "latest"
       },
       "ios": {
-        "buildConfiguration": "Release"
+        "buildConfiguration": "Release",
+        "image": "latest"
       }
     }
   },
@@ -35,6 +37,11 @@
       "android": {
         "serviceAccountKeyPath": "./google-play-service-account.json",
         "track": "internal"
+      },
+      "ios": {
+        "appleId": "vgaillard85@gmail.com",
+        "ascAppId": "6758400953",
+        "appleTeamId": "ZV65B2S3Z4"
       }
     }
   }
