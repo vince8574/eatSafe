@@ -42,6 +42,14 @@
     "plugins": [
       "expo-router",
       [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
+      [
         "expo-camera",
         {
           "cameraPermission": "Nous avons besoin d'accÃ©der Ã  votre appareil photo pour scanner les emballages."
