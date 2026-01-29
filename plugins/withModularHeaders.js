@@ -10,12 +10,24 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
-      // Add use_modular_headers! after use_frameworks! or at the beginning of target block
-      if (!podfileContent.includes('use_modular_headers!')) {
-        // Find the target line and add use_modular_headers! after it
+      // Add specific modular_headers for Firebase pods only
+      const podModifications = `
+# Firebase modular headers fix
+pod 'GoogleUtilities', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'FirebaseAuthInterop', :modular_headers => true
+pod 'FirebaseAppCheckInterop', :modular_headers => true
+pod 'FirebaseMessagingInterop', :modular_headers => true
+pod 'FirebaseFirestoreInternal', :modular_headers => true
+pod 'RecaptchaInterop', :modular_headers => true
+`;
+
+      // Find the target block and add the modifications
+      if (!podfileContent.includes('Firebase modular headers fix')) {
         podfileContent = podfileContent.replace(
           /target '([^']+)' do/,
-          `target '$1' do\n  use_modular_headers!`
+          `target '$1' do${podModifications}`
         );
 
         fs.writeFileSync(podfilePath, podfileContent);
