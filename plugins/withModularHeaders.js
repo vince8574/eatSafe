@@ -10,6 +10,11 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
+      // Add RNFirebase static framework flag at the top of Podfile
+      if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
+        podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
+      }
+
       // Add specific modular_headers for Firebase pods only
       const podModifications = `
 # Firebase modular headers fix
@@ -33,9 +38,9 @@ pod 'GTMSessionFetcher', :modular_headers => true
           /target '([^']+)' do/,
           `target '$1' do${podModifications}`
         );
-
-        fs.writeFileSync(podfilePath, podfileContent);
       }
+
+      fs.writeFileSync(podfilePath, podfileContent);
 
       return config;
     },
