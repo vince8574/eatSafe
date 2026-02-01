@@ -15,9 +15,9 @@ module.exports = function withModularHeaders(config) {
         podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
       }
 
-      // Add specific modular_headers for Firebase pods only (not gRPC)
+      // Add specific modular_headers for Firebase pods
       const podModifications = `
-# Firebase modular headers fix (selective - excludes gRPC)
+# Firebase modular headers fix
 pod 'GoogleUtilities', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true
 pod 'FirebaseCoreInternal', :modular_headers => true
@@ -26,9 +26,13 @@ pod 'FirebaseAuthInterop', :modular_headers => true
 pod 'FirebaseAppCheckInterop', :modular_headers => true
 pod 'FirebaseMessaging', :modular_headers => true
 pod 'FirebaseMessagingInterop', :modular_headers => true
+pod 'FirebaseFirestore', :modular_headers => true
+pod 'FirebaseFirestoreInternal', :modular_headers => true
 pod 'FirebaseCoreExtension', :modular_headers => true
+pod 'FirebaseSharedSwift', :modular_headers => true
 pod 'GTMSessionFetcher', :modular_headers => true
 pod 'RecaptchaInterop', :modular_headers => true
+pod 'leveldb-library', :modular_headers => true
 `;
 
       // Find the target block and add the modifications
