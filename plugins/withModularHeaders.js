@@ -10,36 +10,29 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
-      // Add configuration at the top of Podfile
-      const podfileHeader = `$RNFirebaseAsStaticFramework = true
-use_modular_headers!
-
-# Disable modular headers for gRPC (not compatible)
-pod 'gRPC-Core', :modular_headers => false
-pod 'gRPC-C++', :modular_headers => false
-pod 'abseil', :modular_headers => false
-
-`;
-
+      // Add RNFirebase static framework flag at the top
       if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
-        podfileContent = podfileHeader + podfileContent;
+        podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
       }
 
-      // Add post_install hook to fix duplicate xcprivacy bundle issue
+      // Add post_install hooks for fixing build issues
       const postInstallFix = `
-  # Fix duplicate xcprivacy bundle issue - give each bundle a unique name
+  # Allow non-modular includes in framework modules (needed for React Native + Firebase)
   installer.pods_project.targets.each do |target|
-    if target.name.include?('xcprivacy')
-      target.build_configurations.each do |config|
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+
+      # Fix duplicate xcprivacy bundle issue
+      if target.name.include?('xcprivacy')
         config.build_settings['PRODUCT_NAME'] = target.name
-        config.build_settings['INFOPLIST_KEY_CFBundleDisplayName'] = target.name
       end
     end
   end
 `;
 
       if (podfileContent.includes('post_install do |installer|') &&
-          !podfileContent.includes('Fix duplicate xcprivacy')) {
+          !podfileContent.includes('Allow non-modular includes')) {
         podfileContent = podfileContent.replace(
           /post_install do \|installer\|/,
           `post_install do |installer|${postInstallFix}`
