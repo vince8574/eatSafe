@@ -24,6 +24,7 @@ pod 'FirebaseCore', :modular_headers => true
 pod 'FirebaseCoreExtension', :modular_headers => true
 pod 'FirebaseCoreInternal', :modular_headers => true
 pod 'FirebaseFirestoreInternal', :modular_headers => true
+pod 'FirebaseMessagingInterop', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
 pod 'RecaptchaInterop', :modular_headers => true
 `;
