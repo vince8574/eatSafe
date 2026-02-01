@@ -15,6 +15,27 @@ module.exports = function withModularHeaders(config) {
         podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
       }
 
+      // Add modular headers for Firebase Swift pod dependencies
+      const podModifications = `
+# Firebase modular headers for Swift pods
+pod 'FirebaseAuthInterop', :modular_headers => true
+pod 'FirebaseAppCheckInterop', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseCoreExtension', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'FirebaseFirestoreInternal', :modular_headers => true
+pod 'FirebaseMessagingInterop', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
+pod 'RecaptchaInterop', :modular_headers => true
+`;
+
+      if (!podfileContent.includes('Firebase modular headers')) {
+        podfileContent = podfileContent.replace(
+          /target '([^']+)' do/,
+          `target '$1' do${podModifications}`
+        );
+      }
+
       fs.writeFileSync(podfilePath, podfileContent);
 
       return config;
