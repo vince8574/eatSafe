@@ -43,13 +43,18 @@ pod 'GTMSessionFetcher', :modular_headers => true
       // Add build setting to allow non-modular includes in framework modules
       // This is needed because React-Core headers are not modular
       const nonModularFix = `
-    # Allow non-modular includes for React Native Firebase
-    config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'`;
+  # Allow non-modular includes for React Native Firebase
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+    end
+  end
+`;
 
       if (!podfileContent.includes('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES')) {
-        // Find the post_install block and add the setting inside the build_configurations loop
+        // Find the post_install block and add the setting right after it opens
         podfileContent = podfileContent.replace(
-          /(target\.build_configurations\.each do \|config\|)/g,
+          /(post_install do \|installer\|)/,
           `$1${nonModularFix}`
         );
       }
