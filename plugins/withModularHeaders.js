@@ -10,13 +10,33 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
-      // Add RNFirebase static framework flag and global modular headers at the top
+      // Add RNFirebase static framework flag at the top
       if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
-        const podfileHeader = `$RNFirebaseAsStaticFramework = true
-use_modular_headers!
+        podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
+      }
 
+      // Add specific modular_headers for Firebase pods only (not gRPC)
+      const podModifications = `
+# Firebase modular headers fix (selective - excludes gRPC)
+pod 'GoogleUtilities', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'FirebaseAuth', :modular_headers => true
+pod 'FirebaseAuthInterop', :modular_headers => true
+pod 'FirebaseAppCheckInterop', :modular_headers => true
+pod 'FirebaseMessaging', :modular_headers => true
+pod 'FirebaseMessagingInterop', :modular_headers => true
+pod 'FirebaseCoreExtension', :modular_headers => true
+pod 'GTMSessionFetcher', :modular_headers => true
+pod 'RecaptchaInterop', :modular_headers => true
 `;
-        podfileContent = podfileHeader + podfileContent;
+
+      // Find the target block and add the modifications
+      if (!podfileContent.includes('Firebase modular headers fix')) {
+        podfileContent = podfileContent.replace(
+          /target '([^']+)' do/,
+          `target '$1' do${podModifications}`
+        );
       }
 
       fs.writeFileSync(podfilePath, podfileContent);
