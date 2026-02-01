@@ -10,30 +10,18 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
-      // Add RNFirebase static framework flag at the top
-      if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
-        podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
-      }
+      // Add configuration at the top of Podfile
+      const podfileHeader = `$RNFirebaseAsStaticFramework = true
+use_modular_headers!
 
-      // Add modular headers for Firebase Swift pod dependencies
-      const podModifications = `
-# Firebase modular headers for Swift pods
-pod 'FirebaseAuthInterop', :modular_headers => true
-pod 'FirebaseAppCheckInterop', :modular_headers => true
-pod 'FirebaseCore', :modular_headers => true
-pod 'FirebaseCoreExtension', :modular_headers => true
-pod 'FirebaseCoreInternal', :modular_headers => true
-pod 'FirebaseFirestoreInternal', :modular_headers => true
-pod 'FirebaseMessagingInterop', :modular_headers => true
-pod 'GoogleUtilities', :modular_headers => true
-pod 'RecaptchaInterop', :modular_headers => true
+# Disable modular headers for gRPC (not compatible)
+pod 'gRPC-Core', :modular_headers => false
+pod 'gRPC-C++', :modular_headers => false
+
 `;
 
-      if (!podfileContent.includes('Firebase modular headers')) {
-        podfileContent = podfileContent.replace(
-          /target '([^']+)' do/,
-          `target '$1' do${podModifications}`
-        );
+      if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
+        podfileContent = podfileHeader + podfileContent;
       }
 
       fs.writeFileSync(podfilePath, podfileContent);
