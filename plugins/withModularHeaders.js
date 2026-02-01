@@ -10,53 +10,13 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
-      // Add RNFirebase static framework flag at the top of Podfile
+      // Add RNFirebase static framework flag and global modular headers at the top
       if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
-        podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
-      }
+        const podfileHeader = `$RNFirebaseAsStaticFramework = true
+use_modular_headers!
 
-      // Add specific modular_headers for Firebase pods only
-      const podModifications = `
-# Firebase modular headers fix
-pod 'GoogleUtilities', :modular_headers => true
-pod 'FirebaseCore', :modular_headers => true
-pod 'FirebaseCoreInternal', :modular_headers => true
-pod 'FirebaseAuth', :modular_headers => true
-pod 'FirebaseAuthInterop', :modular_headers => true
-pod 'FirebaseAppCheckInterop', :modular_headers => true
-pod 'FirebaseMessaging', :modular_headers => true
-pod 'FirebaseMessagingInterop', :modular_headers => true
-pod 'FirebaseFirestore', :modular_headers => true
-pod 'FirebaseFirestoreInternal', :modular_headers => true
-pod 'RecaptchaInterop', :modular_headers => true
-pod 'GTMSessionFetcher', :modular_headers => true
 `;
-
-      // Find the target block and add the modifications
-      if (!podfileContent.includes('Firebase modular headers fix')) {
-        podfileContent = podfileContent.replace(
-          /target '([^']+)' do/,
-          `target '$1' do${podModifications}`
-        );
-      }
-
-      // Add build setting to allow non-modular includes in framework modules
-      // This is needed because React-Core headers are not modular
-      const nonModularFix = `
-  # Allow non-modular includes for React Native Firebase
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-    end
-  end
-`;
-
-      if (!podfileContent.includes('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES')) {
-        // Find the post_install block and add the setting right after it opens
-        podfileContent = podfileContent.replace(
-          /(post_install do \|installer\|)/,
-          `$1${nonModularFix}`
-        );
+        podfileContent = podfileHeader + podfileContent;
       }
 
       fs.writeFileSync(podfilePath, podfileContent);
