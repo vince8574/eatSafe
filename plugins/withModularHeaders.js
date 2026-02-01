@@ -15,39 +15,24 @@ module.exports = function withModularHeaders(config) {
         podfileContent = `$RNFirebaseAsStaticFramework = true\n\n${podfileContent}`;
       }
 
-      // Add post_install hook to allow non-modular includes
-      // This is needed because React-Core headers are not modular
-      const postInstallHook = `
-post_install do |installer|
-  # Allow non-modular includes for React Native Firebase with use_frameworks
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-    end
-  end
-
-  # Call the original post_install from Expo if it exists
-  react_native_post_install(installer) if defined?(react_native_post_install)
-end
+      // Add modular headers for Firebase Swift pod dependencies
+      const podModifications = `
+# Firebase modular headers for Swift pods
+pod 'FirebaseAuthInterop', :modular_headers => true
+pod 'FirebaseAppCheckInterop', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseCoreExtension', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'FirebaseFirestoreInternal', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
+pod 'RecaptchaInterop', :modular_headers => true
 `;
 
-      // Check if there's already a post_install block
-      if (podfileContent.includes('post_install do |installer|')) {
-        // Inject our settings into the existing post_install block
+      if (!podfileContent.includes('Firebase modular headers')) {
         podfileContent = podfileContent.replace(
-          /post_install do \|installer\|/,
-          `post_install do |installer|
-  # Allow non-modular includes for React Native Firebase with use_frameworks
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-    end
-  end
-`
+          /target '([^']+)' do/,
+          `target '$1' do${podModifications}`
         );
-      } else {
-        // Add a new post_install block at the end
-        podfileContent += postInstallHook;
       }
 
       fs.writeFileSync(podfilePath, podfileContent);
