@@ -78,8 +78,12 @@ jobs:
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          # Import certificate
-          security import $CERTIFICATE_PATH -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          # Verify certificate with openssl first
+          echo "Verifying certificate with openssl..."
+          openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -noout && echo "Certificate verification: OK"
+
+          # Import certificate (removed -f pkcs12, let it auto-detect)
+          security import $CERTIFICATE_PATH -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -k $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
