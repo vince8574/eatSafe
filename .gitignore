@@ -29,3 +29,7 @@ expo-env.d.ts
 nul
 keystore_base64.txt
 .claude/
+
+# EAS Credentials (sensitive)
+credentials/
+credentials.json
