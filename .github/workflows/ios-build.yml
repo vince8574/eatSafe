@@ -83,11 +83,16 @@ jobs:
           echo "Verifying certificate with openssl..."
           openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -noout && echo "Certificate verification: OK"
 
-          # Convert p12 to macOS-compatible format (legacy algorithms)
+          # Convert p12 to macOS-compatible format
           echo "Converting certificate to macOS-compatible format..."
           CONVERTED_PATH=$RUNNER_TEMP/converted_certificate.p12
-          openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -nodes -legacy | \
-            openssl pkcs12 -export -passout pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -out $CONVERTED_PATH
+
+          # Extract to PEM files
+          openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -clcerts -nokeys -out $RUNNER_TEMP/cert.pem
+          openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -nocerts -nodes -out $RUNNER_TEMP/key.pem
+
+          # Re-create p12 with compatible settings
+          openssl pkcs12 -export -in $RUNNER_TEMP/cert.pem -inkey $RUNNER_TEMP/key.pem -out $CONVERTED_PATH -passout pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD"
 
           echo "Converted certificate size: $(wc -c < $CONVERTED_PATH) bytes"
 
