@@ -83,8 +83,16 @@ jobs:
           echo "Verifying certificate with openssl..."
           openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -noout && echo "Certificate verification: OK"
 
-          # Import certificate (removed -f pkcs12, let it auto-detect)
-          security import $CERTIFICATE_PATH -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -k $KEYCHAIN_PATH
+          # Convert p12 to macOS-compatible format (legacy algorithms)
+          echo "Converting certificate to macOS-compatible format..."
+          CONVERTED_PATH=$RUNNER_TEMP/converted_certificate.p12
+          openssl pkcs12 -in $CERTIFICATE_PATH -passin pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -nodes -legacy | \
+            openssl pkcs12 -export -passout pass:"$DISTRIBUTION_CERTIFICATE_PASSWORD" -out $CONVERTED_PATH
+
+          echo "Converted certificate size: $(wc -c < $CONVERTED_PATH) bytes"
+
+          # Import converted certificate
+          security import $CONVERTED_PATH -P "$DISTRIBUTION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
