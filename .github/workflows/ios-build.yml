@@ -57,9 +57,10 @@ jobs:
           echo -n "$DISTRIBUTION_CERTIFICATE_BASE64" | base64 -D > $CERTIFICATE_PATH
           echo -n "$PROVISIONING_PROFILE_BASE64" | base64 -D > $PROFILE_PATH
 
-          # Debug: check file sizes and headers
+          # Debug: check file sizes, headers, and hash
           echo "Certificate file size: $(wc -c < $CERTIFICATE_PATH) bytes"
           echo "Profile file size: $(wc -c < $PROFILE_PATH) bytes"
+          echo "Certificate SHA256: $(shasum -a 256 $CERTIFICATE_PATH | cut -d' ' -f1)"
           echo "Certificate header (hex): $(xxd -l 16 $CERTIFICATE_PATH | head -1)"
 
           # Verify p12 file format (should start with 30 82 or 30 83)
