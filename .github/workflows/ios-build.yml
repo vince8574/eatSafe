@@ -110,16 +110,41 @@ jobs:
 
       - name: Build Archive
         run: |
+          set -o pipefail
           xcodebuild -workspace ios/Numeline.xcworkspace \
             -scheme Numeline \
             -configuration Release \
             -sdk iphoneos \
             -archivePath $RUNNER_TEMP/Numeline.xcarchive \
+            -derivedDataPath $RUNNER_TEMP/DerivedData \
             archive \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
             CODE_SIGN_IDENTITY="iPhone Distribution" \
-            PROVISIONING_PROFILE=$PROFILE_UUID
+            PROVISIONING_PROFILE="$PROFILE_UUID" \
+            2>&1 | tee $RUNNER_TEMP/xcodebuild.log || {
+              EXIT_CODE=$?
+              echo ""
+              echo "=========================================="
+              echo "BUILD FAILED - Extracting error details"
+              echo "=========================================="
+              echo ""
+              echo "::group::Compilation Errors"
+              grep -A 3 "error:" $RUNNER_TEMP/xcodebuild.log | head -100 || echo "No error patterns found"
+              echo "::endgroup::"
+              echo ""
+              echo "::group::Last 100 lines of build log"
+              tail -100 $RUNNER_TEMP/xcodebuild.log
+              echo "::endgroup::"
+              exit $EXIT_CODE
+            }
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log
+          path: ${{ runner.temp }}/xcodebuild.log
 
       - name: Export IPA
         run: |
