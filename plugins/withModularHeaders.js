@@ -10,27 +10,37 @@ module.exports = function withModularHeaders(config) {
 
       let podfileContent = fs.readFileSync(podfilePath, 'utf-8');
 
-      // Add configuration at the top of Podfile
-      const podfileHeader = `$RNFirebaseAsStaticFramework = true
+      // Add static framework flag at the top of Podfile
+      if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
+        podfileContent = '$RNFirebaseAsStaticFramework = true\n\n' + podfileContent;
+      }
 
-# Modular headers for Firebase Swift pods
-pod 'FirebaseCore', :modular_headers => true
-pod 'FirebaseCoreInternal', :modular_headers => true
-pod 'FirebaseCoreExtension', :modular_headers => true
-pod 'FirebaseAuth', :modular_headers => true
-pod 'FirebaseAuthInterop', :modular_headers => true
-pod 'FirebaseAppCheckInterop', :modular_headers => true
-pod 'FirebaseFirestoreInternal', :modular_headers => true
-pod 'FirebaseMessagingInterop', :modular_headers => true
-pod 'FirebaseSharedSwift', :modular_headers => true
-pod 'GoogleUtilities', :modular_headers => true
-pod 'RecaptchaInterop', :modular_headers => true
-pod 'GTMSessionFetcher', :modular_headers => true
-
+      // Add Firebase pods with modular headers inside the target block
+      const firebasePods = `
+  # Modular headers for Firebase Swift pods
+  pod 'FirebaseSharedSwift', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'FirebaseAuth', :modular_headers => true
+  pod 'FirebaseAuthInterop', :modular_headers => true
+  pod 'FirebaseAppCheckInterop', :modular_headers => true
+  pod 'FirebaseFirestoreInternal', :modular_headers => true
+  pod 'FirebaseMessagingInterop', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'RecaptchaInterop', :modular_headers => true
+  pod 'GTMSessionFetcher', :modular_headers => true
 `;
 
-      if (!podfileContent.includes('$RNFirebaseAsStaticFramework')) {
-        podfileContent = podfileHeader + podfileContent;
+      // Insert Firebase pods after the target line
+      if (!podfileContent.includes("pod 'FirebaseSharedSwift'")) {
+        const targetMatch = podfileContent.match(/target ['"].*['"] do/);
+        if (targetMatch) {
+          podfileContent = podfileContent.replace(
+            targetMatch[0],
+            targetMatch[0] + firebasePods
+          );
+        }
       }
 
       // Add pre_install hook for Firebase Swift compatibility
