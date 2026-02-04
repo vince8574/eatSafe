@@ -37,3 +37,7 @@ credentials.json
 # Firebase Admin SDK (NEVER commit this!)
 firebase-admin-key.json
 *-firebase-adminsdk-*.json
+
+# Google Services config files (contain API keys)
+android/app/google-services.json
+ios/GoogleService-Info.plist
