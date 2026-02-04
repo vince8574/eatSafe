@@ -41,6 +41,10 @@ jobs:
         run: |
           echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
 
+      - name: Create google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
+
       - name: Create .env file
         run: |
           echo "EXPO_PUBLIC_VISION_ENDPOINT=${{ secrets.EXPO_PUBLIC_VISION_ENDPOINT }}" >> .env

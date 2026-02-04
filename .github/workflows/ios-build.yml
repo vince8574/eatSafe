@@ -35,6 +35,11 @@ jobs:
       - name: Install CocoaPods
         run: gem install cocoapods
 
+      - name: Create google-services.json
+        run: |
+          mkdir -p android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -D > android/app/google-services.json
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform ios --clean
 
