@@ -33,3 +33,7 @@ keystore_base64.txt
 # EAS Credentials (sensitive)
 credentials/
 credentials.json
+
+# Firebase Admin SDK (NEVER commit this!)
+firebase-admin-key.json
+*-firebase-adminsdk-*.json
