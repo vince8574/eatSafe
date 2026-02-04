@@ -48,11 +48,14 @@ end
 
       // Add post_install hook for build settings
       const postInstallAddition = `
-    # Fix for Firebase Swift headers
+    # Fix for Firebase Swift headers - only apply to Firebase pods
+    firebase_pods = ['FirebaseCore', 'FirebaseAuth', 'FirebaseFirestore', 'FirebaseCoreInternal', 'FirebaseCoreExtension', 'FirebaseAuthInterop', 'FirebaseAppCheckInterop', 'FirebaseFirestoreInternal', 'FirebaseMessagingInterop', 'FirebaseSharedSwift', 'RNFBApp', 'RNFBAuth', 'RNFBFirestore']
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+        if firebase_pods.include?(target.name)
+          config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+        end
       end
     end
 `;
