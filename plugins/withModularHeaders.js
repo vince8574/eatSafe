@@ -33,6 +33,49 @@ pod 'GTMSessionFetcher', :modular_headers => true
         podfileContent = podfileHeader + podfileContent;
       }
 
+      // Add pre_install hook for Firebase Swift compatibility
+      const preInstallHook = `
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    if pod.name.eql?('RNFBAuth') || pod.name.eql?('RNFBApp') || pod.name.eql?('RNFBFirestore')
+      def pod.build_type
+        Pod::BuildType.static_library
+      end
+    end
+  end
+end
+`;
+
+      // Add post_install hook for build settings
+      const postInstallAddition = `
+    # Fix for Firebase Swift headers
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+      end
+    end
+`;
+
+      // Insert pre_install hook before target
+      if (!podfileContent.includes('pre_install do |installer|')) {
+        const targetMatch = podfileContent.match(/target ['"].*['"] do/);
+        if (targetMatch) {
+          podfileContent = podfileContent.replace(
+            targetMatch[0],
+            preInstallHook + '\n' + targetMatch[0]
+          );
+        }
+      }
+
+      // Add post_install additions
+      if (!podfileContent.includes('BUILD_LIBRARY_FOR_DISTRIBUTION')) {
+        podfileContent = podfileContent.replace(
+          /post_install do \|installer\|/,
+          'post_install do |installer|' + postInstallAddition
+        );
+      }
+
       fs.writeFileSync(podfilePath, podfileContent);
 
       return config;
