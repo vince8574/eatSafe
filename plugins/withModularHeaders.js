@@ -15,22 +15,12 @@ module.exports = function withModularHeaders(config) {
         podfileContent = '$RNFirebaseAsStaticFramework = true\n\n' + podfileContent;
       }
 
-      // 2. Add use_frameworks! inside the target block (if not already present)
-      if (!podfileContent.includes('use_frameworks!')) {
-        const targetMatch = podfileContent.match(/target ['"].*['"] do/);
-        if (targetMatch) {
-          podfileContent = podfileContent.replace(
-            targetMatch[0],
-            targetMatch[0] + '\n  use_frameworks! :linkage => :static\n'
-          );
-        }
-      }
-
-      // 3. Add modular headers for Firebase deps (separate check from use_frameworks!)
+      // 2. Add modular headers for Firebase deps after use_expo_modules!
       if (!podfileContent.includes("pod 'FirebaseCore', :modular_headers => true")) {
-        const targetMatch = podfileContent.match(/target ['"].*['"] do/);
-        if (targetMatch) {
-          const modularHeaders = `
+        podfileContent = podfileContent.replace(
+          'use_expo_modules!',
+          `use_expo_modules!
+
   # Modular headers required by Firebase Swift pods
   pod 'FirebaseCore', :modular_headers => true
   pod 'FirebaseCoreExtension', :modular_headers => true
@@ -39,18 +29,15 @@ module.exports = function withModularHeaders(config) {
   pod 'FirebaseAppCheckInterop', :modular_headers => true
   pod 'FirebaseFirestoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
-  pod 'RecaptchaInterop', :modular_headers => true
-`;
-          podfileContent = podfileContent.replace(
-            targetMatch[0],
-            targetMatch[0] + modularHeaders
-          );
-        }
+  pod 'RecaptchaInterop', :modular_headers => true`
+        );
       }
 
-      // 4. Add post_install hook settings
+      // 3. Add post_install hook settings
       if (!podfileContent.includes('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES')) {
-        const postInstallAddition = `
+        podfileContent = podfileContent.replace(
+          'post_install do |installer|',
+          `post_install do |installer|
     # Fix for React Native + Firebase framework compatibility
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
@@ -59,11 +46,7 @@ module.exports = function withModularHeaders(config) {
         config.build_settings['CODE_SIGN_IDENTITY'] = ''
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
       end
-    end
-`;
-        podfileContent = podfileContent.replace(
-          /post_install do \|installer\|/,
-          'post_install do |installer|' + postInstallAddition
+    end`
         );
       }
 
