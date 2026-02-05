@@ -15,13 +15,27 @@ module.exports = function withModularHeaders(config) {
         podfileContent = '$RNFirebaseAsStaticFramework = true\n\n' + podfileContent;
       }
 
-      // Add use_frameworks! inside the target block
+      // Add use_frameworks! AND modular headers for Firebase deps inside the target block
+      const targetAdditions = `
+  use_frameworks! :linkage => :static
+
+  # Modular headers required by Firebase Swift pods
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseAuthInterop', :modular_headers => true
+  pod 'FirebaseAppCheckInterop', :modular_headers => true
+  pod 'FirebaseFirestoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'RecaptchaInterop', :modular_headers => true
+`;
+
       if (!podfileContent.includes('use_frameworks!')) {
         const targetMatch = podfileContent.match(/target ['"].*['"] do/);
         if (targetMatch) {
           podfileContent = podfileContent.replace(
             targetMatch[0],
-            targetMatch[0] + '\n  use_frameworks! :linkage => :static\n'
+            targetMatch[0] + targetAdditions
           );
         }
       }
@@ -39,7 +53,6 @@ module.exports = function withModularHeaders(config) {
     end
 `;
 
-      // Add post_install additions
       if (!podfileContent.includes('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES')) {
         podfileContent = podfileContent.replace(
           /post_install do \|installer\|/,
