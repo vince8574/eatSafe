@@ -33,18 +33,15 @@ module.exports = function withModularHeaders(config) {
         );
       }
 
-      // 3. Add post_install hook settings
-      if (!podfileContent.includes('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES')) {
+      // 3. Add post_install hook for deployment target
+      if (!podfileContent.includes("config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'")) {
         podfileContent = podfileContent.replace(
           'post_install do |installer|',
           `post_install do |installer|
-    # Fix for React Native + Firebase framework compatibility
+    # Set minimum iOS deployment target
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
-        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-        config.build_settings['CODE_SIGN_IDENTITY'] = ''
-        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
       end
     end`
         );
