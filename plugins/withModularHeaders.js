@@ -22,12 +22,14 @@ use_frameworks! :linkage => :static
         podfileContent = podfileHeader + podfileContent;
       }
 
-      // Add post_install hook for deployment target
+      // Add post_install hook for deployment target and code signing
       const postInstallAddition = `
-    # Set minimum iOS deployment target
+    # Set minimum iOS deployment target and disable code signing for pods
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        config.build_settings['CODE_SIGN_IDENTITY'] = ''
       end
     end
 `;
