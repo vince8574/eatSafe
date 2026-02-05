@@ -36,17 +36,21 @@ module.exports = function withModularHeaders(config) {
         );
       }
 
-      // 3. Add post_install hook for deployment target and warning fixes
-      if (!podfileContent.includes("config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'")) {
+      // 3. Add post_install hook for build settings
+      if (!podfileContent.includes('CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES')) {
         podfileContent = podfileContent.replace(
           'post_install do |installer|',
           `post_install do |installer|
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
-        # Set minimum iOS deployment target
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        config.build_settings['CODE_SIGN_IDENTITY'] = ''
         # Suppress nullability warnings (expo-file-system)
-        config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES' if target.name == 'expo-file-system'
+        if target.name == 'expo-file-system'
+          config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
+        end
       end
     end`
         );
