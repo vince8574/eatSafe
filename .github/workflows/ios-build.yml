@@ -43,6 +43,13 @@ jobs:
       - name: Expo Prebuild
         run: npx expo prebuild --platform ios --clean
 
+      - name: Debug Podfile
+        run: |
+          echo "=== Podfile content ==="
+          cat ios/Podfile
+          echo ""
+          echo "=== End of Podfile ==="
+
       - name: Install Pods
         run: cd ios && pod install --repo-update
 
