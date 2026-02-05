@@ -41,12 +41,21 @@ module.exports = function withModularHeaders(config) {
         podfileContent = podfileContent.replace(
           'post_install do |installer|',
           `post_install do |installer|
+    # Pods that need special module handling
+    rnfb_pods = ['RNFBApp', 'RNFBAuth', 'RNFBFirestore']
+
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4'
         config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
         config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         config.build_settings['CODE_SIGN_IDENTITY'] = ''
+
+        # Disable Clang modules for RNFB pods to allow React imports
+        if rnfb_pods.include?(target.name)
+          config.build_settings['CLANG_ENABLE_MODULES'] = 'NO'
+        end
+
         # Suppress nullability warnings (expo-file-system)
         if target.name == 'expo-file-system'
           config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
