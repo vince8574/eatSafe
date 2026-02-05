@@ -21,13 +21,16 @@ module.exports = function withModularHeaders(config) {
           'use_expo_modules!',
           `use_expo_modules!
 
-  # Modular headers required by Firebase Swift pods
+  # Firebase pods with modular headers for Swift compatibility
   pod 'FirebaseCore', :modular_headers => true
   pod 'FirebaseCoreExtension', :modular_headers => true
   pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseAuth', :modular_headers => true
   pod 'FirebaseAuthInterop', :modular_headers => true
   pod 'FirebaseAppCheckInterop', :modular_headers => true
+  pod 'FirebaseFirestore', :modular_headers => true
   pod 'FirebaseFirestoreInternal', :modular_headers => true
+  pod 'FirebaseSharedSwift', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'RecaptchaInterop', :modular_headers => true`
         );
