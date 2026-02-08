@@ -258,11 +258,11 @@
     "status": {
       "none": "Nema aktivnog plana",
       "expired": "Istekli plan",
-      "active": "Aktivan plan (simuliran)"
+      "active": "Aktivan plan"
     },
     "plan": "Plan",
     "none": "Nijedan",
-    "expiration": "Isticanje (simulirano)",
+    "expiration": "Isticanje",
     "scansRemaining": "Preostala skeniranja",
     "history": "Istorija",
     "unlimited": "Neograničeno",
@@ -274,11 +274,11 @@
     "upTo": "Do",
     "sites": "Lokacije",
     "plansTitle": "Planovi",
-    "plansHelper": "Kupovine su simulirane (Firestore). Stvarna naplata (App Store / Google Play) biće povezana kasnije.",
+    "plansHelper": "Izaberite plan koji najbolje odgovara vašim potrebama. Otkažite u bilo kom trenutku.",
     "planSelected": "Plan izabran",
     "choosePlan": "Izaberite ovaj plan",
     "scanPacksTitle": "Paketi skeniranja",
-    "scanPacksHelper": "Dodajte skeniranja ako je dostignut mjesečni kvota. Firestore simulacija na čekanju naplate u aplikaciji.",
+    "scanPacksHelper": "Dodajte dodatna skeniranja kada je dostignut mjesečni kvota.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -330,7 +330,7 @@
     "pack500": "Paket +500 skeniranja",
     "cannotAdd": "Ne može se dodati paket u ovom trenutku.",
     "loading": "Učitavanje kvote...",
-    "remaining": "Preostala skeniranja (simulacija):"
+    "remaining": "Preostala skeniranja:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Broj serije otkriven:",

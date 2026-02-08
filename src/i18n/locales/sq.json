@@ -258,11 +258,11 @@
     "status": {
       "none": "Asnjë plan aktiv",
       "expired": "Plan i skaduar",
-      "active": "Plan aktiv (i simuluar)"
+      "active": "Plan aktiv"
     },
     "plan": "Plani",
     "none": "Asnjë",
-    "expiration": "Skadenca (e simuluar)",
+    "expiration": "Skadenca",
     "scansRemaining": "Skanimet e mbetura",
     "history": "Historiku",
     "unlimited": "I pakufizuar",
@@ -274,11 +274,11 @@
     "upTo": "Deri në",
     "sites": "Faqet",
     "plansTitle": "Planet",
-    "plansHelper": "Blerjet janë të simuluara (Firestore). Faturimi aktual (App Store / Google Play) do të lidhet më vonë.",
+    "plansHelper": "Zgjidhni planin që përshtatet më mirë me nevojat tuaja. Anuloni në çdo kohë.",
     "planSelected": "Plani u zgjodh",
     "choosePlan": "Zgjidhni këtë plan",
     "scanPacksTitle": "Paketat e skanimit",
-    "scanPacksHelper": "Shtoni skanime nëse kuota juaj mujore është arritur. Simulimi Firestore në pritje të faturimit në aplikacion.",
+    "scanPacksHelper": "Shtoni skanime shtesë kur arrihet kuota juaj mujore.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -330,7 +330,7 @@
     "pack500": "Paketë +500 skanime",
     "cannotAdd": "Nuk mund të shtohet paketa në këtë moment.",
     "loading": "Duke ngarkuar kuotën...",
-    "remaining": "Skanimet e mbetura (simulim):"
+    "remaining": "Skanimet e mbetura:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Numri i lotit u zbulua:",

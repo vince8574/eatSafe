@@ -258,11 +258,11 @@
     "status": {
       "none": "アクティブなプランがありません",
       "expired": "期限切れのプラン",
-      "active": "アクティブなプラン（シミュレート）"
+      "active": "アクティブなプラン"
     },
     "plan": "プラン",
     "none": "なし",
-    "expiration": "有効期限（シミュレート）",
+    "expiration": "有効期限",
     "scansRemaining": "残りのスキャン",
     "history": "履歴",
     "unlimited": "無制限",
@@ -274,11 +274,11 @@
     "upTo": "最大",
     "sites": "サイト",
     "plansTitle": "プラン",
-    "plansHelper": "購入はシミュレートされています（Firestore）。実際の請求（App Store / Google Play）は後で接続されます。",
+    "plansHelper": "ニーズに最適なプランを選択してください。いつでもキャンセルできます。",
     "planSelected": "プランが選択されました",
     "choosePlan": "このプランを選択",
     "scanPacksTitle": "スキャンパック",
-    "scanPacksHelper": "月間割り当てに達した場合はスキャンを追加します。アプリ内課金保留中のFirestoreシミュレーション。",
+    "scanPacksHelper": "月間割り当てに達したら、追加のスキャンを追加します。",
     "plans": {
       "foodtruckStarter": {
         "label": "フードトラック - スターター",
@@ -330,7 +330,7 @@
     "pack500": "+500スキャンパック",
     "cannotAdd": "現在パックを追加できません。",
     "loading": "割り当てを読み込み中...",
-    "remaining": "残りのスキャン（シミュレーション）："
+    "remaining": "残りのスキャン："
   },
   "immediateRecallAlert": {
     "lotDetected": "ロット番号が検出されました：",

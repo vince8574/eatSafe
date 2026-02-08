@@ -180,6 +180,7 @@ export default function SubscriptionScreen() {
                   <>
                     <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
                     <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
+                    <Text style={[styles.packPrice, { color: colors.accent }]}>{pack.price}</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -345,6 +346,11 @@ const styles = StyleSheet.create({
   },
   packSub: {
     fontSize: 12,
+    marginTop: 4
+  },
+  packPrice: {
+    fontSize: 13,
+    fontWeight: '800',
     marginTop: 4
   },
   errorBox: {

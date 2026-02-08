@@ -299,11 +299,11 @@
     "status": {
       "none": "No active plan",
       "expired": "Expired plan",
-      "active": "Active plan (simulated)"
+      "active": "Active plan"
     },
     "plan": "Plan",
     "none": "None",
-    "expiration": "Expiration (simulated)",
+    "expiration": "Expiration",
     "scansRemaining": "Scans remaining",
     "history": "History",
     "unlimited": "Unlimited",
@@ -315,11 +315,11 @@
     "upTo": "Up to",
     "sites": "Sites",
     "plansTitle": "Plans",
-    "plansHelper": "Purchases are simulated (Firestore). Actual billing (App Store / Google Play) will be connected later.",
+    "plansHelper": "Choose the plan that best fits your needs. Cancel anytime.",
     "planSelected": "Plan selected",
     "choosePlan": "Choose this plan",
     "scanPacksTitle": "Scan packs",
-    "scanPacksHelper": "Add scans if your monthly quota is reached. Firestore simulation pending in-app billing.",
+    "scanPacksHelper": "Add extra scans when your monthly quota is reached.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -354,14 +354,6 @@
         "desc2": "Alerts + unlimited history",
         "desc3": "Regulatory format PDF / CSV",
         "desc4": "Multi-employee (up to 10)"
-      },
-      "schoolPremium": {
-        "label": "Daycare / School - Premium",
-        "desc1": "5000 scans included",
-        "desc2": "Alerts + unlimited history",
-        "desc3": "Regulatory format PDF / Excel / CSV",
-        "desc4": "Multi-employee (up to 10)",
-        "desc5": "Multi-site (up to 3 locations)"
       }
     },
     "packs": {
@@ -377,7 +369,7 @@
     "restoreSuccessMessage": "Your purchases have been restored successfully.",
     "restoreError": "Restore error",
     "restoreErrorMessage": "Unable to restore your purchases. Please try again.",
-    "devMode": "Development mode - Purchases are simulated"
+    "devMode": ""
   },
   "quota": {
     "reached": "Scan quota reached",
@@ -385,7 +377,7 @@
     "pack500": "+500 scans pack",
     "cannotAdd": "Cannot add pack at this time.",
     "loading": "Loading quota...",
-    "remaining": "Scans remaining (simulation):"
+    "remaining": "Scans remaining:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Lot number detected:",

@@ -263,11 +263,11 @@
     "status": {
       "none": "Geen actief plan",
       "expired": "Verlopen plan",
-      "active": "Actief plan (gesimuleerd)"
+      "active": "Actief plan"
     },
     "plan": "Plan",
     "none": "Geen",
-    "expiration": "Vervaldatum (gesimuleerd)",
+    "expiration": "Vervaldatum",
     "scansRemaining": "Resterende scans",
     "history": "Geschiedenis",
     "unlimited": "Onbeperkt",
@@ -279,11 +279,11 @@
     "upTo": "Tot",
     "sites": "Sites",
     "plansTitle": "Plannen",
-    "plansHelper": "Aankopen worden gesimuleerd (Firestore). Daadwerkelijke facturering (App Store / Google Play) wordt later verbonden.",
+    "plansHelper": "Kies het plan dat het beste bij uw behoeften past. Op elk moment opzegbaar.",
     "planSelected": "Plan geselecteerd",
     "choosePlan": "Kies dit plan",
     "scanPacksTitle": "Scanpakketten",
-    "scanPacksHelper": "Voeg scans toe als uw maandelijkse quotum is bereikt. Firestore-simulatie in afwachting van in-app facturering.",
+    "scanPacksHelper": "Voeg extra scans toe wanneer uw maandelijkse quotum is bereikt.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -335,7 +335,7 @@
     "pack500": "+500 scans pakket",
     "cannotAdd": "Kan pakket momenteel niet toevoegen.",
     "loading": "Quotum laden...",
-    "remaining": "Resterende scans (simulatie):"
+    "remaining": "Resterende scans:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Lotnummer gedetecteerd:",

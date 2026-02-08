@@ -263,11 +263,11 @@
     "status": {
       "none": "Sin plan activo",
       "expired": "Plan caducado",
-      "active": "Plan activo (simulado)"
+      "active": "Plan activo"
     },
     "plan": "Plan",
     "none": "Ninguno",
-    "expiration": "Vencimiento (simulado)",
+    "expiration": "Vencimiento",
     "scansRemaining": "Escaneos restantes",
     "history": "Historial",
     "unlimited": "Ilimitado",
@@ -279,11 +279,11 @@
     "upTo": "Hasta",
     "sites": "Sitios",
     "plansTitle": "Planes",
-    "plansHelper": "Las compras están simuladas (Firestore). La facturación real (App Store / Google Play) se conectará más tarde.",
+    "plansHelper": "Elige el plan que mejor se adapte a tus necesidades. Cancela en cualquier momento.",
     "planSelected": "Plan seleccionado",
     "choosePlan": "Elegir este plan",
     "scanPacksTitle": "Paquetes de escaneo",
-    "scanPacksHelper": "Agregue escaneos si se alcanza su cuota mensual. Simulación de Firestore pendiente de facturación en la aplicación.",
+    "scanPacksHelper": "Agrega escaneos adicionales cuando se alcance tu cuota mensual.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -335,7 +335,7 @@
     "pack500": "Paquete de +500 escaneos",
     "cannotAdd": "No se puede agregar el paquete en este momento.",
     "loading": "Cargando cuota...",
-    "remaining": "Escaneos restantes (simulación):"
+    "remaining": "Escaneos restantes:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Número de lote detectado:",

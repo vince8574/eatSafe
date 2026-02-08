@@ -263,11 +263,11 @@
     "status": {
       "none": "Kein aktiver Plan",
       "expired": "Abgelaufener Plan",
-      "active": "Aktiver Plan (simuliert)"
+      "active": "Aktiver Plan"
     },
     "plan": "Plan",
     "none": "Keine",
-    "expiration": "Ablauf (simuliert)",
+    "expiration": "Ablauf",
     "scansRemaining": "Verbleibende Scans",
     "history": "Verlauf",
     "unlimited": "Unbegrenzt",
@@ -279,11 +279,11 @@
     "upTo": "Bis zu",
     "sites": "Standorte",
     "plansTitle": "Pläne",
-    "plansHelper": "Käufe werden simuliert (Firestore). Die tatsächliche Abrechnung (App Store / Google Play) wird später verbunden.",
+    "plansHelper": "Wählen Sie den Plan, der am besten zu Ihren Bedürfnissen passt. Jederzeit kündbar.",
     "planSelected": "Plan ausgewählt",
     "choosePlan": "Diesen Plan wählen",
     "scanPacksTitle": "Scan-Pakete",
-    "scanPacksHelper": "Fügen Sie Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist. Firestore-Simulation für In-App-Abrechnung ausstehend.",
+    "scanPacksHelper": "Fügen Sie zusätzliche Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -335,7 +335,7 @@
     "pack500": "+500 Scans Paket",
     "cannotAdd": "Paket kann derzeit nicht hinzugefügt werden.",
     "loading": "Kontingent wird geladen...",
-    "remaining": "Verbleibende Scans (Simulation):"
+    "remaining": "Verbleibende Scans:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Chargennummer erkannt:",

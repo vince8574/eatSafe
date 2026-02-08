@@ -342,11 +342,11 @@
     "status": {
       "none": "Aucun plan actif",
       "expired": "Plan expiré",
-      "active": "Plan actif (simulation)"
+      "active": "Plan actif"
     },
     "plan": "Plan",
     "none": "Aucun",
-    "expiration": "Expiration (simulée)",
+    "expiration": "Expiration",
     "scansRemaining": "Scans restants",
     "history": "Historique",
     "unlimited": "Illimité",
@@ -358,11 +358,11 @@
     "upTo": "Jusqu'à",
     "sites": "Sites",
     "plansTitle": "Plans",
-    "plansHelper": "Les achats sont simulés (Firestore). La facturation réelle (App Store / Google Play) sera branchée plus tard.",
+    "plansHelper": "Choisissez le plan adapté à vos besoins. Résiliable à tout moment.",
     "planSelected": "Plan sélectionné",
     "choosePlan": "Choisir ce plan",
     "scanPacksTitle": "Packs de scans",
-    "scanPacksHelper": "Ajoute des scans si ton quota mensuel est atteint. Simulation Firestore en attendant la facturation in‑app.",
+    "scanPacksHelper": "Ajoutez des scans supplémentaires lorsque votre quota mensuel est atteint.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -397,14 +397,6 @@
         "desc2": "Alertes + historique illimité",
         "desc3": "Format réglementaire PDF / CSV",
         "desc4": "Multi-employés (jusqu'à 10)"
-      },
-      "schoolPremium": {
-        "label": "Crèche / École - Premium",
-        "desc1": "5000 scans inclus",
-        "desc2": "Alertes + historique illimité",
-        "desc3": "Format réglementaire PDF / Excel / CSV",
-        "desc4": "Multi-employés (jusqu'à 10)",
-        "desc5": "Multi-sites (jusqu'à 3 établissements)"
       }
     },
     "packs": {
@@ -420,7 +412,7 @@
     "restoreSuccessMessage": "Vos achats ont été restaurés avec succès.",
     "restoreError": "Erreur de restauration",
     "restoreErrorMessage": "Impossible de restaurer vos achats. Veuillez réessayer.",
-    "devMode": "Mode développement - Les achats sont simulés"
+    "devMode": ""
   },
   "quota": {
     "reached": "Quota de scans atteint",
@@ -428,7 +420,7 @@
     "pack500": "Pack +500 scans",
     "cannotAdd": "Impossible d'ajouter le pack pour le moment.",
     "loading": "Chargement du quota...",
-    "remaining": "Scans restants (simulation) :"
+    "remaining": "Scans restants :"
   },
   "immediateRecallAlert": {
     "lotDetected": "Numéro de lot détecté :",

@@ -258,11 +258,11 @@
     "status": {
       "none": "无活动计划",
       "expired": "已过期计划",
-      "active": "活动计划（模拟）"
+      "active": "活动计划"
     },
     "plan": "计划",
     "none": "无",
-    "expiration": "过期（模拟）",
+    "expiration": "过期",
     "scansRemaining": "剩余扫描次数",
     "history": "历史记录",
     "unlimited": "无限制",
@@ -274,11 +274,11 @@
     "upTo": "最多",
     "sites": "站点",
     "plansTitle": "计划",
-    "plansHelper": "购买为模拟（Firestore）。实际计费（App Store / Google Play）将在稍后连接。",
+    "plansHelper": "选择最适合您需求的计划。随时可以取消。",
     "planSelected": "已选择计划",
     "choosePlan": "选择此计划",
     "scanPacksTitle": "扫描包",
-    "scanPacksHelper": "如果达到月度配额，请添加扫描。待应用内计费的Firestore模拟。",
+    "scanPacksHelper": "当达到月度配额时，添加额外的扫描次数。",
     "plans": {
       "foodtruckStarter": {
         "label": "餐车 - 入门版",
@@ -330,7 +330,7 @@
     "pack500": "+500次扫描包",
     "cannotAdd": "目前无法添加包。",
     "loading": "正在加载配额...",
-    "remaining": "剩余扫描次数（模拟）："
+    "remaining": "剩余扫描次数："
   },
   "immediateRecallAlert": {
     "lotDetected": "检测到批号：",

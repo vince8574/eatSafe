@@ -263,11 +263,11 @@
     "status": {
       "none": "Nenhum plano ativo",
       "expired": "Plano expirado",
-      "active": "Plano ativo (simulado)"
+      "active": "Plano ativo"
     },
     "plan": "Plano",
     "none": "Nenhum",
-    "expiration": "Expiração (simulada)",
+    "expiration": "Expiração",
     "scansRemaining": "Digitalizações restantes",
     "history": "Histórico",
     "unlimited": "Ilimitado",
@@ -279,11 +279,11 @@
     "upTo": "Até",
     "sites": "Sites",
     "plansTitle": "Planos",
-    "plansHelper": "As compras são simuladas (Firestore). A cobrança real (App Store / Google Play) será conectada mais tarde.",
+    "plansHelper": "Escolha o plano que melhor se adapta às suas necessidades. Cancele a qualquer momento.",
     "planSelected": "Plano selecionado",
     "choosePlan": "Escolher este plano",
     "scanPacksTitle": "Pacotes de digitalização",
-    "scanPacksHelper": "Adicione digitalizações se sua cota mensal for atingida. Simulação Firestore pendente de cobrança no aplicativo.",
+    "scanPacksHelper": "Adicione digitalizações extras quando sua cota mensal for atingida.",
     "plans": {
       "foodtruckStarter": {
         "label": "Food Truck - Starter",
@@ -335,7 +335,7 @@
     "pack500": "Pacote de +500 digitalizações",
     "cannotAdd": "Não é possível adicionar o pacote no momento.",
     "loading": "Carregando cota...",
-    "remaining": "Digitalizações restantes (simulação):"
+    "remaining": "Digitalizações restantes:"
   },
   "immediateRecallAlert": {
     "lotDetected": "Número de lote detectado:",
