@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.numeline.app",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -65,7 +65,17 @@
         }
       ],
       "expo-localization",
-      "expo-font"
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Lora_400Regular.ttf",
+            "./assets/fonts/Lora_500Medium.ttf",
+            "./assets/fonts/Lora_600SemiBold.ttf",
+            "./assets/fonts/Lora_700Bold.ttf"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
