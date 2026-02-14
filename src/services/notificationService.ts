@@ -8,17 +8,21 @@ import { extractRecallReason } from '../utils/recallUtils';
 const channelId = 'recall-alerts';
 const isExpoGo = Constants.appOwnership === 'expo';
 
-// Configure notification handler directly
-if (!isExpoGo) {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-      shouldShowAlert: true,
-      shouldShowBanner: true,
-      shouldShowList: true
-    })
-  });
+export function setupNotificationHandler() {
+  if (isExpoGo) return;
+  try {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowAlert: true,
+        shouldShowBanner: true,
+        shouldShowList: true
+      })
+    });
+  } catch (e) {
+    console.warn('[Notifications] Failed to set notification handler:', e);
+  }
 }
 
 export async function requestNotificationPermissions() {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { registerBackgroundTask } from '../services/backgroundService';
-import { requestNotificationPermissions } from '../services/notificationService';
+import { requestNotificationPermissions, setupNotificationHandler } from '../services/notificationService';
 import { useDatabaseWarmup } from '../services/dbService';
 import { purgeExpiredScans } from '../utils/dataCleanup';
 import { registerBackgroundRecallCheck, getAndClearNewRecalls } from '../services/backgroundRecallCheck';
@@ -17,6 +17,7 @@ export function AppInitializer() {
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
+    setupNotificationHandler();
     void registerBackgroundTask();
     // Notification permissions are now requested via dedicated screen
     void registerBackgroundRecallCheck();

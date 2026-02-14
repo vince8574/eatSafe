@@ -2,15 +2,19 @@ import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { checkAllProductsForRecalls, RecallCheckResult } from './recallCheckService';
 import type { ScannedProduct, CountryCode } from '../types';
 
 const BACKGROUND_RECALL_CHECK_TASK = 'background-recall-check';
 const LAST_CHECK_KEY = 'last-recall-check';
 const NEW_RECALLS_KEY = 'new-recalls-found';
+const isExpoGo = Constants.appOwnership === 'expo';
 
 // Définir la tâche en arrière-plan
-TaskManager.defineTask(BACKGROUND_RECALL_CHECK_TASK, async () => {
+if (!isExpoGo) {
+  try {
+  TaskManager.defineTask(BACKGROUND_RECALL_CHECK_TASK, async () => {
   console.log('[BackgroundRecallCheck] Running background recall check...');
 
   try {
@@ -75,7 +79,11 @@ TaskManager.defineTask(BACKGROUND_RECALL_CHECK_TASK, async () => {
     console.error('[BackgroundRecallCheck] Error:', error);
     return BackgroundFetch.BackgroundFetchResult.Failed;
   }
-});
+  });
+  } catch (e) {
+    console.warn('[BackgroundRecallCheck] Failed to define task:', e);
+  }
+}
 
 /**
  * Enregistrer la tâche de vérification en arrière-plan (toutes les heures)
