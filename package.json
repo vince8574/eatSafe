@@ -64,6 +64,9 @@
     "xlsx": "^0.18.5",
     "zustand": "^4.5.2"
   },
+  "overrides": {
+    "expo-modules-core": "~55.0.9"
+  },
   "devDependencies": {
     "@babel/core": "^7.24.5",
     "@testing-library/jest-native": "^5.4.2",
