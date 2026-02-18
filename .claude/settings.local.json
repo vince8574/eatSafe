@@ -50,7 +50,8 @@
       "Bash(npx eas:*)",
       "Bash(npx tsc:*)",
       "Bash(export NODE_OPTIONS=\"--max-old-space-size=8192\")",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix\\(pricing\\): align subscription prices with App Store tiers\n\nUpdate all subscription plan prices to .99 tiers to match\nApple App Store pricing requirements. Add iOS buildNumber.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix\\(pricing\\): align subscription prices with App Store tiers\n\nUpdate all subscription plan prices to .99 tiers to match\nApple App Store pricing requirements. Add iOS buildNumber.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm view:*)"
     ],
     "deny": [],
     "ask": []
