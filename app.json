@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.numeline.app",
-      "buildNumber": "5",
+      "buildNumber": "6",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -83,7 +83,7 @@
     "experiments": {
       "typedRoutes": true
     },
-    "jsEngine": "hermes",
+    "jsEngine": "jsc",
     "extra": {
       "router": {},
       "eas": {
