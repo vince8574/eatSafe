@@ -42,7 +42,7 @@
     },
     "plugins": [
       "./plugins/withModularHeaders",
-      "@react-native-firebase/app",
+      "./plugins/withFirebaseSwift",
       "expo-router",
       [
         "expo-build-properties",
