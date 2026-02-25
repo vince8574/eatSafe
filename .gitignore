@@ -41,3 +41,7 @@ firebase-admin-key.json
 # Google Services config files (contain API keys)
 android/app/google-services.json
 ios/GoogleService-Info.plist
+ios/Numeline/GoogleService-Info.plist
+
+# macOS
+.DS_Store
