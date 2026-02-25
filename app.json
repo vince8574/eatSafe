@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.numeline.app",
-      "buildNumber": "6",
+      "buildNumber": "7",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -42,6 +42,7 @@
     },
     "plugins": [
       "./plugins/withModularHeaders",
+      "@react-native-firebase/app",
       "expo-router",
       [
         "expo-build-properties",

@@ -40,6 +40,10 @@ jobs:
           mkdir -p android/app
           echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -D > android/app/google-services.json
 
+      - name: Create GoogleService-Info.plist
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" | base64 -D > GoogleService-Info.plist
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform ios --clean
 
