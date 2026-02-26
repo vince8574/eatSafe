@@ -1,6 +1,5 @@
 import { getFirestore } from './firebaseService';
 import { getCurrentUserId } from './authService';
-import firestore from '@react-native-firebase/firestore';
 
 const ORGS_COLLECTION = 'organizations';
 const MEMBERS_COLLECTION = 'organizationMembers';
@@ -62,11 +61,15 @@ export async function createOrganization(name: string): Promise<Organization> {
     .collection('members')
     .doc(userId)
     .set({
+      userId,
       role: 'owner',
       email: '', // Sera mis à jour avec le profil utilisateur
       addedAt: Date.now(),
       addedBy: userId
     });
+
+  // Mettre en cache l'orgId dans le profil utilisateur
+  await db.collection('users').doc(userId).set({ orgId: docRef.id }, { merge: true });
 
   console.log(`[organizationService] Created organization ${docRef.id}: ${name}`);
 
@@ -81,32 +84,38 @@ export async function getCurrentOrganization(): Promise<Organization | null> {
     const db = getFirestore();
     const userId = await getCurrentUserId();
 
-    // Chercher dans toutes les organisations où l'utilisateur est membre
-    const membershipQuery = await db
-      .collectionGroup('members')
-      .where(firestore.FieldPath.documentId(), '==', userId)
+    // 1) Chercher les organisations dont l'utilisateur est owner (règle: ownerId == auth.uid)
+    const ownedQuery = await db
+      .collection(ORGS_COLLECTION)
+      .where('ownerId', '==', userId)
       .limit(1)
       .get();
 
-    if (membershipQuery.empty) {
+    if (!ownedQuery.empty) {
+      const orgDoc = ownedQuery.docs[0];
+      // Mettre à jour le cache si absent
+      await db.collection('users').doc(userId).set({ orgId: orgDoc.id }, { merge: true });
+      return { id: orgDoc.id, ...orgDoc.data() } as Organization;
+    }
+
+    // 2) Pour les membres non-owners: lire l'orgId mis en cache dans le profil utilisateur
+    const userDoc = await db.collection('users').doc(userId).get();
+    const orgId = userDoc.data()?.orgId;
+
+    if (!orgId) {
       console.log('[organizationService] User is not member of any organization');
       return null;
     }
 
-    const orgId = membershipQuery.docs[0].ref.parent.parent?.id;
-    if (!orgId) return null;
-
     const orgDoc = await db.collection(ORGS_COLLECTION).doc(orgId).get();
+    if (!orgDoc.exists) {
+      // Nettoyer le cache périmé
+      await db.collection('users').doc(userId).update({ orgId: null });
+      return null;
+    }
 
-    if (!orgDoc.exists) return null;
-
-    const data = orgDoc.data();
-    return {
-      id: orgDoc.id,
-      ...data
-    } as Organization;
+    return { id: orgDoc.id, ...orgDoc.data() } as Organization;
   } catch (error) {
-    // Ne pas supposer que "error" a une propriété code/message
     const hasCode = error && typeof error === 'object' && 'code' in (error as any);
     const hasMessage = error && typeof error === 'object' && 'message' in (error as any);
     const code = hasCode ? (error as any).code : 'UNKNOWN';
@@ -261,11 +270,15 @@ export async function acceptInvite(inviteId: string): Promise<void> {
     .collection('members')
     .doc(userId)
     .set({
+      userId,
       role: invite.role,
       email: invite.email,
       addedAt: Date.now(),
       addedBy: invite.invitedBy
     });
+
+  // Mettre en cache l'orgId dans le profil utilisateur
+  await db.collection('users').doc(userId).set({ orgId: invite.orgId }, { merge: true });
 
   // Marquer l'invitation comme acceptée
   await db.collection(INVITES_COLLECTION).doc(inviteId).update({
@@ -325,7 +338,6 @@ export async function updateMemberRole(
   newRole: UserRole
 ): Promise<void> {
   const db = getFirestore();
-  const currentUserId = await getCurrentUserId();
 
   // Vérifier que l'utilisateur courant est owner
   const currentRole = await getUserRole(orgId);
