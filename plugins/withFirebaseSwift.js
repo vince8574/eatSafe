@@ -54,11 +54,16 @@ module.exports = function withFirebaseSwift(config) {
     }
 
     // Add plist to Xcode project bundle resources if not already referenced
-    if (!xcodeProject.hasFile('GoogleService-Info.plist')) {
-      xcodeProject.addResourceFile('GoogleService-Info.plist', {
+    // Path must be relative to the .xcodeproj file (ios/), so: Numeline/GoogleService-Info.plist
+    const plistXcodePath = path.join(projectName, 'GoogleService-Info.plist');
+    if (!xcodeProject.hasFile(plistXcodePath)) {
+      xcodeProject.addResourceFile(plistXcodePath, {
         target: xcodeProject.getFirstTarget().uuid,
         lastKnownFileType: 'text.plist.xml',
       });
+      console.log('[withFirebaseSwift] Added GoogleService-Info.plist to Xcode bundle resources');
+    } else {
+      console.log('[withFirebaseSwift] GoogleService-Info.plist already in Xcode project');
     }
 
     return config;
