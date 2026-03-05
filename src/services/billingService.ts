@@ -52,21 +52,16 @@ let purchaseUpdateSubscription: EventSubscription | null = null;
 let purchaseErrorSubscription: EventSubscription | null = null;
 
 /**
- * Initialize connection to Google Play Billing
+ * Initialize connection to the store (Google Play or App Store)
  */
 export async function initializeBilling(): Promise<boolean> {
-  if (Platform.OS !== 'android') {
-    console.log('[billingService] Not on Android, skipping IAP initialization');
-    return false;
-  }
-
   try {
     const result = await initConnection();
     isConnected = true;
-    console.log('[billingService] Google Play Billing connected:', result);
+    console.log('[billingService] Store connection established:', result);
     return true;
   } catch (error) {
-    console.error('[billingService] Failed to connect to Google Play Billing:', error);
+    console.error('[billingService] Failed to connect to store:', error);
     isConnected = false;
     return false;
   }
@@ -200,12 +195,16 @@ export async function purchaseSubscription(productId: string, offerToken?: strin
 
   try {
     await requestPurchase({
-      request: {
-        google: {
-          skus: [productId],
-          ...(offerToken && { subscriptionOffers: [{ sku: productId, offerToken }] }),
-        },
-      },
+      request: Platform.OS === 'android'
+        ? {
+            google: {
+              skus: [productId],
+              ...(offerToken && { subscriptionOffers: [{ sku: productId, offerToken }] }),
+            },
+          }
+        : {
+            apple: { skus: [productId] },
+          },
       type: 'subs',
     });
   } catch (error) {
@@ -230,11 +229,9 @@ export async function purchaseScanPack(productId: string): Promise<void> {
 
   try {
     await requestPurchase({
-      request: {
-        google: {
-          skus: [productId],
-        },
-      },
+      request: Platform.OS === 'android'
+        ? { google: { skus: [productId] } }
+        : { apple: { skus: [productId] } },
       type: 'in-app',
     });
   } catch (error) {
@@ -265,7 +262,7 @@ export async function restorePurchases(): Promise<Purchase[]> {
  * Check if billing is available on this device
  */
 export function isBillingAvailable(): boolean {
-  return Platform.OS === 'android' && isConnected;
+  return isConnected;
 }
 
 /**

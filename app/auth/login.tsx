@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { useI18n } from '../../src/i18n/I18nContext';
 import { useTheme } from '../../src/theme/ThemeProvider';
@@ -20,7 +21,7 @@ import { useTheme } from '../../src/theme/ThemeProvider';
 export default function LoginScreen() {
   const { t } = useI18n();
   const { colors } = useTheme();
-  const { signInWithEmail, signInWithGoogle } = useAuth();
+  const { signInWithEmail, signInWithGoogle, signInWithApple } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -64,6 +65,19 @@ export default function LoginScreen() {
       console.log('[Login] Google sign-in error', error?.code, error?.message, error);
       if (error?.code !== 'SIGN_IN_CANCELLED') {
         Alert.alert(t('auth.error'), t('auth.googleSignInFailed'));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    setLoading(true);
+    try {
+      await signInWithApple();
+    } catch (error: any) {
+      if (error?.code !== 'SIGN_IN_CANCELLED') {
+        Alert.alert(t('auth.error'), t('auth.appleSignInFailed') || 'Apple Sign-In failed.');
       }
     } finally {
       setLoading(false);
@@ -180,6 +194,17 @@ export default function LoginScreen() {
             </Text>
           </TouchableOpacity>
 
+          {/* Apple Sign In Button (iOS only) */}
+          {Platform.OS === 'ios' && (
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+              cornerRadius={12}
+              style={styles.appleButton}
+              onPress={handleAppleLogin}
+            />
+          )}
+
           {/* Sign Up Link */}
           <View style={styles.signupContainer}>
             <Text style={[styles.signupText, { color: colors.textSecondary }]}>
@@ -290,6 +315,10 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     fontSize: 16,
     fontWeight: '600',
+  },
+  appleButton: {
+    height: 56,
+    marginBottom: 24,
   },
   signupContainer: {
     flexDirection: 'row',

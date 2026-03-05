@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Platform } from 'react-native';
 import {
   Subscription,
   fetchSubscription,
@@ -38,11 +37,9 @@ export function useSubscription() {
     let mounted = true;
 
     const init = async () => {
-      if (Platform.OS === 'android') {
-        const success = await initBilling();
-        if (mounted) {
-          setState((prev) => ({ ...prev, storeAvailable: success }));
-        }
+      const success = await initBilling();
+      if (mounted) {
+        setState((prev) => ({ ...prev, storeAvailable: success }));
       }
     };
 
