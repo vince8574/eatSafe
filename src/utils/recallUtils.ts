@@ -1,72 +1,73 @@
 import { RecallRecord } from '../types';
 
 /**
- * Extrait la raison du rappel depuis le titre ou la description
+ * Extracts the recall reason from the title or description
  */
 export function extractRecallReason(recall: RecallRecord): string {
   const title = recall.title.toLowerCase();
   const description = recall.description?.toLowerCase() || '';
+  const text = `${title} ${description}`;
 
-  // Raisons courantes de rappel
-  if (title.includes('salmonelle') || description.includes('salmonelle')) {
-    return 'Présence de salmonelles';
+  // Common recall reasons (English keywords for FDA/USDA data)
+  if (text.includes('salmonella')) {
+    return 'Salmonella contamination';
   }
-  if (title.includes('listeria') || description.includes('listeria')) {
-    return 'Présence de listeria';
+  if (text.includes('listeria')) {
+    return 'Listeria contamination';
   }
-  if (title.includes('e.coli') || title.includes('e. coli') || description.includes('e.coli')) {
-    return 'Présence de bactérie E.coli';
+  if (text.includes('e.coli') || text.includes('e. coli')) {
+    return 'E. coli contamination';
   }
-  if (title.includes('allergène') || description.includes('allergène')) {
-    return 'Allergène non déclaré';
+  if (text.includes('allergen') || text.includes('undeclared')) {
+    return 'Undeclared allergen';
   }
-  if (title.includes('corps étranger') || description.includes('corps étranger')) {
-    return 'Présence de corps étrangers';
+  if (text.includes('foreign') && (text.includes('object') || text.includes('material') || text.includes('body'))) {
+    return 'Foreign object contamination';
   }
-  if (title.includes('verre') || description.includes('verre')) {
-    return 'Présence de morceaux de verre';
+  if (text.includes('glass')) {
+    return 'Glass fragments detected';
   }
-  if (title.includes('métal') || description.includes('métal')) {
-    return 'Présence de particules métalliques';
+  if (text.includes('metal')) {
+    return 'Metal particles detected';
   }
-  if (title.includes('moisissure') || description.includes('moisissure')) {
-    return 'Présence de moisissures';
+  if (text.includes('mold') || text.includes('mould')) {
+    return 'Mold contamination';
   }
-  if (title.includes('toxine') || description.includes('toxine')) {
-    return 'Présence de toxines';
+  if (text.includes('toxin') || text.includes('botulism')) {
+    return 'Toxin contamination';
   }
-  if (title.includes('contamination') || description.includes('contamination')) {
-    return 'Contamination microbiologique';
+  if (text.includes('contamination')) {
+    return 'Microbiological contamination';
   }
-  if (title.includes('pesticide') || description.includes('pesticide')) {
-    return 'Présence de pesticides';
+  if (text.includes('pesticide')) {
+    return 'Pesticide residue';
   }
-  if (title.includes('histamine') || description.includes('histamine')) {
-    return 'Taux d\'histamine trop élevé';
+  if (text.includes('histamine')) {
+    return 'Elevated histamine levels';
   }
 
-  // Si aucune raison spécifique n'est trouvée, retourner vide
-  // Le titre complet sera affiché dans le composant RecallAlert
+  // If no specific reason found, return empty
+  // The full title will be displayed in the RecallAlert component
   return '';
 }
 
 /**
- * Détermine la gravité du rappel basée sur la raison
+ * Determines the severity of the recall based on the reason
  */
 export function getRecallSeverity(recall: RecallRecord): 'high' | 'medium' | 'low' {
   const title = recall.title.toLowerCase();
   const description = recall.description?.toLowerCase() || '';
   const text = `${title} ${description}`;
 
-  // Gravité élevée - risques sanitaires graves
+  // High severity - serious health risks
   const highSeverityKeywords = [
-    'salmonelle',
+    'salmonella',
     'listeria',
     'e.coli',
-    'toxine',
-    'botulisme',
-    'verre',
-    'métal',
+    'toxin',
+    'botulism',
+    'glass',
+    'metal',
     'contamination'
   ];
 
@@ -74,10 +75,12 @@ export function getRecallSeverity(recall: RecallRecord): 'high' | 'medium' | 'lo
     return 'high';
   }
 
-  // Gravité moyenne - allergènes et autres risques
+  // Medium severity - allergens and other risks
   const mediumSeverityKeywords = [
-    'allergène',
-    'moisissure',
+    'allergen',
+    'undeclared',
+    'mold',
+    'mould',
     'pesticide',
     'histamine'
   ];
@@ -86,6 +89,6 @@ export function getRecallSeverity(recall: RecallRecord): 'high' | 'medium' | 'lo
     return 'medium';
   }
 
-  // Gravité faible - autres raisons
+  // Low severity - other reasons
   return 'low';
 }

@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useTheme } from '../src/theme/themeContext';
 import { useI18n } from '../src/i18n/I18nContext';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
@@ -16,8 +17,35 @@ export default function NotificationPermissionsScreen() {
   const setNotificationsEnabled = usePreferencesStore((state) => state.setNotificationsEnabled);
   const setHasSeenNotificationPrompt = usePreferencesStore((state) => state.setHasSeenNotificationPrompt);
 
+  const iconScale = useRef(new Animated.Value(0.3)).current;
+  const iconOpacity = useRef(new Animated.Value(0)).current;
+  const contentSlide = useRef(new Animated.Value(40)).current;
+  const contentOpacity = useRef(new Animated.Value(0)).current;
+  const benefit1Opacity = useRef(new Animated.Value(0)).current;
+  const benefit2Opacity = useRef(new Animated.Value(0)).current;
+  const benefit3Opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.spring(iconScale, { toValue: 1, friction: 5, tension: 80, useNativeDriver: true }),
+        Animated.timing(iconOpacity, { toValue: 1, duration: 500, useNativeDriver: true })
+      ]),
+      Animated.parallel([
+        Animated.timing(contentSlide, { toValue: 0, duration: 400, useNativeDriver: true }),
+        Animated.timing(contentOpacity, { toValue: 1, duration: 400, useNativeDriver: true })
+      ]),
+      Animated.stagger(150, [
+        Animated.timing(benefit1Opacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.timing(benefit2Opacity, { toValue: 1, duration: 300, useNativeDriver: true }),
+        Animated.timing(benefit3Opacity, { toValue: 1, duration: 300, useNativeDriver: true })
+      ])
+    ]).start();
+  }, []);
+
   const handleEnableNotifications = async () => {
     try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       setIsLoading(true);
       const granted = await requestNotificationPermissions();
       setHasSeenNotificationPrompt(true);
@@ -29,7 +57,6 @@ export default function NotificationPermissionsScreen() {
       router.replace('/auth/login');
     } catch (error) {
       console.error('[NotificationPermissions] Error:', error);
-      // Continue anyway
       setHasSeenNotificationPrompt(true);
       router.replace('/auth/login');
     } finally {
@@ -38,6 +65,7 @@ export default function NotificationPermissionsScreen() {
   };
 
   const handleSkip = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setHasSeenNotificationPrompt(true);
     setNotificationsEnabled(false);
     router.replace('/(tabs)/home');
@@ -47,46 +75,53 @@ export default function NotificationPermissionsScreen() {
     <GradientBackground>
       <View style={styles.container}>
         <View style={styles.content}>
-          {/* Notification Icon */}
-          <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+          <Animated.View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: colors.accent + '20', transform: [{ scale: iconScale }], opacity: iconOpacity }
+            ]}
+          >
             <Ionicons name="notifications" size={64} color={colors.accent} />
-          </View>
+          </Animated.View>
 
-          {/* Title */}
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            {t('notificationPermissions.title')}
-          </Text>
+          <Animated.View style={[styles.textContainer, { opacity: contentOpacity, transform: [{ translateY: contentSlide }] }]}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>
+              {t('notificationPermissions.title')}
+            </Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+              {t('notificationPermissions.subtitle')}
+            </Text>
+          </Animated.View>
 
-          {/* Subtitle */}
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            {t('notificationPermissions.subtitle')}
-          </Text>
-
-          {/* Benefits List */}
           <View style={styles.benefitsList}>
-            <View style={styles.benefitItem}>
-              <Ionicons name="shield-checkmark" size={24} color={colors.success} />
+            <Animated.View style={[styles.benefitItem, { backgroundColor: colors.surface, opacity: benefit1Opacity }]}>
+              <View style={[styles.benefitIconContainer, { backgroundColor: colors.success + '20' }]}>
+                <Ionicons name="shield-checkmark" size={22} color={colors.success} />
+              </View>
               <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
                 {t('notificationPermissions.benefit1')}
               </Text>
-            </View>
+            </Animated.View>
 
-            <View style={styles.benefitItem}>
-              <Ionicons name="time" size={24} color={colors.accent} />
+            <Animated.View style={[styles.benefitItem, { backgroundColor: colors.surface, opacity: benefit2Opacity }]}>
+              <View style={[styles.benefitIconContainer, { backgroundColor: colors.accent + '20' }]}>
+                <Ionicons name="time" size={22} color={colors.accent} />
+              </View>
               <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
                 {t('notificationPermissions.benefit2')}
               </Text>
-            </View>
+            </Animated.View>
 
-            <View style={styles.benefitItem}>
-              <Ionicons name="people" size={24} color={colors.primary} />
+            <Animated.View style={[styles.benefitItem, { backgroundColor: colors.surface, opacity: benefit3Opacity }]}>
+              <View style={[styles.benefitIconContainer, { backgroundColor: '#6C63FF20' }]}>
+                <Ionicons name="people" size={22} color="#6C63FF" />
+              </View>
               <Text style={[styles.benefitText, { color: colors.textSecondary }]}>
                 {t('notificationPermissions.benefit3')}
               </Text>
-            </View>
+            </Animated.View>
           </View>
 
-          {/* Primary Button */}
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.accent }]}
             onPress={handleEnableNotifications}
@@ -102,7 +137,6 @@ export default function NotificationPermissionsScreen() {
             )}
           </TouchableOpacity>
 
-          {/* Secondary Button */}
           <TouchableOpacity
             style={styles.skipButton}
             onPress={handleSkip}
@@ -138,9 +172,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10
   },
+  textContainer: {
+    alignItems: 'center',
+    gap: 10
+  },
   title: {
-    fontSize: 24,
-    fontWeight: '800',
+    fontSize: 26,
+    fontFamily: 'Lora_700Bold',
     textAlign: 'center'
   },
   subtitle: {
@@ -151,14 +189,23 @@ const styles = StyleSheet.create({
   },
   benefitsList: {
     width: '100%',
-    gap: 16,
+    gap: 12,
     marginTop: 10,
     marginBottom: 20
   },
   benefitItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12
+    gap: 14,
+    padding: 16,
+    borderRadius: 16
+  },
+  benefitIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   benefitText: {
     flex: 1,
@@ -168,13 +215,14 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     borderRadius: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     alignItems: 'center',
     marginTop: 10
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '700'
+    fontWeight: '700',
+    letterSpacing: 0.5
   },
   skipButton: {
     paddingVertical: 12

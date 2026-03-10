@@ -156,7 +156,7 @@ export async function addScanPack(quantity: number): Promise<Subscription> {
   await db.runTransaction(async (transaction) => {
     const snap = await transaction.get(docRef);
     if (!snap.exists) {
-      throw new Error('Aucun abonnement trouvé');
+      throw new Error('No subscription found');
     }
     const data = snap.data() as Subscription;
     const nextRemaining = (data.scansRemaining ?? 0) + quantity;

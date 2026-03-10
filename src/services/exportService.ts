@@ -4,6 +4,7 @@ import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 import * as XLSX from 'xlsx';
 import { ScannedProduct } from '../types';
+import { t, getCurrentLanguage } from '../i18n/i18n';
 
 export type ExportFormat = 'pdf' | 'csv' | 'xlsx';
 
@@ -15,41 +16,57 @@ interface ExportOptions {
   siteName?: string;
 }
 
-/**
- * Génère un CSV à partir des produits scannés
- */
+function getLocale(): string {
+  const lang = getCurrentLanguage();
+  const localeMap: Record<string, string> = {
+    fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT',
+    ar: 'ar-SA', zh: 'zh-CN', ja: 'ja-JP', nl: 'nl-NL', pt: 'pt-PT',
+    ru: 'ru-RU', sq: 'sq-AL', sr: 'sr-RS', me: 'sr-ME'
+  };
+  return localeMap[lang] || 'en-US';
+}
+
+function formatDate(dateStr: string): string {
+  return dateStr ? new Date(dateStr).toLocaleDateString(getLocale()) : '';
+}
+
 function generateCSV(products: ScannedProduct[], regulatoryFormat: boolean = false): string {
   if (regulatoryFormat) {
-    // Format réglementaire pour crèches/écoles
     const headers = [
-      'Date de contrôle',
-      'Marque',
-      'Numéro de lot',
-      'Statut',
-      'Référence rappel',
-      'Contrôleur',
-      'Observations'
+      t('export.controlDate'),
+      t('export.brand'),
+      t('export.lotNumber'),
+      t('export.status'),
+      t('export.recallReference'),
+      t('export.controller'),
+      t('export.observations')
     ].join(',');
 
     const rows = products.map(p => [
-      p.scannedAt ? new Date(p.scannedAt).toLocaleDateString('fr-FR') : '',
+      formatDate(p.scannedAt),
       `"${p.brand}"`,
       `"${p.lotNumber}"`,
-      p.recallStatus === 'recalled' ? 'RAPPELÉ' : 'CONFORME',
+      p.recallStatus === 'recalled' ? t('export.recalled') : t('export.compliant'),
       p.recallReference || 'N/A',
-      '', // Contrôleur - à remplir
-      '' // Observations - à remplir
+      '',
+      ''
     ].join(','));
 
     return [headers, ...rows].join('\n');
   } else {
-    // Format standard
-    const headers = ['Date', 'Marque', 'Numéro de lot', 'Statut', 'Référence rappel'].join(',');
+    const headers = [
+      t('export.date'),
+      t('export.brand'),
+      t('export.lotNumber'),
+      t('export.status'),
+      t('export.recallReference')
+    ].join(',');
+
     const rows = products.map(p => [
-      p.scannedAt ? new Date(p.scannedAt).toLocaleDateString('fr-FR') : '',
+      formatDate(p.scannedAt),
       `"${p.brand}"`,
       `"${p.lotNumber}"`,
-      p.recallStatus === 'recalled' ? 'RAPPELÉ' : 'SÉCURISÉ',
+      p.recallStatus === 'recalled' ? t('export.recalled') : t('export.secured'),
       p.recallReference || 'N/A'
     ].join(','));
 
@@ -57,40 +74,35 @@ function generateCSV(products: ScannedProduct[], regulatoryFormat: boolean = fal
   }
 }
 
-/**
- * Génère un fichier Excel (.xlsx) à partir des produits scannés
- */
 async function generateExcel(products: ScannedProduct[], regulatoryFormat: boolean = false): Promise<string> {
   const worksheet = regulatoryFormat
     ? XLSX.utils.json_to_sheet(
         products.map(p => ({
-          'Date de contrôle': p.scannedAt ? new Date(p.scannedAt).toLocaleDateString('fr-FR') : '',
-          'Marque': p.brand,
-          'Numéro de lot': p.lotNumber,
-          'Statut': p.recallStatus === 'recalled' ? 'RAPPELÉ' : 'CONFORME',
-          'Référence rappel': p.recallReference || 'N/A',
-          'Contrôleur': '',
-          'Observations': ''
+          [t('export.controlDate')]: formatDate(p.scannedAt),
+          [t('export.brand')]: p.brand,
+          [t('export.lotNumber')]: p.lotNumber,
+          [t('export.status')]: p.recallStatus === 'recalled' ? t('export.recalled') : t('export.compliant'),
+          [t('export.recallReference')]: p.recallReference || 'N/A',
+          [t('export.controller')]: '',
+          [t('export.observations')]: ''
         }))
       )
     : XLSX.utils.json_to_sheet(
         products.map(p => ({
-          'Date': p.scannedAt ? new Date(p.scannedAt).toLocaleDateString('fr-FR') : '',
-          'Marque': p.brand,
-          'Numéro de lot': p.lotNumber,
-          'Statut': p.recallStatus === 'recalled' ? 'RAPPELÉ' : 'SÉCURISÉ',
-          'Référence rappel': p.recallReference || 'N/A'
+          [t('export.date')]: formatDate(p.scannedAt),
+          [t('export.brand')]: p.brand,
+          [t('export.lotNumber')]: p.lotNumber,
+          [t('export.status')]: p.recallStatus === 'recalled' ? t('export.recalled') : t('export.secured'),
+          [t('export.recallReference')]: p.recallReference || 'N/A'
         }))
       );
 
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Historique');
+  XLSX.utils.book_append_sheet(workbook, worksheet, t('export.sheetName'));
 
-  // Convertir en base64
   const wbout = XLSX.write(workbook, { type: 'base64', bookType: 'xlsx' });
 
-  // Sauvegarder le fichier
-  const fileName = `historique_${Date.now()}.xlsx`;
+  const fileName = `history_${Date.now()}.xlsx`;
   const fileUri = `${FileSystem.documentDirectory}${fileName}`;
 
   await FileSystem.writeAsStringAsync(fileUri, wbout, {
@@ -100,11 +112,8 @@ async function generateExcel(products: ScannedProduct[], regulatoryFormat: boole
   return fileUri;
 }
 
-/**
- * Génère un HTML pour le PDF
- */
 function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolean = false, companyName?: string, siteName?: string): string {
-  const now = new Date().toLocaleDateString('fr-FR');
+  const now = new Date().toLocaleDateString(getLocale());
 
   if (regulatoryFormat) {
     return `
@@ -130,33 +139,33 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
       </head>
       <body>
         <div class="header">
-          <h1>REGISTRE DE CONTRÔLE DES LOTS</h1>
-          ${companyName ? `<p class="info"><strong>Établissement:</strong> ${companyName}</p>` : ''}
-          ${siteName ? `<p class="info"><strong>Site:</strong> ${siteName}</p>` : ''}
-          <p class="info"><strong>Date d'édition:</strong> ${now}</p>
-          <p class="info"><strong>Nombre de produits contrôlés:</strong> ${products.length}</p>
+          <h1>${t('export.pdfTitle')}</h1>
+          ${companyName ? `<p class="info"><strong>${t('export.establishment')}:</strong> ${companyName}</p>` : ''}
+          ${siteName ? `<p class="info"><strong>${t('export.site')}:</strong> ${siteName}</p>` : ''}
+          <p class="info"><strong>${t('export.editionDate')}:</strong> ${now}</p>
+          <p class="info"><strong>${t('export.productsControlled')}:</strong> ${products.length}</p>
         </div>
 
         <table>
           <thead>
             <tr>
-              <th>Date de contrôle</th>
-              <th>Marque</th>
-              <th>Numéro de lot</th>
-              <th>Statut</th>
-              <th>Référence rappel</th>
-              <th>Contrôleur</th>
-              <th>Observations</th>
+              <th>${t('export.controlDate')}</th>
+              <th>${t('export.brand')}</th>
+              <th>${t('export.lotNumber')}</th>
+              <th>${t('export.status')}</th>
+              <th>${t('export.recallReference')}</th>
+              <th>${t('export.controller')}</th>
+              <th>${t('export.observations')}</th>
             </tr>
           </thead>
           <tbody>
             ${products.map(p => `
               <tr>
-                <td>${p.scannedAt ? new Date(p.scannedAt).toLocaleDateString('fr-FR') : ''}</td>
+                <td>${formatDate(p.scannedAt)}</td>
                 <td>${p.brand}</td>
                 <td>${p.lotNumber}</td>
                 <td class="${p.recallStatus === 'recalled' ? 'recalled' : 'safe'}">
-                  ${p.recallStatus === 'recalled' ? 'RAPPELÉ' : 'CONFORME'}
+                  ${p.recallStatus === 'recalled' ? t('export.recalled') : t('export.compliant')}
                 </td>
                 <td>${p.recallReference || 'N/A'}</td>
                 <td></td>
@@ -167,13 +176,13 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
         </table>
 
         <div class="signature">
-          <p><strong>Signature du responsable:</strong></p>
+          <p><strong>${t('export.signatureLabel')}:</strong></p>
           <div class="signature-line"></div>
         </div>
 
         <div class="footer">
-          <p>Document généré automatiquement par Numeline</p>
-          <p><em>Ce document doit être conservé conformément à la réglementation en vigueur.</em></p>
+          <p>${t('export.footerRegulatory')}</p>
+          <p><em>${t('export.footerRegulatoryNote')}</em></p>
         </div>
       </body>
       </html>
@@ -198,27 +207,27 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
         </style>
       </head>
       <body>
-        <h1>Historique des scans</h1>
-        <p class="info">Généré le ${now} • ${products.length} produits</p>
+        <h1>${t('export.scanHistoryTitle')}</h1>
+        <p class="info">${t('export.generatedOn', { date: now })} &bull; ${products.length} ${t('export.products')}</p>
 
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Marque</th>
-              <th>Numéro de lot</th>
-              <th>Statut</th>
-              <th>Référence rappel</th>
+              <th>${t('export.date')}</th>
+              <th>${t('export.brand')}</th>
+              <th>${t('export.lotNumber')}</th>
+              <th>${t('export.status')}</th>
+              <th>${t('export.recallReference')}</th>
             </tr>
           </thead>
           <tbody>
             ${products.map(p => `
               <tr>
-                <td>${p.scannedAt ? new Date(p.scannedAt).toLocaleDateString('fr-FR') : ''}</td>
+                <td>${formatDate(p.scannedAt)}</td>
                 <td>${p.brand}</td>
                 <td>${p.lotNumber}</td>
                 <td class="${p.recallStatus === 'recalled' ? 'recalled' : 'safe'}">
-                  ${p.recallStatus === 'recalled' ? 'RAPPELÉ' : 'SÉCURISÉ'}
+                  ${p.recallStatus === 'recalled' ? t('export.recalled') : t('export.secured')}
                 </td>
                 <td>${p.recallReference || 'N/A'}</td>
               </tr>
@@ -227,7 +236,7 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
         </table>
 
         <div class="footer">
-          <p>Document généré par Numeline</p>
+          <p>${t('export.footerStandard')}</p>
         </div>
       </body>
       </html>
@@ -235,15 +244,10 @@ function generateHTMLForPDF(products: ScannedProduct[], regulatoryFormat: boolea
   }
 }
 
-/**
- * Génère un PDF à partir des produits scannés
- * Utilise expo-print au lieu de react-native-html-to-pdf
- */
 async function generatePDF(products: ScannedProduct[], regulatoryFormat: boolean = false, companyName?: string, siteName?: string): Promise<string> {
   const html = generateHTMLForPDF(products, regulatoryFormat, companyName, siteName);
 
   try {
-    // Générer le PDF avec expo-print
     const { uri } = await Print.printToFileAsync({
       html,
       base64: false
@@ -251,19 +255,16 @@ async function generatePDF(products: ScannedProduct[], regulatoryFormat: boolean
 
     return uri;
   } catch (error) {
-    console.error('Erreur lors de la génération du PDF:', error);
-    throw new Error('Impossible de générer le PDF. Vérifiez que expo-print est bien installé.');
+    console.error('Error generating PDF:', error);
+    throw new Error(t('export.pdfError'));
   }
 }
 
-/**
- * Exporte les produits scannés dans le format spécifié
- */
 export async function exportProducts(options: ExportOptions): Promise<void> {
   const { products, format, regulatoryFormat = false, companyName, siteName } = options;
 
   if (products.length === 0) {
-    throw new Error('Aucun produit à exporter');
+    throw new Error(t('export.noProducts'));
   }
 
   let fileUri: string;
@@ -271,7 +272,7 @@ export async function exportProducts(options: ExportOptions): Promise<void> {
 
   switch (format) {
     case 'csv':
-      fileName = `historique_${Date.now()}.csv`;
+      fileName = `history_${Date.now()}.csv`;
       fileUri = `${FileSystem.documentDirectory}${fileName}`;
       const csvContent = generateCSV(products, regulatoryFormat);
       await FileSystem.writeAsStringAsync(fileUri, csvContent, {
@@ -288,21 +289,17 @@ export async function exportProducts(options: ExportOptions): Promise<void> {
       break;
 
     default:
-      throw new Error(`Format non supporté: ${format}`);
+      throw new Error(t('export.unsupportedFormat', { format }));
   }
 
-  // Partager le fichier
   const canShare = await Sharing.isAvailableAsync();
   if (canShare) {
     await Sharing.shareAsync(fileUri);
   } else {
-    throw new Error('Le partage de fichiers n\'est pas disponible sur cet appareil');
+    throw new Error(t('export.sharingNotAvailable'));
   }
 }
 
-/**
- * Vérifie si l'export est disponible pour le format donné
- */
 export function canExport(format: ExportFormat, allowedFormats: ExportFormat[]): boolean {
   return allowedFormats.includes(format);
 }

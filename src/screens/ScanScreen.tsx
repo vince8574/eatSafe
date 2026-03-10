@@ -5,6 +5,7 @@ import { Scanner } from '../components/Scanner';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
+import { Ionicons } from '@expo/vector-icons';
 import { getProductByBarcode } from '../services/productLookupService';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -34,7 +35,7 @@ export function ScanScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // Remonter la camÇ¸ra quand on revient sur l'Ç¸cran
+      // Reset camera when returning to this screen
       setScannerResetToken((t) => t + 1);
       return () => {};
     }, [])
@@ -182,9 +183,10 @@ export function ScanScreen() {
           <Text style={[styles.errorText, { color: colors.danger }]}>{errorMessage}</Text>
         ) : null}
 
-        <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+        <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
+          <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
           <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-            ⚠️ {t('common.appDisclaimer')}
+            {t('common.appDisclaimer')}
           </Text>
         </View>
       </ScrollView>
@@ -467,14 +469,18 @@ const styles = StyleSheet.create({
     marginLeft: 12
   },
   appDisclaimerBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
     borderRadius: 16,
     padding: 16,
     marginTop: 16,
-    marginBottom: 8
+    marginBottom: 8,
+    borderWidth: 1
   },
   appDisclaimerText: {
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center'
+    fontSize: 12,
+    lineHeight: 18,
+    flex: 1
   }
 });

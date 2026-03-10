@@ -9,6 +9,7 @@ import { fetchAllRecalls } from '../services/apiService';
 import { RecallAlert } from '../components/RecallAlert';
 import { extractRecallReason } from '../utils/recallUtils';
 import { GradientBackground } from '../components/GradientBackground';
+import { Ionicons } from '@expo/vector-icons';
 
 export function DetailScreen() {
   const { colors } = useTheme();
@@ -139,14 +140,16 @@ export function DetailScreen() {
           </View>
 
           <View style={[styles.governmentInfoBox, { backgroundColor: '#FFA50020', borderColor: '#FFA500' }]}>
+            <Ionicons name="alert-circle" size={16} color="#FFA500" />
             <Text style={[styles.governmentInfoText, { color: colors.textPrimary }]}>
-              ⚠️ {t('common.governmentInfoDisclaimer')}
+              {t('common.governmentInfoDisclaimer')}
             </Text>
           </View>
 
-          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
+            <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
             <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-              ⚠️ {t('common.appDisclaimer')}
+              {t('common.appDisclaimer')}
             </Text>
           </View>
 
@@ -302,10 +305,13 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   governmentInfoBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
     borderRadius: 16,
-    padding: 18,
+    padding: 16,
     marginBottom: 16,
-    borderWidth: 3
+    borderWidth: 2
   },
   governmentInfoText: {
     fontSize: 15,
@@ -314,14 +320,18 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   appDisclaimerBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
     borderRadius: 16,
     padding: 16,
-    marginBottom: 16
+    marginBottom: 16,
+    borderWidth: 1
   },
   appDisclaimerText: {
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center'
+    fontSize: 12,
+    lineHeight: 18,
+    flex: 1
   },
   sectionTitle: {
     fontSize: 18,

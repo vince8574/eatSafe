@@ -213,8 +213,9 @@ export default function SubscriptionScreen() {
         )}
 
         {error ? (
-          <View style={[styles.errorBox, { backgroundColor: '#FEE' }]}>
-            <Text style={[styles.errorText, { color: '#C00' }]}>{error}</Text>
+          <View style={[styles.errorBox, { backgroundColor: '#FEE2E2', borderColor: '#FCA5A5' }]}>
+            <Ionicons name="alert-circle" size={16} color="#DC2626" />
+            <Text style={[styles.errorText, { color: '#DC2626' }]}>{error}</Text>
           </View>
         ) : null}
       </ScrollView>
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '700'
+    fontFamily: 'Lora_700Bold'
   },
   card: {
     borderRadius: 18,
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: '800'
+    fontFamily: 'Lora_700Bold'
   },
   status: {
     fontSize: 14,
@@ -354,10 +355,15 @@ const styles = StyleSheet.create({
     marginTop: 4
   },
   errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     borderRadius: 12,
-    padding: 12
+    padding: 14,
+    borderWidth: 1
   },
   errorText: {
+    flex: 1,
     fontSize: 13,
     fontWeight: '700'
   },

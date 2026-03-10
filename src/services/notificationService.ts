@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { ScannedProduct, RecallRecord } from '../types';
 import { extractRecallReason } from '../utils/recallUtils';
+import { t } from '../i18n/i18n';
 
 const channelId = 'recall-alerts';
 const isExpoGo = Constants.appOwnership === 'expo';
@@ -49,7 +50,7 @@ export async function requestNotificationPermissions() {
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync(channelId, {
-      name: 'Alertes rappels',
+      name: 'Recall Alerts',
       importance: Notifications.AndroidImportance.MAX,
       sound: 'default',
       vibrationPattern: [0, 250, 250, 250]
@@ -70,15 +71,11 @@ export async function scheduleRecallNotification(product: ScannedProduct, recall
 
   const reason = extractRecallReason(recall);
   const reasonText = reason || recall.title;
-  const notificationBody = `⚠️ ${product.brand} - Lot ${product.lotNumber}\n` +
-    `Raison: ${reasonText}\n\n` +
-    `🚫 NE PAS CONSOMMER\n` +
-    `En cas de consommation, contactez les urgences (15 ou 112)`;
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: '🚨 ALERTE PRODUIT CONTAMINÉ',
-      body: notificationBody,
+      title: t('notifications.alert.title'),
+      body: t('notifications.alert.body', { brand: product.brand, lot: product.lotNumber, reason: reasonText }),
       data: {
         productId: product.id,
         recallId: recall.id,
@@ -101,8 +98,8 @@ export async function scheduleDailyCheck() {
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Verification EatSafe',
-      body: 'Mise a jour quotidienne des rappels en cours.',
+      title: t('notifications.dailyCheck.title'),
+      body: t('notifications.dailyCheck.body'),
       data: { type: 'daily-check' }
     },
     trigger: {

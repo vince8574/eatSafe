@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { ScannedProduct } from '../types';
@@ -122,9 +123,18 @@ export function HistoryScreen() {
     const scannedAt = formatDate(item.scannedAt);
 
     return (
-    <TouchableOpacity
-      style={[styles.item, { backgroundColor: colors.surface }]}
-      onPress={() => router.push({ pathname: '/details/[id]', params: { id: item.id } })}
+    <Pressable
+      style={({ pressed }) => [
+        styles.item,
+        {
+          backgroundColor: colors.surface,
+          transform: [{ scale: pressed ? 0.98 : 1 }],
+        },
+      ]}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        router.push({ pathname: '/details/[id]', params: { id: item.id } });
+      }}
     >
       <View style={styles.itemContent}>
         {item.productImage ? (
@@ -158,7 +168,7 @@ export function HistoryScreen() {
           </Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
     );
   };
 
@@ -244,15 +254,19 @@ export function HistoryScreen() {
         renderItem={renderItem}
         ListEmptyComponent={
           <View style={styles.empty}>
+            <View style={styles.emptyIconContainer}>
+              <Ionicons name="scan-outline" size={48} color={colors.textSecondary} style={{ opacity: 0.4 }} />
+            </View>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
               {t('history.emptyStateDetailed')}
             </Text>
           </View>
         }
         ListFooterComponent={
-          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
+            <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
             <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-              ⚠️ {t('common.appDisclaimer')}
+              {t('common.appDisclaimer')}
             </Text>
           </View>
         }
@@ -433,7 +447,12 @@ const styles = StyleSheet.create({
   item: {
     marginBottom: 16,
     borderRadius: 24,
-    padding: 18
+    padding: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4
   },
   itemHeader: {
     flexDirection: 'row',
@@ -465,14 +484,23 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
   empty: {
-    marginTop: 80,
+    marginTop: 60,
     alignItems: 'center',
     paddingHorizontal: 24
   },
+  emptyIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16
+  },
   emptyText: {
     textAlign: 'center',
-    fontSize: 16,
-    lineHeight: 24
+    fontSize: 15,
+    lineHeight: 22
   },
   itemContent: {
     flexDirection: 'row',
@@ -493,14 +521,18 @@ const styles = StyleSheet.create({
     marginBottom: 6
   },
   appDisclaimerBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
     borderRadius: 16,
     padding: 16,
-    marginTop: 24
+    marginTop: 24,
+    borderWidth: 1
   },
   appDisclaimerText: {
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center'
+    fontSize: 12,
+    lineHeight: 18,
+    flex: 1
   },
   modalOverlay: {
     flex: 1,

@@ -33,6 +33,7 @@
     "expo-device": "~55.0.7",
     "expo-file-system": "~55.0.6",
     "expo-font": "~55.0.4",
+    "expo-haptics": "~55.0.8",
     "expo-image-manipulator": "~55.0.6",
     "expo-linear-gradient": "~55.0.6",
     "expo-linking": "~55.0.4",

@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkAllProductsForRecalls } from './recallCheckService';
+import { t } from '../i18n/i18n';
 import type { ScannedProduct, CountryCode } from '../types';
 
 /**
@@ -17,8 +18,8 @@ export async function sendTestNotification(): Promise<boolean> {
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: '✅ Test de notification',
-        body: 'Les notifications fonctionnent correctement! Vous recevrez des alertes si un produit scanné est rappelé.',
+        title: t('notifications.dailyCheck.title'),
+        body: t('notifications.dailyCheck.body'),
         sound: true,
         priority: Notifications.AndroidNotificationPriority.HIGH,
         data: {
@@ -59,7 +60,7 @@ export async function manualRecallCheck(): Promise<{
         success: false,
         productsChecked: 0,
         newRecallsFound: 0,
-        error: 'Aucun produit trouvé. Scannez un produit d\'abord.'
+        error: 'No products found. Scan a product first.'
       };
     }
 
@@ -69,7 +70,7 @@ export async function manualRecallCheck(): Promise<{
         success: false,
         productsChecked: 0,
         newRecallsFound: 0,
-        error: 'Pays non configuré'
+        error: 'Country not configured'
       };
     }
 
@@ -81,7 +82,7 @@ export async function manualRecallCheck(): Promise<{
         success: false,
         productsChecked: 0,
         newRecallsFound: 0,
-        error: 'Aucun produit à vérifier. Scannez un produit d\'abord.'
+        error: 'No products to check. Scan a product first.'
       };
     }
 
@@ -100,8 +101,8 @@ export async function manualRecallCheck(): Promise<{
 
           await Notifications.scheduleNotificationAsync({
             content: {
-              title: '🚨 ALERTE PRODUIT RAPPELÉ',
-              body: `⚠️ ${product.brand} - Lot ${product.lotNumber}\n\n🚫 NE PAS CONSOMMER\nOuvrez l'application pour plus de détails.`,
+              title: t('notifications.alert.title'),
+              body: t('notifications.alert.body', { brand: product.brand, lot: product.lotNumber, reason: '' }),
               sound: true,
               priority: Notifications.AndroidNotificationPriority.MAX,
               vibrate: [0, 250, 250, 250],
@@ -122,8 +123,8 @@ export async function manualRecallCheck(): Promise<{
       // Send success notification if no recalls found
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: '✅ Vérification terminée',
-          body: `Aucun rappel détecté pour vos ${products.length} produit(s) scanné(s). Tout est OK!`,
+          title: t('notifications.dailyCheck.title'),
+          body: t('notifications.dailyCheck.body'),
           sound: false,
           priority: Notifications.AndroidNotificationPriority.DEFAULT,
           data: {
@@ -145,7 +146,7 @@ export async function manualRecallCheck(): Promise<{
       success: false,
       productsChecked: 0,
       newRecallsFound: 0,
-      error: error instanceof Error ? error.message : 'Erreur inconnue'
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }

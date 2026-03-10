@@ -1,4 +1,5 @@
 import { StyleSheet, View, Text, TouchableOpacity, Linking } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { RecallRecord } from '../types';
@@ -19,12 +20,15 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
   return (
     <View style={[styles.container, { backgroundColor: colors.danger }]}>
       <View style={styles.header}>
-        <Text style={styles.icon}>🚨</Text>
+        <Ionicons name="warning" size={48} color="#FFF" />
         <Text style={styles.title}>{t('recallAlert.title')}</Text>
       </View>
 
       <View style={[styles.warningBox, { backgroundColor: 'rgba(0,0,0,0.15)' }]}>
-        <Text style={styles.warningTitle}>🚫 {t('recallAlert.doNotConsume')}</Text>
+        <View style={styles.warningHeader}>
+          <Ionicons name="close-circle" size={24} color="#FFF" />
+          <Text style={styles.warningTitle}>{t('recallAlert.doNotConsume')}</Text>
+        </View>
         <Text style={styles.warningText}>
           {t('recallAlert.warning')}
         </Text>
@@ -46,7 +50,10 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
       </View>
 
       <View style={[styles.emergencyBox, { backgroundColor: 'rgba(0,0,0,0.2)' }]}>
-        <Text style={styles.emergencyTitle}>⚕️ {t('recallAlert.emergencyTitle')}</Text>
+        <View style={styles.emergencyHeader}>
+          <Ionicons name="medkit" size={22} color="#FFF" />
+          <Text style={styles.emergencyTitle}>{t('recallAlert.emergencyTitle')}</Text>
+        </View>
         <Text style={styles.emergencyText}>
           {t('recallAlert.emergencyText')}
         </Text>
@@ -55,16 +62,18 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
             style={[styles.emergencyButton, { backgroundColor: '#FFF' }]}
             onPress={openEmergencyCall}
           >
+            <Ionicons name="call" size={18} color={colors.danger} />
             <Text style={[styles.emergencyButtonText, { color: colors.danger }]}>
-              📞 {t('recallAlert.callSamu')}
+              {t('recallAlert.callSamu')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.emergencyButton, { backgroundColor: '#FFF', marginTop: 8 }]}
             onPress={() => Linking.openURL('tel:112')}
           >
+            <Ionicons name="call" size={18} color={colors.danger} />
             <Text style={[styles.emergencyButtonText, { color: colors.danger }]}>
-              📞 {t('recallAlert.callEmergency')}
+              {t('recallAlert.callEmergency')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -75,8 +84,9 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
           style={[styles.linkButton, { backgroundColor: 'rgba(255,255,255,0.9)' }]}
           onPress={() => Linking.openURL(recall.link!)}
         >
+          <Ionicons name="document-text" size={18} color={colors.danger} />
           <Text style={[styles.linkText, { color: colors.danger }]}>
-            📋 {t('recallAlert.viewOfficialNotice')}
+            {t('recallAlert.viewOfficialNotice')}
           </Text>
         </TouchableOpacity>
       )}
@@ -98,14 +108,11 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    gap: 8
-  },
-  icon: {
-    fontSize: 48
+    gap: 10
   },
   title: {
     fontSize: 24,
-    fontWeight: '900',
+    fontFamily: 'Lora_700Bold',
     color: '#FFF',
     textAlign: 'center',
     letterSpacing: 1
@@ -113,6 +120,12 @@ const styles = StyleSheet.create({
   warningBox: {
     padding: 16,
     borderRadius: 16,
+    gap: 8
+  },
+  warningHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 8
   },
   warningTitle: {
@@ -167,6 +180,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 12
   },
+  emergencyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8
+  },
   emergencyTitle: {
     fontSize: 18,
     fontWeight: '900',
@@ -184,10 +203,13 @@ const styles = StyleSheet.create({
     marginTop: 8
   },
   emergencyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: 12,
-    alignItems: 'center'
+    borderRadius: 12
   },
   emergencyButtonText: {
     fontSize: 17,
@@ -195,10 +217,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5
   },
   linkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: 12,
-    alignItems: 'center'
+    borderRadius: 12
   },
   linkText: {
     fontSize: 16,

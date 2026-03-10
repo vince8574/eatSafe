@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 
 type ScannerMode = 'barcode' | 'photo' | 'band';
 
@@ -10,16 +12,16 @@ type ScannerProps = {
   onBarcodeScanned?: (barcode: string) => void;
   isProcessing?: boolean;
   enableBarcodeScanning?: boolean;
-  mode?: ScannerMode; // 'barcode' pour scan code-barres, 'photo' ou 'band' pour capture photo
-  resetToken?: number; // change pour forcer un remount de la caméra
+  mode?: ScannerMode;
+  resetToken?: number;
   enableFlashToggle?: boolean;
-  aiMessage?: string; // Message à afficher quand l'IA est utilisée
-  onSkip?: () => void; // Fonction appelée quand le bouton Skip est pressé
-  onReload?: () => void; // Fonction appelée quand le bouton Reload est pressé
-  onManualEntry?: () => void; // Fonction appelée quand le bouton de saisie manuelle est pressé
-  onBack?: () => void; // Fonction appelée quand le bouton retour est pressé
-  onRestart?: () => void; // Fonction appelée quand le bouton recommencer est pressé
-  flashPosition?: 'top-left' | 'top-right'; // Position du bouton flash
+  aiMessage?: string;
+  onSkip?: () => void;
+  onReload?: () => void;
+  onManualEntry?: () => void;
+  onBack?: () => void;
+  onRestart?: () => void;
+  flashPosition?: 'top-left' | 'top-right';
 };
 
 export function Scanner({
@@ -39,6 +41,7 @@ export function Scanner({
   flashPosition = 'top-left'
 }: ScannerProps) {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
@@ -59,7 +62,6 @@ export function Scanner({
 
       const barcode = scanningResult.data;
 
-      // Éviter les scans multiples du même code-barres
       if (barcode && barcode !== scannedBarcode) {
         console.log('[Scanner] Barcode scanned:', barcode);
         setScannedBarcode(barcode);
@@ -88,7 +90,6 @@ export function Scanner({
     }
   }, [cameraReady, isProcessing, onCapture]);
 
-  // Forcer un reset (remontage) du composant caméra
   useEffect(() => {
     setScannedBarcode(null);
     setCameraReady(false);
@@ -99,7 +100,7 @@ export function Scanner({
     return (
       <View style={styles.permissionContainer}>
         <Text style={[styles.permissionText, { color: colors.textPrimary }]}>
-          Chargement des autorisations caméra...
+          {t('scanner.cameraLoading')}
         </Text>
       </View>
     );
@@ -108,11 +109,12 @@ export function Scanner({
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
+        <Ionicons name="camera-outline" size={48} color={colors.accent} style={{ marginBottom: 16 }} />
         <Text style={[styles.permissionText, { color: colors.textPrimary }]}>
-          Nous avons besoin d'accéder à votre appareil photo pour scanner les emballages.
+          {t('scanner.cameraPermissionNeeded')}
         </Text>
         <TouchableOpacity style={[styles.permissionButton, { backgroundColor: colors.accent }]} onPress={requestPermission}>
-          <Text style={[styles.permissionButtonText, { color: colors.surface }]}>Autoriser</Text>
+          <Text style={[styles.permissionButtonText, { color: colors.surface }]}>{t('scanner.allowCamera')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -135,41 +137,37 @@ export function Scanner({
             enableBarcodeScanning
               ? {
                   barcodeTypes: [
-                    'qr',           // QR codes (très utilisés aux USA)
-                    'ean13',        // EAN-13 (international)
-                    'ean8',         // EAN-8
-                    'upc_a',        // UPC-A (standard USA)
-                    'upc_e',        // UPC-E (USA compact)
-                    'code128',      // Code 128 (expédition, emballage)
-                    'code39',       // Code 39
-                    'code93',       // Code 93
-                    'codabar',      // Codabar
-                    'itf14',        // ITF-14 (cartons USA)
-                    'aztec',        // Aztec (codes 2D)
-                    'pdf417',       // PDF417 (codes 2D USA)
-                    'datamatrix'    // Data Matrix (codes 2D)
+                    'qr',
+                    'ean13',
+                    'ean8',
+                    'upc_a',
+                    'upc_e',
+                    'code128',
+                    'code39',
+                    'code93',
+                    'codabar',
+                    'itf14',
+                    'aztec',
+                    'pdf417',
+                    'datamatrix'
                   ]
                 }
               : undefined
           }
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
-        {/* Bouton Back en haut à gauche */}
+
+        {/* Back button */}
         {onBack && (
           <TouchableOpacity
-            style={[
-              styles.backButtonTop,
-              {
-                backgroundColor: 'rgba(0,0,0,0.5)'
-              }
-            ]}
+            style={[styles.backButtonTop, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
             onPress={onBack}
           >
-            <Text style={[styles.backIcon, { color: colors.surface }]}>←</Text>
+            <Ionicons name="arrow-back" size={24} color={colors.surface} />
           </TouchableOpacity>
         )}
 
-        {/* Bouton Flash */}
+        {/* Flash button */}
         {enableFlashToggle && (
           <TouchableOpacity
             style={flashPosition === 'top-right' ? styles.flashButtonTopRight : styles.flashButtonTop}
@@ -177,78 +175,59 @@ export function Scanner({
             disabled={!cameraReady}
           >
             <View style={[styles.flashIconContainer, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
-              <Text style={[styles.flashIcon, { color: flashOn ? '#FFD700' : colors.surface }]}>
-                ⚡
-              </Text>
+              <Ionicons
+                name={flashOn ? 'flash' : 'flash-off'}
+                size={22}
+                color={flashOn ? '#FFD700' : colors.surface}
+              />
               {flashOn && <View style={styles.flashActiveDot} />}
             </View>
           </TouchableOpacity>
         )}
 
-        {/* Bouton Reload en bas à gauche */}
+        {/* Reload button */}
         {onReload && (
           <TouchableOpacity
-            style={[
-              styles.reloadButtonCamera,
-              {
-                backgroundColor: 'rgba(0,0,0,0.5)'
-              }
-            ]}
+            style={[styles.reloadButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
             onPress={onReload}
           >
-            <Text style={[styles.reloadIcon, { color: colors.surface }]}>🔄</Text>
+            <Ionicons name="refresh" size={24} color={colors.surface} />
           </TouchableOpacity>
         )}
 
-        {/* Bouton Manual Entry en bas à gauche (à côté du reload) */}
+        {/* Manual entry button */}
         {onManualEntry && (
           <TouchableOpacity
-            style={[
-              styles.manualEntryButtonCamera,
-              {
-                backgroundColor: 'rgba(0,0,0,0.5)'
-              }
-            ]}
+            style={[styles.manualEntryButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
             onPress={onManualEntry}
           >
-            <Text style={[styles.manualEntryIcon, { color: colors.surface }]}>✏️</Text>
+            <Ionicons name="create-outline" size={22} color={colors.surface} />
           </TouchableOpacity>
         )}
 
-        {/* Bouton Restart en bas à gauche */}
+        {/* Restart button */}
         {onRestart && (
           <TouchableOpacity
-            style={[
-              styles.restartButtonCamera,
-              {
-                backgroundColor: 'rgba(0,0,0,0.5)'
-              }
-            ]}
+            style={[styles.restartButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
             onPress={onRestart}
           >
-            <Text style={[styles.restartIcon, { color: colors.surface }]}>↻</Text>
+            <Ionicons name="refresh-circle" size={28} color={colors.surface} />
           </TouchableOpacity>
         )}
 
-        {/* Bouton Skip en bas à droite */}
+        {/* Skip button */}
         {onSkip && (
           <TouchableOpacity
-            style={[
-              styles.skipButtonCamera,
-              {
-                backgroundColor: colors.accent
-              }
-            ]}
+            style={[styles.skipButtonCamera, { backgroundColor: colors.accent }]}
             onPress={onSkip}
           >
-            <Text style={[styles.skipButtonText, { color: colors.surface }]}>Skip</Text>
-            <Text style={[styles.skipIcon, { color: colors.surface }]}>⏭</Text>
+            <Text style={[styles.skipButtonText, { color: colors.surface }]}>{t('scanner.skip')}</Text>
+            <Ionicons name="play-skip-forward" size={18} color={colors.surface} />
           </TouchableOpacity>
         )}
 
         <View pointerEvents="none" style={styles.overlay}>
           {mode === 'barcode' ? (
-            // Cible carrée pour le scan de code-barres
             <View style={styles.barcodeTarget}>
               <View style={[styles.corner, styles.topLeft, { borderColor: colors.accent }]} />
               <View style={[styles.corner, styles.topRight, { borderColor: colors.accent }]} />
@@ -265,14 +244,14 @@ export function Scanner({
               </View>
               {aiMessage && (
                 <View style={[styles.aiMessageContainer, { backgroundColor: 'rgba(46, 125, 50, 0.9)' }]}>
+                  <Ionicons name="sparkles" size={14} color="#FFF" />
                   <Text style={[styles.aiMessageText, { color: colors.surface }]}>
-                    🤖 {aiMessage}
+                    {aiMessage}
                   </Text>
                 </View>
               )}
             </>
           ) : (
-            // Cadre classique pour la capture photo
             <View style={[styles.frame, { borderColor: colors.accent }]} />
           )}
         </View>
@@ -288,7 +267,7 @@ export function Scanner({
             {isProcessing ? (
               <ActivityIndicator color={colors.accent} />
             ) : (
-              <Text style={styles.cameraIcon}>📸</Text>
+              <Ionicons name="camera" size={28} color={colors.surface} />
             )}
           </TouchableOpacity>
         </View>
@@ -421,9 +400,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative'
   },
-  flashIcon: {
-    fontSize: 24
-  },
   flashActiveDot: {
     position: 'absolute',
     bottom: 6,
@@ -455,10 +431,6 @@ const styles = StyleSheet.create({
     elevation: 8,
     zIndex: 10
   },
-  backIcon: {
-    fontSize: 28,
-    fontWeight: '700'
-  },
   restartButtonCamera: {
     position: 'absolute',
     bottom: 20,
@@ -474,10 +446,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 8,
     zIndex: 10
-  },
-  restartIcon: {
-    fontSize: 28,
-    fontWeight: '700'
   },
   skipButtonCamera: {
     position: 'absolute',
@@ -502,10 +470,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.5
   },
-  skipIcon: {
-    fontSize: 18,
-    fontWeight: '700'
-  },
   reloadButtonCamera: {
     position: 'absolute',
     bottom: 20,
@@ -521,9 +485,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 8,
     zIndex: 10
-  },
-  reloadIcon: {
-    fontSize: 24
   },
   manualEntryButtonCamera: {
     position: 'absolute',
@@ -541,14 +502,6 @@ const styles = StyleSheet.create({
     elevation: 8,
     zIndex: 10
   },
-  manualEntryIcon: {
-    fontSize: 20
-  },
-  cameraIcon: {
-    fontSize: 16,
-    fontWeight: '800',
-    letterSpacing: 1
-  },
   permissionContainer: {
     flex: 1,
     alignItems: 'center',
@@ -558,20 +511,24 @@ const styles = StyleSheet.create({
   permissionText: {
     textAlign: 'center',
     fontSize: 16,
-    marginBottom: 16
+    marginBottom: 16,
+    lineHeight: 24
   },
   permissionButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 999
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 16
   },
   permissionButtonText: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '700'
   },
   aiMessageContainer: {
     position: 'absolute',
     bottom: -60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,

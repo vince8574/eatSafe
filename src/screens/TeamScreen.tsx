@@ -11,10 +11,12 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useOrganization } from '../hooks/useOrganization';
 import { UserRole, OrganizationMember } from '../services/organizationService';
 import { useI18n } from '../i18n/I18nContext';
 import { useTheme } from '../theme/themeContext';
+import { GradientBackground } from '../components/GradientBackground';
 
 export default function TeamScreen() {
   const { t } = useI18n();
@@ -66,20 +68,20 @@ export default function TeamScreen() {
 
   const handleRemoveMember = (member: OrganizationMember) => {
     Alert.alert(
-      'Remove member',
-      `Are you sure you want to remove ${member.email || member.name || 'this member'}?`,
+      t('team.removeMember'),
+      `${t('team.confirmRemove')} ${member.email || member.name || ''}?`,
       [
         { text: t('cancel'), style: 'cancel' },
         {
-          text: 'Remove',
+          text: t('team.remove'),
           style: 'destructive',
           onPress: async () => {
             try {
               setProcessingAction(true);
               await removeMemberFromOrg(member.userId);
-              Alert.alert(t('success'), 'Member removed');
+              Alert.alert(t('success'), t('team.memberRemoved'));
             } catch (err) {
-              Alert.alert(t('error'), err instanceof Error ? err.message : 'Failed to remove member');
+              Alert.alert(t('error'), err instanceof Error ? err.message : t('team.removeFailed'));
             } finally {
               setProcessingAction(false);
             }
@@ -91,27 +93,26 @@ export default function TeamScreen() {
 
   const handleChangeRole = (member: OrganizationMember) => {
     if (member.role === 'owner') {
-      Alert.alert(t('error'), 'Cannot change owner role');
+      Alert.alert(t('error'), t('team.cannotChangeOwner'));
       return;
     }
 
-    const roles: UserRole[] = ['member', 'admin'];
     const newRole = member.role === 'admin' ? 'member' : 'admin';
 
     Alert.alert(
-      'Change role',
-      `Change ${member.email || member.name} to ${newRole}?`,
+      t('team.changeRole'),
+      `${t('team.changeRoleTo')} ${member.email || member.name} → ${newRole}?`,
       [
         { text: t('cancel'), style: 'cancel' },
         {
-          text: 'Change',
+          text: t('team.change'),
           onPress: async () => {
             try {
               setProcessingAction(true);
               await updateRole(member.userId, newRole);
-              Alert.alert(t('success'), `Role updated to ${newRole}`);
+              Alert.alert(t('success'), `${t('team.roleUpdated')} ${newRole}`);
             } catch (err) {
-              Alert.alert(t('error'), err instanceof Error ? err.message : 'Failed to update role');
+              Alert.alert(t('error'), err instanceof Error ? err.message : t('team.roleUpdateFailed'));
             } finally {
               setProcessingAction(false);
             }
@@ -123,7 +124,7 @@ export default function TeamScreen() {
 
   const handleUpdateName = async () => {
     if (!newOrgName.trim()) {
-      Alert.alert(t('error'), 'Please enter a name');
+      Alert.alert(t('error'), t('team.enterOrgName'));
       return;
     }
 
@@ -132,9 +133,9 @@ export default function TeamScreen() {
       await updateName(newOrgName.trim());
       setShowEditNameModal(false);
       setNewOrgName('');
-      Alert.alert(t('success'), 'Organization name updated');
+      Alert.alert(t('success'), t('team.nameUpdated'));
     } catch (err) {
-      Alert.alert(t('error'), err instanceof Error ? err.message : 'Failed to update name');
+      Alert.alert(t('error'), err instanceof Error ? err.message : t('team.nameUpdateFailed'));
     } finally {
       setProcessingAction(false);
     }
@@ -142,20 +143,20 @@ export default function TeamScreen() {
 
   const handleCancelInvite = (inviteId: string, email: string) => {
     Alert.alert(
-      'Cancel invitation',
-      `Cancel invitation for ${email}?`,
+      t('team.cancelInvitation'),
+      `${t('team.confirmCancelInvite')} ${email}?`,
       [
         { text: t('cancel'), style: 'cancel' },
         {
-          text: 'Cancel invitation',
+          text: t('team.cancelInvite'),
           style: 'destructive',
           onPress: async () => {
             try {
               setProcessingAction(true);
               await cancelOrgInvite(inviteId);
-              Alert.alert(t('success'), 'Invitation cancelled');
+              Alert.alert(t('success'), t('team.inviteCancelled'));
             } catch (err) {
-              Alert.alert(t('error'), err instanceof Error ? err.message : 'Failed to cancel invitation');
+              Alert.alert(t('error'), err instanceof Error ? err.message : t('team.cancelInviteFailed'));
             } finally {
               setProcessingAction(false);
             }
@@ -195,7 +196,7 @@ export default function TeamScreen() {
     }
   };
 
-  const getRoleIcon = (role: UserRole) => {
+  const getRoleIcon = (role: UserRole): any => {
     switch (role) {
       case 'owner':
         return 'star';
@@ -208,42 +209,50 @@ export default function TeamScreen() {
 
   if (loading) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.accent} />
-        <Text style={[styles.loadingText, { color: colors.textPrimary }]}>
-          {t('team.loading')}
-        </Text>
-      </View>
+      <GradientBackground>
+        <View style={styles.centeredContainer}>
+          <ActivityIndicator size="large" color={colors.accent} />
+          <Text style={[styles.loadingText, { color: colors.textPrimary }]}>
+            {t('team.loading')}
+          </Text>
+        </View>
+      </GradientBackground>
     );
   }
 
   if (!organization) {
     return (
       <>
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-          <Ionicons name="people-outline" size={64} color={colors.textSecondary} />
-          <Text style={[styles.emptyText, { color: colors.textPrimary }]}>
-            {t('team.noOrganization')}
-          </Text>
-          <Text style={[styles.emptySubtext, { color: colors.textSecondary }]}>
-            {t('team.createOrWait')}
-          </Text>
+        <GradientBackground>
+          <View style={styles.centeredContainer}>
+            <View style={[styles.emptyIconContainer, { backgroundColor: colors.accent + '20' }]}>
+              <Ionicons name="people-outline" size={64} color={colors.accent} />
+            </View>
+            <Text style={[styles.emptyText, { color: colors.textPrimary }]}>
+              {t('team.noOrganization')}
+            </Text>
+            <Text style={[styles.emptySubtext, { color: colors.textSecondary }]}>
+              {t('team.createOrWait')}
+            </Text>
 
-          <TouchableOpacity
-            style={[styles.createOrgButton, { backgroundColor: colors.accent }]}
-            onPress={() => setShowCreateOrgModal(true)}
-            disabled={processingAction}
-          >
-            <Ionicons name="add-circle" size={20} color="#FFF" />
-            <Text style={styles.createOrgButtonText}>{t('team.createOrganization')}</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={[styles.createOrgButton, { backgroundColor: colors.accent }]}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                setShowCreateOrgModal(true);
+              }}
+              disabled={processingAction}
+            >
+              <Ionicons name="add-circle" size={20} color="#FFF" />
+              <Text style={styles.createOrgButtonText}>{t('team.createOrganization')}</Text>
+            </TouchableOpacity>
+          </View>
+        </GradientBackground>
 
-        {/* Create Organization Modal */}
         <Modal
           visible={showCreateOrgModal}
           transparent
-          animationType="slide"
+          animationType="fade"
           onRequestClose={() => setShowCreateOrgModal(false)}
         >
           <View style={styles.modalOverlay}>
@@ -258,7 +267,7 @@ export default function TeamScreen() {
               </View>
 
               <TextInput
-                style={[styles.input, { backgroundColor: colors.background, color: colors.textPrimary }]}
+                style={[styles.input, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
                 placeholder={t('team.organizationName')}
                 placeholderTextColor={colors.textSecondary}
                 value={newOrgName}
@@ -285,148 +294,156 @@ export default function TeamScreen() {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Organization Header */}
-      <View style={[styles.header, { backgroundColor: colors.surface }]}>
-        <View style={styles.headerContent}>
-          <Ionicons name="business" size={32} color={colors.accent} />
-          <View style={styles.headerText}>
-            <Text style={[styles.orgName, { color: colors.textPrimary }]}>
-              {organization.name}
-            </Text>
-            <Text style={[styles.memberCount, { color: colors.textSecondary }]}>
-              {members.length} {members.length === 1 ? 'member' : 'members'}
-            </Text>
+    <GradientBackground>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+        {/* Organization Header */}
+        <View style={[styles.header, { backgroundColor: colors.surface }]}>
+          <View style={styles.headerContent}>
+            <View style={[styles.orgIconContainer, { backgroundColor: colors.accent + '20' }]}>
+              <Ionicons name="business" size={28} color={colors.accent} />
+            </View>
+            <View style={styles.headerText}>
+              <Text style={[styles.orgName, { color: colors.textPrimary }]}>
+                {organization.name}
+              </Text>
+              <Text style={[styles.memberCount, { color: colors.textSecondary }]}>
+                {members.length} {members.length === 1 ? 'member' : 'members'}
+              </Text>
+            </View>
+            {canManageMembers && (
+              <TouchableOpacity
+                onPress={() => {
+                  setNewOrgName(organization.name);
+                  setShowEditNameModal(true);
+                }}
+              >
+                <Ionicons name="create-outline" size={24} color={colors.accent} />
+              </TouchableOpacity>
+            )}
           </View>
-          {canManageMembers && (
-            <TouchableOpacity
-              onPress={() => {
-                setNewOrgName(organization.name);
-                setShowEditNameModal(true);
-              }}
-            >
-              <Ionicons name="create-outline" size={24} color={colors.accent} />
-            </TouchableOpacity>
-          )}
         </View>
-      </View>
 
-      {/* Invite Button */}
-      {canManageMembers && (
-        <TouchableOpacity
-          style={[styles.inviteButton, { backgroundColor: colors.accent }]}
-          onPress={() => setShowInviteModal(true)}
-          disabled={processingAction}
-        >
-          <Ionicons name="person-add" size={20} color="#FFF" />
-          <Text style={styles.inviteButtonText}>Invite Member</Text>
-        </TouchableOpacity>
-      )}
+        {/* Invite Button */}
+        {canManageMembers && (
+          <TouchableOpacity
+            style={[styles.inviteButton, { backgroundColor: colors.accent }]}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              setShowInviteModal(true);
+            }}
+            disabled={processingAction}
+          >
+            <Ionicons name="person-add" size={20} color="#FFF" />
+            <Text style={styles.inviteButtonText}>{t('team.inviteMember')}</Text>
+          </TouchableOpacity>
+        )}
 
-      {/* Pending Invitations */}
-      {canManageMembers && organizationInvites.length > 0 && (
+        {/* Pending Invitations */}
+        {canManageMembers && organizationInvites.length > 0 && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+              {t('team.pendingInvitations')}
+            </Text>
+            {organizationInvites.map((invite) => (
+              <View
+                key={invite.id}
+                style={[styles.inviteCard, { backgroundColor: colors.surface }]}
+              >
+                <View style={styles.inviteInfo}>
+                  <View style={[styles.inviteIconContainer, { backgroundColor: colors.accent + '20' }]}>
+                    <Ionicons name="mail-outline" size={18} color={colors.accent} />
+                  </View>
+                  <View style={styles.inviteDetails}>
+                    <Text style={[styles.inviteEmail, { color: colors.textPrimary }]}>
+                      {invite.email}
+                    </Text>
+                    <Text style={[styles.inviteRole, { color: colors.textSecondary }]}>
+                      {invite.role}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleCancelInvite(invite.id, invite.email)}
+                  disabled={processingAction}
+                >
+                  <Ionicons name="close-circle" size={24} color="#E74C3C" />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Members List */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Pending Invitations
+            {t('team.teamMembers')}
           </Text>
-          {organizationInvites.map((invite) => (
+          {members.map((member) => (
             <View
-              key={invite.id}
-              style={[styles.inviteCard, { backgroundColor: colors.surface }]}
+              key={member.userId}
+              style={[styles.memberCard, { backgroundColor: colors.surface }]}
             >
-              <View style={styles.inviteInfo}>
-                <Ionicons name="mail-outline" size={20} color={colors.textSecondary} />
-                <View style={styles.inviteDetails}>
-                  <Text style={[styles.inviteEmail, { color: colors.textPrimary }]}>
-                    {invite.email}
+              <View style={styles.memberInfo}>
+                <View
+                  style={[
+                    styles.roleBadge,
+                    { backgroundColor: getRoleBadgeColor(member.role) }
+                  ]}
+                >
+                  <Ionicons
+                    name={getRoleIcon(member.role)}
+                    size={16}
+                    color="#FFF"
+                  />
+                </View>
+                <View style={styles.memberDetails}>
+                  <Text style={[styles.memberName, { color: colors.textPrimary }]}>
+                    {member.name || member.email || 'Unknown'}
                   </Text>
-                  <Text style={[styles.inviteRole, { color: colors.textSecondary }]}>
-                    Role: {invite.role}
+                  <Text style={[styles.memberEmail, { color: colors.textSecondary }]}>
+                    {member.email}
+                  </Text>
+                  <Text style={[styles.memberRole, { color: colors.textSecondary }]}>
+                    {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity
-                onPress={() => handleCancelInvite(invite.id, invite.email)}
-                disabled={processingAction}
-              >
-                <Ionicons name="close-circle" size={24} color="#E74C3C" />
-              </TouchableOpacity>
+
+              {userRole === 'owner' && member.role !== 'owner' && (
+                <View style={styles.memberActions}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => handleChangeRole(member)}
+                    disabled={processingAction}
+                  >
+                    <Ionicons name="swap-horizontal" size={20} color={colors.accent} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => handleRemoveMember(member)}
+                    disabled={processingAction}
+                  >
+                    <Ionicons name="trash-outline" size={20} color="#E74C3C" />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           ))}
         </View>
-      )}
-
-      {/* Members List */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-          Team Members
-        </Text>
-        {members.map((member) => (
-          <View
-            key={member.userId}
-            style={[styles.memberCard, { backgroundColor: colors.surface }]}
-          >
-            <View style={styles.memberInfo}>
-              <View
-                style={[
-                  styles.roleBadge,
-                  { backgroundColor: getRoleBadgeColor(member.role) }
-                ]}
-              >
-                <Ionicons
-                  name={getRoleIcon(member.role)}
-                  size={16}
-                  color="#FFF"
-                />
-              </View>
-              <View style={styles.memberDetails}>
-                <Text style={[styles.memberName, { color: colors.textPrimary }]}>
-                  {member.name || member.email || 'Unknown'}
-                </Text>
-                <Text style={[styles.memberEmail, { color: colors.textSecondary }]}>
-                  {member.email}
-                </Text>
-                <Text style={[styles.memberRole, { color: colors.textSecondary }]}>
-                  {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
-                </Text>
-              </View>
-            </View>
-
-            {/* Actions (only for owner) */}
-            {userRole === 'owner' && member.role !== 'owner' && (
-              <View style={styles.memberActions}>
-                <TouchableOpacity
-                  style={styles.actionButton}
-                  onPress={() => handleChangeRole(member)}
-                  disabled={processingAction}
-                >
-                  <Ionicons name="swap-horizontal" size={20} color={colors.accent} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.actionButton}
-                  onPress={() => handleRemoveMember(member)}
-                  disabled={processingAction}
-                >
-                  <Ionicons name="trash-outline" size={20} color="#E74C3C" />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        ))}
-      </View>
+      </ScrollView>
 
       {/* Invite Modal */}
       <Modal
         visible={showInviteModal}
         transparent
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowInviteModal(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
-                Invite New Member
+                {t('team.inviteNewMember')}
               </Text>
               <TouchableOpacity onPress={() => setShowInviteModal(false)}>
                 <Ionicons name="close" size={24} color={colors.textPrimary} />
@@ -434,8 +451,8 @@ export default function TeamScreen() {
             </View>
 
             <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.textPrimary }]}
-              placeholder="Email address"
+              style={[styles.input, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
+              placeholder={t('team.emailPlaceholder')}
               placeholderTextColor={colors.textSecondary}
               value={inviteEmail}
               onChangeText={setInviteEmail}
@@ -444,27 +461,27 @@ export default function TeamScreen() {
               autoCorrect={false}
             />
 
-            <Text style={[styles.label, { color: colors.textPrimary }]}>Role</Text>
+            <Text style={[styles.label, { color: colors.textPrimary }]}>{t('team.role')}</Text>
             <View style={styles.roleButtons}>
               <TouchableOpacity
                 style={[
                   styles.roleButton,
-                  { backgroundColor: inviteRole === 'member' ? colors.accent : colors.background }
+                  { backgroundColor: inviteRole === 'member' ? colors.accent : colors.surfaceAlt }
                 ]}
                 onPress={() => setInviteRole('member')}
               >
-                <Text style={[styles.roleButtonText, { color: inviteRole === 'member' ? '#FFF' : colors.text }]}>
+                <Text style={[styles.roleButtonText, { color: inviteRole === 'member' ? '#FFF' : colors.textPrimary }]}>
                   Member
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.roleButton,
-                  { backgroundColor: inviteRole === 'admin' ? colors.accent : colors.background }
+                  { backgroundColor: inviteRole === 'admin' ? colors.accent : colors.surfaceAlt }
                 ]}
                 onPress={() => setInviteRole('admin')}
               >
-                <Text style={[styles.roleButtonText, { color: inviteRole === 'admin' ? '#FFF' : colors.text }]}>
+                <Text style={[styles.roleButtonText, { color: inviteRole === 'admin' ? '#FFF' : colors.textPrimary }]}>
                   Admin
                 </Text>
               </TouchableOpacity>
@@ -478,7 +495,7 @@ export default function TeamScreen() {
               {processingAction ? (
                 <ActivityIndicator color="#FFF" />
               ) : (
-                <Text style={styles.submitButtonText}>Send Invitation</Text>
+                <Text style={styles.submitButtonText}>{t('team.sendInvitation')}</Text>
               )}
             </TouchableOpacity>
           </View>
@@ -489,14 +506,14 @@ export default function TeamScreen() {
       <Modal
         visible={showEditNameModal}
         transparent
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowEditNameModal(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
-                Edit Organization Name
+                {t('team.editOrgName')}
               </Text>
               <TouchableOpacity onPress={() => setShowEditNameModal(false)}>
                 <Ionicons name="close" size={24} color={colors.textPrimary} />
@@ -504,8 +521,8 @@ export default function TeamScreen() {
             </View>
 
             <TextInput
-              style={[styles.input, { backgroundColor: colors.background, color: colors.textPrimary }]}
-              placeholder="Organization name"
+              style={[styles.input, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
+              placeholder={t('team.organizationName')}
               placeholderTextColor={colors.textSecondary}
               value={newOrgName}
               onChangeText={setNewOrgName}
@@ -520,36 +537,58 @@ export default function TeamScreen() {
               {processingAction ? (
                 <ActivityIndicator color="#FFF" />
               ) : (
-                <Text style={styles.submitButtonText}>Update Name</Text>
+                <Text style={styles.submitButtonText}>{t('team.updateName')}</Text>
               )}
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  centeredContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24
+  },
+  scrollContainer: {
     flex: 1
+  },
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 40,
+    gap: 16
   },
   header: {
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0'
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4
   },
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12
+    gap: 14
   },
   headerText: {
     flex: 1
   },
+  orgIconContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   orgName: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontFamily: 'Lora_700Bold'
   },
   memberCount: {
     fontSize: 14,
@@ -559,31 +598,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    margin: 16,
-    padding: 14,
-    borderRadius: 8
+    gap: 10,
+    padding: 16,
+    borderRadius: 16
   },
   inviteButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '700'
   },
   section: {
-    padding: 16
+    gap: 10
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12
+    fontSize: 17,
+    fontFamily: 'Lora_600SemiBold',
+    marginBottom: 4,
+    letterSpacing: 0.3
   },
   memberCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    borderRadius: 8,
-    marginBottom: 8
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2
   },
   memberInfo: {
     flexDirection: 'row',
@@ -592,9 +635,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   roleBadge: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -603,15 +646,18 @@ const styles = StyleSheet.create({
   },
   memberName: {
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '700'
   },
   memberEmail: {
-    fontSize: 14,
+    fontSize: 13,
     marginTop: 2
   },
   memberRole: {
     fontSize: 12,
-    marginTop: 4
+    marginTop: 4,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5
   },
   memberActions: {
     flexDirection: 'row',
@@ -625,8 +671,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    borderRadius: 8,
-    marginBottom: 8
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2
   },
   inviteInfo: {
     flexDirection: 'row',
@@ -634,104 +684,123 @@ const styles = StyleSheet.create({
     gap: 12,
     flex: 1
   },
+  inviteIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   inviteDetails: {
     flex: 1
   },
   inviteEmail: {
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '600'
   },
   inviteRole: {
     fontSize: 12,
-    marginTop: 4
+    marginTop: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  modalContent: {
-    width: '90%',
-    maxWidth: 400,
-    borderRadius: 12,
-    padding: 20
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     alignItems: 'center',
-    marginBottom: 20
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-  input: {
-    padding: 14,
-    borderRadius: 8,
-    fontSize: 16,
+    justifyContent: 'center',
     marginBottom: 16
   },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8
-  },
-  roleButtons: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20
-  },
-  roleButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center'
-  },
-  roleButtonText: {
-    fontSize: 14,
-    fontWeight: '600'
-  },
-  submitButton: {
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center'
-  },
-  submitButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: '600'
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16
-  },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 16,
+    fontSize: 20,
+    fontFamily: 'Lora_700Bold',
     textAlign: 'center'
   },
   emptySubtext: {
     fontSize: 14,
     marginTop: 8,
     textAlign: 'center',
-    paddingHorizontal: 32
+    paddingHorizontal: 32,
+    lineHeight: 20
   },
   createOrgButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    marginTop: 24,
-    marginHorizontal: 32,
-    padding: 14,
-    borderRadius: 8
+    gap: 10,
+    marginTop: 28,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 16
   },
   createOrgButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '700'
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
+    padding: 24,
+    gap: 16
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: 'Lora_700Bold'
+  },
+  input: {
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    fontSize: 16
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5
+  },
+  roleButtons: {
+    flexDirection: 'row',
+    gap: 12
+  },
+  roleButton: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 14,
+    alignItems: 'center'
+  },
+  roleButtonText: {
+    fontSize: 14,
+    fontWeight: '700'
+  },
+  submitButton: {
+    padding: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginTop: 4
+  },
+  submitButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '700'
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16
   }
 });

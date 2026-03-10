@@ -79,7 +79,12 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 18,
     borderRadius: 24,
-    padding: 20
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4
   },
   content: {
     flex: 1
@@ -92,7 +97,7 @@ const styles = StyleSheet.create({
   },
   brand: {
     fontSize: 20,
-    fontWeight: '700'
+    fontFamily: 'Lora_700Bold'
   },
   lot: {
     fontSize: 16,

@@ -67,7 +67,7 @@ export async function deleteCurrentUserAccount(): Promise<void> {
   const userId = user.uid;
   const userEmail = user.email;
 
-  // 1) Supprimer les donnÇ¸es applicatives (produits, abonnements, memberships)
+  // 1) Delete application data (products, subscriptions, memberships)
   await deleteUserScopedProducts(userId);
   await deleteUserSubscription(userId);
   await removeOrganizationMemberships(userId, userEmail);
@@ -75,7 +75,7 @@ export async function deleteCurrentUserAccount(): Promise<void> {
   // 2) Purger les caches locaux
   await AsyncStorage.clear().catch(() => undefined);
 
-  // 3) Supprimer le compte auth (peut demander une rÇ¸auth Firebase si session ancienne)
+  // 3) Delete auth account (may require Firebase reauth if session is old)
   try {
     await auth().currentUser?.delete();
   } catch (error) {

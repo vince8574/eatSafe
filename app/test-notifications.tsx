@@ -1,9 +1,9 @@
 /**
- * Écran de test pour les notifications
- * Accessible via : /test-notifications
+ * Test screen for notifications
+ * Accessible via: /test-notifications
  *
- * UNIQUEMENT POUR DÉVELOPPEMENT
- * À supprimer avant la mise en production
+ * DEVELOPMENT ONLY
+ * Remove before production release
  */
 
 import { useState } from 'react';
@@ -34,16 +34,16 @@ export default function TestNotificationsScreen() {
 
     try {
       await scheduleRecallNotification(testProduct, recall);
-      setLastNotification(`Notification envoyée : ${recall.title}`);
+      setLastNotification(`Notification sent: ${recall.title}`);
       Alert.alert(
-        'Notification envoyée',
-        'Vérifiez votre centre de notifications',
+        'Notification sent',
+        'Check your notification center',
         [{ text: 'OK' }]
       );
     } catch (error) {
       Alert.alert(
-        'Erreur',
-        error instanceof Error ? error.message : 'Impossible d\'envoyer la notification',
+        'Error',
+        error instanceof Error ? error.message : 'Unable to send notification',
         [{ text: 'OK' }]
       );
     }
@@ -54,22 +54,22 @@ export default function TestNotificationsScreen() {
       <View style={styles.content}>
         <View style={[styles.header, { backgroundColor: colors.surface }]}>
           <Text style={[styles.title, { color: colors.textPrimary }]}>
-            🧪 Test des notifications
+            Test Notifications
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Écran de développement - Testez les notifications de rappel
+            Development screen - Test recall notifications
           </Text>
         </View>
 
         {lastNotification ? (
           <View style={[styles.statusBox, { backgroundColor: colors.success }]}>
-            <Text style={styles.statusText}>✅ {lastNotification}</Text>
+            <Text style={styles.statusText}>{lastNotification}</Text>
           </View>
         ) : null}
 
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Types de rappels disponibles
+            Available recall types
           </Text>
 
           {TEST_RECALLS.map((recall, index) => {
@@ -111,7 +111,7 @@ export default function TestNotificationsScreen() {
                   style={[styles.sendButton, { backgroundColor: colors.danger }]}
                   onPress={() => sendTestNotification(index)}
                 >
-                  <Text style={styles.sendButtonText}>📱 Envoyer la notification</Text>
+                  <Text style={styles.sendButtonText}>Send notification</Text>
                 </TouchableOpacity>
               </View>
             );
@@ -121,7 +121,7 @@ export default function TestNotificationsScreen() {
         {selectedRecall !== null && TEST_RECALLS[selectedRecall] && (
           <View style={styles.preview}>
             <Text style={[styles.previewTitle, { color: colors.textPrimary }]}>
-              Aperçu de l'alerte
+              Alert preview
             </Text>
             <RecallAlert
               recall={TEST_RECALLS[selectedRecall]}
@@ -131,13 +131,13 @@ export default function TestNotificationsScreen() {
         )}
 
         <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
-          <Text style={[styles.infoTitle, { color: colors.textPrimary }]}>ℹ️ Instructions</Text>
+          <Text style={[styles.infoTitle, { color: colors.textPrimary }]}>Instructions</Text>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            1. Sélectionnez un type de rappel ci-dessus{'\n'}
-            2. Appuyez sur "Envoyer la notification"{'\n'}
-            3. Vérifiez votre centre de notifications{'\n'}
-            4. L'aperçu montre l'alerte affichée dans les détails{'\n\n'}
-            ⚠️ Les notifications fonctionnent uniquement avec un build natif (pas Expo Go)
+            1. Select a recall type above{'\n'}
+            2. Press "Send notification"{'\n'}
+            3. Check your notification center{'\n'}
+            4. The preview shows the alert displayed in details{'\n\n'}
+            Notifications only work with a native build (not Expo Go)
           </Text>
         </View>
       </View>

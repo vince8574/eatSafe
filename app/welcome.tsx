@@ -1,33 +1,28 @@
-import { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Image, Animated, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../src/theme/themeContext';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import { useI18n } from '../src/i18n/I18nContext';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
-import { GradientBackground } from '../src/components/GradientBackground';
 
 export default function WelcomeScreen() {
-  const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
   const firstName = usePreferencesStore((state) => state.firstName);
   const hasSeenNotificationPrompt = usePreferencesStore((state) => state.hasSeenNotificationPrompt);
   const setHasSeenWelcome = usePreferencesStore((state) => state.setHasSeenWelcome);
 
-  useEffect(() => {
-    setHasSeenWelcome(true);
-    const timer = setTimeout(() => {
-      // Redirect to notification permissions if not seen yet, otherwise to login
-      if (!hasSeenNotificationPrompt) {
-        router.replace('/notification-permissions');
-      } else {
-        router.replace('/auth/login');
-      }
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [router, setHasSeenWelcome, hasSeenNotificationPrompt]);
+  const logoScale = useRef(new Animated.Value(0)).current;
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
+  const textSlide = useRef(new Animated.Value(20)).current;
+  const buttonOpacity = useRef(new Animated.Value(0)).current;
+  const buttonSlide = useRef(new Animated.Value(30)).current;
+  const buttonScale = useRef(new Animated.Value(1)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
-  const handleGoToHome = () => {
+  const navigate = () => {
     setHasSeenWelcome(true);
     if (!hasSeenNotificationPrompt) {
       router.replace('/notification-permissions');
@@ -36,65 +31,170 @@ export default function WelcomeScreen() {
     }
   };
 
+  useEffect(() => {
+    setHasSeenWelcome(true);
+
+    Animated.sequence([
+      Animated.parallel([
+        Animated.spring(logoScale, { toValue: 1, friction: 5, tension: 60, useNativeDriver: true }),
+        Animated.timing(logoOpacity, { toValue: 1, duration: 600, useNativeDriver: true }),
+      ]),
+      Animated.parallel([
+        Animated.timing(textOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.spring(textSlide, { toValue: 0, useNativeDriver: true }),
+      ]),
+      Animated.parallel([
+        Animated.timing(buttonOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
+        Animated.spring(buttonSlide, { toValue: 0, useNativeDriver: true }),
+      ]),
+    ]).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 1.04, duration: 2000, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 2000, useNativeDriver: true }),
+      ])
+    ).start();
+
+    const timer = setTimeout(navigate, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <GradientBackground>
-      <View style={styles.container}>
-        <View style={styles.center}>
+    <LinearGradient
+      colors={['#C4DECC', '#0BAE86', '#0A1F1F']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      <View style={styles.center}>
+        <Animated.View
+          style={[
+            styles.logoWrapper,
+            {
+              opacity: logoOpacity,
+              transform: [{ scale: Animated.multiply(logoScale, pulseAnim) }],
+            },
+          ]}
+        >
+          <View style={styles.logoGlow} />
           <Image source={require('../assets/pomme.png')} style={styles.logo} resizeMode="contain" />
-          <Text style={[styles.greeting, { color: colors.textPrimary }]}>
+        </Animated.View>
+
+        <Animated.View
+          style={{
+            opacity: textOpacity,
+            transform: [{ translateY: textSlide }],
+            alignItems: 'center',
+          }}
+        >
+          <Text style={styles.greeting}>
             {t('welcomeScreen.greeting', { name: firstName || '' })}
           </Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          <Text style={styles.subtitle}>
             {t('welcomeScreen.question')}
           </Text>
+        </Animated.View>
 
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: colors.accent }]}
-            onPress={handleGoToHome}
+        <Animated.View
+          style={{
+            opacity: buttonOpacity,
+            transform: [{ translateY: buttonSlide }, { scale: buttonScale }],
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              navigate();
+            }}
+            onPressIn={() =>
+              Animated.spring(buttonScale, { toValue: 0.95, useNativeDriver: true }).start()
+            }
+            onPressOut={() =>
+              Animated.spring(buttonScale, { toValue: 1, friction: 3, tension: 100, useNativeDriver: true }).start()
+            }
           >
-            <Text style={[styles.buttonText, { color: colors.surface }]}>
-              {t('welcomeScreen.startScanning')}
-            </Text>
-          </TouchableOpacity>
-        </View>
+            <LinearGradient
+              colors={['#35F2A9', '#0BAE86']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>
+                {t('welcomeScreen.startScanning')}
+              </Text>
+            </LinearGradient>
+          </Pressable>
+        </Animated.View>
       </View>
-    </GradientBackground>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   center: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 14,
-    padding: 24
+    gap: 20,
+    padding: 24,
+  },
+  logoWrapper: {
+    width: 130,
+    height: 130,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  logoGlow: {
+    position: 'absolute',
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: 'rgba(53, 242, 169, 0.12)',
   },
   logo: {
-    width: 120,
-    height: 120,
-    borderRadius: 32
+    width: 110,
+    height: 110,
+    borderRadius: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 12,
   },
   greeting: {
-    fontSize: 24,
-    fontWeight: '800'
+    fontSize: 26,
+    fontFamily: 'Lora_700Bold',
+    color: '#F7FBFA',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 15,
-    textAlign: 'center'
+    color: '#A5C9C7',
+    textAlign: 'center',
+    marginTop: 6,
+    lineHeight: 22,
   },
   button: {
-    marginTop: 20,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 16,
-    alignItems: 'center'
+    marginTop: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 40,
+    borderRadius: 18,
+    alignItems: 'center',
+    shadowColor: '#0BAE86',
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    elevation: 8,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '700'
-  }
+    fontFamily: 'Lora_600SemiBold',
+    color: '#0A1F1F',
+    letterSpacing: 0.3,
+  },
 });

@@ -1,5 +1,6 @@
 import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import type { ScannedProduct } from '../types';
@@ -34,8 +35,8 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
       <View style={styles.overlay}>
         <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
           <View style={[styles.header, { backgroundColor: colors.danger }]}>
-            <Text style={styles.headerIcon}>🚨</Text>
-            <Text style={[styles.headerTitle, { color: colors.surface }]}>
+            <Ionicons name="warning" size={48} color="#FFF" />
+            <Text style={[styles.headerTitle, { color: '#FFF' }]}>
               {t('recallAlertModal.alertTitle')}
             </Text>
           </View>
@@ -58,7 +59,7 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
                     {product.brand}
                   </Text>
                   <View style={[styles.dangerBadge, { backgroundColor: colors.danger }]}>
-                    <Text style={[styles.dangerBadgeText, { color: colors.surface }]}>
+                    <Text style={[styles.dangerBadgeText, { color: '#FFF' }]}>
                       {t('recallAlertModal.recalled')}
                     </Text>
                   </View>
@@ -66,16 +67,22 @@ export function RecallAlertModal({ visible, onClose, products }: RecallAlertModa
                 <Text style={[styles.productLot, { color: colors.textSecondary }]}>
                   {t('recallAlertModal.lot', { lotNumber: product.lotNumber })}
                 </Text>
-                <Text style={[styles.viewDetailsText, { color: colors.accent }]}>
-                  {t('recallAlertModal.viewDetails')}
-                </Text>
+                <View style={styles.viewDetailsRow}>
+                  <Text style={[styles.viewDetailsText, { color: colors.accent }]}>
+                    {t('recallAlertModal.viewDetails')}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={16} color={colors.accent} />
+                </View>
               </TouchableOpacity>
             ))}
 
             <View style={[styles.importantNotice, { backgroundColor: 'rgba(255, 59, 48, 0.1)', borderColor: colors.danger }]}>
-              <Text style={[styles.importantTitle, { color: colors.danger }]}>
-                {t('recallAlertModal.importantTitle')}
-              </Text>
+              <View style={styles.importantHeader}>
+                <Ionicons name="alert-circle" size={20} color={colors.danger} />
+                <Text style={[styles.importantTitle, { color: colors.danger }]}>
+                  {t('recallAlertModal.importantTitle')}
+                </Text>
+              </View>
               <Text style={[styles.importantText, { color: colors.textPrimary }]}>
                 {t('recallAlertModal.importantText')}
               </Text>
@@ -120,14 +127,11 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 20,
     alignItems: 'center',
-    gap: 8
-  },
-  headerIcon: {
-    fontSize: 48
+    gap: 10
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: '800',
+    fontFamily: 'Lora_700Bold',
     textTransform: 'uppercase',
     letterSpacing: 1
   },
@@ -173,10 +177,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 8
   },
+  viewDetailsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 4
+  },
   viewDetailsText: {
     fontSize: 14,
-    fontWeight: '600',
-    marginTop: 4
+    fontWeight: '600'
   },
   importantNotice: {
     padding: 16,
@@ -185,10 +194,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 8
   },
+  importantHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8
+  },
   importantTitle: {
     fontSize: 16,
     fontWeight: '800',
-    marginBottom: 8,
     textTransform: 'uppercase',
     letterSpacing: 0.5
   },

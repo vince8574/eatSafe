@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert, Pressable } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { LanguageSelector } from '../../src/components/LanguageSelector';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
@@ -41,15 +42,15 @@ export default function LanguageScreen() {
 
   const handleDeleteAccount = () => {
     Alert.alert(
-      t('auth.deleteAccountTitle', 'Supprimer mon compte'),
-      t('auth.deleteAccountMessage', 'Cette action supprimera votre compte et vos données. Voulez-vous continuer ?'),
+      t('auth.deleteAccountTitle'),
+      t('auth.deleteAccountMessage'),
       [
         {
           text: t('auth.cancel'),
           style: 'cancel'
         },
         {
-          text: t('auth.deleteAccount', 'Supprimer'),
+          text: t('auth.deleteAccount'),
           style: 'destructive',
           onPress: async () => {
             setIsDeleting(true);
@@ -57,13 +58,13 @@ export default function LanguageScreen() {
               await deleteAccount();
               router.replace('/auth/login');
               Alert.alert(
-                t('auth.deleteAccount', 'Supprimer'),
-                t('auth.deleteAccountSuccess', 'Compte supprimé avec succès.')
+                t('auth.deleteAccount'),
+                t('auth.deleteAccountSuccess')
               );
             } catch (error) {
               Alert.alert(
                 t('auth.error'),
-                t('auth.deleteAccountFailed', 'Échec de la suppression du compte. Réessayez après vous être reconnecté.')
+                t('auth.deleteAccountFailed')
               );
             } finally {
               setIsDeleting(false);
@@ -158,7 +159,7 @@ export default function LanguageScreen() {
           <View style={styles.legalButtonContent}>
             <Ionicons name="people-outline" size={24} color={colors.accent} />
             <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
-              {t('team.title') || 'Team Management'}
+              {t('team.title')}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
@@ -212,7 +213,7 @@ export default function LanguageScreen() {
           <View style={styles.legalButtonContent}>
             <Ionicons name="trash-outline" size={24} color="#D64545" />
             <Text style={[styles.logoutButtonText, { color: '#D64545' }]}>
-              {t('auth.deleteAccount', 'Supprimer mon compte')}
+              {t('auth.deleteAccount')}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
@@ -245,9 +246,10 @@ export default function LanguageScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
+      <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
+        <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
         <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-          ⚠️ {t('common.appDisclaimer')}
+          {t('common.appDisclaimer')}
         </Text>
       </View>
       </ScrollView>
@@ -272,8 +274,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: 24,
+    fontFamily: 'Lora_700Bold',
     marginBottom: 8
   },
   subtitle: {
@@ -285,15 +287,16 @@ const styles = StyleSheet.create({
     marginTop: 12
   },
   legalSection: {
-    marginTop: 32,
-    paddingTop: 24,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)'
+    marginTop: 28,
+    paddingTop: 20,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(255,255,255,0.1)'
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 16
+    fontSize: 17,
+    fontFamily: 'Lora_600SemiBold',
+    marginBottom: 14,
+    letterSpacing: 0.3
   },
   legalButton: {
     flexDirection: 'row',
@@ -319,15 +322,19 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   appDisclaimerBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
     borderRadius: 16,
     padding: 16,
     marginTop: 24,
-    marginBottom: 16
+    marginBottom: 16,
+    borderWidth: 1
   },
   appDisclaimerText: {
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center'
+    fontSize: 12,
+    lineHeight: 18,
+    flex: 1
   },
   userInfoBox: {
     flexDirection: 'row',

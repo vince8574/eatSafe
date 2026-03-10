@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { t } from '../i18n/i18n';
 import {
   Subscription,
   fetchSubscription,
@@ -61,7 +62,7 @@ export function useSubscription() {
         ...prev,
         subscription: null,
         loading: false,
-        error: error instanceof Error ? error.message : "Erreur lors du chargement de l'abonnement",
+        error: error instanceof Error ? error.message : t('common.loading'),
       }));
     }
   }, []);
@@ -85,7 +86,7 @@ export function useSubscription() {
       setState((prev) => ({
         ...prev,
         purchasing: false,
-        error: error instanceof Error ? error.message : "Erreur lors de l'achat",
+        error: error instanceof Error ? error.message : t('auth.error'),
       }));
     } finally {
       setState((prev) => ({ ...prev, purchasing: false }));
@@ -111,7 +112,7 @@ export function useSubscription() {
       setState((prev) => ({
         ...prev,
         purchasing: false,
-        error: error instanceof Error ? error.message : "Impossible d'acheter le pack",
+        error: error instanceof Error ? error.message : t('auth.error'),
       }));
     } finally {
       setState((prev) => ({ ...prev, purchasing: false }));
@@ -129,14 +130,14 @@ export function useSubscription() {
         setState((prev) => ({
           ...prev,
           loading: false,
-          error: 'Aucun achat à restaurer'
+          error: t('subscription.restoreErrorMessage')
         }));
       }
     } catch (error) {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : 'Erreur lors de la restauration',
+        error: error instanceof Error ? error.message : t('subscription.restoreErrorMessage'),
       }));
     }
   }, []);

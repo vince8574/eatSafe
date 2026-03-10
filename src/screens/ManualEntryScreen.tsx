@@ -1,6 +1,8 @@
-﻿import { useState, useCallback } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
@@ -23,6 +25,16 @@ export function ManualEntryScreen() {
   const [lotNumber, setLotNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 500, useNativeDriver: true })
+    ]).start();
+  }, []);
 
   const ensureScanQuota = useCallback(async (): Promise<boolean> => {
     const remaining = subscription?.scansRemaining ?? 0;
@@ -73,7 +85,6 @@ export function ManualEntryScreen() {
         lotNumber: lotNumber.trim()
       });
 
-      // IncrÃ©menter le compteur d'utilisation si c'est une marque personnalisÃ©e
       if (brand.trim()) {
         await incrementBrandUsage(brand.trim());
       }
@@ -81,7 +92,6 @@ export function ManualEntryScreen() {
       const recalls = await fetchRecallsByCountry(country);
       const recallStatus = await updateRecall(product, recalls);
 
-      // Send notification if product is recalled
       if (recallStatus.status === 'recalled') {
         const recall = recalls.find(r => r.id === recallStatus.recallReference);
         if (recall) {
@@ -104,52 +114,58 @@ export function ManualEntryScreen() {
 
   return (
     <GradientBackground>
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
-      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-        {t('manualEntry.subtitle')}
-      </Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          {t('manualEntry.subtitle')}
+        </Text>
 
-      <BrandAutocomplete
-        value={brand}
-        onChangeText={setBrand}
-        placeholder={t('manualEntry.brandPlaceholder')}
-        autoCapitalize="words"
-      />
-
-      <View style={[styles.field, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.label, { color: colors.textSecondary }]}>{t('manualEntry.lotLabel')}</Text>
-        <TextInput
-          style={[styles.input, { color: colors.textPrimary, letterSpacing: 1.2 }]}
-          placeholder={t('manualEntry.lotPlaceholder')}
-          placeholderTextColor={colors.textSecondary}
-          value={lotNumber}
-          onChangeText={setLotNumber}
-          autoCapitalize="characters"
+        <BrandAutocomplete
+          value={brand}
+          onChangeText={setBrand}
+          placeholder={t('manualEntry.brandPlaceholder')}
+          autoCapitalize="words"
         />
-      </View>
 
-      <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt }]}>
-        <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
-          âš ï¸ {t('common.appDisclaimer')}
-        </Text>
-        <Text style={[styles.appDisclaimerText, { color: colors.textSecondary, marginTop: 4 }]}>
-          {subLoading
-            ? t('quota.loading')
-            : `${t('quota.remaining')} ${subscription?.scansRemaining ?? 0}`}
-        </Text>
-      </View>
+        <View style={[styles.field, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{t('manualEntry.lotLabel')}</Text>
+          <TextInput
+            style={[styles.input, { color: colors.textPrimary, letterSpacing: 1.2 }]}
+            placeholder={t('manualEntry.lotPlaceholder')}
+            placeholderTextColor={colors.textSecondary}
+            value={lotNumber}
+            onChangeText={setLotNumber}
+            autoCapitalize="characters"
+          />
+        </View>
 
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: colors.accent, opacity: isSubmitting ? 0.5 : 1 }]}
-        onPress={handleSave}
-        disabled={isSubmitting}
-      >
-        <Text style={[styles.buttonText, { color: colors.surface }]}>
-          {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
-        </Text>
-      </TouchableOpacity>
-      </View>
+        <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
+          <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
+          <View style={styles.appDisclaimerContent}>
+            <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+              {t('common.appDisclaimer')}
+            </Text>
+            <Text style={[styles.quotaText, { color: colors.textSecondary }]}>
+              {subLoading
+                ? t('quota.loading')
+                : `${t('quota.remaining')} ${subscription?.scansRemaining ?? 0}`}
+            </Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: colors.accent, opacity: isSubmitting ? 0.5 : 1 }]}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            handleSave();
+          }}
+          disabled={isSubmitting}
+        >
+          <Text style={[styles.buttonText, { color: colors.surface }]}>
+            {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
     </GradientBackground>
   );
 }
@@ -161,6 +177,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    fontFamily: 'Lora_700Bold',
     fontWeight: '700'
   },
   subtitle: {
@@ -197,14 +214,26 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase'
   },
   appDisclaimerBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
     borderRadius: 16,
     padding: 16,
     marginTop: 24,
-    marginBottom: 16
+    marginBottom: 16,
+    borderWidth: 1
+  },
+  appDisclaimerContent: {
+    flex: 1,
+    gap: 4
   },
   appDisclaimerText: {
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center'
+    fontSize: 12,
+    lineHeight: 18
+  },
+  quotaText: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600'
   }
 });

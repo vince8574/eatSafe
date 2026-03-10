@@ -89,9 +89,14 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 12,
-    gap: 8
+    padding: 14,
+    borderRadius: 16,
+    gap: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3
   },
   flag: {
     fontSize: 24
@@ -113,17 +118,17 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '85%',
     maxHeight: '80%',
-    borderRadius: 20,
+    borderRadius: 24,
     padding: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 12,
     elevation: 8
   },
   modalTitle: {
     fontSize: 22,
-    fontWeight: '700',
+    fontFamily: 'Lora_700Bold',
     marginBottom: 20,
     textAlign: 'center'
   },
@@ -153,7 +158,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     padding: 14,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: 'center'
   },
   closeButtonText: {

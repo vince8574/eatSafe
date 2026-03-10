@@ -45,8 +45,8 @@ export async function getProductByBarcode(barcode: string): Promise<ProductInfo 
 
     const productInfo: ProductInfo = {
       barcode,
-      productName: product.product_name || product.product_name_fr || product.product_name_en || 'Produit inconnu',
-      brand: brand || 'Marque inconnue',
+      productName: product.product_name || product.product_name_en || product.product_name_fr || 'Unknown product',
+      brand: brand || 'Unknown brand',
       brands: product.brands || '',
       categories: product.categories,
       imageUrl: product.image_url || product.image_front_url

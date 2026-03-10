@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { fetchAllRecalls } from './apiService';
 import { db } from './dbService';
 import { getRecallStatus } from '../utils/lotMatcher';
+import { t } from '../i18n/i18n';
 
 const TASK_NAME = 'recall-background-sync';
 const isExpoGo = Constants.appOwnership === 'expo';
@@ -40,8 +41,8 @@ if (!isExpoGo) {
             if (recall) {
               await Notifications.scheduleNotificationAsync({
                 content: {
-                  title: '⚠️ Rappel produit détecté',
-                  body: `${recall.title || scan.brand} fait l'objet d'un rappel sanitaire.`,
+                  title: t('notifications.newRecallTitle'),
+                  body: t('notifications.newRecallBody', { brand: scan.brand, lot: scan.lotNumber }),
                   data: {
                     type: 'recall',
                     productId: scan.id,

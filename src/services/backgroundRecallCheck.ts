@@ -4,6 +4,7 @@ import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { checkAllProductsForRecalls, RecallCheckResult } from './recallCheckService';
+import { t } from '../i18n/i18n';
 import type { ScannedProduct, CountryCode } from '../types';
 
 const BACKGROUND_RECALL_CHECK_TASK = 'background-recall-check';
@@ -50,8 +51,8 @@ if (!isExpoGo) {
           if (product) {
             await Notifications.scheduleNotificationAsync({
               content: {
-                title: '🚨 ALERTE PRODUIT RAPPELÉ',
-                body: `⚠️ ${product.brand} - Lot ${product.lotNumber}\n\n🚫 NE PAS CONSOMMER\nOuvrez l'application pour plus de détails.`,
+                title: t('notifications.alert.title'),
+                body: t('notifications.alert.body', { brand: product.brand, lot: product.lotNumber, reason: '' }),
                 sound: true,
                 priority: Notifications.AndroidNotificationPriority.MAX,
                 vibrate: [0, 250, 250, 250],

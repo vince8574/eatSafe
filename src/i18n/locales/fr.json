@@ -481,5 +481,59 @@
     "importantTitle": "⚠️ IMPORTANT",
     "importantText": "• Ne consommez pas ces produits\n• Rapportez-les au magasin pour remboursement\n• En cas de symptômes, contactez les urgences (15 ou 112)",
     "understood": "J'ai compris"
+  },
+  "scanner": {
+    "cameraLoading": "Chargement de la caméra...",
+    "cameraPermissionNeeded": "L'accès à la caméra est nécessaire pour scanner les produits.",
+    "allowCamera": "Autoriser la caméra",
+    "skip": "Passer"
+  },
+  "brandAutocomplete": {
+    "label": "MARQUE",
+    "invalidBrand": "Marque invalide",
+    "invalidBrandMessage": "Le nom de la marque doit contenir au moins 2 caractères.",
+    "newBrand": "Nouvelle marque",
+    "addBrandConfirm": "Ajouter \"{{brand}}\" comme nouvelle marque ?",
+    "addButton": "Ajouter",
+    "brandAdded": "Marque ajoutée",
+    "brandAddedMessage": "\"{{brand}}\" a été enregistrée avec succès.",
+    "brandAddError": "Impossible d'ajouter cette marque. Veuillez réessayer.",
+    "addNewBrand": "Ajouter \"{{brand}}\" comme nouvelle marque",
+    "customBadge": "PERSO"
+  },
+  "export": {
+    "controlDate": "Date de contrôle",
+    "brand": "Marque",
+    "lotNumber": "Numéro de lot",
+    "status": "Statut",
+    "recallReference": "Référence rappel",
+    "controller": "Contrôleur",
+    "observations": "Observations",
+    "date": "Date",
+    "recalled": "RAPPELÉ",
+    "compliant": "CONFORME",
+    "secured": "SÉCURISÉ",
+    "sheetName": "Historique",
+    "pdfTitle": "REGISTRE DE CONTRÔLE DES LOTS",
+    "establishment": "Établissement",
+    "site": "Site",
+    "editionDate": "Date d'édition",
+    "productsControlled": "Nombre de produits contrôlés",
+    "signatureLabel": "Signature du responsable",
+    "footerRegulatory": "Document généré automatiquement par Numeline",
+    "footerRegulatoryNote": "Ce document doit être conservé conformément à la réglementation en vigueur.",
+    "scanHistoryTitle": "Historique des scans",
+    "generatedOn": "Généré le {{date}}",
+    "products": "produits",
+    "footerStandard": "Document généré par Numeline",
+    "noProducts": "Aucun produit à exporter",
+    "unsupportedFormat": "Format non supporté: {{format}}",
+    "pdfError": "Impossible de générer le PDF.",
+    "sharingNotAvailable": "Le partage de fichiers n'est pas disponible sur cet appareil"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "subtitle": "Cette page n'existe pas. Revenez à l'accueil pour continuer.",
+    "goHome": "Retour à l'accueil"
   }
 }

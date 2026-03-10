@@ -9,8 +9,8 @@ import {
   ScrollView,
   Easing,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { RecallRecord } from '../types';
-import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 
 interface ImmediateRecallAlertProps {
@@ -20,26 +20,19 @@ interface ImmediateRecallAlertProps {
   onClose: () => void;
 }
 
-/**
- * Alerte immédiate de rappel avec gyrophare clignotant
- * Affichée quand un rappel est détecté lors d'un scan
- */
 export function ImmediateRecallAlert({
   visible,
   recall,
   matchedLot,
   onClose,
 }: ImmediateRecallAlertProps) {
-  const { colors } = useTheme();
   const { t } = useI18n();
 
-  // Animation pour le gyrophare
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     if (visible) {
-      // Animation de rotation du gyrophare
       const rotateAnimation = Animated.loop(
         Animated.timing(rotateAnim, {
           toValue: 1,
@@ -49,7 +42,6 @@ export function ImmediateRecallAlert({
         })
       );
 
-      // Animation de clignotement
       const blinkAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(opacityAnim, {
@@ -90,7 +82,7 @@ export function ImmediateRecallAlert({
       onRequestClose={onClose}
     >
       <View style={[styles.container, { backgroundColor: '#d32f2f' }]}>
-        {/* Gyrophare animé */}
+        {/* Gyrophare */}
         <Animated.View
           style={[
             styles.gyrophare,
@@ -107,17 +99,17 @@ export function ImmediateRecallAlert({
           contentContainerStyle={styles.scrollContent}
           style={styles.scrollView}
         >
-          {/* Titre d'alerte */}
-          <Text style={styles.alertTitle}>⚠️ {t('recallAlert.title')}</Text>
+          <View style={styles.alertHeader}>
+            <Ionicons name="warning" size={40} color="#FFF" />
+            <Text style={styles.alertTitle}>{t('recallAlert.title')}</Text>
+          </View>
           <Text style={styles.alertSubtitle}>{t('recallAlert.doNotConsume')}</Text>
 
-          {/* Numéro de lot détecté */}
           <View style={styles.lotContainer}>
             <Text style={styles.lotLabel}>{t('immediateRecallAlert.lotDetected')}</Text>
             <Text style={styles.lotNumber}>{matchedLot}</Text>
           </View>
 
-          {/* Informations du rappel */}
           <View style={styles.infoContainer}>
             <Text style={styles.infoTitle}>{t('immediateRecallAlert.recallInfo')}</Text>
 
@@ -145,25 +137,29 @@ export function ImmediateRecallAlert({
             <Text style={styles.infoNote}>{t('recallAlert.reportedBy')}</Text>
           </View>
 
-          {/* Consignes en cas d'ingestion */}
           <View style={styles.instructionsContainer}>
-            <Text style={styles.instructionsTitle}>
-              🚨 {t('recallAlert.emergencyTitle')}
-            </Text>
+            <View style={styles.instructionsHeader}>
+              <Ionicons name="warning" size={22} color="#d32f2f" />
+              <Text style={styles.instructionsTitle}>
+                {t('recallAlert.emergencyTitle')}
+              </Text>
+            </View>
             <View style={styles.instructionsList}>
-              <Text style={styles.instruction}>
-                • {t('recallAlert.doNotConsume')}
-              </Text>
-              <Text style={styles.instruction}>
-                • {t('recallAlert.returnForRefund')}
-              </Text>
-              <Text style={styles.instruction}>
-                • {t('recallAlert.emergencyText')}
-              </Text>
+              <View style={styles.instructionRow}>
+                <Ionicons name="close-circle" size={18} color="#d32f2f" />
+                <Text style={styles.instruction}>{t('recallAlert.doNotConsume')}</Text>
+              </View>
+              <View style={styles.instructionRow}>
+                <Ionicons name="return-down-back" size={18} color="#d32f2f" />
+                <Text style={styles.instruction}>{t('recallAlert.returnForRefund')}</Text>
+              </View>
+              <View style={styles.instructionRow}>
+                <Ionicons name="call" size={18} color="#d32f2f" />
+                <Text style={styles.instruction}>{t('recallAlert.emergencyText')}</Text>
+              </View>
             </View>
           </View>
 
-          {/* Bouton de fermeture */}
           <Pressable
             style={styles.closeButton}
             onPress={onClose}
@@ -206,12 +202,18 @@ const styles = StyleSheet.create({
     shadowRadius: 30,
     elevation: 10,
   },
+  alertHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    marginBottom: 8,
+  },
   alertTitle: {
     fontSize: 32,
-    fontWeight: '900',
+    fontFamily: 'Lora_700Bold',
     color: '#fff',
     textAlign: 'center',
-    marginBottom: 8,
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
   },
   lotContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 20,
   },
@@ -242,13 +244,13 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 20,
   },
   infoTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'Lora_700Bold',
     color: '#d32f2f',
     marginBottom: 12,
   },
@@ -273,21 +275,33 @@ const styles = StyleSheet.create({
   },
   instructionsContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 24,
+  },
+  instructionsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 16,
   },
   instructionsTitle: {
     fontSize: 18,
     fontWeight: '900',
     color: '#d32f2f',
-    marginBottom: 16,
     textAlign: 'center',
   },
   instructionsList: {
-    gap: 12,
+    gap: 14,
+  },
+  instructionRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
   },
   instruction: {
+    flex: 1,
     fontSize: 16,
     color: '#333',
     lineHeight: 24,
@@ -295,7 +309,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 18,
     alignItems: 'center',
     marginBottom: 40,

@@ -1,17 +1,19 @@
 import { Link } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '../src/theme/themeContext';
+import { useI18n } from '../src/i18n/I18nContext';
 
 export default function NotFound() {
   const { colors } = useTheme();
+  const { t } = useI18n();
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.textPrimary }]}>Page introuvable</Text>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>{t('notFound.title')}</Text>
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-        Cette page n'existe pas. Revenez à l'accueil pour continuer.
+        {t('notFound.subtitle')}
       </Text>
       <Link href="/(tabs)/home" style={[styles.link, { color: colors.accent }]}>
-        Retour à l'accueil
+        {t('notFound.goHome')}
       </Link>
     </View>
   );

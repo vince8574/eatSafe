@@ -10,6 +10,7 @@ import {
   Alert
 } from 'react-native';
 import { useTheme } from '../theme/themeContext';
+import { useI18n } from '../i18n/I18nContext';
 import { searchBrands, addBrandToFirestore } from '../services/firestoreBrandsService';
 import { addCustomBrand, searchCustomBrands } from '../services/customBrandsService';
 
@@ -29,10 +30,11 @@ interface BrandAutocompleteProps {
 export function BrandAutocomplete({
   value,
   onChangeText,
-  placeholder = "Ex: Marque X",
+  placeholder,
   autoCapitalize = "words"
 }: BrandAutocompleteProps) {
   const { colors } = useTheme();
+  const { t } = useI18n();
   const [suggestions, setSuggestions] = useState<BrandSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -48,7 +50,6 @@ export function BrandAutocomplete({
     try {
       const results: BrandSuggestion[] = [];
 
-      // 1. Rechercher dans les marques personnalisées
       const customBrands = await searchCustomBrands(searchText, 5);
       customBrands.forEach(cb => {
         results.push({
@@ -57,10 +58,8 @@ export function BrandAutocomplete({
         });
       });
 
-      // 2. Rechercher dans Firestore
       const firestoreBrands = await searchBrands(searchText, 5);
       firestoreBrands.forEach(brand => {
-        // Ne pas dupliquer si déjà dans les customs
         if (!results.find(r => r.name.toLowerCase() === brand.toLowerCase())) {
           results.push({
             name: brand,
@@ -69,7 +68,7 @@ export function BrandAutocomplete({
         }
       });
 
-      setSuggestions(results.slice(0, 8)); // Max 8 suggestions
+      setSuggestions(results.slice(0, 8));
       setShowSuggestions(results.length > 0);
     } catch (error) {
       console.warn('Error loading brand suggestions:', error);
@@ -82,7 +81,7 @@ export function BrandAutocomplete({
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       loadSuggestions(value);
-    }, 300); // Debounce de 300ms
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [value, loadSuggestions]);
@@ -98,31 +97,33 @@ export function BrandAutocomplete({
 
     if (!trimmedBrand || trimmedBrand.length < 2) {
       Alert.alert(
-        'Marque invalide',
-        'Le nom de la marque doit contenir au moins 2 caractères.'
+        t('brandAutocomplete.invalidBrand'),
+        t('brandAutocomplete.invalidBrandMessage')
       );
       return;
     }
 
     Alert.alert(
-      'Nouvelle marque',
-      `Voulez-vous ajouter "${trimmedBrand}" à votre liste de marques personnalisées ?`,
+      t('brandAutocomplete.newBrand'),
+      t('brandAutocomplete.addBrandConfirm', { brand: trimmedBrand }),
       [
         {
-          text: 'Annuler',
+          text: t('common.cancel'),
           style: 'cancel'
         },
         {
-          text: 'Ajouter',
+          text: t('brandAutocomplete.addButton'),
           onPress: async () => {
             const success = await addCustomBrand(trimmedBrand);
             if (success) {
-              // Ajouter aussi à Firestore pour partage avec autres utilisateurs
               await addBrandToFirestore(trimmedBrand);
               setShowSuggestions(false);
-              Alert.alert('✓ Marque ajoutée', `"${trimmedBrand}" a été ajoutée à vos marques.`);
+              Alert.alert(
+                t('brandAutocomplete.brandAdded'),
+                t('brandAutocomplete.brandAddedMessage', { brand: trimmedBrand })
+              );
             } else {
-              Alert.alert('Erreur', 'Cette marque existe déjà ou ne peut pas être ajoutée.');
+              Alert.alert(t('auth.error'), t('brandAutocomplete.brandAddError'));
             }
           }
         }
@@ -141,10 +142,10 @@ export function BrandAutocomplete({
   return (
     <View style={styles.container}>
       <View style={[styles.inputContainer, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.label, { color: colors.textSecondary }]}>Marque / Produit</Text>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>{t('brandAutocomplete.label')}</Text>
         <TextInput
           style={[styles.input, { color: colors.textPrimary }]}
-          placeholder={placeholder}
+          placeholder={placeholder || t('manualEntry.brandPlaceholder')}
           placeholderTextColor={colors.textSecondary}
           value={value}
           onChangeText={handleTextChange}
@@ -179,7 +180,7 @@ export function BrandAutocomplete({
                 {item.isCustom && (
                   <View style={[styles.badge, { backgroundColor: colors.accent }]}>
                     <Text style={[styles.badgeText, { color: colors.surface }]}>
-                      Perso
+                      {t('brandAutocomplete.customBadge')}
                     </Text>
                   </View>
                 )}
@@ -191,7 +192,7 @@ export function BrandAutocomplete({
                 onPress={handleAddNewBrand}
               >
                 <Text style={[styles.addButtonText, { color: colors.accent }]}>
-                  + Ajouter "{value}" comme nouvelle marque
+                  {t('brandAutocomplete.addNewBrand', { brand: value })}
                 </Text>
               </TouchableOpacity>
             }
@@ -205,7 +206,7 @@ export function BrandAutocomplete({
           onPress={handleAddNewBrand}
         >
           <Text style={[styles.addNewButtonText, { color: colors.accent }]}>
-            + Ajouter "{value}" comme nouvelle marque
+            {t('brandAutocomplete.addNewBrand', { brand: value })}
           </Text>
         </TouchableOpacity>
       )}

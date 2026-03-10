@@ -53,11 +53,17 @@ export default function TabsLayout() {
           borderTopWidth: 0,
           paddingBottom: 14 + insets.bottom,
           paddingTop: 10,
-          height: 76 + insets.bottom
+          height: 76 + insets.bottom,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+          elevation: 8
         },
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '600'
+          fontSize: 11,
+          fontWeight: '700',
+          letterSpacing: 0.3
         }
       }}
     >
