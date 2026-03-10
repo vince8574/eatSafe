@@ -1,0 +1,1048 @@
+diff --git a/node_modules/react-native-worklets/android/.project b/node_modules/react-native-worklets/android/.project
+new file mode 100644
+index 0000000..4fe32fd
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/.project
+@@ -0,0 +1,28 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>react-native-worklets</name>
++	<comment>Project react-native-worklets created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++	<filteredResources>
++		<filter>
++			<id>1762715184322</id>
++			<name></name>
++			<type>30</type>
++			<matcher>
++				<id>org.eclipse.core.resources.regexFilterMatcher</id>
++				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
++			</matcher>
++		</filter>
++	</filteredResources>
++</projectDescription>
+diff --git a/node_modules/react-native-worklets/android/CMakeLists.txt b/node_modules/react-native-worklets/android/CMakeLists.txt
+index 7ce6058..d8962d8 100644
+--- a/node_modules/react-native-worklets/android/CMakeLists.txt
++++ b/node_modules/react-native-worklets/android/CMakeLists.txt
+@@ -104,5 +104,5 @@ if(${JS_RUNTIME} STREQUAL "hermes")
+     target_link_libraries(worklets ReactAndroid::hermestooling)
+   endif()
+ elseif(${JS_RUNTIME} STREQUAL "jsc")
+-  target_link_libraries(worklets ReactAndroid::jsctooling)
++  # jsctooling target removed in React Native 0.80+
+ endif()
+diff --git a/node_modules/react-native-worklets/android/bin/.project b/node_modules/react-native-worklets/android/bin/.project
+new file mode 100644
+index 0000000..c16470e
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/.project
+@@ -0,0 +1,34 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>react-native-worklets</name>
++	<comment>Project react-native-worklets created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++	<filteredResources>
++		<filter>
++			<id>1762715184322</id>
++			<name></name>
++			<type>30</type>
++			<matcher>
++				<id>org.eclipse.core.resources.regexFilterMatcher</id>
++				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
++			</matcher>
++		</filter>
++	</filteredResources>
++</projectDescription>
+diff --git a/node_modules/react-native-worklets/android/bin/CMakeLists.txt b/node_modules/react-native-worklets/android/bin/CMakeLists.txt
+new file mode 100644
+index 0000000..7ce6058
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/CMakeLists.txt
+@@ -0,0 +1,108 @@
++project(Worklets)
++cmake_minimum_required(VERSION 3.8)
++
++set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
++
++set(CMAKE_CXX_STANDARD 20)
++
++# default CMAKE_CXX_FLAGS: "-g -DANDROID -fdata-sections -ffunction-sections
++# -funwind-tables -fstack-protector-strong -no-canonical-prefixes
++# -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-protector-all"
++include("${REACT_NATIVE_DIR}/ReactAndroid/cmake-utils/folly-flags.cmake")
++add_compile_options(${folly_FLAGS})
++
++string(
++  APPEND
++  CMAKE_CXX_FLAGS
++  " -DREACT_NATIVE_MINOR_VERSION=${REACT_NATIVE_MINOR_VERSION}\
++    -DWORKLETS_VERSION=${WORKLETS_VERSION}\
++    -DWORKLETS_FEATURE_FLAGS=\"${WORKLETS_FEATURE_FLAGS}\"\
++    -DHERMES_V1_ENABLED=${HERMES_V1_ENABLED}")
++
++string(APPEND CMAKE_CXX_FLAGS " -fno-omit-frame-pointer -fstack-protector-all")
++
++if(${IS_REANIMATED_EXAMPLE_APP})
++  string(APPEND CMAKE_CXX_FLAGS " -DIS_REANIMATED_EXAMPLE_APP -Wpedantic")
++endif()
++if(${WORKLETS_BUNDLE_MODE})
++  string(APPEND CMAKE_CXX_FLAGS " -DWORKLETS_BUNDLE_MODE")
++endif()
++
++if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Debug")
++  string(APPEND CMAKE_CXX_FLAGS " -DNDEBUG")
++endif()
++
++if(${JS_RUNTIME} STREQUAL "hermes")
++  string(APPEND CMAKE_CXX_FLAGS " -DJS_RUNTIME_HERMES=1")
++elseif(${JS_RUNTIME} STREQUAL "jsc")
++  string(APPEND CMAKE_CXX_FLAGS " -DJS_RUNTIME_JSC=1")
++else()
++  message(FATAL_ERROR "Unknown JS runtime ${JS_RUNTIME}.")
++endif()
++
++set(BUILD_DIR "${CMAKE_SOURCE_DIR}/build")
++set(ANDROID_CPP_DIR "${CMAKE_SOURCE_DIR}/src/main/cpp")
++set(COMMON_CPP_DIR "${CMAKE_SOURCE_DIR}/../Common/cpp")
++
++file(GLOB_RECURSE WORKLETS_COMMON_CPP_SOURCES CONFIGURE_DEPENDS
++     "${COMMON_CPP_DIR}/worklets/*.cpp")
++file(GLOB_RECURSE WORKLETS_ANDROID_CPP_SOURCES CONFIGURE_DEPENDS
++     "${ANDROID_CPP_DIR}/worklets/*.cpp")
++
++# Consume shared libraries and headers from prefabs
++find_package(fbjni REQUIRED CONFIG)
++find_package(ReactAndroid REQUIRED CONFIG)
++
++if(${JS_RUNTIME} STREQUAL "hermes")
++  find_package(hermes-engine REQUIRED CONFIG)
++endif()
++
++add_library(worklets SHARED ${WORKLETS_COMMON_CPP_SOURCES}
++                            ${WORKLETS_ANDROID_CPP_SOURCES})
++
++if(ReactAndroid_VERSION_MINOR GREATER_EQUAL 80)
++  include(
++    "${REACT_NATIVE_DIR}/ReactCommon/cmake-utils/react-native-flags.cmake")
++  target_compile_reactnative_options(worklets PUBLIC)
++else()
++  string(APPEND CMAKE_CXX_FLAGS
++         " -fexceptions -frtti -std=c++${CMAKE_CXX_STANDARD} -Wall -Werror")
++endif()
++
++# includes
++target_include_directories(worklets PUBLIC "${COMMON_CPP_DIR}"
++                                           "${ANDROID_CPP_DIR}")
++
++target_include_directories(
++  worklets
++  PRIVATE "${REACT_NATIVE_DIR}/ReactCommon"
++          "${REACT_NATIVE_DIR}/ReactCommon/yoga"
++          "${REACT_NATIVE_DIR}/ReactAndroid/src/main/jni/react/turbomodule"
++          "${REACT_NATIVE_DIR}/ReactCommon/react/nativemodule/core/ReactCommon"
++          "${REACT_NATIVE_DIR}/ReactCommon/callinvoker"
++          "${REACT_NATIVE_DIR}/ReactCommon/runtimeexecutor"
++          "${REACT_NATIVE_DIR}/ReactCommon/jsiexecutor"
++          "${REACT_NATIVE_DIR}/ReactCommon/react/renderer/graphics/platform/cxx"
++)
++
++# build shared lib
++set_target_properties(worklets PROPERTIES LINKER_LANGUAGE CXX)
++
++target_link_libraries(worklets log ReactAndroid::reactnative ReactAndroid::jsi
++                      fbjni::fbjni)
++
++if(${JS_RUNTIME} STREQUAL "hermes")
++  if(ReactAndroid_VERSION_MINOR GREATER_EQUAL 82)
++    target_link_libraries(worklets hermes-engine::hermesvm)
++  else()
++    target_link_libraries(worklets hermes-engine::libhermes)
++  endif()
++
++  if(${HERMES_ENABLE_DEBUGGER})
++    string(APPEND CMAKE_CXX_FLAGS " -DHERMES_ENABLE_DEBUGGER=1")
++
++    target_link_libraries(worklets ReactAndroid::hermestooling)
++  endif()
++elseif(${JS_RUNTIME} STREQUAL "jsc")
++  target_link_libraries(worklets ReactAndroid::jsctooling)
++endif()
+diff --git a/node_modules/react-native-worklets/android/bin/build.gradle b/node_modules/react-native-worklets/android/bin/build.gradle
+new file mode 100644
+index 0000000..61c565b
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/build.gradle
+@@ -0,0 +1,345 @@
++import com.android.build.gradle.tasks.ExternalNativeBuildJsonTask
++import groovy.json.JsonSlurper
++import java.nio.file.Paths
++import org.apache.tools.ant.taskdefs.condition.Os
++
++def safeExtGet(prop, fallback) {
++    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
++}
++
++def safeAppExtGet(prop, fallback) {
++    def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
++    appProject?.ext?.has(prop) ? appProject.ext.get(prop) : fallback
++}
++
++def isNewArchitectureEnabled() {
++    // To opt-in for the New Architecture, you can either:
++    // - Set `newArchEnabled` to true inside the `gradle.properties` file
++    // - Invoke gradle with `-newArchEnabled=true`
++    // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
++    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
++}
++
++def resolveReactNativeDirectory() {
++    def reactNativeLocation = safeAppExtGet("REACT_NATIVE_NODE_MODULES_DIR", null)
++    if (reactNativeLocation != null) {
++        return file(reactNativeLocation)
++    }
++
++    // Fallback to node resolver for custom directory structures like monorepos.
++    def reactNativePackage = file(
++        providers.exec {
++            workingDir(rootDir)
++            commandLine("node", "--print", "require.resolve('react-native/package.json')")
++        }.standardOutput.asText.get().trim()
++    )
++    if (reactNativePackage.exists()) {
++        return reactNativePackage.parentFile
++    }
++
++    throw new GradleException(
++        "[Worklets] Unable to resolve react-native location in node_modules. You should set project extension property (in `app/build.gradle`) named `REACT_NATIVE_NODE_MODULES_DIR` with the path to react-native in node_modules."
++    )
++}
++
++def getReactNativeVersion() {
++    def reactNativeRootDir = resolveReactNativeDirectory()
++    def reactProperties = new Properties()
++    file("$reactNativeRootDir/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }
++    return reactProperties.getProperty("VERSION_NAME")
++}
++
++def getReactNativeMinorVersion() {
++    def reactNativeVersion = getReactNativeVersion()
++    return reactNativeVersion.startsWith("0.0.0-") ? 1000 : reactNativeVersion.split("\\.")[1].toInteger()
++}
++
++def getWorkletsVersion() {
++    def inputFile = file(projectDir.path + '/../package.json')
++    def json = new JsonSlurper().parseText(inputFile.text)
++    return json.version
++}
++
++def toPlatformFileString(String path) {
++    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
++        path = path.replace(File.separatorChar, '/' as char)
++    }
++    return path
++}
++
++def getStaticFeatureFlags() {
++    def featureFlags = new HashMap<String, String>()
++
++    def staticFeatureFlagsFile = file(projectDir.path + "/../src/featureFlags/staticFlags.json")
++    if (!staticFeatureFlagsFile.exists()) {
++        throw new GradleException("[Worklets] Feature flags file not found at ${staticFeatureFlagsFile.absolutePath}.")
++    }
++    new JsonSlurper().parseText(staticFeatureFlagsFile.text).each { key, value ->
++        featureFlags[key] = value.toString()
++    }
++
++    def packageJsonFile = file(rootDir.path + "/../package.json")
++    if (packageJsonFile.exists()) {
++        def packageJson = new JsonSlurper().parseText(packageJsonFile.text)
++        packageJson.worklets?.staticFeatureFlags?.each { key, value ->
++            featureFlags[key] = value.toString()
++        }
++    }
++
++    return featureFlags.collect { key, value -> "[${key}:${value}]" }.join("")
++}
++
++if (isNewArchitectureEnabled()) {
++    apply plugin: "com.facebook.react"
++}
++
++def packageDir = project.projectDir.parentFile
++def reactNativeRootDir = resolveReactNativeDirectory()
++def REACT_NATIVE_MINOR_VERSION = getReactNativeMinorVersion()
++def REACT_NATIVE_VERSION = getReactNativeVersion()
++def WORKLETS_VERSION = getWorkletsVersion()
++def IS_NEW_ARCHITECTURE_ENABLED = isNewArchitectureEnabled()
++def IS_REANIMATED_EXAMPLE_APP = safeAppExtGet("isReanimatedExampleApp", false)
++def BUNDLE_MODE = safeAppExtGet("workletsBundleMode", false)
++def WORKLETS_FEATURE_FLAGS = getStaticFeatureFlags()
++def HERMES_V1_ENABLED = safeAppExtGet("hermesV1Enabled", false)
++
++// Set version for prefab
++version WORKLETS_VERSION
++
++def workletsPrefabHeadersDir = project.file("$buildDir/prefab-headers/worklets")
++
++def JS_RUNTIME = {
++    // Override JS runtime with environment variable
++    if (System.getenv("JS_RUNTIME")) {
++        return System.getenv("JS_RUNTIME")
++    }
++
++    // Check if Hermes is enabled in app setup
++    def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
++    if (appProject?.hermesEnabled?.toBoolean() || appProject?.ext?.react?.enableHermes?.toBoolean()) {
++        return "hermes"
++    }
++
++    // Use JavaScriptCore (JSC) by default
++    return "jsc"
++}.call()
++
++def reactNativeArchitectures() {
++    def value = project.getProperties().get("reactNativeArchitectures")
++    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
++}
++
++buildscript {
++    repositories {
++        google()
++        mavenCentral()
++    }
++    dependencies {
++        classpath "com.android.tools.build:gradle:8.2.1"
++        classpath "de.undercouch:gradle-download-task:5.6.0"
++        classpath "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
++    }
++}
++
++if (project == rootProject) {
++    apply from: "spotless.gradle"
++}
++
++apply plugin: "com.android.library"
++apply plugin: "maven-publish"
++apply plugin: "de.undercouch.download"
++
++apply from: "./fix-prefab.gradle"
++
++
++android {
++    compileSdkVersion safeExtGet("compileSdkVersion", 34)
++
++    namespace "com.swmansion.worklets"
++
++    if (rootProject.hasProperty("ndkPath")) {
++        ndkPath rootProject.ext.ndkPath
++    }
++    if (rootProject.hasProperty("ndkVersion")) {
++        ndkVersion rootProject.ext.ndkVersion
++    }
++
++    buildFeatures {
++        prefab true
++        prefabPublishing true
++        buildConfig true
++    }
++
++    prefab {
++        worklets {
++            headers workletsPrefabHeadersDir.absolutePath
++        }
++    }
++
++    defaultConfig {
++        minSdkVersion safeExtGet("minSdkVersion", 23)
++        targetSdkVersion safeExtGet("targetSdkVersion", 34)
++        versionCode 1
++        versionName WORKLETS_VERSION
++
++        buildConfigField("boolean", "IS_INTERNAL_BUILD", "false")
++        buildConfigField("int", "EXOPACKAGE_FLAGS", "0")
++        buildConfigField("int", "REACT_NATIVE_MINOR_VERSION", REACT_NATIVE_MINOR_VERSION.toString())
++        buildConfigField("boolean", "BUNDLE_MODE", BUNDLE_MODE.toString())
++
++        externalNativeBuild {
++            cmake {
++                arguments "-DANDROID_STL=c++_shared",
++                        "-DREACT_NATIVE_MINOR_VERSION=${REACT_NATIVE_MINOR_VERSION}",
++                        "-DANDROID_TOOLCHAIN=clang",
++                        "-DREACT_NATIVE_DIR=${toPlatformFileString(reactNativeRootDir.path)}",
++                        "-DJS_RUNTIME=${JS_RUNTIME}",
++                        "-DIS_REANIMATED_EXAMPLE_APP=${IS_REANIMATED_EXAMPLE_APP}",
++                        "-DWORKLETS_BUNDLE_MODE=${BUNDLE_MODE}",
++                        "-DWORKLETS_VERSION=${WORKLETS_VERSION}",
++                        "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
++                        "-DWORKLETS_FEATURE_FLAGS=${WORKLETS_FEATURE_FLAGS}",
++                        "-DHERMES_V1_ENABLED=${HERMES_V1_ENABLED}"
++                abiFilters (*reactNativeArchitectures())
++                targets("worklets")
++            }
++        }
++
++        consumerProguardFiles 'proguard-rules.pro'
++    }
++    externalNativeBuild {
++        cmake {
++            version = System.getenv("CMAKE_VERSION") ?: "3.22.1"
++            path "CMakeLists.txt"
++        }
++    }
++    buildTypes {
++        debug {
++            externalNativeBuild {
++                cmake {
++                    if (JS_RUNTIME == "hermes") {
++                        //  React Native doesn't expose these flags, but not having them
++                        //  can lead to runtime errors due to ABI mismatches.
++                        //  There's also
++                        //    HERMESVM_PROFILER_OPCODE
++                        //    HERMESVM_PROFILER_BB
++                        //  which shouldn't be defined in standard setups.
++                        arguments "-DHERMES_ENABLE_DEBUGGER=1"
++                    }
++                }
++            }
++            packagingOptions {
++                doNotStrip "**/**/*.so"
++            }
++        }
++    }
++    lintOptions {
++        abortOnError false
++    }
++    packagingOptions {
++        // For some reason gradle only complains about the duplicated version of librrc_root and libreact_render libraries
++        // while there are more libraries copied in intermediates folder of the lib build directory, we exclude
++        // only the ones that make the build fail (ideally we should only include libreanimated but we
++        // are only allowed to specify exclude patterns)
++        excludes = [
++                "META-INF",
++                "META-INF/**",
++                "**/libc++_shared.so",
++                "**/libfbjni.so",
++                "**/libjsi.so",
++                "**/libhermes.so",
++                "**/libhermesvm.so",
++                "**/libhermestooling.so",
++                "**/libreactnative.so",
++                "**/libjscexecutor.so",
++        ]
++    }
++    compileOptions {
++        sourceCompatibility JavaVersion.VERSION_17
++        targetCompatibility JavaVersion.VERSION_17
++    }
++    sourceSets {
++        main {
++            java {
++                if (BUNDLE_MODE) {
++                    srcDirs += "src/experimentalBundling"
++                } else {
++                    srcDirs += "src/legacyBundling"
++                }
++            }
++        }
++    }
++    tasks.withType(ExternalNativeBuildJsonTask) {
++        compileTask ->
++            compileTask.doLast {
++                if (!IS_REANIMATED_EXAMPLE_APP) {
++                    return
++                }
++
++                def generated = new File("${compileTask.abi.getCxxBuildFolder()}/compile_commands.json")
++                def output = new File("${packageDir}/compile_commands.json")
++
++                output.text = generated.text
++
++                println("Generated clangd metadata.")
++            }
++    }
++}
++
++def validateReactNativeVersionResult = providers.exec {
++    workingDir(projectDir.path)
++    commandLine("node", "./../scripts/validate-react-native-version.js", REACT_NATIVE_VERSION.toString())
++    ignoreExitValue = true
++}
++
++task assertMinimalReactNativeVersionTask {
++    doFirst {
++        if (validateReactNativeVersionResult.getResult().get().exitValue != 0) {
++            throw new GradleException(validateReactNativeVersionResult.getStandardError().getAsText().get().trim())
++        }
++    }
++}
++
++preBuild.dependsOn(assertMinimalReactNativeVersionTask)
++
++task assertNewArchitectureEnabledTask {
++    onlyIf { !IS_NEW_ARCHITECTURE_ENABLED }
++    doFirst {
++        throw new GradleException("[Worklets] Worklets require new architecture to be enabled. Please enable it by setting `newArchEnabled` to `true` in `gradle.properties`.")
++    }
++}
++
++preBuild.dependsOn(assertNewArchitectureEnabledTask)
++
++task prepareWorkletsHeadersForPrefabs(type: Copy) {
++    from("$projectDir/src/main/cpp")
++    from("$projectDir/../Common/cpp")
++    include("worklets/**/*.h")
++    into(workletsPrefabHeadersDir)
++}
++
++task cleanCmakeCache() {
++    tasks.getByName("clean").dependsOn(cleanCmakeCache)
++    doFirst {
++        delete "${projectDir}/.cxx"
++    }
++}
++
++repositories {
++    mavenCentral()
++    google()
++}
++
++dependencies {
++    implementation "com.facebook.yoga:proguard-annotations:1.19.0"
++    implementation "androidx.transition:transition:1.1.0"
++    implementation "androidx.core:core:1.6.0"
++
++    implementation "com.facebook.react:react-android" // version substituted by RNGP
++    if (JS_RUNTIME == "hermes") {
++        implementation "com.facebook.react:hermes-android" // version substituted by RNGP
++    }
++}
++
++preBuild.dependsOn(prepareWorkletsHeadersForPrefabs)
+diff --git a/node_modules/react-native-worklets/android/bin/fix-prefab.gradle b/node_modules/react-native-worklets/android/bin/fix-prefab.gradle
+new file mode 100644
+index 0000000..fcf502a
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/fix-prefab.gradle
+@@ -0,0 +1,53 @@
++tasks.configureEach { task ->
++    // Make sure that we generate our prefab publication file only after having built the native library
++    // so that not a header publication file, but a full configuration publication will be generated, which
++    // will include the .so file
++
++    def prefabConfigurePattern = ~/^prefab(.+)ConfigurePackage$/
++    def matcher = task.name =~ prefabConfigurePattern
++    if (matcher.matches()) {
++        def variantName = matcher[0][1]
++        task.outputs.upToDateWhen { false }
++        task.dependsOn("externalNativeBuild${variantName}")
++    }
++}
++
++afterEvaluate {
++    def abis = reactNativeArchitectures()
++    rootProject.allprojects.each { proj ->
++
++        if (proj === rootProject) return
++
++        def dependsOnThisLib = proj.configurations.any { config ->
++            config.dependencies.any { dep ->
++                dep.group == project.group && dep.name == project.name
++            }
++        }
++
++        if (!dependsOnThisLib && proj != project) return
++
++        if (!proj.plugins.hasPlugin('com.android.application') && !proj.plugins.hasPlugin('com.android.library')) {
++            return
++        }
++
++        def variants = proj.android.hasProperty('applicationVariants') ? proj.android.applicationVariants : proj.android.libraryVariants
++        // Touch the prefab_config.json files to ensure that in ExternalNativeJsonGenerator.kt we will re-trigger the prefab CLI to
++        // generate a libnameConfig.cmake file that will contain our native library (.so).
++        // See this condition: https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:build-system/gradle-core/src/main/java/com/android/build/gradle/tasks/ExternalNativeJsonGenerator.kt;l=207-219?q=createPrefabBuildSystemGlue
++        variants.all { variant ->
++            def variantName = variant.name
++            abis.each { abi ->
++                def searchDir = new File(proj.projectDir, ".cxx/${variantName}")
++                if (!searchDir.exists()) return
++                def matches = []
++                searchDir.eachDir { randomDir ->
++                    def prefabFile = new File(randomDir, "${abi}/prefab_config.json")
++                    if (prefabFile.exists()) matches << prefabFile
++                }
++                matches.each { prefabConfig ->
++                    prefabConfig.setLastModified(System.currentTimeMillis())
++                }
++            }
++        }
++    }
++}
+diff --git a/node_modules/react-native-worklets/android/bin/gradle.properties b/node_modules/react-native-worklets/android/bin/gradle.properties
+new file mode 100644
+index 0000000..2cf6e18
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/gradle.properties
+@@ -0,0 +1,5 @@
++Worklets_kotlinVersion=1.7.0
++Worklets_minSdkVersion=21
++Worklets_targetSdkVersion=31
++Worklets_compileSdkVersion=31
++Worklets_ndkversion=21.4.7075529
+diff --git a/node_modules/react-native-worklets/android/bin/proguard-rules.pro b/node_modules/react-native-worklets/android/bin/proguard-rules.pro
+new file mode 100644
+index 0000000..e386c4a
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/proguard-rules.pro
+@@ -0,0 +1,3 @@
++-keep class com.swmansion.worklets.** { *; }
++-keep class com.facebook.react.turbomodule.** { *; }
++-keep class com.facebook.react.fabric.** { *; }
+diff --git a/node_modules/react-native-worklets/android/bin/spotless.gradle b/node_modules/react-native-worklets/android/bin/spotless.gradle
+new file mode 100644
+index 0000000..906dc16
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/spotless.gradle
+@@ -0,0 +1,9 @@
++// formatter & linter configuration for java
++apply plugin: 'com.diffplug.spotless'
++
++spotless {
++  java {
++    target 'src/**/*.java'
++    googleJavaFormat()
++  }
++}
+diff --git a/node_modules/react-native-worklets/android/bin/src/experimentalBundling/com/swmansion/worklets/WorkletsModule.class b/node_modules/react-native-worklets/android/bin/src/experimentalBundling/com/swmansion/worklets/WorkletsModule.class
+new file mode 100644
+index 0000000..0b9ae4c
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/experimentalBundling/com/swmansion/worklets/WorkletsModule.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/legacyBundling/com/swmansion/worklets/WorkletsModule.class b/node_modules/react-native-worklets/android/bin/src/legacyBundling/com/swmansion/worklets/WorkletsModule.class
+new file mode 100644
+index 0000000..52955b3
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/legacyBundling/com/swmansion/worklets/WorkletsModule.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/AndroidUIScheduler.h b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/AndroidUIScheduler.h
+new file mode 100644
+index 0000000..e765edf
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/AndroidUIScheduler.h
+@@ -0,0 +1,40 @@
++#pragma once
++
++#include <worklets/Tools/UIScheduler.h>
++
++#include <fbjni/fbjni.h>
++#include <jsi/jsi.h>
++
++#include <memory>
++
++namespace worklets {
++
++using namespace facebook;
++using namespace worklets;
++
++class AndroidUIScheduler : public jni::HybridClass<AndroidUIScheduler> {
++ public:
++  static auto constexpr kJavaDescriptor = "Lcom/swmansion/worklets/AndroidUIScheduler;";
++  static jni::local_ref<jhybriddata> initHybrid(jni::alias_ref<jhybridobject> jThis);
++  static void registerNatives();
++
++  std::shared_ptr<UIScheduler> getUIScheduler() {
++    return uiScheduler_;
++  }
++
++  void scheduleTriggerOnUI();
++
++ private:
++  friend HybridBase;
++
++  void triggerUI();
++
++  void invalidate();
++
++  jni::global_ref<AndroidUIScheduler::javaobject> javaPart_;
++  std::shared_ptr<UIScheduler> uiScheduler_;
++
++  explicit AndroidUIScheduler(jni::alias_ref<AndroidUIScheduler::jhybridobject> jThis);
++};
++
++} // namespace worklets
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/AnimationFrameCallback.h b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/AnimationFrameCallback.h
+new file mode 100644
+index 0000000..655af6c
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/AnimationFrameCallback.h
+@@ -0,0 +1,30 @@
++#pragma once
++
++#include <fbjni/fbjni.h>
++
++#include <utility>
++
++namespace worklets {
++
++class AnimationFrameCallback : public facebook::jni::HybridClass<AnimationFrameCallback> {
++ public:
++  static auto constexpr kJavaDescriptor = "Lcom/swmansion/worklets/runloop/AnimationFrameCallback;";
++
++  void onAnimationFrame(double timestampMs) {
++    callback_(timestampMs);
++  }
++
++  static void registerNatives() {
++    javaClassStatic()->registerNatives({
++        makeNativeMethod("onAnimationFrame", AnimationFrameCallback::onAnimationFrame),
++    });
++  }
++
++ private:
++  friend HybridBase;
++
++  explicit AnimationFrameCallback(std::function<void(const double)> callback) : callback_(std::move(callback)) {}
++
++  std::function<void(double)> callback_;
++};
++} // namespace worklets
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/PlatformLogger.cpp b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/PlatformLogger.cpp
+new file mode 100644
+index 0000000..c9b5dce
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/PlatformLogger.cpp
+@@ -0,0 +1,31 @@
++#include <android/log.h>
++
++#include <worklets/Tools/PlatformLogger.h>
++
++#include <string>
++
++constexpr const auto tag = "Worklets";
++
++namespace worklets {
++
++void PlatformLogger::log(const char *str) {
++  __android_log_print(ANDROID_LOG_VERBOSE, tag, "%s", str);
++}
++
++void PlatformLogger::log(const std::string &str) {
++  log(str.c_str());
++}
++
++void PlatformLogger::log(const double d) {
++  __android_log_print(ANDROID_LOG_VERBOSE, tag, "%f", d);
++}
++
++void PlatformLogger::log(const int i) {
++  __android_log_print(ANDROID_LOG_VERBOSE, tag, "%d", i);
++}
++
++void PlatformLogger::log(const bool b) {
++  log(b ? "true" : "false");
++}
++
++} // namespace worklets
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsModule.cpp b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsModule.cpp
+new file mode 100644
+index 0000000..2237cce
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsModule.cpp
+@@ -0,0 +1,94 @@
++#include <worklets/NativeModules/JSIWorkletsModuleProxy.h>
++#include <worklets/Tools/WorkletsJSIUtils.h>
++#include <worklets/WorkletRuntime/RNRuntimeWorkletDecorator.h>
++#include <worklets/android/AnimationFrameCallback.h>
++#include <worklets/android/WorkletsModule.h>
++
++#include <memory>
++#include <string>
++#include <utility>
++
++namespace worklets {
++
++using namespace facebook;
++using namespace react;
++
++WorkletsModule::WorkletsModule(
++    jni::alias_ref<jhybridobject> jThis,
++    jsi::Runtime *rnRuntime,
++    jni::alias_ref<JavaMessageQueueThread::javaobject> messageQueueThread,
++    const std::shared_ptr<facebook::react::CallInvoker> &jsCallInvoker,
++    const std::shared_ptr<UIScheduler> &uiScheduler,
++    const std::shared_ptr<const JSBigStringBuffer> &script,
++    const std::string &sourceURL)
++    : javaPart_(jni::make_global(jThis)),
++      rnRuntime_(rnRuntime),
++      workletsModuleProxy_(std::make_shared<WorkletsModuleProxy>(
++          *rnRuntime,
++          std::make_shared<JMessageQueueThread>(messageQueueThread),
++          jsCallInvoker,
++          uiScheduler,
++          getIsOnJSQueueThread(),
++          RuntimeBindings{.requestAnimationFrame = getRequestAnimationFrame()},
++          script,
++          sourceURL)) {
++  auto jsiWorkletsModuleProxy = workletsModuleProxy_->createJSIWorkletsModuleProxy();
++  auto optimizedJsiWorkletsModuleProxy = jsi_utils::optimizedFromHostObject(
++      *rnRuntime_, std::static_pointer_cast<jsi::HostObject>(std::move(jsiWorkletsModuleProxy)));
++  RNRuntimeWorkletDecorator::decorate(
++      *rnRuntime_, std::move(optimizedJsiWorkletsModuleProxy), workletsModuleProxy_->getJSLogger());
++}
++
++jni::local_ref<WorkletsModule::jhybriddata> WorkletsModule::initHybrid(
++    jni::alias_ref<jhybridobject> jThis,
++    jlong jsContext,
++    jni::alias_ref<JavaMessageQueueThread::javaobject> messageQueueThread,
++    jni::alias_ref<facebook::react::CallInvokerHolder::javaobject> jsCallInvokerHolder,
++    jni::alias_ref<worklets::AndroidUIScheduler::javaobject> androidUIScheduler
++#ifdef WORKLETS_BUNDLE_MODE
++    ,
++    jni::alias_ref<facebook::react::BundleWrapper::javaobject> bundleWrapper,
++    const std::string &sourceURL
++#endif // WORKLETS_BUNDLE_MODE
++) {
++  auto jsCallInvoker = jsCallInvokerHolder->cthis()->getCallInvoker();
++  auto rnRuntime = reinterpret_cast<jsi::Runtime *>(jsContext);
++  auto uiScheduler = androidUIScheduler->cthis()->getUIScheduler();
++
++  std::shared_ptr<const JSBigStringBuffer> script = nullptr;
++#ifdef WORKLETS_BUNDLE_MODE
++  script = bundleWrapper->cthis()->getBundle();
++#else
++  const auto sourceURL = std::string{};
++#endif // WORKLETS_BUNDLE_MODE
++
++  return makeCxxInstance(jThis, rnRuntime, messageQueueThread, jsCallInvoker, uiScheduler, script, sourceURL);
++}
++
++RuntimeBindings::RequestAnimationFrame WorkletsModule::getRequestAnimationFrame() {
++  return [javaPart = javaPart_](std::function<void(const double)> &&callback) -> void {
++    static const auto jRequestAnimationFrame =
++        javaPart->getClass()->getMethod<void(AnimationFrameCallback::javaobject)>("requestAnimationFrame");
++    jRequestAnimationFrame(javaPart.get(), AnimationFrameCallback::newObjectCxxArgs(std::move(callback)).get());
++  };
++}
++
++std::function<bool()> WorkletsModule::getIsOnJSQueueThread() {
++  return [javaPart = javaPart_]() -> bool {
++    return javaPart->getClass()->getMethod<jboolean()>("isOnJSQueueThread").operator()(javaPart);
++  };
++}
++
++void WorkletsModule::invalidateCpp() {
++  javaPart_.reset();
++  workletsModuleProxy_.reset();
++}
++
++void WorkletsModule::registerNatives() {
++  registerHybrid({
++      makeNativeMethod("initHybrid", WorkletsModule::initHybrid),
++      makeNativeMethod("invalidateCpp", WorkletsModule::invalidateCpp),
++  });
++}
++
++} // namespace worklets
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsModule.h b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsModule.h
+new file mode 100644
+index 0000000..292b484
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsModule.h
+@@ -0,0 +1,74 @@
++#pragma once
++
++#include <ReactCommon/CallInvokerHolder.h>
++#include <fbjni/fbjni.h>
++#include <jsi/jsi.h>
++#include <react/jni/JMessageQueueThread.h>
++#include <worklets/Tools/Defs.h>
++#ifdef WORKLETS_BUNDLE_MODE
++#include <react/fabric/BundleWrapper.h>
++#endif // WORKLETS_BUNDLE_MODE
++
++#include <worklets/NativeModules/WorkletsModuleProxy.h>
++#include <worklets/WorkletRuntime/RuntimeBindings.h>
++#include <worklets/android/AndroidUIScheduler.h>
++
++#include <memory>
++#include <string>
++
++namespace worklets {
++
++using namespace facebook;
++using namespace facebook::jni;
++
++class WorkletsModule : public jni::HybridClass<WorkletsModule> {
++ public:
++  static auto constexpr kJavaDescriptor = "Lcom/swmansion/worklets/WorkletsModule;";
++
++  static jni::local_ref<jhybriddata> initHybrid(
++      jni::alias_ref<jhybridobject> jThis,
++      jlong jsContext,
++      jni::alias_ref<JavaMessageQueueThread::javaobject> messageQueueThread,
++      jni::alias_ref<facebook::react::CallInvokerHolder::javaobject> jsCallInvokerHolder,
++      jni::alias_ref<worklets::AndroidUIScheduler::javaobject> androidUIScheduler
++#ifdef WORKLETS_BUNDLE_MODE
++      ,
++      jni::alias_ref<facebook::react::BundleWrapper::javaobject> bundleWrapper,
++      const std::string &sourceURL
++#endif // WORKLETS_BUNDLE_MODE
++  );
++
++  static void registerNatives();
++
++  inline std::shared_ptr<WorkletsModuleProxy> getWorkletsModuleProxy() {
++    return workletsModuleProxy_;
++  }
++
++ private:
++  explicit WorkletsModule(
++      jni::alias_ref<jhybridobject> jThis,
++      jsi::Runtime *rnRuntime,
++      jni::alias_ref<JavaMessageQueueThread::javaobject> messageQueueThread,
++      const std::shared_ptr<facebook::react::CallInvoker> &jsCallInvoker,
++      const std::shared_ptr<UIScheduler> &uiScheduler,
++      const std::shared_ptr<const JSBigStringBuffer> &bundle,
++      const std::string &sourceURL);
++
++  void invalidateCpp();
++
++  template <class Signature>
++  JMethod<Signature> getJniMethod(std::string const &methodName) {
++    return javaPart_->getClass()->getMethod<Signature>(methodName.c_str());
++  }
++
++  RuntimeBindings::RequestAnimationFrame getRequestAnimationFrame();
++
++  std::function<bool()> getIsOnJSQueueThread();
++
++  friend HybridBase;
++  jni::global_ref<WorkletsModule::javaobject> javaPart_;
++  jsi::Runtime *rnRuntime_;
++  std::shared_ptr<WorkletsModuleProxy> workletsModuleProxy_;
++};
++
++} // namespace worklets
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsOnLoad.cpp b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsOnLoad.cpp
+new file mode 100644
+index 0000000..f40a878
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/bin/src/main/cpp/worklets/android/WorkletsOnLoad.cpp
+@@ -0,0 +1,13 @@
++#include <fbjni/fbjni.h>
++
++#include <worklets/android/AndroidUIScheduler.h>
++#include <worklets/android/AnimationFrameCallback.h>
++#include <worklets/android/WorkletsModule.h>
++
++JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
++  return facebook::jni::initialize(vm, [] {
++    worklets::WorkletsModule::registerNatives();
++    worklets::AndroidUIScheduler::registerNatives();
++    worklets::AnimationFrameCallback::registerNatives();
++  });
++}
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/AndroidUIScheduler.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/AndroidUIScheduler.class
+new file mode 100644
+index 0000000..d10bc44
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/AndroidUIScheduler.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/JSCallInvokerResolver.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/JSCallInvokerResolver.class
+new file mode 100644
+index 0000000..4f0b256
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/JSCallInvokerResolver.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsMessageQueueThread.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsMessageQueueThread.class
+new file mode 100644
+index 0000000..3e73ae7
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsMessageQueueThread.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsMessageQueueThreadBase.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsMessageQueueThreadBase.class
+new file mode 100644
+index 0000000..8020526
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsMessageQueueThreadBase.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsPackage.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsPackage.class
+new file mode 100644
+index 0000000..75a1bad
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/WorkletsPackage.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/runloop/AnimationFrameCallback.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/runloop/AnimationFrameCallback.class
+new file mode 100644
+index 0000000..e550b34
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/runloop/AnimationFrameCallback.class differ
+diff --git a/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/runloop/AnimationFrameQueue.class b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/runloop/AnimationFrameQueue.class
+new file mode 100644
+index 0000000..33d8a6a
+Binary files /dev/null and b/node_modules/react-native-worklets/android/bin/src/main/java/com/swmansion/worklets/runloop/AnimationFrameQueue.class differ
+diff --git a/node_modules/react-native-worklets/android/build/intermediates/prefab_package_header_only/prefab_publication.json/debug b/node_modules/react-native-worklets/android/build/intermediates/prefab_package_header_only/prefab_publication.json/debug
+new file mode 100644
+index 0000000..37588b5
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/build/intermediates/prefab_package_header_only/prefab_publication.json/debug
+@@ -0,0 +1,18 @@
++{
++  "installationFolder": "C:\\Users\\vgail\\Documents\\projets\\eatSafe\\node_modules\\react-native-worklets\\android\\build\\intermediates\\prefab_package\\debug\\prefab",
++  "gradlePath": ":react-native-worklets",
++  "packageInfo": {
++    "packageName": "react-native-worklets",
++    "packageVersion": "0.7.2",
++    "packageSchemaVersion": 2,
++    "packageDependencies": [],
++    "modules": [
++      {
++        "moduleName": "worklets",
++        "moduleHeaders": "C:\\Users\\vgail\\Documents\\projets\\eatSafe\\node_modules\\react-native-worklets\\android\\build\\prefab-headers\\worklets",
++        "moduleExportLibraries": [],
++        "abis": []
++      }
++    ]
++  }
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-worklets/android/build/intermediates/prefab_package_header_only/prefab_publication.json/release b/node_modules/react-native-worklets/android/build/intermediates/prefab_package_header_only/prefab_publication.json/release
+new file mode 100644
+index 0000000..15bc90b
+--- /dev/null
++++ b/node_modules/react-native-worklets/android/build/intermediates/prefab_package_header_only/prefab_publication.json/release
+@@ -0,0 +1,18 @@
++{
++  "installationFolder": "C:\\Users\\vgail\\Documents\\projets\\eatSafe\\node_modules\\react-native-worklets\\android\\build\\intermediates\\prefab_package\\release\\prefab",
++  "gradlePath": ":react-native-worklets",
++  "packageInfo": {
++    "packageName": "react-native-worklets",
++    "packageVersion": "0.7.2",
++    "packageSchemaVersion": 2,
++    "packageDependencies": [],
++    "modules": [
++      {
++        "moduleName": "worklets",
++        "moduleHeaders": "C:\\Users\\vgail\\Documents\\projets\\eatSafe\\node_modules\\react-native-worklets\\android\\build\\prefab-headers\\worklets",
++        "moduleExportLibraries": [],
++        "abis": []
++      }
++    ]
++  }
++}
+\ No newline at end of file
