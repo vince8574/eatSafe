@@ -15,7 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.numeline.app",
-      "buildNumber": "6",
+      "buildNumber": "11",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -42,6 +43,7 @@
     },
     "plugins": [
       "./plugins/withModularHeaders",
+      "./plugins/withFirebaseSwift",
       "expo-router",
       [
         "expo-build-properties",
@@ -55,7 +57,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Nous avons besoin d'accÃ©der Ã  votre appareil photo pour scanner les emballages."
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan food labels."
         }
       ],
       [
@@ -79,7 +81,13 @@
       "expo-secure-store",
       "expo-sharing",
       "expo-sqlite",
-      "@react-native-google-signin/google-signin"
+      "expo-apple-authentication",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.577892941568-pua3fri507m71ic48aqo95p5p01163g5"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

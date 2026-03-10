@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from '@react-native-firebase/auth';
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
 import { getCurrentUser } from './authService';
 
@@ -29,16 +29,18 @@ async function deleteUserSubscription(userId: string): Promise<void> {
 async function removeOrganizationMemberships(userId: string, userEmail?: string | null): Promise<void> {
   const db = getFirestore();
 
-  // Supprimer les memberships
-  const membershipSnap = await firestore()
-    .collectionGroup('members')
-    .where(firestore.FieldPath.documentId(), '==', userId)
-    .get();
+  // Récupérer l'orgId depuis le profil utilisateur (mis en cache à la création/adhésion)
+  const userDoc = await db.collection('users').doc(userId).get();
+  const orgId = userDoc.data()?.orgId;
 
-  if (!membershipSnap.empty) {
-    const batch = db.batch();
-    membershipSnap.docs.forEach(doc => batch.delete(doc.ref));
-    await batch.commit();
+  if (orgId) {
+    await db
+      .collection('organizationMembers')
+      .doc(orgId)
+      .collection('members')
+      .doc(userId)
+      .delete()
+      .catch(() => undefined);
   }
 
   // Supprimer les invitations par email

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, PropsWithChildren } fro
 import '@react-native-firebase/app'; // Initialize Firebase app
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { deleteCurrentUserAccount } from '../services/accountDeletionService';
 
 export interface AuthContextValue {
@@ -11,6 +12,7 @@ export interface AuthContextValue {
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -101,6 +103,31 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
+  const signInWithApple = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      const { identityToken } = credential;
+      if (!identityToken) {
+        throw { code: 'NO_IDENTITY_TOKEN', message: 'Apple Sign-In did not return an identity token.' };
+      }
+
+      const appleCredential = auth.AppleAuthProvider.credential(identityToken);
+      await auth().signInWithCredential(appleCredential);
+    } catch (error: any) {
+      if (error?.code === 'ERR_REQUEST_CANCELED') {
+        throw { code: 'SIGN_IN_CANCELLED', message: 'Apple Sign-In was cancelled.' };
+      }
+      console.error('[AuthContext] Apple sign in error:', error);
+      throw error;
+    }
+  };
+
   const signOut = async () => {
     try {
       // Try to clear Google session, but never block Firebase sign-out if this fails
@@ -171,6 +198,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     signInWithEmail,
     signUpWithEmail,
     signInWithGoogle,
+    signInWithApple,
     signOut,
     deleteAccount,
     resetPassword,
