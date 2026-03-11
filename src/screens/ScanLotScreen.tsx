@@ -456,7 +456,7 @@ export function ScanLotScreen() {
 
         <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
           <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
-          <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+          <Text style={[styles.appDisclaimerText, { color: colors.textPrimary }]}>
             {t('common.appDisclaimer')}
           </Text>
         </View>

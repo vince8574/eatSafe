@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-native';
+import { useState, useCallback } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -26,15 +26,6 @@ export function ManualEntryScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
-      Animated.timing(slideAnim, { toValue: 0, duration: 500, useNativeDriver: true })
-    ]).start();
-  }, []);
 
   const ensureScanQuota = useCallback(async (): Promise<boolean> => {
     const remaining = subscription?.scansRemaining ?? 0;
@@ -114,7 +105,7 @@ export function ManualEntryScreen() {
 
   return (
     <GradientBackground>
-      <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+      <View style={styles.container}>
         <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {t('manualEntry.subtitle')}
@@ -142,7 +133,7 @@ export function ManualEntryScreen() {
         <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
           <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
           <View style={styles.appDisclaimerContent}>
-            <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+            <Text style={[styles.appDisclaimerText, { color: colors.textPrimary }]}>
               {t('common.appDisclaimer')}
             </Text>
             <Text style={[styles.quotaText, { color: colors.textSecondary }]}>
@@ -165,7 +156,7 @@ export function ManualEntryScreen() {
             {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
           </Text>
         </TouchableOpacity>
-      </Animated.View>
+      </View>
     </GradientBackground>
   );
 }

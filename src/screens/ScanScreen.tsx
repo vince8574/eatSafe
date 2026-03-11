@@ -35,10 +35,12 @@ export function ScanScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // Reset camera when returning to this screen
-      setScannerResetToken((t) => t + 1);
+      // Only reset if coming back after navigating away (brand already set)
+      if (brandText) {
+        resetFlow();
+      }
       return () => {};
-    }, [])
+    }, [brandText, resetFlow])
   );
 
   const handleConfirm = useCallback(() => {
@@ -185,7 +187,7 @@ export function ScanScreen() {
 
         <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
           <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
-          <Text style={[styles.appDisclaimerText, { color: colors.textSecondary }]}>
+          <Text style={[styles.appDisclaimerText, { color: colors.textPrimary }]}>
             {t('common.appDisclaimer')}
           </Text>
         </View>

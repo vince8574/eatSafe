@@ -28,18 +28,20 @@ export default function LegalNoticeScreen() {
         </View>
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-          <RenderHtml
-            contentWidth={width - 32}
-            source={source}
-            baseStyle={{ color: colors.textPrimary, fontSize: 15, lineHeight: 22 }}
-            tagsStyles={{
-              h1: { fontSize: 22, fontWeight: '700', marginBottom: 12, color: colors.textPrimary },
-              h3: { fontSize: 17, fontWeight: '700', marginTop: 16, marginBottom: 6, color: colors.textPrimary },
-              p: { marginBottom: 10 },
-              ul: { paddingLeft: 18, marginBottom: 10 },
-              li: { marginBottom: 4 }
-            }}
-          />
+          <View style={[styles.contentCard, { backgroundColor: colors.surface }]}>
+            <RenderHtml
+              contentWidth={width - 72}
+              source={source}
+              baseStyle={{ color: colors.textPrimary, fontSize: 15, lineHeight: 22 }}
+              tagsStyles={{
+                h1: { fontSize: 22, fontWeight: '700', marginBottom: 12, color: colors.textPrimary },
+                h3: { fontSize: 17, fontWeight: '700', marginTop: 16, marginBottom: 6, color: colors.textPrimary },
+                p: { marginBottom: 10 },
+                ul: { paddingLeft: 18, marginBottom: 10 },
+                li: { marginBottom: 4 }
+              }}
+            />
+          </View>
         </ScrollView>
       </View>
     </GradientBackground>
@@ -75,7 +77,16 @@ const styles = StyleSheet.create({
     flex: 1
   },
   contentContainer: {
-    padding: 20,
+    padding: 16,
     paddingBottom: 80
+  },
+  contentCard: {
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3
   }
 });
