@@ -1,9 +1,9 @@
 diff --git a/node_modules/react-native-worklets/android/CMakeLists.txt b/node_modules/react-native-worklets/android/CMakeLists.txt
-index 7ce6058..f3a1b2c 100644
+index 7ce6058..daf4fe4 100644
 --- a/node_modules/react-native-worklets/android/CMakeLists.txt
 +++ b/node_modules/react-native-worklets/android/CMakeLists.txt
-@@ -55,6 +55,17 @@ find_package(ReactAndroid REQUIRED CONFIG)
-
+@@ -55,10 +55,22 @@ find_package(ReactAndroid REQUIRED CONFIG)
+ 
  if(${JS_RUNTIME} STREQUAL "hermes")
    find_package(hermes-engine REQUIRED CONFIG)
 +elseif(${JS_RUNTIME} STREQUAL "jsc")
@@ -18,14 +18,15 @@ index 7ce6058..f3a1b2c 100644
 +    PROPERTIES COMPILE_DEFINITIONS "kJSTypeBigInt=8"
 +    COMPILE_OPTIONS "-Wno-switch;-Wno-error")
  endif()
-
+ 
  add_library(worklets SHARED ${WORKLETS_COMMON_CPP_SOURCES}
 -                            ${WORKLETS_ANDROID_CPP_SOURCES})
 +                            ${WORKLETS_ANDROID_CPP_SOURCES}
 +                            ${WORKLETS_JSC_SOURCES})
-
+ 
  if(ReactAndroid_VERSION_MINOR GREATER_EQUAL 80)
-@@ -104,5 +115,5 @@ if(${JS_RUNTIME} STREQUAL "hermes")
+   include(
+@@ -104,5 +116,5 @@ if(${JS_RUNTIME} STREQUAL "hermes")
      target_link_libraries(worklets ReactAndroid::hermestooling)
    endif()
  elseif(${JS_RUNTIME} STREQUAL "jsc")
@@ -44,4 +45,4 @@ index 61c565b..aea6de7 100644
 +        implementation "io.github.react-native-community:jsc-android:2026004.+"
      }
  }
-
+ 

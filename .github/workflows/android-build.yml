@@ -6,7 +6,7 @@ on:
       build_type:
         description: 'Build type'
         required: true
-        default: 'aab'
+        default: 'apk'
         type: choice
         options:
           - aab
@@ -41,6 +41,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
+
+      - name: Generate native Android project
+        run: npx expo prebuild --platform android --no-install
 
       - name: Decode Keystore
         run: |
