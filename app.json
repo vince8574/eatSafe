@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.numeline.app",
       "buildNumber": "11",
       "usesAppleSignIn": true,
+      "jsEngine": "jsc",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -92,7 +93,7 @@
     "experiments": {
       "typedRoutes": true
     },
-    "jsEngine": "jsc",
+    "jsEngine": "hermes",
     "extra": {
       "router": {},
       "eas": {
