@@ -8,6 +8,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "eas-build-pre-install": "bash ./scripts/eas-build-pre-install.sh",
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest",
     "download-brands": "node scripts/downloadBrands.js",
