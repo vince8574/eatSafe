@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Scanner } from '../components/Scanner';
@@ -33,14 +33,19 @@ export function ScanScreen() {
     setScannerResetToken((t) => t + 1);
   }, []);
 
+  // Track if we navigated away so we only reset when coming BACK
+  const hasNavigatedAway = useRef(false);
+
   useFocusEffect(
     useCallback(() => {
-      // Only reset if coming back after navigating away (brand already set)
-      if (brandText) {
+      if (hasNavigatedAway.current) {
         resetFlow();
+        hasNavigatedAway.current = false;
       }
-      return () => {};
-    }, [brandText, resetFlow])
+      return () => {
+        hasNavigatedAway.current = true;
+      };
+    }, [resetFlow])
   );
 
   const handleConfirm = useCallback(() => {

@@ -16,25 +16,21 @@ function matchCandidate(candidate: string, recallLot: string): boolean {
   const normalized = normalizeLot(candidate);
   const recallNormalized = normalizeLot(recallLot);
 
-  // Log for lot 58041 specifically
-  if (candidate.includes('58041') || recallLot.includes('58041')) {
-    console.log('[matchCandidate] Comparing 58041:', {
-      candidate,
-      normalized,
-      recallLot,
-      recallNormalized,
-      exactMatch: normalized === recallNormalized,
-      partialMatch: normalized.includes(recallNormalized) || recallNormalized.includes(normalized)
-    });
+  // Skip empty or very short values to avoid false positives
+  if (normalized.length < 3 || recallNormalized.length < 3) {
+    return false;
   }
 
-  // Match exact
+  // Exact match
   if (normalized === recallNormalized) {
     return true;
   }
 
-  // Match partiel (le candidat contient le lot de rappel ou vice versa)
-  if (normalized.includes(recallNormalized) || recallNormalized.includes(normalized)) {
+  // Partial match: only if the shorter string is at least 6 chars
+  // (avoids matching short tokens like "123" against everything)
+  const shorter = normalized.length <= recallNormalized.length ? normalized : recallNormalized;
+  const longer = normalized.length > recallNormalized.length ? normalized : recallNormalized;
+  if (shorter.length >= 6 && longer.includes(shorter)) {
     return true;
   }
 

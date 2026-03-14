@@ -213,34 +213,35 @@ export function ScanLotScreen() {
       });
 
       const matchingRecalls = recallList.filter((recall) => {
-        // Check lot match first (most reliable indicator)
+        // Skip recalls without lot numbers — brand-only matching is too unreliable
         if (!recall.lotNumbers || recall.lotNumbers.length === 0) {
-          // If no lot numbers in recall, fallback to brand match only
-          return recall.brand ? recall.brand.toLowerCase() === finalBrand.toLowerCase() : false;
+          return false;
         }
 
         const lotMatch = recall.lotNumbers.some((lot) => {
           const normalizedRecallLot = normalizeLotValue(lot);
-          if (!normalizedRecallLot) {
+          // Skip empty or very short recall lot numbers (avoid false positives)
+          if (!normalizedRecallLot || normalizedRecallLot.length < 3) {
             return false;
           }
 
-          const candidateHit = candidatesForMatch.some(
-            (candidate) =>
-              candidate.includes(normalizedRecallLot) || normalizedRecallLot.includes(candidate)
-          );
-          const inFullText = normalizedOcrText.includes(normalizedRecallLot);
+          // Check candidates with strict matching
+          const candidateHit = candidatesForMatch.some((candidate) => {
+            if (!candidate || candidate.length < 3) return false;
 
-          return candidateHit || inFullText;
+            // Exact match
+            if (candidate === normalizedRecallLot) return true;
+
+            // Partial match only if shorter string is at least 6 chars
+            const shorter = candidate.length <= normalizedRecallLot.length ? candidate : normalizedRecallLot;
+            const longer = candidate.length > normalizedRecallLot.length ? candidate : normalizedRecallLot;
+            return shorter.length >= 6 && longer.includes(shorter);
+          });
+
+          return candidateHit;
         });
 
-        // If lot matches, accept the recall regardless of brand
-        // (brand names can vary: product name vs manufacturer name)
-        if (lotMatch) {
-          return true;
-        }
-
-        return false;
+        return lotMatch;
       });
 
       if (matchingRecalls.length > 0) {
