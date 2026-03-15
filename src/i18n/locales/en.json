@@ -205,6 +205,10 @@
     "firstNameLabel": "Your first name",
     "firstNamePlaceholder": "e.g. Marie",
     "firstNameError": "Please enter your first name to continue.",
+    "companyNameLabel": "Your company name",
+    "companyNamePlaceholder": "e.g. Dupont Bakery",
+    "optional": "Optional",
+    "referralConsent": "I would like my company to be listed on numeline.com as a professional committed to food safety for its customers.",
     "continue": "Continue"
   },
   "welcomeScreen": {

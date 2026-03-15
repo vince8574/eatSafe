@@ -467,6 +467,10 @@
     "firstNameLabel": "اسمك الأول",
     "firstNamePlaceholder": "مثال: أحمد",
     "firstNameError": "يرجى إدخال اسمك الأول للمتابعة.",
+    "companyNameLabel": "اسم شركتك",
+    "companyNamePlaceholder": "مثال: مخبز دوبون",
+    "optional": "اختياري",
+    "referralConsent": "أرغب في أن يتم إدراج شركتي على موقع numeline.com كمحترف ملتزم بسلامة الغذاء لعملائه.",
     "continue": "متابعة"
   },
   "scanner": {

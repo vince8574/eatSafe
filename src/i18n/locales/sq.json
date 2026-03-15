@@ -488,5 +488,17 @@
     "title": "Faqja nuk u gjet",
     "subtitle": "Kjo faqe nuk ekziston. Kthehuni në faqen kryesore për të vazhduar.",
     "goHome": "Kthehu në fillim"
+  },
+  "onboarding": {
+    "title": "Mirë se vini!",
+    "disclaimer": "Aplikacioni ofron alarme parandaluese por nuk garanton sigurinë e produkteve. Ju mbeteni i vetmi përgjegjës në rast të konsumimit të një produkti të kontaminuar.",
+    "firstNameLabel": "Emri juaj",
+    "firstNamePlaceholder": "P.sh. Maria",
+    "firstNameError": "Ju lutem shkruani emrin tuaj për të vazhduar.",
+    "companyNameLabel": "Emri i kompanisë suaj",
+    "companyNamePlaceholder": "P.sh. Furra Hoxha",
+    "optional": "Opsionale",
+    "referralConsent": "Dëshiroj që kompania ime të listohet në numeline.com si profesionist i angazhuar për sigurinë ushqimore të klientëve të saj.",
+    "continue": "Vazhdo"
   }
 }

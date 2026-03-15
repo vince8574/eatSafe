@@ -493,5 +493,17 @@
     "title": "Pagina non trovata",
     "subtitle": "Questa pagina non esiste. Torna alla schermata principale per continuare.",
     "goHome": "Torna alla home"
+  },
+  "onboarding": {
+    "title": "Benvenuto!",
+    "disclaimer": "L'app fornisce avvisi preventivi ma non garantisce la sicurezza dei prodotti. Lei rimane l'unico responsabile in caso di consumo di un prodotto contaminato.",
+    "firstNameLabel": "Il tuo nome",
+    "firstNamePlaceholder": "Es: Maria",
+    "firstNameError": "Inserisci il tuo nome per continuare.",
+    "companyNameLabel": "Nome della tua azienda",
+    "companyNamePlaceholder": "Es: Panificio Rossi",
+    "optional": "Facoltativo",
+    "referralConsent": "Desidero che la mia azienda sia presente su numeline.com come professionista impegnato nella sicurezza alimentare dei propri clienti.",
+    "continue": "Continua"
   }
 }

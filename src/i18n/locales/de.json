@@ -493,5 +493,17 @@
     "title": "Seite nicht gefunden",
     "subtitle": "Diese Seite existiert nicht. Kehren Sie zur Startseite zurück.",
     "goHome": "Zurück zur Startseite"
+  },
+  "onboarding": {
+    "title": "Willkommen!",
+    "disclaimer": "Die App bietet präventive Warnungen, garantiert jedoch nicht die Sicherheit von Produkten. Sie tragen die alleinige Verantwortung im Falle des Verzehrs eines kontaminierten Produkts.",
+    "firstNameLabel": "Ihr Vorname",
+    "firstNamePlaceholder": "z.B. Marie",
+    "firstNameError": "Bitte geben Sie Ihren Vornamen ein, um fortzufahren.",
+    "companyNameLabel": "Name Ihres Unternehmens",
+    "companyNamePlaceholder": "z.B. Bäckerei Müller",
+    "optional": "Optional",
+    "referralConsent": "Ich möchte, dass mein Unternehmen auf numeline.com als Fachbetrieb aufgeführt wird, der sich für die Lebensmittelsicherheit seiner Kunden einsetzt.",
+    "continue": "Weiter"
   }
 }

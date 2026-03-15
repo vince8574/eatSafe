@@ -488,5 +488,17 @@
     "title": "Stranica nije pronađena",
     "subtitle": "Ova stranica ne postoji. Vratite se na početni ekran.",
     "goHome": "Nazad na početnu"
+  },
+  "onboarding": {
+    "title": "Dobrodošli!",
+    "disclaimer": "Aplikacija pruža preventivna upozorenja, ali ne garantuje bezbjednost proizvoda. Vi snosite isključivu odgovornost u slučaju konzumiranja kontaminiranog proizvoda.",
+    "firstNameLabel": "Vaše ime",
+    "firstNamePlaceholder": "Npr. Marija",
+    "firstNameError": "Molimo unesite svoje ime da biste nastavili.",
+    "companyNameLabel": "Naziv vaše kompanije",
+    "companyNamePlaceholder": "Npr. Pekara Petrović",
+    "optional": "Opcionalno",
+    "referralConsent": "Želim da moja kompanija bude navedena na numeline.com kao profesionalac posvećen bezbjednosti hrane svojih klijenata.",
+    "continue": "Nastavi"
   }
 }

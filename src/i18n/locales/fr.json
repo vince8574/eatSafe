@@ -205,6 +205,10 @@
     "firstNameLabel": "Votre prénom",
     "firstNamePlaceholder": "Ex : Marie",
     "firstNameError": "Merci de renseigner votre prénom pour continuer.",
+    "companyNameLabel": "Nom de votre société",
+    "companyNamePlaceholder": "Ex : Boulangerie Dupont",
+    "optional": "Facultatif",
+    "referralConsent": "Je souhaite que ma société soit référencée sur le site numeline.com en tant que professionnel engagé pour la sécurité alimentaire de ses clients.",
     "continue": "Continuer"
   },
   "welcomeScreen": {

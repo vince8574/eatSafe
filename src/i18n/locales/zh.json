@@ -488,5 +488,17 @@
     "title": "页面未找到",
     "subtitle": "此页面不存在。返回主页继续。",
     "goHome": "返回首页"
+  },
+  "onboarding": {
+    "title": "欢迎！",
+    "disclaimer": "本应用提供预防性警报，但不保证产品安全性。如食用受污染产品，您需自行承担责任。",
+    "firstNameLabel": "您的名字",
+    "firstNamePlaceholder": "例如：小明",
+    "firstNameError": "请输入您的名字以继续。",
+    "companyNameLabel": "您的公司名称",
+    "companyNamePlaceholder": "例如：王氏面包店",
+    "optional": "可选",
+    "referralConsent": "我希望我的公司在 numeline.com 上被列为致力于客户食品安全的专业企业。",
+    "continue": "继续"
   }
 }

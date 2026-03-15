@@ -493,5 +493,17 @@
     "title": "Página no encontrada",
     "subtitle": "Esta página no existe. Vuelva a la pantalla de inicio para continuar.",
     "goHome": "Volver al inicio"
+  },
+  "onboarding": {
+    "title": "¡Bienvenido!",
+    "disclaimer": "La aplicación proporciona alertas preventivas pero no garantiza la seguridad de los productos. Usted es el único responsable en caso de consumir un producto contaminado.",
+    "firstNameLabel": "Tu nombre",
+    "firstNamePlaceholder": "Ej: María",
+    "firstNameError": "Por favor, ingresa tu nombre para continuar.",
+    "companyNameLabel": "Nombre de tu empresa",
+    "companyNamePlaceholder": "Ej: Panadería García",
+    "optional": "Opcional",
+    "referralConsent": "Deseo que mi empresa aparezca en numeline.com como profesional comprometido con la seguridad alimentaria de sus clientes.",
+    "continue": "Continuar"
   }
 }

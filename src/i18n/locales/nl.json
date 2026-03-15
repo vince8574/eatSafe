@@ -493,5 +493,17 @@
     "title": "Pagina niet gevonden",
     "subtitle": "Deze pagina bestaat niet. Ga terug naar het startscherm om door te gaan.",
     "goHome": "Terug naar home"
+  },
+  "onboarding": {
+    "title": "Welkom!",
+    "disclaimer": "De app biedt preventieve waarschuwingen maar garandeert niet de veiligheid van producten. U blijft als enige verantwoordelijk bij consumptie van een besmet product.",
+    "firstNameLabel": "Uw voornaam",
+    "firstNamePlaceholder": "Bijv. Marie",
+    "firstNameError": "Vul uw voornaam in om door te gaan.",
+    "companyNameLabel": "Naam van uw bedrijf",
+    "companyNamePlaceholder": "Bijv. Bakkerij Jansen",
+    "optional": "Optioneel",
+    "referralConsent": "Ik wil dat mijn bedrijf op numeline.com wordt vermeld als professional die zich inzet voor de voedselveiligheid van zijn klanten.",
+    "continue": "Doorgaan"
   }
 }

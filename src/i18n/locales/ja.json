@@ -488,5 +488,17 @@
     "title": "ページが見つかりません",
     "subtitle": "このページは存在しません。ホーム画面に戻ってください。",
     "goHome": "ホームに戻る"
+  },
+  "onboarding": {
+    "title": "ようこそ！",
+    "disclaimer": "このアプリは予防的な警告を提供しますが、製品の安全性を保証するものではありません。汚染された製品を消費した場合の責任はお客様にあります。",
+    "firstNameLabel": "お名前",
+    "firstNamePlaceholder": "例：太郎",
+    "firstNameError": "続行するにはお名前を入力してください。",
+    "companyNameLabel": "会社名",
+    "companyNamePlaceholder": "例：山田ベーカリー",
+    "optional": "任意",
+    "referralConsent": "お客様の食品安全に取り組む専門企業として、numeline.com に当社を掲載することを希望します。",
+    "continue": "続行"
   }
 }

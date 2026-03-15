@@ -8,12 +8,16 @@ type PreferencesState = {
   notificationsEnabled: boolean;
   darkMode: 'system' | 'light' | 'dark';
   firstName: string;
+  companyName: string;
+  wantsNumelineReferral: boolean;
   hasSeenWelcome: boolean;
   hasSeenNotificationPrompt: boolean;
   // setCountry removed - country is always 'US'
   setNotificationsEnabled: (value: boolean) => void;
   setDarkMode: (mode: 'system' | 'light' | 'dark') => void;
   setFirstName: (name: string) => void;
+  setCompanyName: (name: string) => void;
+  setWantsNumelineReferral: (value: boolean) => void;
   setHasSeenWelcome: (value: boolean) => void;
   setHasSeenNotificationPrompt: (value: boolean) => void;
 };
@@ -25,12 +29,16 @@ export const usePreferencesStore = create<PreferencesState>()(
       notificationsEnabled: true,
       darkMode: 'system',
       firstName: '',
+      companyName: '',
+      wantsNumelineReferral: false,
       hasSeenWelcome: false,
       hasSeenNotificationPrompt: false,
       // setCountry removed - country is always 'US'
       setNotificationsEnabled: (notificationsEnabled) => set({ notificationsEnabled }),
       setDarkMode: (darkMode) => set({ darkMode }),
       setFirstName: (firstName) => set({ firstName }),
+      setCompanyName: (companyName) => set({ companyName }),
+      setWantsNumelineReferral: (wantsNumelineReferral) => set({ wantsNumelineReferral }),
       setHasSeenWelcome: (hasSeenWelcome) => set({ hasSeenWelcome }),
       setHasSeenNotificationPrompt: (hasSeenNotificationPrompt) => set({ hasSeenNotificationPrompt })
     }),
