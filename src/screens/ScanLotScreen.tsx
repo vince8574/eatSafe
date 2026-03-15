@@ -580,6 +580,26 @@ export function ScanLotScreen() {
                   </Text>
                 </TouchableOpacity>
 
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border }]}
+                    onPress={() => { setConfirmModalVisible(false); resetFlow(); }}
+                    disabled={isFinalizing}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
+                      {t('scan.restart')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalButton, { backgroundColor: colors.accent }]}
+                    onPress={handleConfirm}
+                    disabled={isFinalizing}
+                  >
+                    <Text style={[styles.modalButtonText, { color: colors.surface }]}>
+                      {t('scan.validate')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </>
             )}
           </View>

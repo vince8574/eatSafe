@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -38,6 +38,7 @@ export function BrandAutocomplete({
   const [suggestions, setSuggestions] = useState<BrandSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const isLoadingRef = useRef(false);
 
   const loadSuggestions = useCallback(async (searchText: string) => {
     if (!searchText.trim() || searchText.trim().length < 2) {
@@ -46,6 +47,8 @@ export function BrandAutocomplete({
       return;
     }
 
+    if (isLoadingRef.current) return;
+    isLoadingRef.current = true;
     setIsLoading(true);
     try {
       const results: BrandSuggestion[] = [];
@@ -75,6 +78,7 @@ export function BrandAutocomplete({
       setSuggestions([]);
     } finally {
       setIsLoading(false);
+      isLoadingRef.current = false;
     }
   }, []);
 
