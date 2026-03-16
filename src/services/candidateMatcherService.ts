@@ -44,6 +44,20 @@ export interface CandidateMatchResult {
 }
 
 /**
+ * Checks if brand names are similar enough to be considered the same
+ */
+function brandMatches(scannedBrand: string, recallBrand: string | undefined): boolean {
+  if (!recallBrand) return false;
+  const a = scannedBrand.toLowerCase().trim();
+  const b = recallBrand.toLowerCase().trim();
+  if (a === b) return true;
+  // Check if one contains the other (e.g. "Nestlé France" contains "Nestlé")
+  if (a.length >= 3 && b.includes(a)) return true;
+  if (b.length >= 3 && a.includes(b)) return true;
+  return false;
+}
+
+/**
  * Vérifie tous les candidats de numéros de lot contre les rappels d'une marque
  */
 export async function checkAllCandidates(
@@ -55,21 +69,39 @@ export async function checkAllCandidates(
   console.log('[checkAllCandidates] Brand:', brand);
 
   try {
-    // Récupérer les rappels du pays
     const allRecalls = await fetchRecallsByCountry(country as any);
 
     console.log(`[checkAllCandidates] Checking ${allRecalls.length} total recalls`);
 
-    // Vérifier chaque candidat contre TOUS les rappels (pas seulement ceux de la marque)
-    // Car le nom de la marque peut varier (nom de produit vs fabricant)
+    // Phase 1: Check recalls matching the brand first (high confidence)
+    const brandRecalls = allRecalls.filter(r => brandMatches(brand, r.brand));
+    console.log(`[checkAllCandidates] ${brandRecalls.length} recalls match brand "${brand}"`);
+
     for (const candidate of candidates) {
-      for (const recall of allRecalls) {
-        // Vérifier si ce candidat matche avec un des numéros de lot du rappel
+      for (const recall of brandRecalls) {
         for (const recallLot of recall.lotNumbers) {
           if (matchCandidate(candidate, recallLot)) {
-            // Bonus: vérifier si la marque correspond aussi (pour privilégier les bons matches)
-            const brandMatch = recall.brand?.toLowerCase() === brand.toLowerCase();
-            console.log(`[checkAllCandidates] ✅ MATCH FOUND! Candidate "${candidate}" matches recall lot "${recallLot}" (brand match: ${brandMatch})`);
+            console.log(`[checkAllCandidates] ✅ BRAND+LOT MATCH! "${candidate}" matches recall lot "${recallLot}"`);
+            return {
+              hasRecall: true,
+              matchedCandidate: candidate,
+              matchedRecall: recall
+            };
+          }
+        }
+      }
+    }
+
+    // Phase 2: Check all recalls but require exact lot match only (no substring)
+    for (const candidate of candidates) {
+      const normalizedCandidate = normalizeLot(candidate);
+      if (normalizedCandidate.length < 5) continue; // Skip very short candidates
+
+      for (const recall of allRecalls) {
+        for (const recallLot of recall.lotNumbers) {
+          const normalizedRecallLot = normalizeLot(recallLot);
+          if (normalizedCandidate === normalizedRecallLot && normalizedRecallLot.length >= 5) {
+            console.log(`[checkAllCandidates] ✅ EXACT LOT MATCH (different brand)! "${candidate}" matches recall lot "${recallLot}"`);
             return {
               hasRecall: true,
               matchedCandidate: candidate,

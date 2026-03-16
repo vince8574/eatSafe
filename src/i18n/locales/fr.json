@@ -181,7 +181,9 @@
     "country": "Pays",
     "theme": "Thème",
     "notifications": "Notifications",
-    "about": "À propos"
+    "about": "À propos",
+    "numelineReferral": "Référencement numeline.com",
+    "numelineReferralDescription": "Apparaître sur numeline.com en tant qu'entreprise qui prend soin de la santé de ses clients"
   },
   "languages": {
     "fr": "Français",

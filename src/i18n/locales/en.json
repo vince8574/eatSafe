@@ -181,7 +181,9 @@
     "country": "Country",
     "theme": "Theme",
     "notifications": "Notifications",
-    "about": "About"
+    "about": "About",
+    "numelineReferral": "numeline.com listing",
+    "numelineReferralDescription": "Appear on numeline.com as a company that cares about the health of its customers"
   },
   "languages": {
     "fr": "Français",

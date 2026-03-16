@@ -279,7 +279,11 @@ export default function LoginScreen() {
       console.log('[Login] Google sign-in error', error?.code, error?.message, error);
       if (error?.code !== 'SIGN_IN_CANCELLED') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        Alert.alert(t('auth.error'), t('auth.googleSignInFailed'));
+        const errorDetail = error?.message || error?.code || 'Unknown error';
+        Alert.alert(
+          t('auth.error'),
+          `${t('auth.googleSignInFailed')}\n\nCode: ${error?.code || 'N/A'}\nDetail: ${errorDetail}`
+        );
       }
     } finally {
       setLoading(false);

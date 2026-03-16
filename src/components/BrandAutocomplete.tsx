@@ -85,7 +85,7 @@ export function BrandAutocomplete({
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       loadSuggestions(value);
-    }, 300);
+    }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [value, loadSuggestions]);
@@ -141,6 +141,7 @@ export function BrandAutocomplete({
       setShowSuggestions(false);
       setSuggestions([]);
     }
+    // Don't toggle loading/suggestions visibility during typing to avoid flicker
   };
 
   return (
@@ -156,13 +157,11 @@ export function BrandAutocomplete({
           autoCapitalize={autoCapitalize}
           onFocus={() => value.trim().length >= 2 && setSuggestions(suggestions)}
         />
-        {isLoading && (
-          <ActivityIndicator
-            size="small"
-            color={colors.accent}
-            style={styles.loadingIndicator}
-          />
-        )}
+        <ActivityIndicator
+          size="small"
+          color={colors.accent}
+          style={[styles.loadingIndicator, { opacity: isLoading ? 1 : 0 }]}
+        />
       </View>
 
       {showSuggestions && suggestions.length > 0 && (

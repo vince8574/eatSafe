@@ -8,6 +8,8 @@ import { useI18n } from '../../src/i18n/I18nContext';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientBackground } from '../../src/components/GradientBackground';
 import { useAuth } from '../../src/contexts/AuthContext';
+import { usePreferencesStore } from '../../src/stores/usePreferencesStore';
+import { updateCompanyReferral } from '../../src/services/companyReferralService';
 
 export default function LanguageScreen() {
   const { colors } = useTheme();
@@ -15,6 +17,20 @@ export default function LanguageScreen() {
   const router = useRouter();
   const { user, signOut, deleteAccount } = useAuth();
   const [isDeleting, setIsDeleting] = useState(false);
+  const companyName = usePreferencesStore((state) => state.companyName);
+  const wantsNumelineReferral = usePreferencesStore((state) => state.wantsNumelineReferral);
+  const setWantsNumelineReferral = usePreferencesStore((state) => state.setWantsNumelineReferral);
+
+  const handleToggleReferral = async () => {
+    const newValue = !wantsNumelineReferral;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setWantsNumelineReferral(newValue);
+    try {
+      await updateCompanyReferral(newValue, companyName || undefined);
+    } catch (error) {
+      console.warn('Failed to update referral preference:', error);
+    }
+  };
 
   const handleSignOut = () => {
     Alert.alert(
@@ -165,6 +181,47 @@ export default function LanguageScreen() {
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
         </TouchableOpacity>
       </View>
+
+      {/* Section Numeline.com Referral */}
+      {companyName ? (
+        <View style={styles.legalSection}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            numeline.com
+          </Text>
+          <TouchableOpacity
+            style={[styles.referralCard, { backgroundColor: colors.surface, borderColor: wantsNumelineReferral ? colors.accent : colors.border }]}
+            onPress={handleToggleReferral}
+            activeOpacity={0.8}
+          >
+            <View style={styles.referralContent}>
+              <Ionicons name="globe-outline" size={24} color={colors.accent} />
+              <View style={styles.referralTextContainer}>
+                <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+                  {t('settings.numelineReferral')}
+                </Text>
+                <Text style={[styles.referralDescription, { color: colors.textSecondary }]}>
+                  {t('settings.numelineReferralDescription')}
+                </Text>
+              </View>
+            </View>
+            <View style={[
+              styles.toggleSwitch,
+              {
+                backgroundColor: wantsNumelineReferral ? colors.accent : colors.surfaceAlt,
+                borderColor: wantsNumelineReferral ? colors.accent : colors.border
+              }
+            ]}>
+              <View style={[
+                styles.toggleKnob,
+                {
+                  backgroundColor: '#FFF',
+                  transform: [{ translateX: wantsNumelineReferral ? 18 : 2 }]
+                }
+              ]} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      ) : null}
 
       {/* Section Compte */}
       <View style={styles.legalSection}>
@@ -376,5 +433,46 @@ const styles = StyleSheet.create({
   logoutButtonText: {
     fontSize: 16,
     fontWeight: '600'
+  },
+  referralCard: {
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  referralContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1
+  },
+  referralTextContainer: {
+    flex: 1,
+    gap: 4
+  },
+  referralDescription: {
+    fontSize: 12,
+    lineHeight: 16
+  },
+  toggleSwitch: {
+    width: 44,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginLeft: 12
+  },
+  toggleKnob: {
+    width: 22,
+    height: 22,
+    borderRadius: 11
   }
 });

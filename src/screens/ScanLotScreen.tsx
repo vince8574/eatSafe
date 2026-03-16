@@ -218,27 +218,34 @@ export function ScanLotScreen() {
           return false;
         }
 
+        // Check if brand matches (required for partial lot matching)
+        const brandLower = finalBrand.toLowerCase();
+        const recallBrandLower = (recall.brand || '').toLowerCase();
+        const isBrandMatch = brandLower === recallBrandLower ||
+          (brandLower.length >= 3 && recallBrandLower.includes(brandLower)) ||
+          (recallBrandLower.length >= 3 && brandLower.includes(recallBrandLower));
+
         const lotMatch = recall.lotNumbers.some((lot) => {
           const normalizedRecallLot = normalizeLotValue(lot);
-          // Skip empty or very short recall lot numbers (avoid false positives)
           if (!normalizedRecallLot || normalizedRecallLot.length < 3) {
             return false;
           }
 
-          // Check candidates with strict matching
-          const candidateHit = candidatesForMatch.some((candidate) => {
+          return candidatesForMatch.some((candidate) => {
             if (!candidate || candidate.length < 3) return false;
 
-            // Exact match
+            // Exact match (always accepted)
             if (candidate === normalizedRecallLot) return true;
 
-            // Partial match only if shorter string is at least 6 chars
-            const shorter = candidate.length <= normalizedRecallLot.length ? candidate : normalizedRecallLot;
-            const longer = candidate.length > normalizedRecallLot.length ? candidate : normalizedRecallLot;
-            return shorter.length >= 6 && longer.includes(shorter);
-          });
+            // Partial match only if brand also matches AND shorter string is at least 6 chars
+            if (isBrandMatch) {
+              const shorter = candidate.length <= normalizedRecallLot.length ? candidate : normalizedRecallLot;
+              const longer = candidate.length > normalizedRecallLot.length ? candidate : normalizedRecallLot;
+              return shorter.length >= 6 && longer.includes(shorter);
+            }
 
-          return candidateHit;
+            return false;
+          });
         });
 
         return lotMatch;
