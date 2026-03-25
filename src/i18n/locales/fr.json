@@ -95,7 +95,7 @@
     "privacyInfo": "Les photos prises pendant le scan sont traitées localement puis supprimées immédiatement. Seuls la marque et le numéro de lot sont conservés sur cet appareil.",
     "recallStatusLabel": "Statut rappel",
     "status": {
-      "safe": "✅ SÉCURITAIRE",
+      "safe": "ℹ️ AUCUN RAPPEL TROUVÉ",
       "recalled": "🚨 RAPPELÉ - NE PAS CONSOMMER",
       "unknown": "❓ INCONNU",
       "warning": "⚠️ AVERTISSEMENT"
@@ -103,7 +103,8 @@
     "recallInfo": "Informations du rappel",
     "actions": {
       "delete": "Supprimer le scan",
-      "viewRecall": "Voir le rappel"
+      "viewRecall": "Voir le rappel",
+      "scanAnother": "Scanner un autre produit"
     }
   },
   "history": {
@@ -442,7 +443,7 @@
     "noText": "Aucun texte détecté",
     "checkingRecalls": "🔍 Vérification des rappels en cours...",
     "recallDetected": "⚠️ RAPPEL DÉTECTÉ",
-    "productSafe": "✅ PRODUIT SAFE - Aucun rappel",
+    "productSafe": "ℹ️ AUCUN RAPPEL TROUVÉ",
     "edit": "✏️ Modifier",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

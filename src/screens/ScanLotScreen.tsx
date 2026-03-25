@@ -32,7 +32,7 @@ export function ScanLotScreen() {
     productName?: string;
     productImage?: string;
   }>();
-  const { addProduct, updateRecall } = useScannedProducts();
+  const { addProduct, updateRecall, updateProduct } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
   const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
 
@@ -251,9 +251,17 @@ export function ScanLotScreen() {
         return lotMatch;
       });
 
-      if (matchingRecalls.length > 0) {
+      if (matchingRecalls.length === 0) {
+        // No recalls found — mark product as safe immediately
+        await updateProduct(product.id, {
+          recallStatus: 'safe',
+          lastCheckedAt: Date.now()
+        });
+      } else {
         await updateRecall(product, matchingRecalls);
+      }
 
+      if (matchingRecalls.length > 0) {
         // Send immediate notification when recall is detected
         console.log(`[ScanLotScreen] Recall detected! Sending notification for ${finalBrand} - ${finalLot}`);
         await Notifications.scheduleNotificationAsync({
@@ -302,7 +310,8 @@ export function ScanLotScreen() {
     resetFlow,
     router,
     t,
-    updateRecall
+    updateRecall,
+    updateProduct
   ]);
 
   const handleRestart = useCallback(() => {

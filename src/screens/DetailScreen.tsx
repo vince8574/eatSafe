@@ -116,9 +116,9 @@ export function DetailScreen() {
                 {t('details.status.recalled')}
               </Text>
             ) : (
-              <View style={[styles.noRecallBadge, { backgroundColor: colors.success + '15', borderColor: colors.success }]}>
-                <Text style={[styles.noRecallText, { color: colors.success }]}>
-                  {t('recallStatus.safe')}
+              <View style={[styles.noRecallBadge, { backgroundColor: colors.surfaceAlt, borderColor: colors.textSecondary }]}>
+                <Text style={[styles.noRecallText, { color: colors.textPrimary }]}>
+                  ℹ️ {t('recallStatus.safe')}
                 </Text>
               </View>
             )}
@@ -152,6 +152,13 @@ export function DetailScreen() {
               {t('common.appDisclaimer')}
             </Text>
           </View>
+
+          <TouchableOpacity
+            style={[styles.scanAnotherButton, { backgroundColor: colors.accent }]}
+            onPress={() => router.replace('/(tabs)')}
+          >
+            <Text style={styles.scanAnotherText}>{t('details.actions.scanAnother')}</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.deleteButton, { backgroundColor: colors.danger }]}
@@ -347,6 +354,17 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     fontWeight: '600'
+  },
+  scanAnotherButton: {
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginBottom: 12
+  },
+  scanAnotherText: {
+    fontSize: 16,
+    color: '#0A1F1F',
+    fontWeight: '700'
   },
   deleteButton: {
     paddingVertical: 16,
