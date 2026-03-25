@@ -328,10 +328,9 @@ export function ScanLotScreen() {
   }, []);
 
   const handleEditLot = useCallback(() => {
-    // Utiliser le texte OCR brut au lieu du lot dÃ©tectÃ©
-    setEditedLot(ocrText);
+    setEditedLot(lotNumber || '');
     setIsEditingLot(true);
-  }, [ocrText]);
+  }, [lotNumber]);
 
   const handleCancelEdit = useCallback(() => {
     setIsEditingLot(false);
@@ -536,7 +535,7 @@ export function ScanLotScreen() {
                 </Text>
                 <View style={[styles.ocrTextContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
                   <Text style={[styles.ocrText, { color: colors.textPrimary }]}>
-                    {ocrText || t('scanLot.noText')}
+                    {lotNumber || (lotCandidates.length > 0 ? lotCandidates.join(' / ') : t('scanLot.noText'))}
                   </Text>
                 </View>
 
