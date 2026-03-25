@@ -79,7 +79,7 @@
     "lot": "批次",
     "scannedAt": "扫描于",
     "status": {
-      "safe": "安全",
+      "safe": "ℹ️ 未发现召回",
       "recalled": "已召回",
       "unknown": "状态未知"
     },
@@ -389,7 +389,7 @@
     "noText": "未检测到文本",
     "checkingRecalls": "🔍 正在检查召回...",
     "recallDetected": "⚠️ 检测到召回",
-    "productSafe": "✅ 产品安全 - 无召回",
+    "productSafe": "ℹ️ 未发现召回",
     "edit": "✏️ 编辑",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

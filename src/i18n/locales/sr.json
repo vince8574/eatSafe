@@ -79,7 +79,7 @@
     "lot": "Лот",
     "scannedAt": "Скенирано",
     "status": {
-      "safe": "Безбедан",
+      "safe": "ℹ️ ОПОЗИВ НИЈЕ ПРОНАЂЕН",
       "recalled": "Повучен",
       "unknown": "Непознат статус"
     },
@@ -389,7 +389,7 @@
     "noText": "Није откривен текст",
     "checkingRecalls": "🔍 Провера опозива...",
     "recallDetected": "⚠️ ОПОЗИВ ОТКРИВЕН",
-    "productSafe": "✅ ПРОИЗВОД БЕЗБЕДАН - Нема опозива",
+    "productSafe": "ℹ️ ОПОЗИВ НИЈЕ ПРОНАЂЕН",
     "edit": "✏️ Уреди",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

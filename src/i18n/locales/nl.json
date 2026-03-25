@@ -79,7 +79,7 @@
     "lot": "Lot",
     "scannedAt": "Gescand op",
     "status": {
-      "safe": "Veilig",
+      "safe": "ℹ️ GEEN RECALL GEVONDEN",
       "recalled": "Teruggeroepen",
       "unknown": "Status onbekend"
     },
@@ -413,7 +413,7 @@
     "noText": "Geen tekst gedetecteerd",
     "checkingRecalls": "🔍 Controleren op terugroepacties...",
     "recallDetected": "⚠️ TERUGROEPACTIE GEDETECTEERD",
-    "productSafe": "✅ PRODUCT VEILIG - Geen terugroepactie",
+    "productSafe": "ℹ️ GEEN RECALL GEVONDEN",
     "edit": "✏️ Bewerken",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

@@ -79,7 +79,7 @@
     "lot": "Lotto",
     "scannedAt": "Scansionato il",
     "status": {
-      "safe": "Sicuro",
+      "safe": "ℹ️ NESSUN RICHIAMO TROVATO",
       "recalled": "Richiamato",
       "unknown": "Stato sconosciuto"
     },
@@ -394,7 +394,7 @@
     "noText": "Nessun testo rilevato",
     "checkingRecalls": "🔍 Verifica richiami in corso...",
     "recallDetected": "⚠️ RICHIAMO RILEVATO",
-    "productSafe": "✅ PRODOTTO SICURO - Nessun richiamo",
+    "productSafe": "ℹ️ NESSUN RICHIAMO TROVATO",
     "edit": "✏️ Modifica",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

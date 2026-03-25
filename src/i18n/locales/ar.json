@@ -95,7 +95,7 @@
     "privacyInfo": "تُعالج الصور محلياً وتُحذف فوراً. يتم الاحتفاظ بالعلامة التجارية ورقم الدفعة فقط على هذا الجهاز.",
     "recallStatusLabel": "حالة السحب",
     "status": {
-      "safe": "✅ آمن",
+      "safe": "ℹ️ لم يُعثر على سحب",
       "recalled": "🚨 مسحوب - لا تستهلك",
       "unknown": "❓ غير معروف",
       "warning": "⚠️ تحذير"
@@ -406,7 +406,7 @@
     "noText": "لم يتم اكتشاف نص",
     "checkingRecalls": "🔍 جاري التحقق من الاستدعاءات...",
     "recallDetected": "⚠️ تم اكتشاف استدعاء",
-    "productSafe": "✅ المنتج آمن - لا يوجد استدعاء",
+    "productSafe": "ℹ️ لم يُعثر على سحب",
     "edit": "✏️ تعديل",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

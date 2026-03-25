@@ -79,7 +79,7 @@
     "lot": "ロット",
     "scannedAt": "スキャン日時",
     "status": {
-      "safe": "安全",
+      "safe": "ℹ️ リコール情報なし",
       "recalled": "リコール",
       "unknown": "不明な状態"
     },
@@ -389,7 +389,7 @@
     "noText": "テキストが検出されませんでした",
     "checkingRecalls": "🔍 リコールを確認中...",
     "recallDetected": "⚠️ リコール検出",
-    "productSafe": "✅ 製品安全 - リコールなし",
+    "productSafe": "ℹ️ リコール情報なし",
     "edit": "✏️ 編集",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

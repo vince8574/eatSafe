@@ -79,7 +79,7 @@
     "lot": "Партия",
     "scannedAt": "Proskanirovan {{date}} v {{time}}",
     "status": {
-      "safe": "Безопасно",
+      "safe": "ℹ️ ОТЗЫВ НЕ НАЙДЕН",
       "recalled": "Отозвано",
       "unknown": "Статус неизвестен"
     },
@@ -408,7 +408,7 @@
     "noText": "Текст не обнаружен",
     "checkingRecalls": "🔍 Проверка отзывов...",
     "recallDetected": "⚠️ ОТЗЫВ ОБНАРУЖЕН",
-    "productSafe": "✅ ПРОДУКТ БЕЗОПАСЕН - Нет отзыва",
+    "productSafe": "ℹ️ ОТЗЫВ НЕ НАЙДЕН",
     "edit": "✏️ Редактировать",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

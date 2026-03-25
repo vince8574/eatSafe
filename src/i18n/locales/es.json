@@ -79,7 +79,7 @@
     "lot": "Lote",
     "scannedAt": "Escaneado el",
     "status": {
-      "safe": "Seguro",
+      "safe": "ℹ️ SIN RECALL ENCONTRADO",
       "recalled": "Retirado",
       "unknown": "Estado desconocido"
     },
@@ -394,7 +394,7 @@
     "noText": "No se detectó texto",
     "checkingRecalls": "🔍 Verificando retiros...",
     "recallDetected": "⚠️ RETIRO DETECTADO",
-    "productSafe": "✅ PRODUCTO SEGURO - Sin retiro",
+    "productSafe": "ℹ️ SIN RECALL ENCONTRADO",
     "edit": "✏️ Editar",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

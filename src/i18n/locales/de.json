@@ -79,7 +79,7 @@
     "lot": "Charge",
     "scannedAt": "Gescannt am",
     "status": {
-      "safe": "Sicher",
+      "safe": "ℹ️ KEIN RÜCKRUF GEFUNDEN",
       "recalled": "Zurückgerufen",
       "unknown": "Status unbekannt"
     },
@@ -394,7 +394,7 @@
     "noText": "Kein Text erkannt",
     "checkingRecalls": "🔍 Überprüfung auf Rückrufe...",
     "recallDetected": "⚠️ RÜCKRUF ERKANNT",
-    "productSafe": "✅ PRODUKT SICHER - Kein Rückruf",
+    "productSafe": "ℹ️ KEIN RÜCKRUF GEFUNDEN",
     "edit": "✏️ Bearbeiten",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",

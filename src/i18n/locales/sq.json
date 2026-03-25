@@ -79,7 +79,7 @@
     "lot": "Loti",
     "scannedAt": "Skanuar më",
     "status": {
-      "safe": "I sigurt",
+      "safe": "ℹ️ NUK U GJE TËRHEQJE",
       "recalled": "I rikthyer",
       "unknown": "Status i panjohur"
     },
@@ -389,7 +389,7 @@
     "noText": "Nuk u zbulua tekst",
     "checkingRecalls": "🔍 Duke kontrolluar tërheqjet...",
     "recallDetected": "⚠️ TËRHEQJE E ZBULUAR",
-    "productSafe": "✅ PRODUKTI I SIGURT - Pa tërheqje",
+    "productSafe": "ℹ️ NUK U GJE TËRHEQJE",
     "edit": "✏️ Redakto",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
