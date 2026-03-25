@@ -800,50 +800,41 @@ export async function performOcr(uri: string, brand?: string): Promise<LotExtrac
   ensureMlkitAvailable();
 
   try {
-    // Pour les numéros de lot, utiliser Google Vision en premier (meilleure précision)
+    // ML Kit en premier (local, instantané), Google Vision en fallback si lot non détecté
     let result: OCRResult;
 
-    console.log('[Lot OCR] Trying Google Vision API first...');
+    console.log('[Lot OCR] Trying ML Kit first (local, fast)...');
 
-    // Pour Google Vision, cropper selon le cadre visible (bande centrale comme dans l'UI)
-    // Cela correspond au cadre "band" affiché à l'utilisateur: 90% largeur, 22% hauteur
-    const processedForVision = await preprocessImage(uri, {
-      cropForLot: true,
-      narrowBand: true,
-      useVisionConfig: true
-    });
-    const visionResult = await tryVisionFallback(processedForVision, { text: '', lines: [], source: 'none' }, 'lot');
+    const processedForMlkit = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+    result = await runMlkit(processedForMlkit);
 
-    if (visionResult) {
-      console.log('[Lot OCR] Using Google Vision API result');
-      result = visionResult;
+    try {
+      await FileSystem.deleteAsync(processedForMlkit, { idempotent: true });
+    } catch (error) {
+      console.warn('Failed to delete mlkit processed image', error);
+    }
 
-      // Nettoyer l'image préprocessée pour Vision
+    // Si ML Kit n'a trouvé aucun lot, tenter Google Vision en fallback
+    const mlkitLot = await extractLotNumber(result.text, brand);
+    if (!mlkitLot) {
+      console.log('[Lot OCR] ML Kit found no lot number, trying Google Vision as fallback...');
+      const processedForVision = await preprocessImage(uri, {
+        cropForLot: true,
+        narrowBand: true,
+        useVisionConfig: true
+      });
+      const visionResult = await tryVisionFallback(processedForVision, result, 'lot');
       try {
         await FileSystem.deleteAsync(processedForVision, { idempotent: true });
       } catch (error) {
         console.warn('Failed to delete vision processed image', error);
+      }
+      if (visionResult) {
+        console.log('[Lot OCR] Using Google Vision fallback result');
+        result = visionResult;
       }
     } else {
-      console.log('[Lot OCR] Google Vision unavailable, using ML Kit');
-
-      // Nettoyer l'image préprocessée pour Vision
-      try {
-        await FileSystem.deleteAsync(processedForVision, { idempotent: true });
-      } catch (error) {
-        console.warn('Failed to delete vision processed image', error);
-      }
-
-      // Pour ML Kit, utiliser le crop agressif
-      const processedForMlkit = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
-      result = await runMlkit(processedForMlkit);
-
-      // Nettoyer l'image préprocessée pour MLKit
-      try {
-        await FileSystem.deleteAsync(processedForMlkit, { idempotent: true });
-      } catch (error) {
-        console.warn('Failed to delete mlkit processed image', error);
-      }
+      console.log('[Lot OCR] ML Kit found lot number, skipping Vision API');
     }
 
     console.log('[Lot OCR] OCR source:', result.source);
