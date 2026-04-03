@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "577892941568",
+    "project_id": "eatsok-6d19f",
+    "storage_bucket": "eatsok-6d19f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577892941568:android:b0b72743b7ad25fe47bde5",
+        "android_client_info": {
+          "package_name": "com.eatsafe.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577892941568-kmujnp71o8452dn8g99ntnaqeudufhlr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatsafe.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "577892941568-stnb7q0bcn594pg6u7vo3g22odq54v5d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatsafe.app",
+            "certificate_hash": "5ed039e79dfbe96cacd3104745dda1649bf4fb9a"
+          }
+        },
+        {
+          "client_id": "577892941568-vvsf9rc2g3sg5r21vnqnas06r616oper.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eatsafe.app",
+            "certificate_hash": "660432812f100fd38722a3466ed4f2f8e0168ab6"
+          }
+        },
+        {
+          "client_id": "577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaEWd6i6iv_7IVyvum-yZox-fm842KoDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "577892941568-8csv1ods5k2k3mm96qair7o7gtpefh6k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "EatsOK"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
