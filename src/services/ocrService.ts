@@ -393,51 +393,71 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
     return /^0\d{9}$/.test(cleaned);
   };
 
+  // Stop keywords — if these appear after the LOT prefix, truncate before them
+  const stopKeywords = ['DLC', 'DLUO', 'DDM', 'EXP', 'BEST', 'USE BY', 'BBD', 'BB', 'BEFORE', 'À CONSOMMER', 'CONSUME', 'DATE', 'GTIN', 'EAN', 'UPC'];
+
+  // Extract the tight alphanumeric code right after a keyword — stops at spaces/stop-words/dates
+  const extractTightCode = (afterKeyword: string): string => {
+    // Take only first token (stop at first space or line break)
+    let code = afterKeyword.trim().split(/\s+/)[0] ?? '';
+    // Remove trailing punctuation
+    code = code.replace(/[.,;:]+$/, '');
+    // Remove date-like suffixes (e.g. /01/2026)
+    code = code.replace(/[\/\-]\d{2}[\/\-]\d{2,4}.*$/, '');
+    return code.toUpperCase();
+  };
+
   // Patterns pour différents formats de numéros de lot (ordre de priorité)
   const patterns = [
-    // 1. Format "LOT" ou "L" suivi du numéro (PRIORITÉ ABSOLUE)
-    // Chercher "L" ou "LOT" même sans word boundary strict
+    // 1. FDA/USDA formats: "LOT:", "LOT #", "LOT CODE:", "LOT NUMBER:", "BATCH:", "BATCH NO:", "LOT NO:"
+    // Captures tight code right after keyword — stops at space
     {
-      regex: /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi,
-      name: 'LOT/L prefix',
+      name: 'LOT/BATCH keyword (FDA/USDA)',
       priority: 1,
       extract: (text: string): string[] => {
         const results: string[] = [];
-        // Chercher tous les patterns qui commencent par L ou LOT
-        const regex = /(?:^|[^A-Z])(?:LOT|L)[:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\s\-\/\.]*)/gi;
+        // Match all LOT/BATCH keyword variants
+        const regex = /\b(?:LOT\s*(?:CODE|NUMBER|NO|#)?|BATCH\s*(?:NO|NUMBER|CODE)?|LOTE)\s*[:\s#.-]*([A-Z0-9][A-Z0-9\-\/\.]{1,24})/gi;
         let match;
         while ((match = regex.exec(text)) !== null) {
-          let lotNum = match[1].trim();
-
-          // Arrêter avant les chiffres qui ressemblent à une heure (HH:MM) ou une date (DD/YYYY)
-          // Exemple: "693 R2102R 13:31" -> on garde "693 R2102R"
-          lotNum = lotNum.replace(/\s*\d{1,2}[:\/]\d{2,4}.*$/gi, '');
-
-          // Arrêter si on trouve "FH" (souvent suivi de date)
-          lotNum = lotNum.replace(/\s*FH.*$/gi, '');
-
-          // Nettoyer le numéro de lot en enlevant les espaces internes
-          lotNum = lotNum.replace(/\s+/g, '');
-
-          // Filtrer les matches trop courts ou qui sont juste des lettres
-          if (lotNum.length >= 3 && /\d/.test(lotNum) && !isPhoneNumber(lotNum)) {
-            // Tronquer à une longueur raisonnable (enlever le surplus)
-            if (lotNum.length > 22) {
-              lotNum = lotNum.substring(0, 22);
-            }
-
-            results.push(lotNum);
+          const raw = match[1];
+          const code = extractTightCode(raw);
+          if (code.length >= 2 && !isPhoneNumber(code) && !containsExcludedKeyword(code)) {
+            results.push(code);
+          }
+        }
+        // Also try single "L:" or "L " prefix (common on French packaging)
+        const lRegex = /(?:^|[\s\n])L[:\s][:\s]*([A-Z0-9]{3,20})/gi;
+        while ((match = lRegex.exec(text)) !== null) {
+          const code = extractTightCode(match[1]);
+          if (code.length >= 3 && !isPhoneNumber(code)) {
+            results.push(code);
           }
         }
         return results;
       }
     },
 
-    // 2. Format "N°" ou "NO" suivi du numéro
+    // 2. Pure numeric lot codes (FDA uses these: "Lot: 58041")
     {
-      regex: /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi,
-      name: 'NO prefix',
+      name: 'Numeric-only lot (FDA)',
       priority: 2,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\b(?:LOT|BATCH|LOT\s*CODE|LOT\s*NUMBER|LOT\s*NO)\s*[:\s#.-]*(\d{4,10})\b/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const code = match[1].trim();
+          if (!isPhoneNumber(code)) results.push(code);
+        }
+        return results;
+      }
+    },
+
+    // 3. Format "N°" ou "NO" suivi du numéro
+    {
+      name: 'NO prefix',
+      priority: 3,
       extract: (text: string): string[] => {
         const results: string[] = [];
         const regex = /\bN[O0°][:\s\-\.]*([A-Z0-9]{3,}[A-Z0-9\-\/\.]*)\b/gi;
@@ -452,38 +472,8 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
       }
     },
 
-    // 3. Format ligne complète commençant par "L" + chiffres (pattern de secours pour OCR imparfait)
-    // Ex: "L693 A 2102R" -> "L693A2102R" ou "693 A 2102R" -> "L693A2102R"
+    // 4. Format "lettres+chiffres" (ex: AB1234, L1234)
     {
-      regex: /(?:^|\s)L?(\d+[A-Z0-9\s]*)/gi,
-      name: 'L at line start',
-      priority: 3,
-      extract: (text: string): string[] => {
-        const results: string[] = [];
-        const regex = /(?:^|\s)L?(\d+[A-Z0-9\s]*)/gi;
-        let match;
-        while ((match = regex.exec(text)) !== null) {
-          let lotNum = match[1].trim();
-
-          // Nettoyer les espaces
-          lotNum = lotNum.replace(/\s+/g, '');
-
-          // Vérifier qu'on a au moins 3 chiffres/lettres et qu'il y a des lettres (pas que des chiffres)
-          if (lotNum.length >= 3 && /\d/.test(lotNum) && /[A-Z]/i.test(lotNum) && !isPhoneNumber(lotNum)) {
-            // Tronquer à une longueur raisonnable
-            if (lotNum.length > 22) {
-              lotNum = lotNum.substring(0, 22);
-            }
-            results.push(lotNum);
-          }
-        }
-        return results;
-      }
-    },
-
-    // 4. Format "lettres+chiffres" (ex: AB1234, LOT1234, L1234)
-    {
-      regex: /\b([A-Z]{1,3}\d{3,})\b/gi,
       name: 'Letters+digits',
       priority: 4,
       extract: (text: string): string[] => {
@@ -492,8 +482,7 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
         let match;
         while ((match = regex.exec(text)) !== null) {
           const lotNum = match[1];
-          // Exclure les codes-barres EAN/GTIN qui sont purement numériques après 1-2 lettres
-          if (lotNum.length <= 10 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+          if (lotNum.length <= 12 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
             results.push(lotNum);
           }
         }
@@ -501,27 +490,26 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
       }
     },
 
-    // 5. Format "chiffres+lettres" (ex: 1234AB, 123456A)
+    // 5. Format "chiffres+lettres" (ex: 1234AB)
     {
-      regex: /\b(\d{3,}[A-Z]{1,3})\b/gi,
       name: 'Digits+letters',
       priority: 5,
       extract: (text: string): string[] => {
         const results: string[] = [];
-        const regex = /\b(\d{3,}[A-Z]{1,3})\b/gi;
+        const regex = /\b(\d{3,}[A-Z]{1,4})\b/gi;
         let match;
         while ((match = regex.exec(text)) !== null) {
           const lotNum = match[1];
-          if (lotNum.length <= 10 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+          if (lotNum.length <= 12 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
             results.push(lotNum);
           }
         }
         return results;
       }
     },
-    // 6. Séquences alphanumériques denses (tokens OCR)
+
+    // 6. Séquences alphanumériques denses (fallback)
     {
-      regex: /[A-Z0-9]{6,24}/gi,
       name: 'Dense alphanumerics',
       priority: 6,
       extract: (text: string): string[] => {
@@ -530,7 +518,7 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
           .split(/\s+/)
           .map((t) => t.trim())
           .filter(Boolean);
-        return tokens.filter((token) => token.length >= 6 && token.length <= 24 && /\d/.test(token));
+        return tokens.filter((token) => token.length >= 6 && token.length <= 20 && /\d/.test(token) && /[A-Z]/.test(token));
       }
     }
   ];
