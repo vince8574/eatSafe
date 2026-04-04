@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { registerBackgroundTask } from '../services/backgroundService';
 import { setupNotificationHandler } from '../services/notificationService';
@@ -8,48 +8,16 @@ import { registerBackgroundRecallCheck, getAndClearNewRecalls } from '../service
 import { RecallAlertModal } from '../components/RecallAlertModal';
 import { useScannedProducts, syncProductsToAsyncStorage } from '../hooks/useScannedProducts';
 import { migrateLocalScansToFirestore } from '../services/productMigrationService';
+import { getAllProducts, updateProduct as updateFirestoreProduct } from '../services/firebaseProductsService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { getRecallStatus } from '../utils/lotMatcher';
 import type { ScannedProduct } from '../types';
 
 export function AppInitializer() {
   useDatabaseWarmup();
-  const { products, updateRecall, updateProduct } = useScannedProducts();
+  const { products, updateRecall } = useScannedProducts();
   const [alertProducts, setAlertProducts] = useState<ScannedProduct[]>([]);
   const [showAlert, setShowAlert] = useState(false);
-  const resolvedUnknownRef = useRef(false);
-
-  // Resolve all products stuck in 'unknown' status against US recall databases
-  useEffect(() => {
-    if (resolvedUnknownRef.current) return;
-    const unknownProducts = (products ?? []).filter((p) => p.recallStatus === 'unknown');
-    if (unknownProducts.length === 0) return;
-
-    resolvedUnknownRef.current = true;
-    console.log(`[AppInitializer] Resolving ${unknownProducts.length} products with unknown recall status`);
-
-    const resolveUnknown = async () => {
-      try {
-        const recalls = await fetchRecallsByCountry('US');
-        for (const product of unknownProducts) {
-          const result = getRecallStatus(product, recalls);
-          if (result.status === 'recalled') {
-            const matchingRecalls = recalls.filter((r) => getRecallStatus(product, [r]).status === 'recalled');
-            await updateRecall(product, matchingRecalls);
-          } else {
-            await updateProduct(product.id, { recallStatus: 'safe', lastCheckedAt: Date.now() });
-          }
-        }
-        console.log(`[AppInitializer] Resolved ${unknownProducts.length} unknown products`);
-      } catch (error) {
-        console.error('[AppInitializer] Failed to resolve unknown products:', error);
-        resolvedUnknownRef.current = false; // allow retry on next render if it failed
-      }
-    };
-
-    void resolveUnknown();
-  }, [products, updateRecall, updateProduct]);
-
   useEffect(() => {
     setupNotificationHandler();
     void registerBackgroundTask();
@@ -66,6 +34,38 @@ export function AppInitializer() {
     // Synchroniser les produits Firestore vers AsyncStorage au démarrage
     void syncProductsToAsyncStorage();
 
+    // Résoudre tous les produits bloqués en statut 'unknown'
+    const resolveUnknownProducts = async () => {
+      try {
+        const allProducts = await getAllProducts();
+        const unknownProducts = allProducts.filter((p) => p.recallStatus === 'unknown');
+        if (unknownProducts.length === 0) return;
+
+        console.log(`[AppInitializer] Resolving ${unknownProducts.length} unknown products`);
+        const recalls = await fetchRecallsByCountry('US');
+
+        for (const product of unknownProducts) {
+          const result = getRecallStatus(product, recalls);
+          if (result.status === 'recalled') {
+            const matchingRecalls = recalls.filter((r) => getRecallStatus(product, [r]).status === 'recalled');
+            await updateFirestoreProduct(product.id, {
+              recallStatus: 'recalled',
+              recallReference: result.recallReference,
+              lastCheckedAt: Date.now()
+            });
+            // Notify the UI via the hook
+            updateRecall(product, matchingRecalls);
+          } else {
+            await updateFirestoreProduct(product.id, { recallStatus: 'safe', lastCheckedAt: Date.now() });
+          }
+        }
+        console.log(`[AppInitializer] Resolved ${unknownProducts.length} unknown products`);
+      } catch (error) {
+        console.error('[AppInitializer] Failed to resolve unknown products:', error);
+      }
+    };
+    void resolveUnknownProducts();
+
     // Vérifier s'il y a de nouveaux rappels au démarrage
     const checkNewRecalls = async () => {
       const newRecalls = await getAndClearNewRecalls();
@@ -76,13 +76,13 @@ export function AppInitializer() {
         const recalledProducts: ScannedProduct[] = [];
         for (const result of newRecalls) {
           if (result.newRecalls.length > 0) {
-            // Mettre à jour le produit
-            for (const recall of result.newRecalls) {
-              updateRecall(result.productId, recall);
-            }
-
             // Ajouter à la liste des produits à afficher
             const product = products.find((p) => p.id === result.productId);
+
+            // Mettre à jour le produit
+            if (product) {
+              updateRecall(product, result.newRecalls);
+            }
             if (product) {
               recalledProducts.push(product);
             }
