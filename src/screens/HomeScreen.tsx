@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   logoBig: {
     width: 130,
     height: 130,
-    borderRadius: 32,
+    borderRadius: 65,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,

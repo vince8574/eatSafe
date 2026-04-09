@@ -21,47 +21,36 @@ function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
 
   const lotNumbers: string[] = [];
 
-  // Add the full text as one potential match
-  lotNumbers.push(codeInfo);
-
-  // Pattern 1: "Lot: XXXXX" ou "Lot #XXXXX" ou "LOT XXXXX"
-  const lotPatterns = codeInfo.match(/\bLot[:\s#]*([A-Za-z0-9-]+)/gi);
-  if (lotPatterns) {
-    lotPatterns.forEach(match => {
-      // Extract lot number and remove any trailing punctuation
-      const lotNum = match.replace(/\bLot[:\s#]*/i, '').replace(/[;:,\.\s]+$/, '').trim();
-      if (lotNum) {
-        lotNumbers.push(lotNum);
+  // Pattern 1: Explicit lot keywords — "Lot: XXXXX", "Lot #XXXXX", "Lots 12255, 22265"
+  const lotRegex = /\bLots?\s*[:\s#.-]*([A-Za-z0-9][A-Za-z0-9\s,\-\/]{0,80})/gi;
+  let match;
+  while ((match = lotRegex.exec(codeInfo)) !== null) {
+    // Split by comma in case of "Lots 12255, 22265, 12415"
+    const parts = match[1].split(/[,;]/);
+    for (const part of parts) {
+      const trimmed = part.trim().replace(/[.,;:\s]+$/, '');
+      // Must be alphanumeric code, not a date or sentence
+      if (trimmed && trimmed.length >= 3 && !/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(trimmed)) {
+        lotNumbers.push(trimmed);
       }
-    });
+    }
   }
 
-  // Pattern 2: Split by common separators (comma, semicolon, newline, "1)", "2)", etc.)
-  const parts = codeInfo.split(/[,;\n]|(?:\d+\))/);
-  parts.forEach(part => {
-    const trimmed = part.trim();
-    if (trimmed.length > 0) {
+  // Pattern 2: "Batch" or "Code" keywords
+  const batchRegex = /\b(?:Batch|Code)\s*[:\s#.-]*([A-Za-z0-9][A-Za-z0-9\-\/\.]{2,24})/gi;
+  while ((match = batchRegex.exec(codeInfo)) !== null) {
+    const trimmed = match[1].trim().replace(/[.,;:\s]+$/, '');
+    if (trimmed && !/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(trimmed)) {
       lotNumbers.push(trimmed);
     }
-  });
-
-  // Pattern 3: Extract standalone numbers/codes (alphanumeric sequences of 4+ chars)
-  const codes = codeInfo.match(/\b[A-Z0-9]{4,}\b/g);
-  if (codes) {
-    codes.forEach(code => {
-      // Exclude common words like "BEST", "USED", "DATE", etc.
-      if (!/^(BEST|USED|DATE|CODE|PROD|INTERNAL|PRODUCT)$/i.test(code)) {
-        lotNumbers.push(code);
-      }
-    });
   }
+
+  // Do NOT add full code_info text, dates, UPCs, or generic alphanumeric sequences
+  // These cause false positives
 
   // Remove duplicates (case-insensitive)
   const uniqueLots = Array.from(new Set(lotNumbers.map(l => l.toUpperCase())))
-    .map(upper => {
-      // Find the original case version
-      return lotNumbers.find(l => l.toUpperCase() === upper) || upper;
-    });
+    .map(upper => lotNumbers.find(l => l.toUpperCase() === upper) || upper);
 
   return uniqueLots;
 }
@@ -81,14 +70,6 @@ export async function fetchFdaRecalls(): Promise<RecallRecord[]> {
 
   const results = (data.results ?? []).map((item: any) => {
     const extracted = extractFdaLotNumbers(item.code_info);
-
-    // Log H-0337-2026 specifically for debugging
-    if (item.recall_number === 'H-0337-2026') {
-      console.log('[FDA] ⭐ Found H-0337-2026!');
-      console.log('[FDA] Raw code_info:', item.code_info);
-      console.log('[FDA] Extracted lots:', extracted);
-      console.log('[FDA] Brand:', item.recalling_firm);
-    }
 
     return {
       id: item.recall_number,

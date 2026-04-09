@@ -21,12 +21,18 @@ const OPEN_FOOD_FACTS_API = 'https://world.openfoodfacts.org/api/v2';
 /**
  * Récupère les informations produit depuis Open Food Facts (avec priorité USA)
  */
+function fetchWithTimeout(url: string, timeoutMs: number = 5000): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
 async function getProductFromOpenFoodFacts(barcode: string): Promise<ProductInfo | null> {
   try {
     console.log(`[OpenFoodFacts] Fetching product for barcode: ${barcode}`);
 
-    // Essayer avec le domaine US en priorité
-    const usResponse = await fetch(
+    // Essayer avec le domaine US en priorité (timeout 5s)
+    const usResponse = await fetchWithTimeout(
       `https://us.openfoodfacts.org/api/v2/product/${barcode}.json`
     );
 
@@ -35,8 +41,8 @@ async function getProductFromOpenFoodFacts(barcode: string): Promise<ProductInfo
     if (usResponse.ok) {
       data = await usResponse.json();
     } else {
-      // Fallback sur le domaine mondial
-      const worldResponse = await fetch(
+      // Fallback sur le domaine mondial (timeout 5s)
+      const worldResponse = await fetchWithTimeout(
         `${OPEN_FOOD_FACTS_API}/product/${barcode}.json`
       );
 

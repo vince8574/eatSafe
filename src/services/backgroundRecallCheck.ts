@@ -19,12 +19,12 @@ if (!isExpoGo) {
   console.log('[BackgroundRecallCheck] Running background recall check...');
 
   try {
-    // Récupérer les produits et le pays depuis AsyncStorage
+    // Récupérer les produits depuis AsyncStorage
     const productsJson = await AsyncStorage.getItem('scanned-products');
-    const country = (await AsyncStorage.getItem('country')) as CountryCode | null;
+    const country: CountryCode = 'US'; // Always US market
 
-    if (!productsJson || !country) {
-      console.log('[BackgroundRecallCheck] No products or country found');
+    if (!productsJson) {
+      console.log('[BackgroundRecallCheck] No products found');
       return BackgroundFetch.BackgroundFetchResult.NoData;
     }
 

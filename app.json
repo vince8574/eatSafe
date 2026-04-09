@@ -63,7 +63,9 @@
       [
         "expo-notifications",
         {
-          "mode": "production"
+          "mode": "production",
+          "icon": "./assets/icon.png",
+          "color": "#0A1F1F"
         }
       ],
       "expo-localization",

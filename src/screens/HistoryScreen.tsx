@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: 18,
     overflow: 'hidden'
   },
   title: {

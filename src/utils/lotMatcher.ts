@@ -95,23 +95,40 @@ function matchBrands(productBrand: string, recallBrand: string | undefined) {
 export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   const normalized = normalizeLot(product.lotNumber);
 
+  // Ignore very short lot numbers — too likely to cause false positives
+  if (normalized.length < 3) {
+    return false;
+  }
+
   const matches = (recall.lotNumbers ?? []).some((lot) => {
     const candidate = normalizeLot(lot);
 
+    if (!candidate || candidate.length < 3) {
+      return false;
+    }
+
+    // Exact match
     if (candidate === normalized) {
       return true;
     }
 
-    if (candidate.includes(normalized) || normalized.includes(candidate)) {
-      return true;
+    // Substring match only if the scanned lot is long enough (≥6 chars)
+    // to avoid short codes matching inside longer ones
+    if (normalized.length >= 6) {
+      if (candidate.includes(normalized) || normalized.includes(candidate)) {
+        return true;
+      }
     }
 
+    // Fuzzy match: scale threshold with lot length
     if (Math.abs(candidate.length - normalized.length) > 2) {
       return false;
     }
 
     const distance = levenshteinDistance(candidate, normalized);
-    return distance <= 2;
+    // Allow 1 edit for lots < 8 chars, 2 edits for longer lots
+    const maxDistance = normalized.length < 8 ? 1 : 2;
+    return distance <= maxDistance;
   });
 
   return matches;
@@ -122,12 +139,17 @@ export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]
     const brandMatches = matchBrands(product.brand, recall.brand);
     const lotMatches = matchLots(product, recall);
 
-    // If the lot matches, accept the recall even when the brand differs
-    if (lotMatches) {
+    // If recall has no brand info, lot match alone is enough
+    if (lotMatches && (!recall.brand || recall.brand.trim() === '')) {
       return true;
     }
 
-    // For recalls without explicit lot codes, fall back to brand matching
+    // If recall has a brand, require both brand AND lot to match
+    if (lotMatches && brandMatches) {
+      return true;
+    }
+
+    // For recalls without explicit lot codes, require brand match
     const hasNoLots = !recall.lotNumbers || recall.lotNumbers.length === 0;
     return hasNoLots && brandMatches;
   });

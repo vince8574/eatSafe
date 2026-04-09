@@ -107,7 +107,7 @@ export function ScanScreen() {
         // Attendre 2 secondes pour que l'utilisateur lise le message
         setTimeout(() => {
           router.push('/scan-lot' as any);
-        }, 2500);
+        }, 1500);
       }
     } catch (error) {
       console.error('[ScanScreen] Barcode scan error:', error);
@@ -115,7 +115,7 @@ export function ScanScreen() {
       setErrorMessage(t('scan.productNotPubliclyListed'));
       setTimeout(() => {
         router.push('/scan-lot' as any);
-      }, 2500);
+      }, 1500);
     }
   }, [brandText, t, router]);
 

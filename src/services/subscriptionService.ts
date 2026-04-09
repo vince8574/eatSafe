@@ -142,6 +142,18 @@ export async function selectPlan(planId: string): Promise<Subscription> {
   const scopeId = await getSubscriptionScopeId();
   const docRef = db.collection(COLLECTION).doc(scopeId);
   const payload = buildSubscriptionFromPlan(planId);
+
+  // Preserve extra credits from packs when switching plans
+  const snap = await docRef.get();
+  if (snap.exists) {
+    const current = snap.data() as Subscription;
+    const oldIncluded = current.scansIncluded ?? 0;
+    const oldRemaining = current.scansRemaining ?? 0;
+    // Extra credits = scans remaining beyond what the old plan included
+    const extraCredits = Math.max(0, oldRemaining - oldIncluded);
+    payload.scansRemaining = payload.scansIncluded + extraCredits;
+  }
+
   await docRef.set(payload, { merge: true });
 
   console.log(`[subscriptionService] Plan ${planId} selected for scope ${scopeId}`);
@@ -266,6 +278,16 @@ async function activateSubscription(
     throw new Error(`Unknown plan: ${planId}`);
   }
 
+  // Preserve extra credits from packs when switching plans
+  let extraCredits = 0;
+  const snap = await docRef.get();
+  if (snap.exists) {
+    const current = snap.data() as Subscription;
+    const oldIncluded = current.scansIncluded ?? 0;
+    const oldRemaining = current.scansRemaining ?? 0;
+    extraCredits = Math.max(0, oldRemaining - oldIncluded);
+  }
+
   const payload: Subscription & { googlePlayTransactionId?: string; googlePlayPurchaseToken?: string } = {
     planId: plan.id,
     planName: plan.labelKey,
@@ -273,7 +295,7 @@ async function activateSubscription(
     // Google Play manages the actual expiration, this is just for reference
     expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
     scansIncluded: plan.scansIncluded,
-    scansRemaining: plan.scansIncluded,
+    scansRemaining: plan.scansIncluded + extraCredits,
     historyRetentionDays: plan.historyRetentionDays,
     exportEnabled: plan.exportEnabled,
     exportFormats: plan.exportFormats,
