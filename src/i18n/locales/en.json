@@ -14,7 +14,11 @@
     "appDisclaimer": "This app provides recall information based on official public databases. It does not guarantee product safety. This app does not verify expiration dates or product freshness.",
     "noRecallDisclaimer": "The absence of a recall does not guarantee product safety.",
     "verifyWithSources": "Always verify recall information with official sources from the FDA or USDA.",
-    "governmentInfoDisclaimer": "This app does not replace official government information."
+    "governmentInfoDisclaimer": "This app does not replace official government information.",
+    "exitAppTitle": "Exit app?",
+    "exitAppMessage": "Do you really want to close Numeline?",
+    "exit": "Exit",
+    "stay": "Stay"
   },
   "home": {
     "title": "Numeline",
@@ -222,6 +226,8 @@
     "namePromptMessage": "To personalize your experience, please enter your first name:",
     "namePromptPlaceholder": "Your first name",
     "namePromptSave": "Continue",
+    "nameTooShort": "Please enter at least 2 characters.",
+    "nameInvalid": "Name can only contain letters, spaces, hyphens or apostrophes.",
     "namePromptSkip": "Skip"
   },
   "legal": {
@@ -266,6 +272,7 @@
     "sendResetEmail": "Send Reset Link",
     "backToLogin": "Back to Login",
     "resetEmailSent": "Reset email sent",
+    "resetEmailGenericMessage": "If an account exists for this email, you will receive a password reset link. Please check your inbox.",
     "emailSent": "Email sent!",
     "account": "Account",
     "loggedInAs": "Logged in as",
@@ -312,6 +319,9 @@
     "teamMembers": "Team members",
     "pendingInvitations": "Pending invitations",
     "emailAddress": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "inviteEmailSubject": "Invitation to join {{org}} on Numeline",
+    "inviteEmailBody": "Hello,\n\nYou have been invited to join {{org}} on Numeline as {{role}}.\n\nDownload Numeline from the Play Store or App Store to accept your invitation.\n\nThank you!",
     "role": "Role",
     "member": "Member",
     "admin": "Administrator",
@@ -320,6 +330,11 @@
     "inviteNewMember": "Invite a new member",
     "editOrgName": "Edit organization name",
     "updateName": "Update name",
+    "dangerZone": "Danger zone",
+    "deleteOrg": "Delete team",
+    "confirmDeleteOrg": "Are you sure you want to permanently delete the team \"{{name}}\"? This will remove all members and invitations. This action cannot be undone.",
+    "orgDeleted": "Team deleted successfully.",
+    "orgDeleteFailed": "Unable to delete the team.",
     "enterEmail": "Please enter an email address",
     "invitationSent": "Invitation sent to",
     "invitationFailed": "Failed to send invitation",
@@ -419,6 +434,9 @@
     "restoreSuccessMessage": "Your purchases have been restored successfully.",
     "restoreError": "Restore error",
     "restoreErrorMessage": "Unable to restore your purchases. Please try again.",
+    "restoreNoPurchase": "No previous purchase found for this account.",
+    "confirmTitle": "Confirm subscription",
+    "confirmMessage": "Do you want to subscribe to",
     "devMode": ""
   },
   "quota": {
@@ -493,7 +511,10 @@
     "cameraLoading": "Loading camera...",
     "cameraPermissionNeeded": "Camera access is needed to scan products.",
     "allowCamera": "Allow Camera",
-    "skip": "Skip"
+    "skip": "Skip",
+    "tipBarcode": "Center the barcode inside the frame",
+    "tipBand": "Frame the lot number and hold steady",
+    "tipPhoto": "Fill the frame with the product label"
   },
   "brandAutocomplete": {
     "label": "BRAND",

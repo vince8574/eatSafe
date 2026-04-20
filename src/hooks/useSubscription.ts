@@ -119,26 +119,21 @@ export function useSubscription() {
     }
   }, [state.storeAvailable, refresh]);
 
-  // Restore previous purchases
-  const restorePurchases = useCallback(async () => {
+  // Restore previous purchases. Returns the restored subscription or null
+  // when no previous purchase was found. Throws on unexpected errors.
+  const restorePurchases = useCallback(async (): Promise<Subscription | null> => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
     try {
       const sub = await restorePreviousPurchases();
       if (sub) {
         setState((prev) => ({ ...prev, subscription: sub, loading: false, error: null }));
       } else {
-        setState((prev) => ({
-          ...prev,
-          loading: false,
-          error: t('subscription.restoreErrorMessage')
-        }));
+        setState((prev) => ({ ...prev, loading: false, error: null }));
       }
+      return sub;
     } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
-        error: error instanceof Error ? error.message : t('subscription.restoreErrorMessage'),
-      }));
+      setState((prev) => ({ ...prev, loading: false, error: null }));
+      throw error;
     }
   }, []);
 

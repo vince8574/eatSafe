@@ -14,7 +14,11 @@
     "appDisclaimer": "Questa app fornisce informazioni sui richiami basate su database pubblici ufficiali. Non garantisce la sicurezza del prodotto. Questa app non verifica le date di scadenza o la freschezza dei prodotti.",
     "noRecallDisclaimer": "L'assenza di un richiamo non garantisce la sicurezza del prodotto.",
     "verifyWithSources": "Verificare sempre le informazioni sui richiami con fonti ufficiali della FDA o USDA.",
-    "governmentInfoDisclaimer": "Questa app non sostituisce le informazioni ufficiali del governo."
+    "governmentInfoDisclaimer": "Questa app non sostituisce le informazioni ufficiali del governo.",
+    "exitAppTitle": "Uscire dall'app?",
+    "exitAppMessage": "Vuoi davvero chiudere Numeline?",
+    "exit": "Esci",
+    "stay": "Resta"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "Per personalizzare la tua esperienza, inserisci il tuo nome:",
     "namePromptPlaceholder": "Il tuo nome",
     "namePromptSave": "Continua",
+    "nameTooShort": "Inserisci almeno 2 caratteri.",
+    "nameInvalid": "Il nome può contenere solo lettere, spazi, trattini o apostrofi.",
     "namePromptSkip": "Salta"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "Invia link di ripristino",
     "backToLogin": "Torna al login",
     "resetEmailSent": "Email di ripristino inviata",
+    "resetEmailGenericMessage": "Se esiste un account per questa email, riceverai un link per reimpostare la password. Controlla la tua casella di posta.",
     "emailSent": "Email inviata!",
     "account": "Account",
     "loggedInAs": "Accesso eseguito come",
@@ -269,6 +276,9 @@
     "teamMembers": "Membri del team",
     "pendingInvitations": "Inviti in sospeso",
     "emailAddress": "Indirizzo email",
+    "emailPlaceholder": "nome@esempio.com",
+    "inviteEmailSubject": "Invito a unirti a {{org}} su Numeline",
+    "inviteEmailBody": "Ciao,\n\nSei stato invitato a unirti a {{org}} su Numeline come {{role}}.\n\nScarica Numeline da Play Store o App Store per accettare il tuo invito.\n\nGrazie!",
     "role": "Ruolo",
     "member": "Membro",
     "admin": "Amministratore",
@@ -276,6 +286,11 @@
     "sendInvitation": "Invia invito",
     "inviteNewMember": "Invita un nuovo membro",
     "editOrgName": "Modifica nome organizzazione",
+    "dangerZone": "Zona pericolosa",
+    "deleteOrg": "Elimina team",
+    "confirmDeleteOrg": "Sei sicuro di voler eliminare definitivamente il team \"{{name}}\"? Tutti i membri e gli inviti verranno rimossi. Questa azione non può essere annullata.",
+    "orgDeleted": "Team eliminato con successo.",
+    "orgDeleteFailed": "Impossibile eliminare il team.",
     "updateName": "Aggiorna nome",
     "enterEmail": "Inserisci un indirizzo email",
     "invitationSent": "Invito inviato a",
@@ -370,7 +385,17 @@
       "medium": "Pacchetto Medio",
       "large": "Pacchetto Grande",
       "xlarge": "Pacchetto XL"
-    }
+    },
+    "restoreTitle": "Ripristina acquisti",
+    "restoreHelper": "Ripristina i tuoi acquisti precedenti se hai cambiato dispositivo o reinstallato l'app.",
+    "restoreButton": "Ripristina i miei acquisti",
+    "restoreSuccess": "Ripristino riuscito",
+    "restoreSuccessMessage": "I tuoi acquisti sono stati ripristinati con successo.",
+    "restoreError": "Errore di ripristino",
+    "restoreErrorMessage": "Impossibile ripristinare i tuoi acquisti. Riprova.",
+    "restoreNoPurchase": "Nessun acquisto precedente trovato per questo account.",
+    "confirmTitle": "Conferma abbonamento",
+    "confirmMessage": "Vuoi abbonarti a"
   },
   "quota": {
     "reached": "Quota di scansione raggiunta",
@@ -444,7 +469,10 @@
     "cameraLoading": "Caricamento fotocamera...",
     "cameraPermissionNeeded": "L'accesso alla fotocamera è necessario per scansionare i prodotti.",
     "allowCamera": "Consenti fotocamera",
-    "skip": "Salta"
+    "skip": "Salta",
+    "tipBarcode": "Centra il codice a barre nel riquadro",
+    "tipBand": "Inquadra il numero di lotto e tieni fermo",
+    "tipPhoto": "Riempi il riquadro con l'etichetta del prodotto"
   },
   "brandAutocomplete": {
     "label": "MARCA",

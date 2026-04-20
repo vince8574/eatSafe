@@ -10,20 +10,48 @@ interface NamePromptModalProps {
   onSkip: () => void;
 }
 
+const MAX_NAME_LENGTH = 30;
+const MIN_NAME_LENGTH = 2;
+// Lettres (toutes langues), espaces, apostrophes, tirets
+const NAME_REGEX = /^[\p{L}][\p{L} '\-]*$/u;
+
 export function NamePromptModal({ visible, onSave, onSkip }: NamePromptModalProps) {
   const { colors } = useTheme();
   const { t } = useI18n();
   const [name, setName] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const validate = (value: string): string | null => {
+    const trimmed = value.trim();
+    if (trimmed.length < MIN_NAME_LENGTH) {
+      return t('welcomeScreen.nameTooShort');
+    }
+    if (!NAME_REGEX.test(trimmed)) {
+      return t('welcomeScreen.nameInvalid');
+    }
+    return null;
+  };
+
+  const handleChange = (value: string) => {
+    setName(value);
+    if (error) setError(null);
+  };
 
   const handleSave = () => {
-    if (name.trim()) {
-      onSave(name.trim());
-      setName('');
+    const trimmed = name.trim();
+    const err = validate(trimmed);
+    if (err) {
+      setError(err);
+      return;
     }
+    onSave(trimmed);
+    setName('');
+    setError(null);
   };
 
   const handleSkip = () => {
     setName('');
+    setError(null);
     onSkip();
   };
 
@@ -53,17 +81,22 @@ export function NamePromptModal({ visible, onSave, onSkip }: NamePromptModalProp
                 {
                   backgroundColor: colors.surfaceAlt,
                   color: colors.textPrimary,
-                  borderColor: colors.border
+                  borderColor: error ? '#D64545' : colors.border
                 }
               ]}
               placeholder={t('welcomeScreen.namePromptPlaceholder')}
               placeholderTextColor={colors.textSecondary}
               value={name}
-              onChangeText={setName}
+              onChangeText={handleChange}
               autoCapitalize="words"
+              autoCorrect={false}
+              maxLength={MAX_NAME_LENGTH}
               autoFocus
               onSubmitEditing={handleSave}
             />
+            {error ? (
+              <Text style={styles.errorText}>{error}</Text>
+            ) : null}
 
             <View style={styles.buttons}>
               <TouchableOpacity
@@ -153,5 +186,12 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '700'
+  },
+  errorText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#D64545',
+    marginTop: -12,
+    textAlign: 'center'
   }
 });

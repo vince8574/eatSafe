@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -25,12 +25,53 @@ export default function SubscriptionScreen() {
     refresh
   } = useSubscription();
 
+  const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
+  const [pendingPackId, setPendingPackId] = useState<string | null>(null);
+
+  const handleChoosePlan = (planId: string) => {
+    if (purchasing) return;
+    const plan = plans.find((p) => p.id === planId);
+    Alert.alert(
+      t('subscription.confirmTitle'),
+      plan ? `${t('subscription.confirmMessage')} ${t(plan.labelKey)} (${plan.price})?` : t('subscription.confirmMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('subscription.choosePlan'),
+          onPress: async () => {
+            setPendingPlanId(planId);
+            try {
+              await choosePlan(planId);
+            } finally {
+              setPendingPlanId(null);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleBuyPack = async (packId: string, quantity: number) => {
+    if (purchasing) return;
+    setPendingPackId(packId);
+    try {
+      await buyPack(quantity);
+    } finally {
+      setPendingPackId(null);
+    }
+  };
+
   const handleRestorePurchases = async () => {
     try {
-      await restorePurchases();
-      Alert.alert(t('subscription.restoreSuccess'), t('subscription.restoreSuccessMessage'));
+      const restored = await restorePurchases();
+      if (restored) {
+        Alert.alert(t('subscription.restoreSuccess'), t('subscription.restoreSuccessMessage'));
+      } else {
+        Alert.alert(t('subscription.restoreError'), t('subscription.restoreNoPurchase'));
+      }
     } catch (err) {
-      Alert.alert(t('subscription.restoreError'), t('subscription.restoreErrorMessage'));
+      const message = err instanceof Error ? err.message : t('subscription.restoreErrorMessage');
+      Alert.alert(t('subscription.restoreError'), message);
     }
   };
 
@@ -114,15 +155,17 @@ export default function SubscriptionScreen() {
             {t('subscription.plansHelper')}
           </Text>
           {plans.map((plan) => {
-            const selected = subscription?.planId === plan.id;
+            const isActive = subscription?.planId === plan.id && subscription?.status === 'active';
+            const isPending = pendingPlanId === plan.id;
+            const disabled = loading || purchasing || isActive;
             return (
               <View
                 key={plan.id}
                 style={[
                   styles.planCard,
                   {
-                    borderColor: selected ? colors.accent : colors.border,
-                    backgroundColor: selected ? colors.surfaceAlt : colors.surface
+                    borderColor: isActive ? colors.accent : colors.border,
+                    backgroundColor: isActive ? colors.surfaceAlt : colors.surface
                   }
                 ]}
               >
@@ -138,21 +181,25 @@ export default function SubscriptionScreen() {
                 <TouchableOpacity
                   style={[
                     styles.planButton,
-                    { backgroundColor: selected ? colors.surface : colors.accent, borderColor: colors.accent }
+                    {
+                      backgroundColor: isActive ? colors.surface : colors.accent,
+                      borderColor: colors.accent,
+                      opacity: disabled && !isPending ? 0.5 : 1
+                    }
                   ]}
-                  onPress={() => choosePlan(plan.id)}
-                  disabled={loading || purchasing}
+                  onPress={() => handleChoosePlan(plan.id)}
+                  disabled={disabled}
                 >
-                  {purchasing ? (
-                    <ActivityIndicator color={selected ? colors.accent : colors.surface} size="small" />
+                  {isPending ? (
+                    <ActivityIndicator color={isActive ? colors.accent : colors.surface} size="small" />
                   ) : (
                     <Text
                       style={[
                         styles.planButtonText,
-                        { color: selected ? colors.accent : colors.surface }
+                        { color: isActive ? colors.accent : colors.surface }
                       ]}
                     >
-                      {selected ? t('subscription.planSelected') : t('subscription.choosePlan')}
+                      {isActive ? t('subscription.planSelected') : t('subscription.choosePlan')}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -167,24 +214,35 @@ export default function SubscriptionScreen() {
             {t('subscription.scanPacksHelper')}
           </Text>
           <View style={styles.packs}>
-            {packs.map((pack) => (
-              <TouchableOpacity
-                key={pack.id}
-                style={[styles.packButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
-                onPress={() => buyPack(pack.quantity)}
-                disabled={loading || purchasing}
-              >
-                {purchasing ? (
-                  <ActivityIndicator color={colors.accent} size="small" />
-                ) : (
-                  <>
-                    <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
-                    <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
-                    <Text style={[styles.packPrice, { color: colors.accent }]}>{pack.price}</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-            ))}
+            {packs.map((pack) => {
+              const isPending = pendingPackId === pack.id;
+              const disabled = loading || purchasing;
+              return (
+                <TouchableOpacity
+                  key={pack.id}
+                  style={[
+                    styles.packButton,
+                    {
+                      backgroundColor: colors.surfaceAlt,
+                      borderColor: colors.accent,
+                      opacity: disabled && !isPending ? 0.5 : 1
+                    }
+                  ]}
+                  onPress={() => handleBuyPack(pack.id, pack.quantity)}
+                  disabled={disabled}
+                >
+                  {isPending ? (
+                    <ActivityIndicator color={colors.accent} size="small" />
+                  ) : (
+                    <>
+                      <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
+                      <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
+                      <Text style={[styles.packPrice, { color: colors.accent }]}>{pack.price}</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 

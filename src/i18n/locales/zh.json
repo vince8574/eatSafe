@@ -14,7 +14,11 @@
     "appDisclaimer": "本应用程序根据官方公共数据库提供召回信息。它不保证产品安全。本应用程序不验证保质期或产品新鲜度。",
     "noRecallDisclaimer": "无召回不保证产品安全。",
     "verifyWithSources": "请始终通过FDA或USDA的官方来源验证召回信息。",
-    "governmentInfoDisclaimer": "本应用程序不能替代官方政府信息。"
+    "governmentInfoDisclaimer": "本应用程序不能替代官方政府信息。",
+    "exitAppTitle": "退出应用？",
+    "exitAppMessage": "确定要关闭 Numeline 吗？",
+    "exit": "退出",
+    "stay": "留下"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "为了个性化您的体验,请输入您的名字:",
     "namePromptPlaceholder": "您的名字",
     "namePromptSave": "继续",
+    "nameTooShort": "请至少输入2个字符。",
+    "nameInvalid": "姓名只能包含字母、空格、连字符或撇号。",
     "namePromptSkip": "跳过"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "发送重置链接",
     "backToLogin": "返回登录",
     "resetEmailSent": "重置电子邮件已发送",
+    "resetEmailGenericMessage": "如果此电子邮件存在帐户，您将收到密码重置链接。请查收您的收件箱。",
     "emailSent": "电子邮件已发送!",
     "account": "帐户",
     "loggedInAs": "登录身份",
@@ -264,6 +271,9 @@
     "teamMembers": "团队成员",
     "pendingInvitations": "待处理邀请",
     "emailAddress": "电子邮箱",
+    "emailPlaceholder": "name@example.com",
+    "inviteEmailSubject": "邀请加入 Numeline 上的 {{org}}",
+    "inviteEmailBody": "您好,\n\n您被邀请以 {{role}} 身份加入 Numeline 上的 {{org}}。\n\n请从 Play Store 或 App Store 下载 Numeline 以接受您的邀请。\n\n谢谢!",
     "role": "角色",
     "member": "成员",
     "admin": "管理员",
@@ -271,6 +281,11 @@
     "sendInvitation": "发送邀请",
     "inviteNewMember": "邀请新成员",
     "editOrgName": "编辑组织名称",
+    "dangerZone": "危险区域",
+    "deleteOrg": "删除团队",
+    "confirmDeleteOrg": "确定要永久删除团队 \"{{name}}\" 吗？所有成员和邀请将被删除。此操作无法撤销。",
+    "orgDeleted": "团队已成功删除。",
+    "orgDeleteFailed": "无法删除团队。",
     "updateName": "更新名称",
     "enterEmail": "请输入电子邮箱",
     "invitationSent": "邀请已发送至",
@@ -365,7 +380,17 @@
       "medium": "中型包",
       "large": "大型包",
       "xlarge": "超大型包"
-    }
+    },
+    "restoreTitle": "恢复购买",
+    "restoreHelper": "如果您更换了设备或重新安装了应用程序，请恢复您之前的购买。",
+    "restoreButton": "恢复我的购买",
+    "restoreSuccess": "恢复成功",
+    "restoreSuccessMessage": "您的购买已成功恢复。",
+    "restoreError": "恢复错误",
+    "restoreErrorMessage": "无法恢复您的购买。请重试。",
+    "restoreNoPurchase": "未找到此账户的任何以往购买记录。",
+    "confirmTitle": "确认订阅",
+    "confirmMessage": "您想订阅"
   },
   "quota": {
     "reached": "已达到扫描配额",
@@ -439,7 +464,10 @@
     "cameraLoading": "正在加载相机...",
     "cameraPermissionNeeded": "需要相机权限来扫描产品。",
     "allowCamera": "允许相机",
-    "skip": "跳过"
+    "skip": "跳过",
+    "tipBarcode": "将条形码置于取景框中央",
+    "tipBand": "对准批号并保持稳定",
+    "tipPhoto": "将产品标签填满取景框"
   },
   "brandAutocomplete": {
     "label": "品牌",

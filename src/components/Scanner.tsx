@@ -79,7 +79,8 @@ export function Scanner({
     try {
       const photo = await cameraRef.current.takePictureAsync({
         quality: 1.0,
-        skipProcessing: false
+        skipProcessing: false,
+        shutterSound: false
       });
 
       if (photo?.uri) {
@@ -225,6 +226,19 @@ export function Scanner({
             <Ionicons name="play-skip-forward" size={18} color={colors.surface} />
           </TouchableOpacity>
         )}
+
+        <View pointerEvents="none" style={styles.tipContainer}>
+          <View style={styles.tipBubble}>
+            <Ionicons name="information-circle-outline" size={16} color="#FFF" />
+            <Text style={styles.tipText}>
+              {mode === 'barcode'
+                ? t('scanner.tipBarcode')
+                : mode === 'band'
+                  ? t('scanner.tipBand')
+                  : t('scanner.tipPhoto')}
+            </Text>
+          </View>
+        </View>
 
         <View pointerEvents="none" style={styles.overlay}>
           {mode === 'barcode' ? (
@@ -539,5 +553,30 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     lineHeight: 18
+  },
+  tipContainer: {
+    position: 'absolute',
+    top: 80,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 5
+  },
+  tipBubble: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    maxWidth: '85%'
+  },
+  tipText: {
+    color: '#FFF',
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+    flexShrink: 1
   }
 });

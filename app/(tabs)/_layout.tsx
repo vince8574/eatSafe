@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { Tabs } from 'expo-router';
-import { Image, View } from 'react-native';
+import { Alert, BackHandler, Image, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
@@ -41,6 +42,23 @@ export default function TabsLayout() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const insets = useSafeAreaInsets();
+
+  // BUG-011: demander confirmation avant de quitter l'app via le bouton retour
+  useEffect(() => {
+    const onBackPress = () => {
+      Alert.alert(
+        t('common.exitAppTitle'),
+        t('common.exitAppMessage'),
+        [
+          { text: t('common.stay'), style: 'cancel' },
+          { text: t('common.exit'), style: 'destructive', onPress: () => BackHandler.exitApp() }
+        ]
+      );
+      return true;
+    };
+    const sub = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => sub.remove();
+  }, [t]);
 
   return (
     <Tabs

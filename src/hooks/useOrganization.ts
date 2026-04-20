@@ -17,7 +17,8 @@ import {
   acceptInvite,
   rejectInvite,
   getOrganizationInvites,
-  cancelInvite
+  cancelInvite,
+  deleteOrganization
 } from '../services/organizationService';
 
 export interface UseOrganizationReturn {
@@ -40,6 +41,7 @@ export interface UseOrganizationReturn {
   acceptPendingInvite: (inviteId: string) => Promise<void>;
   rejectPendingInvite: (inviteId: string) => Promise<void>;
   cancelOrgInvite: (inviteId: string) => Promise<void>;
+  deleteOrg: () => Promise<void>;
 }
 
 /**
@@ -211,6 +213,25 @@ export function useOrganization(): UseOrganizationReturn {
     }
   }
 
+  async function deleteOrg() {
+    if (!organization) {
+      throw new Error('No organization found');
+    }
+    try {
+      setError(null);
+      await deleteOrganization(organization.id);
+      setOrganization(null);
+      setMembers([]);
+      setUserRole(null);
+      setCanManage(false);
+      setOrganizationInvites([]);
+    } catch (err) {
+      console.error('[useOrganization] Error deleting organization:', err);
+      setError(err instanceof Error ? err.message : 'Failed to delete organization');
+      throw err;
+    }
+  }
+
   return {
     organization,
     members,
@@ -228,7 +249,8 @@ export function useOrganization(): UseOrganizationReturn {
     updateName,
     acceptPendingInvite,
     rejectPendingInvite,
-    cancelOrgInvite
+    cancelOrgInvite,
+    deleteOrg
   };
 }
 

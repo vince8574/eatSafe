@@ -435,3 +435,46 @@ export async function cancelInvite(inviteId: string): Promise<void> {
 
   console.log(`[organizationService] Cancelled invite ${inviteId}`);
 }
+
+/**
+ * Supprimer une organisation (réservé au propriétaire).
+ * Supprime l'org, ses membres, ses invitations en attente,
+ * et nettoie le cache orgId sur le profil utilisateur.
+ */
+export async function deleteOrganization(orgId: string): Promise<void> {
+  const db = getFirestore();
+  const userId = await getCurrentUserId();
+
+  const orgDoc = await db.collection(ORGS_COLLECTION).doc(orgId).get();
+  if (!orgDoc.exists) {
+    throw new Error('Organization not found');
+  }
+
+  const org = orgDoc.data() as Organization;
+  if (org.ownerId !== userId) {
+    throw new Error('Only the owner can delete the organization');
+  }
+
+  // Supprimer tous les membres
+  const membersSnapshot = await db
+    .collection(MEMBERS_COLLECTION)
+    .doc(orgId)
+    .collection('members')
+    .get();
+  await Promise.all(membersSnapshot.docs.map((doc) => doc.ref.delete()));
+
+  // Supprimer les invitations en attente
+  const invitesSnapshot = await db
+    .collection(INVITES_COLLECTION)
+    .where('orgId', '==', orgId)
+    .get();
+  await Promise.all(invitesSnapshot.docs.map((doc) => doc.ref.delete()));
+
+  // Supprimer l'organisation
+  await db.collection(ORGS_COLLECTION).doc(orgId).delete();
+
+  // Nettoyer le cache orgId du propriétaire
+  await db.collection('users').doc(userId).set({ orgId: null }, { merge: true });
+
+  console.log(`[organizationService] Deleted organization ${orgId}`);
+}

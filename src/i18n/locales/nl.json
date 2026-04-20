@@ -14,7 +14,11 @@
     "appDisclaimer": "Deze app biedt recall-informatie op basis van officiële openbare databases. Het garandeert geen productveiligheid. Deze app controleert geen houdbaarheidsdata of versheid van producten.",
     "noRecallDisclaimer": "De afwezigheid van een recall garandeert niet de veiligheid van het product.",
     "verifyWithSources": "Verifieer terugroepinformatie altijd met officiële bronnen van de FDA of USDA.",
-    "governmentInfoDisclaimer": "Deze app vervangt geen officiële overheidsinformatie."
+    "governmentInfoDisclaimer": "Deze app vervangt geen officiële overheidsinformatie.",
+    "exitAppTitle": "App afsluiten?",
+    "exitAppMessage": "Wilt u Numeline echt afsluiten?",
+    "exit": "Afsluiten",
+    "stay": "Blijven"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "Om uw ervaring te personaliseren, voer uw voornaam in:",
     "namePromptPlaceholder": "Uw voornaam",
     "namePromptSave": "Doorgaan",
+    "nameTooShort": "Voer ten minste 2 tekens in.",
+    "nameInvalid": "De naam mag alleen letters, spaties, koppeltekens of apostrofs bevatten.",
     "namePromptSkip": "Overslaan"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "Resetlink verzenden",
     "backToLogin": "Terug naar inloggen",
     "resetEmailSent": "Reset e-mail verzonden",
+    "resetEmailGenericMessage": "Als er een account bestaat voor dit e-mailadres, ontvangt u een link om uw wachtwoord opnieuw in te stellen. Controleer uw inbox.",
     "emailSent": "E-mail verzonden!",
     "account": "Account",
     "loggedInAs": "Ingelogd als",
@@ -258,7 +265,10 @@
     "cameraLoading": "Camera laden...",
     "cameraPermissionNeeded": "Cameratoegang is nodig om producten te scannen.",
     "allowCamera": "Camera toestaan",
-    "skip": "Overslaan"
+    "skip": "Overslaan",
+    "tipBarcode": "Centreer de barcode in het kader",
+    "tipBand": "Kader het partijnummer in en houd stil",
+    "tipPhoto": "Vul het kader met het productetiket"
   },
   "brandAutocomplete": {
     "label": "MERK",
@@ -288,6 +298,9 @@
     "teamMembers": "Teamleden",
     "pendingInvitations": "Openstaande uitnodigingen",
     "emailAddress": "E-mailadres",
+    "emailPlaceholder": "naam@voorbeeld.com",
+    "inviteEmailSubject": "Uitnodiging voor {{org}} op Numeline",
+    "inviteEmailBody": "Hallo,\n\nJe bent uitgenodigd om lid te worden van {{org}} op Numeline als {{role}}.\n\nDownload Numeline in de Play Store of App Store om je uitnodiging te accepteren.\n\nBedankt!",
     "role": "Rol",
     "member": "Lid",
     "admin": "Beheerder",
@@ -295,6 +308,11 @@
     "sendInvitation": "Uitnodiging versturen",
     "inviteNewMember": "Nieuw lid uitnodigen",
     "editOrgName": "Organisatienaam bewerken",
+    "dangerZone": "Gevaarlijke zone",
+    "deleteOrg": "Team verwijderen",
+    "confirmDeleteOrg": "Weet u zeker dat u het team \"{{name}}\" permanent wilt verwijderen? Alle leden en uitnodigingen worden verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+    "orgDeleted": "Team succesvol verwijderd.",
+    "orgDeleteFailed": "Kan het team niet verwijderen.",
     "updateName": "Naam bijwerken",
     "enterEmail": "Voer een e-mailadres in",
     "invitationSent": "Uitnodiging verstuurd naar",
@@ -389,7 +407,17 @@
       "medium": "Medium Pakket",
       "large": "Groot Pakket",
       "xlarge": "XL Pakket"
-    }
+    },
+    "restoreTitle": "Aankopen herstellen",
+    "restoreHelper": "Herstel uw eerdere aankopen als u van apparaat bent gewisseld of de app opnieuw hebt geïnstalleerd.",
+    "restoreButton": "Mijn aankopen herstellen",
+    "restoreSuccess": "Herstellen geslaagd",
+    "restoreSuccessMessage": "Uw aankopen zijn succesvol hersteld.",
+    "restoreError": "Herstelfout",
+    "restoreErrorMessage": "Kan uw aankopen niet herstellen. Probeer het opnieuw.",
+    "restoreNoPurchase": "Geen eerdere aankoop gevonden voor dit account.",
+    "confirmTitle": "Abonnement bevestigen",
+    "confirmMessage": "Wilt u zich abonneren op"
   },
   "quota": {
     "reached": "Scanquotum bereikt",

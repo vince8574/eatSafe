@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal, Pressable } from 'react-native';
-import { useRouter } from 'expo-router';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ActivityIndicator, Alert, Modal, Pressable, InteractionManager } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
@@ -22,7 +22,20 @@ export function HistoryScreen() {
   const router = useRouter();
   const { products } = useScannedProducts();
   const { subscription, loading: subLoading } = useSubscription();
-  const [filter, setFilter] = useState<Filter>('all');
+  const { filter: filterParam } = useLocalSearchParams<{ filter?: string }>();
+  const initialFilter: Filter =
+    filterParam === 'recalled' || filterParam === 'safe' || filterParam === 'unknown'
+      ? filterParam
+      : 'all';
+  const [filter, setFilter] = useState<Filter>(initialFilter);
+
+  useEffect(() => {
+    if (filterParam === 'recalled' || filterParam === 'safe' || filterParam === 'unknown') {
+      setFilter(filterParam);
+    } else if (filterParam === 'all') {
+      setFilter('all');
+    }
+  }, [filterParam]);
   const [isExporting, setIsExporting] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
@@ -100,23 +113,26 @@ export function HistoryScreen() {
       return;
     }
 
-    try {
-      setIsExporting(true);
-      setShowExportModal(false);
+    setIsExporting(true);
+    setShowExportModal(false);
 
-      await exportProducts({
-        products: filtered,
-        format,
-        regulatoryFormat
-      });
-
-      Alert.alert(t('historyScreen.exportSuccess'), t('historyScreen.fileGenerated', { format: format.toUpperCase() }));
-    } catch (error) {
-      console.error('[HistoryScreen] Export error', error);
-      Alert.alert(t('auth.error'), error instanceof Error ? error.message : t('historyScreen.cannotGenerate'));
-    } finally {
-      setIsExporting(false);
-    }
+    // Attendre la fin des animations/interactions avant de lancer
+    // l'export (évite le freeze à la première ouverture)
+    InteractionManager.runAfterInteractions(async () => {
+      try {
+        await exportProducts({
+          products: filtered,
+          format,
+          regulatoryFormat
+        });
+        Alert.alert(t('historyScreen.exportSuccess'), t('historyScreen.fileGenerated', { format: format.toUpperCase() }));
+      } catch (error) {
+        console.error('[HistoryScreen] Export error', error);
+        Alert.alert(t('auth.error'), error instanceof Error ? error.message : t('historyScreen.cannotGenerate'));
+      } finally {
+        setIsExporting(false);
+      }
+    });
   }, [filtered, exportFormats, regulatoryFormat, t]);
 
   const renderItem = ({ item }: { item: ScannedProduct }) => {

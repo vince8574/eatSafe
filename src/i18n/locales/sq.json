@@ -14,7 +14,11 @@
     "appDisclaimer": "Ky aplikacion ofron informacion mbi tërheqjet bazuar në databaza publike zyrtare. Nuk garanton sigurinë e produktit. Ky aplikacion nuk verifikon datat e skadencës ose freskinë e produkteve.",
     "noRecallDisclaimer": "Mungesa e një tërheqjeje nuk garanton sigurinë e produktit.",
     "verifyWithSources": "Verifikoni gjithmonë informacionin e tërheqjes me burime zyrtare nga FDA ose USDA.",
-    "governmentInfoDisclaimer": "Ky aplikacion nuk zëvendëson informacionin zyrtar të qeverisë."
+    "governmentInfoDisclaimer": "Ky aplikacion nuk zëvendëson informacionin zyrtar të qeverisë.",
+    "exitAppTitle": "Dilni nga aplikacioni?",
+    "exitAppMessage": "A dëshironi vërtet të mbyllni Numeline?",
+    "exit": "Dil",
+    "stay": "Qëndro"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "Për të personalizuar përvojën tuaj, ju lutemi shkruani emrin tuaj:",
     "namePromptPlaceholder": "Emri juaj",
     "namePromptSave": "Vazhdo",
+    "nameTooShort": "Ju lutemi shkruani të paktën 2 karaktere.",
+    "nameInvalid": "Emri mund të përmbajë vetëm shkronja, hapësira, vija ose apostrofe.",
     "namePromptSkip": "Kalo"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "Dërgoni lidhjen e rivendosjes",
     "backToLogin": "Kthehuni në hyrje",
     "resetEmailSent": "Email rivendosje dërguar",
+    "resetEmailGenericMessage": "Nëse një llogari ekziston për këtë email, do të merrni një lidhje për rivendosjen e fjalëkalimit. Ju lutemi kontrolloni kutinë tuaj hyrëse.",
     "emailSent": "Email dërguar!",
     "account": "Llogaria",
     "loggedInAs": "Hyni si",
@@ -264,6 +271,9 @@
     "teamMembers": "Anëtarët e ekipit",
     "pendingInvitations": "Ftesa në pritje",
     "emailAddress": "Adresa e emailit",
+    "emailPlaceholder": "emri@shembull.com",
+    "inviteEmailSubject": "Ftesë për t'u bashkuar me {{org}} në Numeline",
+    "inviteEmailBody": "Përshëndetje,\n\nJeni ftuar të bashkoheni me {{org}} në Numeline si {{role}}.\n\nShkarkoni Numeline nga Play Store ose App Store për të pranuar ftesën tuaj.\n\nFaleminderit!",
     "role": "Roli",
     "member": "Anëtar",
     "admin": "Administrator",
@@ -271,6 +281,11 @@
     "sendInvitation": "Dërgo ftesën",
     "inviteNewMember": "Fto anëtar të ri",
     "editOrgName": "Ndrysho emrin e organizatës",
+    "dangerZone": "Zona e rrezikshme",
+    "deleteOrg": "Fshi ekipin",
+    "confirmDeleteOrg": "Jeni i sigurt që dëshironi të fshini përgjithmonë ekipin \"{{name}}\"? Të gjithë anëtarët dhe ftesat do të hiqen. Ky veprim nuk mund të zhbëhet.",
+    "orgDeleted": "Ekipi u fshi me sukses.",
+    "orgDeleteFailed": "Fshirja e ekipit dështoi.",
     "updateName": "Përditëso emrin",
     "enterEmail": "Ju lutem shkruani adresën e emailit",
     "invitationSent": "Ftesa u dërgua tek",
@@ -365,7 +380,17 @@
       "medium": "Paketë e mesme",
       "large": "Paketë e madhe",
       "xlarge": "Paketë XL"
-    }
+    },
+    "restoreTitle": "Rivendos blerjet",
+    "restoreHelper": "Rivendos blerjet e tua të mëparshme nëse ke ndërruar pajisjen ose ke riinstaluar aplikacionin.",
+    "restoreButton": "Rivendos blerjet e mia",
+    "restoreSuccess": "Rivendosja e suksesshme",
+    "restoreSuccessMessage": "Blerjet e tua janë rivendosur me sukses.",
+    "restoreError": "Gabim në rivendosje",
+    "restoreErrorMessage": "Nuk mund të rivendosim blerjet e tua. Ju lutemi provoni përsëri.",
+    "restoreNoPurchase": "Nuk u gjet asnjë blerje e mëparshme për këtë llogari.",
+    "confirmTitle": "Konfirmo abonimin",
+    "confirmMessage": "Dëshiron të abonohesh në"
   },
   "quota": {
     "reached": "Kuota e skanimit u arrit",
@@ -439,7 +464,10 @@
     "cameraLoading": "Duke ngarkuar kamerën...",
     "cameraPermissionNeeded": "Qasja në kamerë nevojitet për të skanuar produktet.",
     "allowCamera": "Lejo kamerën",
-    "skip": "Kalo"
+    "skip": "Kalo",
+    "tipBarcode": "Qendërzo barkodin brenda kornizës",
+    "tipBand": "Kornizo numrin e grupit dhe qëndro i palëvizur",
+    "tipPhoto": "Mbush kornizën me etiketën e produktit"
   },
   "brandAutocomplete": {
     "label": "MARKA",

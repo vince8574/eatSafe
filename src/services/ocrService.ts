@@ -5,7 +5,7 @@ import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { OCRResult } from '../types';
 import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
-import { tryVisionFallback } from './visionFallbackService';
+import { tryVisionFallback, runVisionFallback, isVisionAvailable } from './visionFallbackService';
 
 const preprocessConfig = {
   resize: { width: 1800 }, // Résolution optimale pour ML Kit (trop élevé peut dégrader la précision)
@@ -802,24 +802,31 @@ export async function performOcr(uri: string, brand?: string): Promise<LotExtrac
       console.warn('Failed to delete mlkit processed image', error);
     }
 
-    // Si ML Kit n'a trouvé aucun lot, tenter Google Vision en fallback
+    // Si ML Kit n'a trouvé aucun lot, forcer Google Vision en fallback
     const mlkitLot = await extractLotNumber(result.text, brand);
     if (!mlkitLot) {
-      console.log('[Lot OCR] ML Kit found no lot number, trying Google Vision as fallback...');
-      const processedForVision = await preprocessImage(uri, {
-        cropForLot: true,
-        narrowBand: true,
-        useVisionConfig: true
-      });
-      const visionResult = await tryVisionFallback(processedForVision, result, 'lot');
-      try {
-        await FileSystem.deleteAsync(processedForVision, { idempotent: true });
-      } catch (error) {
-        console.warn('Failed to delete vision processed image', error);
-      }
-      if (visionResult) {
-        console.log('[Lot OCR] Using Google Vision fallback result');
-        result = visionResult;
+      if (isVisionAvailable()) {
+        console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
+        const processedForVision = await preprocessImage(uri, {
+          cropForLot: true,
+          narrowBand: true,
+          useVisionConfig: true
+        });
+        try {
+          const visionResult = await runVisionFallback(processedForVision);
+          console.log('[Lot OCR] Using Google Vision fallback result');
+          result = visionResult;
+        } catch (error) {
+          console.warn('[Lot OCR] Vision fallback failed, keeping ML Kit result', error);
+        } finally {
+          try {
+            await FileSystem.deleteAsync(processedForVision, { idempotent: true });
+          } catch (error) {
+            console.warn('Failed to delete vision processed image', error);
+          }
+        }
+      } else {
+        console.log('[Lot OCR] Vision not configured, cannot fallback');
       }
     } else {
       console.log('[Lot OCR] ML Kit found lot number, skipping Vision API');

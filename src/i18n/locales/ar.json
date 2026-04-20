@@ -14,7 +14,11 @@
     "appDisclaimer": "يوفر هذا التطبيق معلومات عن سحب المنتجات من قواعد البيانات الرسمية. لا يضمن سلامة المنتج ولا يتحقق من تواريخ الصلاحية.",
     "noRecallDisclaimer": "عدم وجود سحب لا يعني أن المنتج آمن.",
     "verifyWithSources": "تحقق دائماً من معلومات السحب من المصادر الرسمية (FDA أو USDA).",
-    "governmentInfoDisclaimer": "هذا التطبيق لا يُغني عن المعلومات الحكومية الرسمية."
+    "governmentInfoDisclaimer": "هذا التطبيق لا يُغني عن المعلومات الحكومية الرسمية.",
+    "exitAppTitle": "الخروج من التطبيق؟",
+    "exitAppMessage": "هل تريد حقاً إغلاق Numeline؟",
+    "exit": "خروج",
+    "stay": "البقاء"
   },
   "home": {
     "title": "Numeline",
@@ -198,6 +202,8 @@
     "namePromptMessage": "لتخصيص تجربتك، يرجى إدخال اسمك الأول:",
     "namePromptPlaceholder": "اسمك الأول",
     "namePromptSave": "متابعة",
+    "nameTooShort": "يرجى إدخال حرفين على الأقل.",
+    "nameInvalid": "يمكن أن يحتوي الاسم على حروف ومسافات وشرطات وفواصل عليا فقط.",
     "namePromptSkip": "تخطي"
   },
   "legal": {
@@ -242,6 +248,7 @@
     "sendResetEmail": "إرسال رابط إعادة التعيين",
     "backToLogin": "العودة لتسجيل الدخول",
     "resetEmailSent": "تم إرسال رابط إعادة التعيين",
+    "resetEmailGenericMessage": "إذا كان هناك حساب لهذا البريد الإلكتروني، ستتلقى رابط إعادة تعيين كلمة المرور. يرجى التحقق من صندوق الوارد الخاص بك.",
     "emailSent": "تم إرسال البريد!",
     "account": "الحساب",
     "loggedInAs": "مسجّل الدخول كـ",
@@ -283,6 +290,9 @@
     "teamMembers": "أعضاء الفريق",
     "pendingInvitations": "دعوات معلقة",
     "emailAddress": "عنوان البريد الإلكتروني",
+    "emailPlaceholder": "name@example.com",
+    "inviteEmailSubject": "دعوة للانضمام إلى {{org}} على Numeline",
+    "inviteEmailBody": "مرحباً،\n\nلقد تمت دعوتك للانضمام إلى {{org}} على Numeline كـ {{role}}.\n\nقم بتنزيل Numeline من Play Store أو App Store لقبول دعوتك.\n\nشكراً!",
     "role": "الدور",
     "member": "عضو",
     "admin": "مسؤول",
@@ -290,6 +300,11 @@
     "sendInvitation": "إرسال الدعوة",
     "inviteNewMember": "دعوة عضو جديد",
     "editOrgName": "تعديل اسم المنظمة",
+    "dangerZone": "منطقة خطر",
+    "deleteOrg": "حذف الفريق",
+    "confirmDeleteOrg": "هل أنت متأكد أنك تريد حذف الفريق \"{{name}}\" نهائياً؟ سيتم إزالة جميع الأعضاء والدعوات. لا يمكن التراجع عن هذا الإجراء.",
+    "orgDeleted": "تم حذف الفريق بنجاح.",
+    "orgDeleteFailed": "تعذر حذف الفريق.",
     "updateName": "تحديث الاسم",
     "enterEmail": "الرجاء إدخال عنوان بريد إلكتروني",
     "invitationSent": "تم إرسال الدعوة إلى",
@@ -382,7 +397,17 @@
       "medium": "حزمة متوسطة",
       "large": "حزمة كبيرة",
       "xlarge": "حزمة XL"
-    }
+    },
+    "restoreTitle": "استعادة المشتريات",
+    "restoreHelper": "استعد مشترياتك السابقة إذا قمت بتغيير الجهاز أو إعادة تثبيت التطبيق.",
+    "restoreButton": "استعادة مشترياتي",
+    "restoreSuccess": "تمت الاستعادة بنجاح",
+    "restoreSuccessMessage": "تمت استعادة مشترياتك بنجاح.",
+    "restoreError": "خطأ في الاستعادة",
+    "restoreErrorMessage": "تعذر استعادة مشترياتك. يرجى المحاولة مرة أخرى.",
+    "restoreNoPurchase": "لم يتم العثور على أي عملية شراء سابقة لهذا الحساب.",
+    "confirmTitle": "تأكيد الاشتراك",
+    "confirmMessage": "هل تريد الاشتراك في"
   },
   "quota": {
     "reached": "تم الوصول للحد الأقصى من عمليات المسح",
@@ -477,7 +502,10 @@
     "cameraLoading": "جارٍ تحميل الكاميرا...",
     "cameraPermissionNeeded": "يلزم الوصول إلى الكاميرا لمسح المنتجات.",
     "allowCamera": "السماح بالكاميرا",
-    "skip": "تخطي"
+    "skip": "تخطي",
+    "tipBarcode": "ضع الرمز الشريطي في وسط الإطار",
+    "tipBand": "أطّر رقم الدفعة وابقَ ثابتًا",
+    "tipPhoto": "املأ الإطار بملصق المنتج"
   },
   "brandAutocomplete": {
     "label": "العلامة التجارية",

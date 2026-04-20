@@ -14,7 +14,11 @@
     "appDisclaimer": "Ova aplikacija pruža informacije o opozivu na osnovu zvaničnih javnih baza podataka. Ne garantuje bezbjednost proizvoda. Ova aplikacija ne provjerava rokove trajanja niti svježinu proizvoda.",
     "noRecallDisclaimer": "Izostanak opoziva ne garantuje bezbjednost proizvoda.",
     "verifyWithSources": "Uvijek provjeravajte informacije o opozivu sa zvaničnim izvorima FDA ili USDA.",
-    "governmentInfoDisclaimer": "Ova aplikacija ne zamjenjuje zvaniene vladine informacije."
+    "governmentInfoDisclaimer": "Ova aplikacija ne zamjenjuje zvaniene vladine informacije.",
+    "exitAppTitle": "Izaći iz aplikacije?",
+    "exitAppMessage": "Želite li zaista zatvoriti Numeline?",
+    "exit": "Izađi",
+    "stay": "Ostani"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "Da biste personalizovali iskustvo, unesite svoje ime:",
     "namePromptPlaceholder": "Vaše ime",
     "namePromptSave": "Nastavi",
+    "nameTooShort": "Unesite najmanje 2 znaka.",
+    "nameInvalid": "Ime može sadržati samo slova, razmake, crtice ili apostrofe.",
     "namePromptSkip": "Preskoči"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "Pošalji vezu za resetovanje",
     "backToLogin": "Nazad na prijavu",
     "resetEmailSent": "E-pošta za resetovanje je poslana",
+    "resetEmailGenericMessage": "Ako postoji nalog za ovaj email, primićete link za resetovanje lozinke. Molimo provjerite svoje prijemno sanduče.",
     "emailSent": "E-pošta je poslana!",
     "account": "Račun",
     "loggedInAs": "Prijavljeni kao",
@@ -264,6 +271,9 @@
     "teamMembers": "Članovi tima",
     "pendingInvitations": "Pozivnice na čekanju",
     "emailAddress": "E-mail adresa",
+    "emailPlaceholder": "ime@primjer.com",
+    "inviteEmailSubject": "Pozivnica da se pridružite {{org}} na Numeline",
+    "inviteEmailBody": "Zdravo,\n\nPozvani ste da se pridružite {{org}} na Numeline kao {{role}}.\n\nPreuzmite Numeline sa Play Store ili App Store da biste prihvatili pozivnicu.\n\nHvala!",
     "role": "Uloga",
     "member": "Član",
     "admin": "Administrator",
@@ -271,6 +281,11 @@
     "sendInvitation": "Pošalji pozivnicu",
     "inviteNewMember": "Pozovi novog člana",
     "editOrgName": "Izmijeni naziv organizacije",
+    "dangerZone": "Opasna zona",
+    "deleteOrg": "Obriši tim",
+    "confirmDeleteOrg": "Da li ste sigurni da želite trajno obrisati tim \"{{name}}\"? Svi članovi i pozivnice biće uklonjeni. Ova radnja se ne može poništiti.",
+    "orgDeleted": "Tim je uspješno obrisan.",
+    "orgDeleteFailed": "Brisanje tima nije uspjelo.",
     "updateName": "Ažuriraj naziv",
     "enterEmail": "Unesite e-mail adresu",
     "invitationSent": "Pozivnica poslata",
@@ -365,7 +380,17 @@
       "medium": "Srednji paket",
       "large": "Veliki paket",
       "xlarge": "XL paket"
-    }
+    },
+    "restoreTitle": "Vrati kupovine",
+    "restoreHelper": "Vratite svoje prethodne kupovine ako ste promijenili uređaj ili ponovo instalirali aplikaciju.",
+    "restoreButton": "Vrati moje kupovine",
+    "restoreSuccess": "Vraćanje uspješno",
+    "restoreSuccessMessage": "Vaše kupovine su uspješno vraćene.",
+    "restoreError": "Greška pri vraćanju",
+    "restoreErrorMessage": "Nije moguće vratiti vaše kupovine. Molimo pokušajte ponovo.",
+    "restoreNoPurchase": "Prethodna kupovina za ovaj nalog nije pronađena.",
+    "confirmTitle": "Potvrdi pretplatu",
+    "confirmMessage": "Želite li se pretplatiti na"
   },
   "quota": {
     "reached": "Kvota skeniranja dostignuta",
@@ -439,7 +464,10 @@
     "cameraLoading": "Učitavanje kamere...",
     "cameraPermissionNeeded": "Pristup kameri je potreban za skeniranje proizvoda.",
     "allowCamera": "Dozvoli kameru",
-    "skip": "Preskoči"
+    "skip": "Preskoči",
+    "tipBarcode": "Centriraj barkod unutar okvira",
+    "tipBand": "Uokviri broj serije i drži mirno",
+    "tipPhoto": "Popuni okvir etiketom proizvoda"
   },
   "brandAutocomplete": {
     "label": "BREND",

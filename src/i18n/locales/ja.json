@@ -14,7 +14,11 @@
     "appDisclaimer": "このアプリは公式の公開データベースに基づいてリコール情報を提供します。製品の安全性は保証しません。このアプリは有効期限や製品の鮮度を確認しません。",
     "noRecallDisclaimer": "リコールがないことは製品の安全性を保証するものではありません。",
     "verifyWithSources": "リコール情報は常にFDAまたはUSDAの公式情報源で確認してください。",
-    "governmentInfoDisclaimer": "このアプリは政府の公式情報に代わるものではありません。"
+    "governmentInfoDisclaimer": "このアプリは政府の公式情報に代わるものではありません。",
+    "exitAppTitle": "アプリを終了しますか？",
+    "exitAppMessage": "本当に Numeline を閉じますか？",
+    "exit": "終了",
+    "stay": "留まる"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "体験をパーソナライズするために、お名前を入力してください:",
     "namePromptPlaceholder": "あなたの名前",
     "namePromptSave": "続ける",
+    "nameTooShort": "2文字以上入力してください。",
+    "nameInvalid": "名前には文字、スペース、ハイフン、アポストロフィのみを使用できます。",
     "namePromptSkip": "スキップ"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "リセットリンクを送信",
     "backToLogin": "ログインに戻る",
     "resetEmailSent": "リセットメールが送信されました",
+    "resetEmailGenericMessage": "このメールアドレスのアカウントが存在する場合、パスワードリセットリンクが届きます。受信トレイをご確認ください。",
     "emailSent": "メールが送信されました!",
     "account": "アカウント",
     "loggedInAs": "ログイン中:",
@@ -264,6 +271,9 @@
     "teamMembers": "チームメンバー",
     "pendingInvitations": "保留中の招待",
     "emailAddress": "メールアドレス",
+    "emailPlaceholder": "name@example.com",
+    "inviteEmailSubject": "Numeline の {{org}} への招待",
+    "inviteEmailBody": "こんにちは,\n\nNumeline の {{org}} に {{role}} として招待されました。\n\nPlay Store または App Store から Numeline をダウンロードして招待を承諾してください。\n\nよろしくお願いします!",
     "role": "役割",
     "member": "メンバー",
     "admin": "管理者",
@@ -271,6 +281,11 @@
     "sendInvitation": "招待を送信",
     "inviteNewMember": "新しいメンバーを招待",
     "editOrgName": "組織名を編集",
+    "dangerZone": "危険ゾーン",
+    "deleteOrg": "チームを削除",
+    "confirmDeleteOrg": "チーム「{{name}}」を完全に削除してもよろしいですか？すべてのメンバーと招待が削除されます。この操作は取り消せません。",
+    "orgDeleted": "チームが正常に削除されました。",
+    "orgDeleteFailed": "チームを削除できませんでした。",
     "updateName": "名前を更新",
     "enterEmail": "メールアドレスを入力してください",
     "invitationSent": "招待を送信しました",
@@ -365,7 +380,17 @@
       "medium": "ミディアムパック",
       "large": "ラージパック",
       "xlarge": "XLパック"
-    }
+    },
+    "restoreTitle": "購入を復元",
+    "restoreHelper": "デバイスを変更したりアプリを再インストールした場合は、以前の購入を復元できます。",
+    "restoreButton": "購入を復元する",
+    "restoreSuccess": "復元成功",
+    "restoreSuccessMessage": "購入履歴が正常に復元されました。",
+    "restoreError": "復元エラー",
+    "restoreErrorMessage": "購入を復元できませんでした。もう一度お試しください。",
+    "restoreNoPurchase": "このアカウントで以前の購入は見つかりませんでした。",
+    "confirmTitle": "サブスクリプションの確認",
+    "confirmMessage": "このプランに登録しますか"
   },
   "quota": {
     "reached": "スキャン割り当てに達しました",
@@ -439,7 +464,10 @@
     "cameraLoading": "カメラを読み込み中...",
     "cameraPermissionNeeded": "製品をスキャンするにはカメラへのアクセスが必要です。",
     "allowCamera": "カメラを許可",
-    "skip": "スキップ"
+    "skip": "スキップ",
+    "tipBarcode": "バーコードをフレームの中央に合わせてください",
+    "tipBand": "ロット番号を枠に収め、動かさないでください",
+    "tipPhoto": "製品ラベルでフレームを満たしてください"
   },
   "brandAutocomplete": {
     "label": "ブランド",

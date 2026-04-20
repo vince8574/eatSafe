@@ -45,28 +45,49 @@ export default function ForgotPasswordScreen() {
     ]).start();
   }, []);
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleResetPassword = async () => {
-    if (!email) {
+    const trimmed = email.trim();
+    if (!trimmed) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       Alert.alert(t('auth.error'), t('auth.enterEmail'));
       return;
     }
+    if (!EMAIL_REGEX.test(trimmed)) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      Alert.alert(t('auth.error'), t('auth.invalidEmail'));
+      return;
+    }
 
     setLoading(true);
-    try {
-      await resetPassword(email);
+    // Generic response to avoid user-enumeration: show the same confirmation
+    // whether or not the email is registered. Firebase still only sends the
+    // reset email to registered accounts.
+    const showGenericConfirmation = () => {
       setEmailSent(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Animated.spring(successAnim, { toValue: 1, useNativeDriver: true }).start();
-      Alert.alert(t('auth.success'), t('auth.resetEmailSent'), [
+      Alert.alert(t('auth.resetEmailSent'), t('auth.resetEmailGenericMessage'), [
         { text: t('auth.ok'), onPress: () => router.back() },
       ]);
+    };
+
+    try {
+      await resetPassword(trimmed);
+      showGenericConfirmation();
     } catch (error: any) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      let errorMessage = t('auth.resetPasswordFailed');
-      if (error.code === 'auth/invalid-email') errorMessage = t('auth.invalidEmail');
-      else if (error.code === 'auth/user-not-found') errorMessage = t('auth.userNotFound');
-      Alert.alert(t('auth.error'), errorMessage);
+      if (error?.code === 'auth/invalid-email') {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        Alert.alert(t('auth.error'), t('auth.invalidEmail'));
+      } else if (error?.code === 'auth/user-not-found') {
+        // Do NOT reveal that the email isn't registered — show the same
+        // generic confirmation as the success path.
+        showGenericConfirmation();
+      } else {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        Alert.alert(t('auth.error'), t('auth.resetPasswordFailed'));
+      }
     } finally {
       setLoading(false);
     }

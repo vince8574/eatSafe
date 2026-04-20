@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, AppState }
 import { useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
-import { useUserStore } from '../stores/useUserStore';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { NamePromptModal } from '../components/NamePromptModal';
 import { SplashAnimation } from '../components/SplashAnimation';
 import { GradientBackground } from '../components/GradientBackground';
@@ -15,7 +15,8 @@ export function WelcomeScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
-  const { firstName, setFirstName } = useUserStore();
+  const firstName = usePreferencesStore((state) => state.firstName);
+  const setFirstName = usePreferencesStore((state) => state.setFirstName);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const appState = useRef(AppState.currentState);

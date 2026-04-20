@@ -14,7 +14,11 @@
     "appDisclaimer": "Este app fornece informações de recall com base em bancos de dados públicos oficiais. Não garante a segurança do produto. Este app não verifica datas de validade ou o frescor dos produtos.",
     "noRecallDisclaimer": "A ausência de recall não garante a segurança do produto.",
     "verifyWithSources": "Sempre verifique as informações de recall com fontes oficiais da FDA ou USDA.",
-    "governmentInfoDisclaimer": "Este aplicativo não substitui as informações oficiais do governo."
+    "governmentInfoDisclaimer": "Este aplicativo não substitui as informações oficiais do governo.",
+    "exitAppTitle": "Sair do aplicativo?",
+    "exitAppMessage": "Deseja realmente fechar o Numeline?",
+    "exit": "Sair",
+    "stay": "Ficar"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "Para personalizar sua experiência, digite seu primeiro nome:",
     "namePromptPlaceholder": "Seu primeiro nome",
     "namePromptSave": "Continuar",
+    "nameTooShort": "Por favor, insira pelo menos 2 caracteres.",
+    "nameInvalid": "O nome só pode conter letras, espaços, hífens ou apóstrofos.",
     "namePromptSkip": "Pular"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "Enviar Link de Redefinição",
     "backToLogin": "Voltar ao Login",
     "resetEmailSent": "Email de redefinição enviado",
+    "resetEmailGenericMessage": "Se existir uma conta para este e-mail, você receberá um link para redefinir sua senha. Por favor, verifique sua caixa de entrada.",
     "emailSent": "E-mail enviado!",
     "account": "Conta",
     "loggedInAs": "Conectado como",
@@ -258,7 +265,10 @@
     "cameraLoading": "Carregando câmera...",
     "cameraPermissionNeeded": "O acesso à câmera é necessário para digitalizar produtos.",
     "allowCamera": "Permitir câmera",
-    "skip": "Pular"
+    "skip": "Pular",
+    "tipBarcode": "Centralize o código de barras no quadro",
+    "tipBand": "Enquadre o número do lote e mantenha firme",
+    "tipPhoto": "Preencha o quadro com o rótulo do produto"
   },
   "brandAutocomplete": {
     "label": "MARCA",
@@ -288,6 +298,9 @@
     "teamMembers": "Membros da equipe",
     "pendingInvitations": "Convites pendentes",
     "emailAddress": "Endereço de email",
+    "emailPlaceholder": "nome@exemplo.com",
+    "inviteEmailSubject": "Convite para participar de {{org}} no Numeline",
+    "inviteEmailBody": "Olá,\n\nVocê foi convidado para participar de {{org}} no Numeline como {{role}}.\n\nBaixe o Numeline na Play Store ou App Store para aceitar seu convite.\n\nObrigado!",
     "role": "Função",
     "member": "Membro",
     "admin": "Administrador",
@@ -295,6 +308,11 @@
     "sendInvitation": "Enviar convite",
     "inviteNewMember": "Convidar novo membro",
     "editOrgName": "Editar nome da organização",
+    "dangerZone": "Zona de perigo",
+    "deleteOrg": "Excluir equipe",
+    "confirmDeleteOrg": "Tem certeza de que deseja excluir permanentemente a equipe \"{{name}}\"? Todos os membros e convites serão removidos. Esta ação não pode ser desfeita.",
+    "orgDeleted": "Equipe excluída com sucesso.",
+    "orgDeleteFailed": "Não foi possível excluir a equipe.",
     "updateName": "Atualizar nome",
     "enterEmail": "Por favor, insira um endereço de email",
     "invitationSent": "Convite enviado para",
@@ -389,7 +407,17 @@
       "medium": "Pacote Médio",
       "large": "Pacote Grande",
       "xlarge": "Pacote XL"
-    }
+    },
+    "restoreTitle": "Restaurar compras",
+    "restoreHelper": "Restaure suas compras anteriores se você mudou de dispositivo ou reinstalou o aplicativo.",
+    "restoreButton": "Restaurar minhas compras",
+    "restoreSuccess": "Restauração bem-sucedida",
+    "restoreSuccessMessage": "Suas compras foram restauradas com sucesso.",
+    "restoreError": "Erro de restauração",
+    "restoreErrorMessage": "Não foi possível restaurar suas compras. Por favor, tente novamente.",
+    "restoreNoPurchase": "Nenhuma compra anterior encontrada para esta conta.",
+    "confirmTitle": "Confirmar assinatura",
+    "confirmMessage": "Deseja assinar"
   },
   "quota": {
     "reached": "Cota de digitalização atingida",

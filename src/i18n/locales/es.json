@@ -14,7 +14,11 @@
     "appDisclaimer": "Esta app proporciona información de retiros basada en bases de datos públicas oficiales. No garantiza la seguridad del producto. Esta app no verifica las fechas de caducidad ni la frescura de los productos.",
     "noRecallDisclaimer": "La ausencia de un retiro no garantiza la seguridad del producto.",
     "verifyWithSources": "Siempre verifique la información de retiros con fuentes oficiales de la FDA o USDA.",
-    "governmentInfoDisclaimer": "Esta aplicación no reemplaza la información oficial del gobierno."
+    "governmentInfoDisclaimer": "Esta aplicación no reemplaza la información oficial del gobierno.",
+    "exitAppTitle": "¿Salir de la aplicación?",
+    "exitAppMessage": "¿Realmente desea cerrar Numeline?",
+    "exit": "Salir",
+    "stay": "Quedarse"
   },
   "home": {
     "title": "Numeline",
@@ -179,6 +183,8 @@
     "namePromptMessage": "Para personalizar su experiencia, ingrese su nombre:",
     "namePromptPlaceholder": "Su nombre",
     "namePromptSave": "Continuar",
+    "nameTooShort": "Por favor, introduce al menos 2 caracteres.",
+    "nameInvalid": "El nombre solo puede contener letras, espacios, guiones o apóstrofes.",
     "namePromptSkip": "Omitir"
   },
   "legal": {
@@ -223,6 +229,7 @@
     "sendResetEmail": "Enviar enlace de restablecimiento",
     "backToLogin": "Volver al inicio de sesión",
     "resetEmailSent": "Correo de restablecimiento enviado",
+    "resetEmailGenericMessage": "Si existe una cuenta para este correo electrónico, recibirás un enlace para restablecer tu contraseña. Por favor, consulta tu bandeja de entrada.",
     "emailSent": "¡Correo enviado!",
     "account": "Cuenta",
     "loggedInAs": "Sesión iniciada como",
@@ -269,6 +276,9 @@
     "teamMembers": "Miembros del equipo",
     "pendingInvitations": "Invitaciones pendientes",
     "emailAddress": "Dirección de correo",
+    "emailPlaceholder": "nombre@ejemplo.com",
+    "inviteEmailSubject": "Invitación para unirse a {{org}} en Numeline",
+    "inviteEmailBody": "Hola,\n\nHas sido invitado a unirte a {{org}} en Numeline como {{role}}.\n\nDescarga Numeline en Play Store o App Store para aceptar tu invitación.\n\n¡Gracias!",
     "role": "Rol",
     "member": "Miembro",
     "admin": "Administrador",
@@ -276,6 +286,11 @@
     "sendInvitation": "Enviar invitación",
     "inviteNewMember": "Invitar a un nuevo miembro",
     "editOrgName": "Editar nombre de organización",
+    "dangerZone": "Zona peligrosa",
+    "deleteOrg": "Eliminar equipo",
+    "confirmDeleteOrg": "¿Estás seguro de que quieres eliminar permanentemente el equipo \"{{name}}\"? Se eliminarán todos los miembros e invitaciones. Esta acción no se puede deshacer.",
+    "orgDeleted": "Equipo eliminado correctamente.",
+    "orgDeleteFailed": "No se pudo eliminar el equipo.",
     "updateName": "Actualizar nombre",
     "enterEmail": "Por favor ingrese una dirección de correo",
     "invitationSent": "Invitación enviada a",
@@ -370,7 +385,17 @@
       "medium": "Paquete Mediano",
       "large": "Paquete Grande",
       "xlarge": "Paquete XL"
-    }
+    },
+    "restoreTitle": "Restaurar compras",
+    "restoreHelper": "Restaura tus compras anteriores si cambiaste de dispositivo o reinstalaste la aplicación.",
+    "restoreButton": "Restaurar mis compras",
+    "restoreSuccess": "Restauración exitosa",
+    "restoreSuccessMessage": "Tus compras se han restaurado correctamente.",
+    "restoreError": "Error de restauración",
+    "restoreErrorMessage": "No se pudieron restaurar tus compras. Por favor, inténtalo de nuevo.",
+    "restoreNoPurchase": "No se encontró ninguna compra anterior para esta cuenta.",
+    "confirmTitle": "Confirmar suscripción",
+    "confirmMessage": "¿Deseas suscribirte a"
   },
   "quota": {
     "reached": "Cuota de escaneo alcanzada",
@@ -444,7 +469,10 @@
     "cameraLoading": "Cargando cámara...",
     "cameraPermissionNeeded": "Se necesita acceso a la cámara para escanear productos.",
     "allowCamera": "Permitir cámara",
-    "skip": "Omitir"
+    "skip": "Omitir",
+    "tipBarcode": "Centre el código de barras dentro del marco",
+    "tipBand": "Encuadre el número de lote y manténgase firme",
+    "tipPhoto": "Llene el marco con la etiqueta del producto"
   },
   "brandAutocomplete": {
     "label": "MARCA",

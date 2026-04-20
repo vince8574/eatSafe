@@ -35,7 +35,8 @@ export default function TeamScreen() {
     updateName,
     cancelOrgInvite,
     createNewOrganization,
-    refresh
+    refresh,
+    deleteOrg
   } = useOrganization();
 
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -48,19 +49,23 @@ export default function TeamScreen() {
 
   const handleInvite = async () => {
     if (!inviteEmail.trim()) {
-      Alert.alert(t('error'), t('team.enterEmail'));
+      Alert.alert(t('auth.error'), t('team.enterEmail'));
       return;
     }
 
     try {
       setProcessingAction(true);
-      await inviteNewMember(inviteEmail.toLowerCase().trim(), inviteRole);
+      const targetEmail = inviteEmail.toLowerCase().trim();
+      // Create the invite in Firestore — the sendInvitationEmail Cloud Function
+      // will be triggered automatically and will send the email via Resend.
+      await inviteNewMember(targetEmail, inviteRole);
+
       setShowInviteModal(false);
       setInviteEmail('');
       setInviteRole('member');
-      Alert.alert(t('success'), `${t('team.invitationSent')} ${inviteEmail}`);
+      Alert.alert(t('auth.success'), `${t('team.invitationSent')} ${targetEmail}`);
     } catch (err) {
-      Alert.alert(t('error'), err instanceof Error ? err.message : t('team.invitationFailed'));
+      Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.invitationFailed'));
     } finally {
       setProcessingAction(false);
     }
@@ -71,7 +76,7 @@ export default function TeamScreen() {
       t('team.removeMember'),
       `${t('team.confirmRemove')} ${member.email || member.name || ''}?`,
       [
-        { text: t('cancel'), style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
           text: t('team.remove'),
           style: 'destructive',
@@ -79,9 +84,9 @@ export default function TeamScreen() {
             try {
               setProcessingAction(true);
               await removeMemberFromOrg(member.userId);
-              Alert.alert(t('success'), t('team.memberRemoved'));
+              Alert.alert(t('auth.success'), t('team.memberRemoved'));
             } catch (err) {
-              Alert.alert(t('error'), err instanceof Error ? err.message : t('team.removeFailed'));
+              Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.removeFailed'));
             } finally {
               setProcessingAction(false);
             }
@@ -93,7 +98,7 @@ export default function TeamScreen() {
 
   const handleChangeRole = (member: OrganizationMember) => {
     if (member.role === 'owner') {
-      Alert.alert(t('error'), t('team.cannotChangeOwner'));
+      Alert.alert(t('auth.error'), t('team.cannotChangeOwner'));
       return;
     }
 
@@ -103,16 +108,16 @@ export default function TeamScreen() {
       t('team.changeRole'),
       `${t('team.changeRoleTo')} ${member.email || member.name} → ${newRole}?`,
       [
-        { text: t('cancel'), style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
           text: t('team.change'),
           onPress: async () => {
             try {
               setProcessingAction(true);
               await updateRole(member.userId, newRole);
-              Alert.alert(t('success'), `${t('team.roleUpdated')} ${newRole}`);
+              Alert.alert(t('auth.success'), `${t('team.roleUpdated')} ${newRole}`);
             } catch (err) {
-              Alert.alert(t('error'), err instanceof Error ? err.message : t('team.roleUpdateFailed'));
+              Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.roleUpdateFailed'));
             } finally {
               setProcessingAction(false);
             }
@@ -124,7 +129,7 @@ export default function TeamScreen() {
 
   const handleUpdateName = async () => {
     if (!newOrgName.trim()) {
-      Alert.alert(t('error'), t('team.enterOrgName'));
+      Alert.alert(t('auth.error'), t('team.enterOrgName'));
       return;
     }
 
@@ -133,9 +138,9 @@ export default function TeamScreen() {
       await updateName(newOrgName.trim());
       setShowEditNameModal(false);
       setNewOrgName('');
-      Alert.alert(t('success'), t('team.nameUpdated'));
+      Alert.alert(t('auth.success'), t('team.nameUpdated'));
     } catch (err) {
-      Alert.alert(t('error'), err instanceof Error ? err.message : t('team.nameUpdateFailed'));
+      Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.nameUpdateFailed'));
     } finally {
       setProcessingAction(false);
     }
@@ -146,7 +151,7 @@ export default function TeamScreen() {
       t('team.cancelInvitation'),
       `${t('team.confirmCancelInvite')} ${email}?`,
       [
-        { text: t('cancel'), style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
           text: t('team.cancelInvite'),
           style: 'destructive',
@@ -154,9 +159,36 @@ export default function TeamScreen() {
             try {
               setProcessingAction(true);
               await cancelOrgInvite(inviteId);
-              Alert.alert(t('success'), t('team.inviteCancelled'));
+              Alert.alert(t('auth.success'), t('team.inviteCancelled'));
             } catch (err) {
-              Alert.alert(t('error'), err instanceof Error ? err.message : t('team.cancelInviteFailed'));
+              Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.cancelInviteFailed'));
+            } finally {
+              setProcessingAction(false);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleDeleteOrganization = () => {
+    if (!organization) return;
+    Alert.alert(
+      t('team.deleteOrg'),
+      t('team.confirmDeleteOrg', { name: organization.name }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('team.deleteOrg'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setProcessingAction(true);
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              await deleteOrg();
+              Alert.alert(t('auth.success'), t('team.orgDeleted'));
+            } catch (err) {
+              Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.orgDeleteFailed'));
             } finally {
               setProcessingAction(false);
             }
@@ -168,7 +200,7 @@ export default function TeamScreen() {
 
   const handleCreateOrganization = async () => {
     if (!newOrgName.trim()) {
-      Alert.alert(t('error'), t('team.enterOrgName'));
+      Alert.alert(t('auth.error'), t('team.enterOrgName'));
       return;
     }
 
@@ -177,9 +209,9 @@ export default function TeamScreen() {
       await createNewOrganization(newOrgName.trim());
       setShowCreateOrgModal(false);
       setNewOrgName('');
-      Alert.alert(t('success'), t('team.orgCreated'));
+      Alert.alert(t('auth.success'), t('team.orgCreated'));
     } catch (err) {
-      Alert.alert(t('error'), err instanceof Error ? err.message : t('team.orgCreationFailed'));
+      Alert.alert(t('auth.error'), err instanceof Error ? err.message : t('team.orgCreationFailed'));
     } finally {
       setProcessingAction(false);
     }
@@ -430,6 +462,23 @@ export default function TeamScreen() {
             </View>
           ))}
         </View>
+
+        {/* Danger zone — réservé au propriétaire */}
+        {userRole === 'owner' && (
+          <View style={styles.dangerZone}>
+            <Text style={[styles.dangerTitle, { color: colors.textSecondary }]}>
+              {t('team.dangerZone')}
+            </Text>
+            <TouchableOpacity
+              style={[styles.deleteOrgButton, { borderColor: '#E74C3C' }]}
+              onPress={handleDeleteOrganization}
+              disabled={processingAction}
+            >
+              <Ionicons name="trash" size={18} color="#E74C3C" />
+              <Text style={styles.deleteOrgButtonText}>{t('team.deleteOrg')}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
 
       {/* Invite Modal */}
@@ -450,6 +499,7 @@ export default function TeamScreen() {
               </TouchableOpacity>
             </View>
 
+            <Text style={[styles.label, { color: colors.textPrimary }]}>{t('team.emailAddress')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
               placeholder={t('team.emailPlaceholder')}
@@ -471,7 +521,7 @@ export default function TeamScreen() {
                 onPress={() => setInviteRole('member')}
               >
                 <Text style={[styles.roleButtonText, { color: inviteRole === 'member' ? '#FFF' : colors.textPrimary }]}>
-                  Member
+                  {t('team.member')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -482,7 +532,7 @@ export default function TeamScreen() {
                 onPress={() => setInviteRole('admin')}
               >
                 <Text style={[styles.roleButtonText, { color: inviteRole === 'admin' ? '#FFF' : colors.textPrimary }]}>
-                  Admin
+                  {t('team.admin')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -802,5 +852,32 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16
+  },
+  dangerZone: {
+    marginTop: 32,
+    paddingTop: 24,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(231, 76, 60, 0.2)',
+    gap: 12
+  },
+  dangerTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8
+  },
+  deleteOrgButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 1.5
+  },
+  deleteOrgButtonText: {
+    color: '#E74C3C',
+    fontSize: 15,
+    fontWeight: '700'
   }
 });

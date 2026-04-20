@@ -14,7 +14,11 @@
     "appDisclaimer": "Cette application fournit des informations de rappel basées sur des bases de données publiques officielles. Elle ne garantit pas la sécurité du produit. Cette application ne vérifie pas les dates de péremption ni la fraîcheur des produits.",
     "noRecallDisclaimer": "L'absence de rappel ne garantit pas la sécurité du produit.",
     "verifyWithSources": "Vérifiez toujours les informations de rappel auprès des sources officielles de la FDA ou de l'USDA.",
-    "governmentInfoDisclaimer": "Cette application ne remplace pas les informations officielles du gouvernement."
+    "governmentInfoDisclaimer": "Cette application ne remplace pas les informations officielles du gouvernement.",
+    "exitAppTitle": "Quitter l'application ?",
+    "exitAppMessage": "Voulez-vous vraiment fermer Numeline ?",
+    "exit": "Quitter",
+    "stay": "Rester"
   },
   "home": {
     "title": "Numeline",
@@ -222,6 +226,8 @@
     "namePromptMessage": "Pour personnaliser votre expérience, veuillez entrer votre prénom :",
     "namePromptPlaceholder": "Votre prénom",
     "namePromptSave": "Continuer",
+    "nameTooShort": "Veuillez saisir au moins 2 caractères.",
+    "nameInvalid": "Le prénom ne peut contenir que des lettres, espaces, tirets ou apostrophes.",
     "namePromptSkip": "Ignorer"
   },
   "legal": {
@@ -266,6 +272,7 @@
     "sendResetEmail": "Envoyer le lien",
     "backToLogin": "Retour à la connexion",
     "resetEmailSent": "E-mail de réinitialisation envoyé",
+    "resetEmailGenericMessage": "Si un compte existe pour cet e-mail, vous recevrez un lien de réinitialisation. Veuillez consulter votre boîte de réception.",
     "emailSent": "E-mail envoyé !",
     "account": "Compte",
     "loggedInAs": "Connecté en tant que",
@@ -312,6 +319,9 @@
     "teamMembers": "Membres de l'équipe",
     "pendingInvitations": "Invitations en attente",
     "emailAddress": "Adresse e-mail",
+    "emailPlaceholder": "nom@exemple.com",
+    "inviteEmailSubject": "Invitation à rejoindre {{org}} sur Numeline",
+    "inviteEmailBody": "Bonjour,\n\nVous avez été invité(e) à rejoindre {{org}} sur Numeline en tant que {{role}}.\n\nTéléchargez Numeline depuis le Play Store ou l'App Store pour accepter votre invitation.\n\nMerci !",
     "role": "Rôle",
     "member": "Membre",
     "admin": "Administrateur",
@@ -319,6 +329,11 @@
     "sendInvitation": "Envoyer l'invitation",
     "inviteNewMember": "Inviter un nouveau membre",
     "editOrgName": "Modifier le nom de l'organisation",
+    "dangerZone": "Zone sensible",
+    "deleteOrg": "Supprimer l'équipe",
+    "confirmDeleteOrg": "Voulez-vous vraiment supprimer définitivement l'équipe « {{name}} » ? Tous les membres et invitations seront supprimés. Cette action est irréversible.",
+    "orgDeleted": "Équipe supprimée avec succès.",
+    "orgDeleteFailed": "Impossible de supprimer l'équipe.",
     "updateName": "Mettre à jour le nom",
     "enterEmail": "Veuillez saisir une adresse e-mail",
     "invitationSent": "Invitation envoyée à",
@@ -419,6 +434,9 @@
     "restoreSuccessMessage": "Vos achats ont été restaurés avec succès.",
     "restoreError": "Erreur de restauration",
     "restoreErrorMessage": "Impossible de restaurer vos achats. Veuillez réessayer.",
+    "restoreNoPurchase": "Aucun achat précédent trouvé pour ce compte.",
+    "confirmTitle": "Confirmer l'abonnement",
+    "confirmMessage": "Voulez-vous souscrire à",
     "devMode": ""
   },
   "quota": {
@@ -493,7 +511,10 @@
     "cameraLoading": "Chargement de la caméra...",
     "cameraPermissionNeeded": "L'accès à la caméra est nécessaire pour scanner les produits.",
     "allowCamera": "Autoriser la caméra",
-    "skip": "Passer"
+    "skip": "Passer",
+    "tipBarcode": "Centrez le code-barres dans le cadre",
+    "tipBand": "Cadrez le numéro de lot et restez immobile",
+    "tipPhoto": "Remplissez le cadre avec l'étiquette du produit"
   },
   "brandAutocomplete": {
     "label": "MARQUE",

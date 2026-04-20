@@ -26,7 +26,7 @@ function getLocale(): string {
   return localeMap[lang] || 'en-US';
 }
 
-function formatDate(dateStr: string): string {
+function formatDate(dateStr: string | number): string {
   return dateStr ? new Date(dateStr).toLocaleDateString(getLocale()) : '';
 }
 
@@ -267,6 +267,17 @@ export async function exportProducts(options: ExportOptions): Promise<void> {
     throw new Error(t('export.noProducts'));
   }
 
+  // Vérifier la disponibilité du partage AVANT de faire le travail lourd
+  // (évite le freeze "première ouverture" si le plugin n'est pas encore prêt)
+  const canShare = await Promise.race([
+    Sharing.isAvailableAsync(),
+    new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 3000))
+  ]);
+
+  if (!canShare) {
+    throw new Error(t('export.sharingNotAvailable'));
+  }
+
   let fileUri: string;
   let fileName: string;
 
@@ -292,12 +303,7 @@ export async function exportProducts(options: ExportOptions): Promise<void> {
       throw new Error(t('export.unsupportedFormat', { format }));
   }
 
-  const canShare = await Sharing.isAvailableAsync();
-  if (canShare) {
-    await Sharing.shareAsync(fileUri);
-  } else {
-    throw new Error(t('export.sharingNotAvailable'));
-  }
+  await Sharing.shareAsync(fileUri);
 }
 
 export function canExport(format: ExportFormat, allowedFormats: ExportFormat[]): boolean {
