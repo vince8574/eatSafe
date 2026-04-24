@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import { defineSecret } from 'firebase-functions/params';
 import * as admin from 'firebase-admin';
 import * as https from 'https';
 import { Resend } from 'resend';
@@ -6,16 +7,15 @@ admin.initializeApp();
 
 const firestore = admin.firestore();
 
-// Resend API key is stored in Firebase Functions config:
-//   firebase functions:config:set resend.key="re_xxxx"
-const resendApiKey = (functions.config().resend?.key as string | undefined) ?? '';
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
+// Resend API key stored as Firebase secret:
+//   firebase functions:secrets:set RESEND_API_KEY
+const RESEND_API_KEY = defineSecret('RESEND_API_KEY');
 
-const FROM_ADDRESS = 'Numeline <invitations@numeline.com>';
+const FROM_ADDRESS = 'Numeline <invitations@send.numeline.com>';
 const REPLY_TO = 'support@numeline.com';
 const APP_NAME = 'Numeline';
 
-function buildInvitationHtml(orgName: string, role: string, inviterName: string): string {
+function buildInvitationHtml(orgName: string, role: string, inviterName: string, invitedEmail: string): string {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -56,7 +56,7 @@ function buildInvitationHtml(orgName: string, role: string, inviterName: string)
                 </tr>
               </table>
               <p style="margin:24px 0 0 0;font-size:13px;line-height:1.5;color:#6b7280;text-align:center;">
-                Once installed, sign in with this email address (${''}) to accept your invitation.
+                Once installed, sign in with <strong>${invitedEmail}</strong> and your invitation will appear automatically.
               </p>
             </td>
           </tr>
@@ -79,7 +79,7 @@ function buildInvitationHtml(orgName: string, role: string, inviterName: string)
 </html>`;
 }
 
-function buildInvitationText(orgName: string, role: string, inviterName: string): string {
+function buildInvitationText(orgName: string, role: string, inviterName: string, invitedEmail: string): string {
   return `You're invited to join ${orgName} on ${APP_NAME}!
 
 ${inviterName ? `${inviterName} has invited you` : 'You have been invited'} to join ${orgName} on ${APP_NAME} as ${role}.
@@ -88,7 +88,7 @@ ${APP_NAME} helps food professionals scan products and get instant alerts on FDA
 
 Download ${APP_NAME}: https://numeline.com/download
 
-Once installed, sign in with the email address that received this invitation to accept it.
+Once installed, sign in with ${invitedEmail} and your invitation will appear automatically.
 
 —
 You received this email because someone invited you to ${APP_NAME}.
@@ -101,12 +101,15 @@ If this was a mistake, you can safely ignore this email.`;
  */
 export const sendInvitationEmail = functions
   .region('europe-west1')
-  .firestore.document('invites/{inviteId}')
+  .runWith({ secrets: [RESEND_API_KEY] })
+  .firestore.document('organizationInvites/{inviteId}')
   .onCreate(async (snapshot) => {
-    if (!resend) {
-      console.error('[sendInvitationEmail] Resend API key not configured. Run: firebase functions:config:set resend.key="re_xxx"');
+    const resendApiKey = process.env.RESEND_API_KEY ?? '';
+    if (!resendApiKey) {
+      console.error('[sendInvitationEmail] RESEND_API_KEY secret not set. Run: firebase functions:secrets:set RESEND_API_KEY');
       return null;
     }
+    const resend = new Resend(resendApiKey);
 
     const invite = snapshot.data();
     if (!invite) {
@@ -141,8 +144,8 @@ export const sendInvitationEmail = functions
         to: targetEmail,
         replyTo: REPLY_TO,
         subject: `Invitation to join ${orgName} on ${APP_NAME}`,
-        html: buildInvitationHtml(orgName, role, inviterName),
-        text: buildInvitationText(orgName, role, inviterName),
+        html: buildInvitationHtml(orgName, role, inviterName, targetEmail),
+        text: buildInvitationText(orgName, role, inviterName, targetEmail),
       });
 
       console.log(`[sendInvitationEmail] Sent invite to ${targetEmail}, message id: ${response.data?.id ?? 'unknown'}`);

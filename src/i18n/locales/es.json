@@ -465,6 +465,17 @@
     "importantText": "• No consumir estos productos\n• Devuélvalos a la tienda para obtener un reembolso\n• Si aparecen síntomas, contacte a los servicios de emergencia",
     "understood": "Entiendo"
   },
+  "pendingInvite": {
+    "title": "Tienes una invitación pendiente",
+    "description": "Alguien te ha invitado a unirte a su organización. Acepta para empezar.",
+    "roleAs": "Como {{role}}",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "acceptErrorTitle": "No se pudo aceptar",
+    "acceptError": "No se pudo aceptar la invitación. Inténtalo de nuevo.",
+    "rejectErrorTitle": "No se pudo rechazar",
+    "rejectError": "No se pudo rechazar la invitación. Inténtalo de nuevo."
+  },
   "scanner": {
     "cameraLoading": "Cargando cámara...",
     "cameraPermissionNeeded": "Se necesita acceso a la cámara para escanear productos.",

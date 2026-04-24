@@ -465,6 +465,17 @@
     "importantText": "• Non consumare questi prodotti\n• Restituiscili al negozio per un rimborso\n• Se compaiono sintomi, contattare i servizi di emergenza",
     "understood": "Ho capito"
   },
+  "pendingInvite": {
+    "title": "Hai un invito in sospeso",
+    "description": "Qualcuno ti ha invitato a unirti alla sua organizzazione. Accetta per iniziare.",
+    "roleAs": "Come {{role}}",
+    "accept": "Accetta",
+    "decline": "Rifiuta",
+    "acceptErrorTitle": "Impossibile accettare",
+    "acceptError": "Impossibile accettare l'invito. Riprova.",
+    "rejectErrorTitle": "Impossibile rifiutare",
+    "rejectError": "Impossibile rifiutare l'invito. Riprova."
+  },
   "scanner": {
     "cameraLoading": "Caricamento fotocamera...",
     "cameraPermissionNeeded": "L'accesso alla fotocamera è necessario per scansionare i prodotti.",

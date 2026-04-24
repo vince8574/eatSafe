@@ -507,6 +507,17 @@
     "importantText": "• Ne consommez pas ces produits\n• Rapportez-les au magasin pour remboursement\n• En cas de symptômes, contactez les urgences (15 ou 112)",
     "understood": "J'ai compris"
   },
+  "pendingInvite": {
+    "title": "Vous avez une invitation en attente",
+    "description": "Quelqu'un vous invite à rejoindre son organisation. Acceptez pour commencer.",
+    "roleAs": "En tant que {{role}}",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "acceptErrorTitle": "Impossible d'accepter",
+    "acceptError": "Impossible d'accepter l'invitation. Veuillez réessayer.",
+    "rejectErrorTitle": "Impossible de refuser",
+    "rejectError": "Impossible de refuser l'invitation. Veuillez réessayer."
+  },
   "scanner": {
     "cameraLoading": "Chargement de la caméra...",
     "cameraPermissionNeeded": "L'accès à la caméra est nécessaire pour scanner les produits.",

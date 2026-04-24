@@ -4,6 +4,7 @@ import { Alert, BackHandler, Image, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/theme/themeContext';
 import { useI18n } from '../../src/i18n/I18nContext';
+import { PendingInvitesModal } from '../../src/components/PendingInvitesModal';
 
 const tabIcons = {
   home: require('../../assets/home.png'),
@@ -61,7 +62,9 @@ export default function TabsLayout() {
   }, [t]);
 
   return (
-    <Tabs
+    <>
+      <PendingInvitesModal />
+      <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
@@ -119,6 +122,7 @@ export default function TabsLayout() {
           tabBarIcon: renderTabIcon(tabIcons.language)
         }}
       />
-    </Tabs>
+      </Tabs>
+    </>
   );
 }

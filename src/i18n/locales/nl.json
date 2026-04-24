@@ -261,6 +261,17 @@
     "passwordTooShort": "Wachtwoord moet minimaal 6 tekens zijn",
     "passwordsDoNotMatch": "Wachtwoorden komen niet overeen"
   },
+  "pendingInvite": {
+    "title": "U heeft een openstaande uitnodiging",
+    "description": "Iemand heeft u uitgenodigd om lid te worden van zijn organisatie. Accepteer om te beginnen.",
+    "roleAs": "Als {{role}}",
+    "accept": "Accepteren",
+    "decline": "Weigeren",
+    "acceptErrorTitle": "Kan niet accepteren",
+    "acceptError": "Kan de uitnodiging niet accepteren. Probeer het opnieuw.",
+    "rejectErrorTitle": "Kan niet weigeren",
+    "rejectError": "Kan de uitnodiging niet weigeren. Probeer het opnieuw."
+  },
   "scanner": {
     "cameraLoading": "Camera laden...",
     "cameraPermissionNeeded": "Cameratoegang is nodig om producten te scannen.",

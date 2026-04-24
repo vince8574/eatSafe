@@ -261,6 +261,17 @@
     "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
     "passwordsDoNotMatch": "As senhas não correspondem"
   },
+  "pendingInvite": {
+    "title": "Você tem um convite pendente",
+    "description": "Alguém o convidou a entrar na organização. Aceite para começar.",
+    "roleAs": "Como {{role}}",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "acceptErrorTitle": "Não foi possível aceitar",
+    "acceptError": "Não foi possível aceitar o convite. Tente novamente.",
+    "rejectErrorTitle": "Não foi possível recusar",
+    "rejectError": "Não foi possível recusar o convite. Tente novamente."
+  },
   "scanner": {
     "cameraLoading": "Carregando câmera...",
     "cameraPermissionNeeded": "O acesso à câmera é necessário para digitalizar produtos.",

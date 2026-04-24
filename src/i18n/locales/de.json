@@ -465,6 +465,17 @@
     "importantText": "• Konsumieren Sie diese Produkte nicht\n• Bringen Sie sie zur Rückerstattung ins Geschäft zurück\n• Bei Symptomen kontaktieren Sie den Notdienst",
     "understood": "Ich verstehe"
   },
+  "pendingInvite": {
+    "title": "Sie haben eine ausstehende Einladung",
+    "description": "Jemand hat Sie eingeladen, seiner Organisation beizutreten. Akzeptieren Sie, um zu beginnen.",
+    "roleAs": "Als {{role}}",
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "acceptErrorTitle": "Annahme nicht möglich",
+    "acceptError": "Einladung konnte nicht angenommen werden. Bitte versuchen Sie es erneut.",
+    "rejectErrorTitle": "Ablehnung nicht möglich",
+    "rejectError": "Einladung konnte nicht abgelehnt werden. Bitte versuchen Sie es erneut."
+  },
   "scanner": {
     "cameraLoading": "Kamera wird geladen...",
     "cameraPermissionNeeded": "Kamerazugriff wird zum Scannen von Produkten benötigt.",

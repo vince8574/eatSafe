@@ -507,6 +507,17 @@
     "importantText": "• Do not consume these products\n• Return them to the store for refund\n• If symptoms appear, contact emergency services (911 or 112)",
     "understood": "I understand"
   },
+  "pendingInvite": {
+    "title": "You have a pending invitation",
+    "description": "Someone invited you to join their organization. Accept to get started.",
+    "roleAs": "As {{role}}",
+    "accept": "Accept",
+    "decline": "Decline",
+    "acceptErrorTitle": "Could not accept",
+    "acceptError": "Unable to accept the invitation. Please try again.",
+    "rejectErrorTitle": "Could not decline",
+    "rejectError": "Unable to decline the invitation. Please try again."
+  },
   "scanner": {
     "cameraLoading": "Loading camera...",
     "cameraPermissionNeeded": "Camera access is needed to scan products.",

@@ -460,6 +460,17 @@
     "importantText": "• Ne konzumirajte ove proizvode\n• Vratite ih u prodavnicu za povraćaj novca\n• Ako se pojave simptomi, kontaktirajte hitnu pomoć",
     "understood": "Razumijem"
   },
+  "pendingInvite": {
+    "title": "Imate pozivnicu na čekanju",
+    "description": "Neko vas je pozvao da se pridružite njegovoj organizaciji. Prihvatite da počnete.",
+    "roleAs": "Kao {{role}}",
+    "accept": "Prihvati",
+    "decline": "Odbij",
+    "acceptErrorTitle": "Nije moguće prihvatiti",
+    "acceptError": "Nije moguće prihvatiti poziv. Pokušajte ponovo.",
+    "rejectErrorTitle": "Nije moguće odbiti",
+    "rejectError": "Nije moguće odbiti poziv. Pokušajte ponovo."
+  },
   "scanner": {
     "cameraLoading": "Učitavanje kamere...",
     "cameraPermissionNeeded": "Pristup kameri je potreban za skeniranje proizvoda.",

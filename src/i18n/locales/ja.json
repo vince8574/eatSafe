@@ -460,6 +460,17 @@
     "importantText": "• これらの製品を消費しないでください\n• 店舗に返品して払い戻しを受けてください\n• 症状が現れた場合は緊急サービスに連絡してください",
     "understood": "理解しました"
   },
+  "pendingInvite": {
+    "title": "保留中の招待があります",
+    "description": "誰かがあなたを組織に招待しました。承認して始めましょう。",
+    "roleAs": "{{role}}として",
+    "accept": "承認",
+    "decline": "拒否",
+    "acceptErrorTitle": "承認できません",
+    "acceptError": "招待を承認できませんでした。もう一度お試しください。",
+    "rejectErrorTitle": "拒否できません",
+    "rejectError": "招待を拒否できませんでした。もう一度お試しください。"
+  },
   "scanner": {
     "cameraLoading": "カメラを読み込み中...",
     "cameraPermissionNeeded": "製品をスキャンするにはカメラへのアクセスが必要です。",

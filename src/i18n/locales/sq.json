@@ -460,6 +460,17 @@
     "importantText": "• Mos i konsumoni këto produkte\n• Kthejini në dyqan për rimbursim\n• Nëse shfaqen simptoma, kontaktoni shërbimet e urgjencës",
     "understood": "E kuptoj"
   },
+  "pendingInvite": {
+    "title": "Keni një ftesë në pritje",
+    "description": "Dikush ju ftoi të bashkoheni me organizatën e tij. Pranoni për të filluar.",
+    "roleAs": "Si {{role}}",
+    "accept": "Prano",
+    "decline": "Refuzo",
+    "acceptErrorTitle": "Nuk u pranua",
+    "acceptError": "Nuk u pranua ftesa. Provoni përsëri.",
+    "rejectErrorTitle": "Nuk u refuzua",
+    "rejectError": "Nuk u refuzua ftesa. Provoni përsëri."
+  },
   "scanner": {
     "cameraLoading": "Duke ngarkuar kamerën...",
     "cameraPermissionNeeded": "Qasja në kamerë nevojitet për të skanuar produktet.",

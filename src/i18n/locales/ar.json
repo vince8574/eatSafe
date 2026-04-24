@@ -498,6 +498,17 @@
     "referralConsent": "أرغب في أن يتم إدراج شركتي على موقع numeline.com كمحترف ملتزم بسلامة الغذاء لعملائه.",
     "continue": "متابعة"
   },
+  "pendingInvite": {
+    "title": "لديك دعوة معلقة",
+    "description": "دعاك شخص ما للانضمام إلى مؤسسته. اقبل للبدء.",
+    "roleAs": "بصفة {{role}}",
+    "accept": "قبول",
+    "decline": "رفض",
+    "acceptErrorTitle": "تعذر القبول",
+    "acceptError": "تعذر قبول الدعوة. يرجى المحاولة مرة أخرى.",
+    "rejectErrorTitle": "تعذر الرفض",
+    "rejectError": "تعذر رفض الدعوة. يرجى المحاولة مرة أخرى."
+  },
   "scanner": {
     "cameraLoading": "جارٍ تحميل الكاميرا...",
     "cameraPermissionNeeded": "يلزم الوصول إلى الكاميرا لمسح المنتجات.",

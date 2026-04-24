@@ -460,6 +460,17 @@
     "importantText": "• 请勿食用这些产品\n• 将它们退回商店以获得退款\n• 如果出现症状，请联系紧急服务",
     "understood": "我明白"
   },
+  "pendingInvite": {
+    "title": "您有一个待处理的邀请",
+    "description": "有人邀请您加入他们的组织。接受以开始使用。",
+    "roleAs": "作为{{role}}",
+    "accept": "接受",
+    "decline": "拒绝",
+    "acceptErrorTitle": "无法接受",
+    "acceptError": "无法接受邀请，请重试。",
+    "rejectErrorTitle": "无法拒绝",
+    "rejectError": "无法拒绝邀请，请重试。"
+  },
   "scanner": {
     "cameraLoading": "正在加载相机...",
     "cameraPermissionNeeded": "需要相机权限来扫描产品。",
