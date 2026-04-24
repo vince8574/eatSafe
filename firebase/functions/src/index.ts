@@ -34,6 +34,11 @@ function buildInvitationHtml(orgName: string, role: string, inviterName: string,
             </td>
           </tr>
           <tr>
+            <td style="padding:0;font-size:0;line-height:0;">
+              <img src="https://numeline.com/feature-graphic-1024x500.png" alt="${APP_NAME}" width="560" style="display:block;border:0;width:100%;max-width:560px;height:auto;" />
+            </td>
+          </tr>
+          <tr>
             <td style="padding:32px 32px 16px 32px;color:#0A1F1F;">
               <h1 style="margin:0 0 16px 0;font-size:22px;font-weight:600;">You're invited!</h1>
               <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#374151;">
