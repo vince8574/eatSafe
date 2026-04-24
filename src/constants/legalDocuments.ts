@@ -10,7 +10,7 @@ const LEGAL_HTML: LegalContent = {
       <p><strong>Last updated: January 14, 2026</strong></p>
       <p>Numeline is a mobile app operated by Olympe et odin (SIRET 91457466000025). This policy explains how we collect and use information.</p>
       <h3>Data controller</h3>
-      <p>Olympe et odin, France. Contact: vgaillard85@gmail.com.app</p>
+      <p>Olympe et odin, France. Contact: contact@numeline.com</p>
       <h3>Information we collect</h3>
       <ul>
         <li>Account data: email address and authentication identifiers (Firebase Authentication).</li>
@@ -51,7 +51,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Retention</h3>
       <p>Account and scan data are kept while your account is active and removed upon deletion. Local data stays on your device until you clear app data or uninstall.</p>
       <h3>Your rights</h3>
-      <p>You can request access, correction, deletion, or portability of your data. Contact: vgaillard85@gmail.com.app</p>
+      <p>You can request access, correction, deletion, or portability of your data. Contact: contact@numeline.com</p>
       <h3>International transfers</h3>
       <p>Some providers may process data outside your country. We rely on appropriate safeguards when required.</p>
       <h3>Changes</h3>
@@ -83,17 +83,17 @@ const LEGAL_HTML: LegalContent = {
       <h3>Governing law</h3>
       <p>These terms are governed by French law.</p>
       <h3>Contact</h3>
-      <p>Contact: contact@eatsok.app</p>`,
+      <p>Contact: contact@numeline.com</p>`,
     notice: `      <h1>Legal Notice - Numeline</h1>
       <p><strong>Last updated: January 14, 2026</strong></p>
       <h3>Publisher</h3>
-      <p>Olympe et odin (SIRET 91457466000025) - contact@eatsok.app</p>
+      <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
       <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
       <h3>Intellectual property</h3>
       <p>Brand, logo, and content are protected. Reuse requires prior authorization.</p>
       <h3>Data protection</h3>
-      <p>For any request: vgaillard85@gmail.com.app</p>`,
+      <p>For any request: contact@numeline.com</p>`,
     disclaimer: `
       <h1>Food Recall Disclaimer</h1>
       <p>This app provides recall information for products sold in the United States for information only.</p>
@@ -109,7 +109,7 @@ const LEGAL_HTML: LegalContent = {
       <p><strong>Derniere mise a jour : 14 janvier 2026</strong></p>
       <p>Numeline est une application mobile exploitee par Olympe et odin (SIRET 91457466000025). Cette politique explique comment nous collectons et utilisons les informations.</p>
       <h3>Responsable du traitement</h3>
-      <p>Olympe et odin, France. Contact : vgaillard85@gmail.com.app</p>
+      <p>Olympe et odin, France. Contact : contact@numeline.com</p>
       <h3>Informations que nous collectons</h3>
       <ul>
         <li>Donnees de compte : adresse email et identifiants d'authentification (Firebase Authentication).</li>
@@ -150,7 +150,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Conservation</h3>
       <p>Les donnees de compte et de scan sont conservees tant que votre compte est actif et supprimees apres suppression. Les donnees locales restent sur votre appareil jusqu'a suppression des donnees ou desinstallation.</p>
       <h3>Vos droits</h3>
-      <p>Vous pouvez demander acces, rectification, suppression ou portabilite de vos donnees. Contact : vgaillard85@gmail.com.app</p>
+      <p>Vous pouvez demander acces, rectification, suppression ou portabilite de vos donnees. Contact : contact@numeline.com</p>
       <h3>Transferts internationaux</h3>
       <p>Certains fournisseurs peuvent traiter des donnees hors de votre pays. Nous utilisons des garanties appropriees si necessaire.</p>
       <h3>Modifications</h3>
@@ -182,17 +182,17 @@ const LEGAL_HTML: LegalContent = {
       <h3>Loi applicable</h3>
       <p>Ces conditions sont regies par le droit francais.</p>
       <h3>Contact</h3>
-      <p>Contact : contact@eatsok.app</p>`,
+      <p>Contact : contact@numeline.com</p>`,
     notice: `      <h1>Mentions legales - Numeline</h1>
       <p><strong>Derniere mise a jour : 14 janvier 2026</strong></p>
       <h3>Editeur</h3>
-      <p>Olympe et odin (SIRET 91457466000025) - contact@eatsok.app</p>
+      <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hebergement</h3>
       <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
       <h3>Propriete intellectuelle</h3>
       <p>Marque, logo et contenus proteges. Reutilisation soumise a autorisation.</p>
       <h3>Protection des donnees</h3>
-      <p>Pour toute demande : vgaillard85@gmail.com.app</p>`,
+      <p>Pour toute demande : contact@numeline.com</p>`,
     disclaimer: `
       <h1>Avertissement Rappel Alimentaire</h1>
       <p>L'application fournit des informations de rappel pour les produits vendus aux Etats-Unis a titre informatif uniquement.</p>
@@ -208,7 +208,7 @@ const LEGAL_HTML: LegalContent = {
       <p><strong>Ultima actualizacion: 14 de enero de 2026</strong></p>
       <p>Numeline es una aplicacion movil operada por Olympe et odin (SIRET 91457466000025). Esta politica explica como recopilamos y usamos la informacion.</p>
       <h3>Responsable</h3>
-      <p>Olympe et odin, Francia. Contacto: vgaillard85@gmail.com.app</p>
+      <p>Olympe et odin, Francia. Contacto: contact@numeline.com</p>
       <h3>Informacion que recopilamos</h3>
       <ul>
         <li>Datos de cuenta: correo electronico e identificadores de autenticacion (Firebase Authentication).</li>
@@ -249,7 +249,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Conservacion</h3>
       <p>Los datos de cuenta y escaneo se conservan mientras su cuenta este activa y se eliminan al eliminar la cuenta. Los datos locales permanecen en su dispositivo hasta que borre los datos o desinstale la app.</p>
       <h3>Sus derechos</h3>
-      <p>Puede solicitar acceso, correccion, eliminacion o portabilidad de sus datos. Contacto: vgaillard85@gmail.com.app</p>
+      <p>Puede solicitar acceso, correccion, eliminacion o portabilidad de sus datos. Contacto: contact@numeline.com</p>
       <h3>Transferencias internacionales</h3>
       <p>Algunos proveedores pueden procesar datos fuera de su pais. Usamos salvaguardas apropiadas cuando es necesario.</p>
       <h3>Cambios</h3>
@@ -281,17 +281,17 @@ const LEGAL_HTML: LegalContent = {
       <h3>Ley aplicable</h3>
       <p>Estos terminos se rigen por la ley francesa.</p>
       <h3>Contacto</h3>
-      <p>Contacto: contact@eatsok.app</p>`,
+      <p>Contacto: contact@numeline.com</p>`,
     notice: `      <h1>Aviso legal - Numeline</h1>
       <p><strong>Ultima actualizacion: 14 de enero de 2026</strong></p>
       <h3>Editor</h3>
-      <p>Olympe et odin (SIRET 91457466000025) - contact@eatsok.app</p>
+      <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Alojamiento</h3>
       <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
       <h3>Propiedad intelectual</h3>
       <p>Marca, logotipo y contenidos protegidos. Requiere autorizacion para reutilizar.</p>
       <h3>Proteccion de datos</h3>
-      <p>Para cualquier solicitud: vgaillard85@gmail.com.app</p>`,
+      <p>Para cualquier solicitud: contact@numeline.com</p>`,
     disclaimer: `
       <h1>Descargo de responsabilidad</h1>
       <p>La app ofrece informacion de retiros en EE. UU. solo con fines informativos.</p>
@@ -306,7 +306,7 @@ const LEGAL_HTML: LegalContent = {
       <p><strong>Ultimo aggiornamento: 14 gennaio 2026</strong></p>
       <p>Numeline e una app mobile gestita da Olympe et odin (SIRET 91457466000025). Questa informativa spiega come raccogliamo e usiamo le informazioni.</p>
       <h3>Titolare del trattamento</h3>
-      <p>Olympe et odin, Francia. Contatto: vgaillard85@gmail.com.app</p>
+      <p>Olympe et odin, Francia. Contatto: contact@numeline.com</p>
       <h3>Informazioni che raccogliamo</h3>
       <ul>
         <li>Dati account: indirizzo email e identificativi di autenticazione (Firebase Authentication).</li>
@@ -347,7 +347,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Conservazione</h3>
       <p>I dati di account e scansione sono conservati finche il tuo account e attivo e rimossi alla cancellazione. I dati locali restano sul dispositivo finche non cancelli i dati o disinstalli l'app.</p>
       <h3>I tuoi diritti</h3>
-      <p>Puoi richiedere accesso, rettifica, cancellazione o portabilita dei dati. Contatto: vgaillard85@gmail.com.app</p>
+      <p>Puoi richiedere accesso, rettifica, cancellazione o portabilita dei dati. Contatto: contact@numeline.com</p>
       <h3>Trasferimenti internazionali</h3>
       <p>Alcuni fornitori possono trattare dati fuori dal tuo paese. Usiamo garanzie appropriate quando necessario.</p>
       <h3>Modifiche</h3>
@@ -379,17 +379,17 @@ const LEGAL_HTML: LegalContent = {
       <h3>Legge applicabile</h3>
       <p>Questi termini sono regolati dalla legge francese.</p>
       <h3>Contatto</h3>
-      <p>Contatto: contact@eatsok.app</p>`,
+      <p>Contatto: contact@numeline.com</p>`,
     notice: `      <h1>Note legali - Numeline</h1>
       <p><strong>Ultimo aggiornamento: 14 gennaio 2026</strong></p>
       <h3>Editore</h3>
-      <p>Olympe et odin (SIRET 91457466000025) - contact@eatsok.app</p>
+      <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
       <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
       <h3>Proprieta intellettuale</h3>
       <p>Marchio, logo e contenuti protetti. Riutilizzo soggetto ad autorizzazione.</p>
       <h3>Protezione dei dati</h3>
-      <p>Per qualsiasi richiesta: vgaillard85@gmail.com.app</p>`,
+      <p>Per qualsiasi richiesta: contact@numeline.com</p>`,
     disclaimer: `
       <h1>Disclaimer richiami alimentari</h1>
       <p>Informazioni sui richiami negli Stati Uniti solo a scopo informativo.</p>
@@ -404,7 +404,7 @@ const LEGAL_HTML: LegalContent = {
       <p><strong>Ultima atualizacao: 14 de janeiro de 2026</strong></p>
       <p>Numeline e um aplicativo movel operado por Olympe et odin (SIRET 91457466000025). Esta politica explica como coletamos e usamos informacoes.</p>
       <h3>Responsavel pelo tratamento</h3>
-      <p>Olympe et odin, Franca. Contato: vgaillard85@gmail.com.app</p>
+      <p>Olympe et odin, Franca. Contato: contact@numeline.com</p>
       <h3>Informacoes que coletamos</h3>
       <ul>
         <li>Dados da conta: endereco de email e identificadores de autenticacao (Firebase Authentication).</li>
@@ -445,7 +445,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Retencao</h3>
       <p>Dados de conta e scan sao mantidos enquanto sua conta estiver ativa e removidos apos exclusao. Dados locais permanecem no dispositivo ate que voce limpe os dados ou desinstale o app.</p>
       <h3>Seus direitos</h3>
-      <p>Voce pode solicitar acesso, correcao, exclusao ou portabilidade dos seus dados. Contato: vgaillard85@gmail.com.app</p>
+      <p>Voce pode solicitar acesso, correcao, exclusao ou portabilidade dos seus dados. Contato: contact@numeline.com</p>
       <h3>Transferencias internacionais</h3>
       <p>Alguns fornecedores podem processar dados fora do seu pais. Usamos salvaguardas apropriadas quando necessario.</p>
       <h3>Mudancas</h3>
@@ -477,17 +477,17 @@ const LEGAL_HTML: LegalContent = {
       <h3>Lei aplicavel</h3>
       <p>Estes termos sao regidos pela lei francesa.</p>
       <h3>Contato</h3>
-      <p>Contato: contact@eatsok.app</p>`,
+      <p>Contato: contact@numeline.com</p>`,
     notice: `      <h1>Aviso legal - Numeline</h1>
       <p><strong>Ultima atualizacao: 14 de janeiro de 2026</strong></p>
       <h3>Editor</h3>
-      <p>Olympe et odin (SIRET 91457466000025) - contact@eatsok.app</p>
+      <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hospedagem</h3>
       <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
       <h3>Propriedade intelectual</h3>
       <p>Marca, logotipo e conteudos protegidos. Reutilizacao requer autorizacao.</p>
       <h3>Protecao de dados</h3>
-      <p>Para qualquer solicitacao: vgaillard85@gmail.com.app</p>`,
+      <p>Para qualquer solicitacao: contact@numeline.com</p>`,
     disclaimer: `
       <h1>Isencao de responsabilidade</h1>
       <p>Informacoes sobre recalls nos EUA apenas para fins informativos.</p>
@@ -502,7 +502,7 @@ const LEGAL_HTML: LegalContent = {
       <p><strong>Letzte Aktualisierung: 14. Januar 2026</strong></p>
       <p>Numeline ist eine mobile App von Olympe et odin (SIRET 91457466000025). Diese Richtlinie erklaert, wie wir Informationen erheben und nutzen.</p>
       <h3>Verantwortlicher</h3>
-      <p>Olympe et odin, Frankreich. Kontakt: vgaillard85@gmail.com.app</p>
+      <p>Olympe et odin, Frankreich. Kontakt: contact@numeline.com</p>
       <h3>Welche Daten wir erheben</h3>
       <ul>
         <li>Kontodaten: E-Mail-Adresse und Authentifizierungskennungen (Firebase Authentication).</li>
@@ -543,7 +543,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Speicherdauer</h3>
       <p>Konto- und Scan-Daten werden gespeichert, solange Ihr Konto aktiv ist, und bei Loeschung entfernt. Lokale Daten verbleiben auf Ihrem Geraet, bis Sie App-Daten loeschen oder die App deinstallieren.</p>
       <h3>Ihre Rechte</h3>
-      <p>Sie koennen Auskunft, Berichtigung, Loeschung oder Datenuebertragbarkeit verlangen. Kontakt: vgaillard85@gmail.com.app</p>
+      <p>Sie koennen Auskunft, Berichtigung, Loeschung oder Datenuebertragbarkeit verlangen. Kontakt: contact@numeline.com</p>
       <h3>Internationale Uebermittlungen</h3>
       <p>Einige Anbieter koennen Daten ausserhalb Ihres Landes verarbeiten. Wir verwenden geeignete Schutzmassnahmen, wenn erforderlich.</p>
       <h3>Aenderungen</h3>
@@ -575,17 +575,17 @@ const LEGAL_HTML: LegalContent = {
       <h3>Anwendbares Recht</h3>
       <p>Diese Bedingungen unterliegen franzoesischem Recht.</p>
       <h3>Kontakt</h3>
-      <p>Kontakt: contact@eatsok.app</p>`,
+      <p>Kontakt: contact@numeline.com</p>`,
     notice: `      <h1>Rechtlicher Hinweis - Numeline</h1>
       <p><strong>Letzte Aktualisierung: 14. Januar 2026</strong></p>
       <h3>Herausgeber</h3>
-      <p>Olympe et odin (SIRET 91457466000025) - contact@eatsok.app</p>
+      <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
       <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
       <h3>Urheberrecht</h3>
       <p>Marke, Logo und Inhalte sind geschuetzt. Wiederverwendung erfordert Genehmigung.</p>
       <h3>Datenschutz</h3>
-      <p>Fuer Anfragen: vgaillard85@gmail.com.app</p>`,
+      <p>Fuer Anfragen: contact@numeline.com</p>`,
     disclaimer: `
       <h1>Haftungsausschluss</h1>
       <p>Rueckrufinformationen fuer die USA nur zu Informationszwecken.</p>
