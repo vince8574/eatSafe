@@ -180,6 +180,19 @@ export default function LanguageScreen() {
           </View>
           <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.legalButton, { backgroundColor: colors.surface }]}
+          onPress={() => router.push('/public-profile')}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="storefront-outline" size={24} color={colors.accent} />
+            <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+              {t('publicProfile.menuLabel')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.textSecondary} />
+        </TouchableOpacity>
       </View>
 
       {/* Section Numeline.com Referral */}
