@@ -110,8 +110,8 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     id: 'restaurant_premium',
     labelKey: 'subscription.plans.restaurantPremium.label',
     category: 'restaurant',
-    price: '$69.99 / mo',
-    pricePerMonth: 69.99,
+    price: '$59.99 / mo',
+    pricePerMonth: 59.99,
     descriptionKeys: [
       'subscription.plans.restaurantPremium.desc1',
       'subscription.plans.restaurantPremium.desc2',
@@ -132,8 +132,8 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     id: 'school_security',
     labelKey: 'subscription.plans.schoolSecurity.label',
     category: 'school',
-    price: '$59.99 / mo',
-    pricePerMonth: 59.99,
+    price: '$69.99 / mo',
+    pricePerMonth: 69.99,
     descriptionKeys: [
       'subscription.plans.schoolSecurity.desc1',
       'subscription.plans.schoolSecurity.desc2',
