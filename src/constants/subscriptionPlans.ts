@@ -22,8 +22,8 @@ export interface ScanPack {
   priceUSD: number;
 }
 
+// Plans listed in ascending price order (displayed as-is in the app and on the website).
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
-  // STARTER
   {
     id: 'starter_basic',
     labelKey: 'subscription.plans.starterBasic.label',
@@ -43,8 +43,6 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     sitesLimit: null,
     regulatoryFormat: false
   },
-
-  // FOOD TRUCKS
   {
     id: 'foodtruck_starter',
     labelKey: 'subscription.plans.foodtruckStarter.label',
@@ -84,8 +82,6 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     sitesLimit: null,
     regulatoryFormat: false
   },
-
-  // RESTAURANTS
   {
     id: 'restaurant_standard',
     labelKey: 'subscription.plans.restaurantStandard.label',
@@ -107,33 +103,11 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     regulatoryFormat: false
   },
   {
-    id: 'restaurant_premium',
-    labelKey: 'subscription.plans.restaurantPremium.label',
-    category: 'restaurant',
-    price: '$59.99 / mo',
-    pricePerMonth: 59.99,
-    descriptionKeys: [
-      'subscription.plans.restaurantPremium.desc1',
-      'subscription.plans.restaurantPremium.desc2',
-      'subscription.plans.restaurantPremium.desc3',
-      'subscription.plans.restaurantPremium.desc4'
-    ],
-    scansIncluded: 5000,
-    historyRetentionDays: 180,
-    exportEnabled: true,
-    exportFormats: ['pdf', 'xlsx', 'csv'],
-    employeesLimit: 10,
-    sitesLimit: null,
-    regulatoryFormat: false
-  },
-
-  // CRÈCHES / ÉCOLES
-  {
     id: 'school_security',
     labelKey: 'subscription.plans.schoolSecurity.label',
     category: 'school',
-    price: '$69.99 / mo',
-    pricePerMonth: 69.99,
+    price: '$59.99 / mo',
+    pricePerMonth: 59.99,
     descriptionKeys: [
       'subscription.plans.schoolSecurity.desc1',
       'subscription.plans.schoolSecurity.desc2',
@@ -147,6 +121,26 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     employeesLimit: 10,
     sitesLimit: null,
     regulatoryFormat: true
+  },
+  {
+    id: 'restaurant_premium',
+    labelKey: 'subscription.plans.restaurantPremium.label',
+    category: 'restaurant',
+    price: '$69.99 / mo',
+    pricePerMonth: 69.99,
+    descriptionKeys: [
+      'subscription.plans.restaurantPremium.desc1',
+      'subscription.plans.restaurantPremium.desc2',
+      'subscription.plans.restaurantPremium.desc3',
+      'subscription.plans.restaurantPremium.desc4'
+    ],
+    scansIncluded: 5000,
+    historyRetentionDays: 180,
+    exportEnabled: true,
+    exportFormats: ['pdf', 'xlsx', 'csv'],
+    employeesLimit: 10,
+    sitesLimit: null,
+    regulatoryFormat: false
   },
 ];
 
