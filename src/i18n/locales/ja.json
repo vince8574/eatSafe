@@ -338,41 +338,45 @@
     "scanPacksTitle": "スキャンパック",
     "scanPacksHelper": "月間割り当てに達したら、追加のスキャンを追加します。",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100スキャン含む",
+        "desc2": "30日間の履歴",
+        "desc3": "リアルタイムリコール警告"
+      },
       "foodtruckStarter": {
-        "label": "フードトラック - スターター",
+        "label": "Plus",
         "desc1": "500スキャン含む",
         "desc2": "30日間の履歴",
         "desc3": "リアルタイムリコール警告"
       },
       "foodtruckPro": {
-        "label": "フードトラック - プロ",
-        "desc1": "2000スキャン含む",
-        "desc2": "90日間の履歴",
-        "desc3": "PDF/CSVエクスポート"
+        "label": "Pro",
+        "desc1": "1000スキャン含む",
+        "desc2": "PDF/CSVエクスポート",
+        "desc3": "90日間の履歴",
+        "desc4": "リアルタイムリコール警告"
       },
-      "restaurantEssential": {
-        "label": "レストラン - エッセンシャル",
-        "desc1": "5000スキャン含む",
-        "desc2": "180日間の履歴",
-        "desc3": "最大5人の従業員"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "1500スキャン含む",
+        "desc2": "警告 + 6ヶ月の履歴",
+        "desc3": "PDF/Excelエクスポート",
+        "desc4": "複数従業員（最大3人）"
       },
       "restaurantPremium": {
-        "label": "レストラン - プレミアム",
-        "desc1": "15,000スキャン含む",
-        "desc2": "無制限の履歴",
-        "desc3": "規制対応エクスポート"
+        "label": "Advanced",
+        "desc1": "5000スキャン含む",
+        "desc2": "警告 + 6ヶ月の履歴",
+        "desc3": "PDF/Excel/CSVエクスポート",
+        "desc4": "複数従業員（最大10人）"
       },
-      "collectiveBasic": {
-        "label": "団体給食 - ベーシック",
-        "desc1": "30,000スキャン含む",
-        "desc2": "最大20人の従業員",
-        "desc3": "最大3サイト"
-      },
-      "collectiveEnterprise": {
-        "label": "団体給食 - エンタープライズ",
-        "desc1": "無制限スキャン",
-        "desc2": "無制限の従業員",
-        "desc3": "無制限のサイト"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "2000スキャン含む",
+        "desc2": "警告 + 1年間の履歴",
+        "desc3": "規制対応形式 PDF/CSV",
+        "desc4": "複数従業員（最大10人）"
       }
     },
     "packs": {

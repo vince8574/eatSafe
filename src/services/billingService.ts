@@ -23,6 +23,7 @@ import {
 
 // Product IDs - must match Google Play Console
 export const SUBSCRIPTION_PRODUCT_IDS = [
+  'starter_basic',
   'foodtruck_starter',
   'foodtruck_pro',
   'restaurant_standard',

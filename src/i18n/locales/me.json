@@ -338,41 +338,45 @@
     "scanPacksTitle": "Paketi skeniranja",
     "scanPacksHelper": "Dodajte dodatna skeniranja kada je dostignut mjesečni kvota.",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100 skeniranja uključeno",
+        "desc2": "30 dana istorije",
+        "desc3": "Upozorenja o opozivu u realnom vremenu"
+      },
       "foodtruckStarter": {
-        "label": "Food Truck - Starter",
+        "label": "Plus",
         "desc1": "500 skeniranja uključeno",
         "desc2": "30 dana istorije",
         "desc3": "Upozorenja o opozivu u realnom vremenu"
       },
       "foodtruckPro": {
-        "label": "Food Truck - Pro",
-        "desc1": "2000 skeniranja uključeno",
-        "desc2": "90 dana istorije",
-        "desc3": "Izvoz PDF/CSV"
+        "label": "Pro",
+        "desc1": "1000 skeniranja uključeno",
+        "desc2": "Izvoz PDF/CSV",
+        "desc3": "90 dana istorije",
+        "desc4": "Upozorenja o opozivu u realnom vremenu"
       },
-      "restaurantEssential": {
-        "label": "Restoran - Osnovni",
-        "desc1": "5000 skeniranja uključeno",
-        "desc2": "180 dana istorije",
-        "desc3": "Do 5 zaposlenih"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "1500 skeniranja uključeno",
+        "desc2": "Upozorenja + 6 mjeseci istorije",
+        "desc3": "Izvoz PDF/Excel",
+        "desc4": "Više zaposlenih (do 3)"
       },
       "restaurantPremium": {
-        "label": "Restoran - Premium",
-        "desc1": "15.000 skeniranja uključeno",
-        "desc2": "Neograničena istorija",
-        "desc3": "Regulatorni izvoz"
+        "label": "Advanced",
+        "desc1": "5000 skeniranja uključeno",
+        "desc2": "Upozorenja + 6 mjeseci istorije",
+        "desc3": "Izvoz PDF/Excel/CSV",
+        "desc4": "Više zaposlenih (do 10)"
       },
-      "collectiveBasic": {
-        "label": "Kolektivni ketering - Osnovni",
-        "desc1": "30.000 skeniranja uključeno",
-        "desc2": "Do 20 zaposlenih",
-        "desc3": "Do 3 lokacije"
-      },
-      "collectiveEnterprise": {
-        "label": "Kolektivni ketering - Enterprise",
-        "desc1": "Neograničena skeniranja",
-        "desc2": "Neograničeni zaposleni",
-        "desc3": "Neograničene lokacije"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "2000 skeniranja uključeno",
+        "desc2": "Upozorenja + 1 godina istorije",
+        "desc3": "PDF/CSV u regulatornom formatu",
+        "desc4": "Više zaposlenih (do 10)"
       }
     },
     "packs": {

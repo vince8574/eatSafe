@@ -376,41 +376,45 @@
     "scanPacksTitle": "Scanpakketten",
     "scanPacksHelper": "Voeg extra scans toe wanneer uw maandelijkse quotum is bereikt.",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100 scans inbegrepen",
+        "desc2": "30 dagen geschiedenis",
+        "desc3": "Realtime terugroepwaarschuwingen"
+      },
       "foodtruckStarter": {
-        "label": "Food Truck - Starter",
+        "label": "Plus",
         "desc1": "500 scans inbegrepen",
         "desc2": "30 dagen geschiedenis",
         "desc3": "Realtime terugroepwaarschuwingen"
       },
       "foodtruckPro": {
-        "label": "Food Truck - Pro",
-        "desc1": "2000 scans inbegrepen",
-        "desc2": "90 dagen geschiedenis",
-        "desc3": "PDF/CSV-export"
+        "label": "Pro",
+        "desc1": "1000 scans inbegrepen",
+        "desc2": "PDF/CSV-export",
+        "desc3": "90 dagen geschiedenis",
+        "desc4": "Realtime terugroepwaarschuwingen"
       },
-      "restaurantEssential": {
-        "label": "Restaurant - Essential",
-        "desc1": "5000 scans inbegrepen",
-        "desc2": "180 dagen geschiedenis",
-        "desc3": "Tot 5 medewerkers"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "1500 scans inbegrepen",
+        "desc2": "Waarschuwingen + 6 maanden geschiedenis",
+        "desc3": "PDF/Excel-export",
+        "desc4": "Meerdere medewerkers (tot 3)"
       },
       "restaurantPremium": {
-        "label": "Restaurant - Premium",
-        "desc1": "15.000 scans inbegrepen",
-        "desc2": "Onbeperkte geschiedenis",
-        "desc3": "Regelgevende export"
+        "label": "Advanced",
+        "desc1": "5000 scans inbegrepen",
+        "desc2": "Waarschuwingen + 6 maanden geschiedenis",
+        "desc3": "PDF/Excel/CSV-export",
+        "desc4": "Meerdere medewerkers (tot 10)"
       },
-      "collectiveBasic": {
-        "label": "Collectieve Catering - Basic",
-        "desc1": "30.000 scans inbegrepen",
-        "desc2": "Tot 20 medewerkers",
-        "desc3": "Tot 3 locaties"
-      },
-      "collectiveEnterprise": {
-        "label": "Collectieve Catering - Enterprise",
-        "desc1": "Onbeperkte scans",
-        "desc2": "Onbeperkte medewerkers",
-        "desc3": "Onbeperkte locaties"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "2000 scans inbegrepen",
+        "desc2": "Waarschuwingen + 1 jaar geschiedenis",
+        "desc3": "PDF/CSV in regelgevend formaat",
+        "desc4": "Meerdere medewerkers (tot 10)"
       }
     },
     "packs": {

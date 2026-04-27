@@ -343,41 +343,45 @@
     "scanPacksTitle": "Paquetes de escaneo",
     "scanPacksHelper": "Agrega escaneos adicionales cuando se alcance tu cuota mensual.",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100 escaneos incluidos",
+        "desc2": "30 días de historial",
+        "desc3": "Alertas de retiro en tiempo real"
+      },
       "foodtruckStarter": {
-        "label": "Food Truck - Starter",
+        "label": "Plus",
         "desc1": "500 escaneos incluidos",
         "desc2": "30 días de historial",
         "desc3": "Alertas de retiro en tiempo real"
       },
       "foodtruckPro": {
-        "label": "Food Truck - Pro",
-        "desc1": "2000 escaneos incluidos",
-        "desc2": "90 días de historial",
-        "desc3": "Exportación PDF/CSV"
+        "label": "Pro",
+        "desc1": "1000 escaneos incluidos",
+        "desc2": "Exportación PDF/CSV",
+        "desc3": "90 días de historial",
+        "desc4": "Alertas de retiro en tiempo real"
       },
-      "restaurantEssential": {
-        "label": "Restaurante - Essential",
-        "desc1": "5000 escaneos incluidos",
-        "desc2": "180 días de historial",
-        "desc3": "Hasta 5 empleados"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "1500 escaneos incluidos",
+        "desc2": "Alertas + 6 meses de historial",
+        "desc3": "Exportación PDF/Excel",
+        "desc4": "Multi-empleado (hasta 3)"
       },
       "restaurantPremium": {
-        "label": "Restaurante - Premium",
-        "desc1": "15.000 escaneos incluidos",
-        "desc2": "Historial ilimitado",
-        "desc3": "Exportación reglamentaria"
+        "label": "Advanced",
+        "desc1": "5000 escaneos incluidos",
+        "desc2": "Alertas + 6 meses de historial",
+        "desc3": "Exportación PDF/Excel/CSV",
+        "desc4": "Multi-empleado (hasta 10)"
       },
-      "collectiveBasic": {
-        "label": "Restauración Colectiva - Basic",
-        "desc1": "30.000 escaneos incluidos",
-        "desc2": "Hasta 20 empleados",
-        "desc3": "Hasta 3 sitios"
-      },
-      "collectiveEnterprise": {
-        "label": "Restauración Colectiva - Enterprise",
-        "desc1": "Escaneos ilimitados",
-        "desc2": "Empleados ilimitados",
-        "desc3": "Sitios ilimitados"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "2000 escaneos incluidos",
+        "desc2": "Alertas + 1 año de historial",
+        "desc3": "PDF/CSV con formato reglamentario",
+        "desc4": "Multi-empleado (hasta 10)"
       }
     },
     "packs": {

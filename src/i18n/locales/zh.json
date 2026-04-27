@@ -338,41 +338,45 @@
     "scanPacksTitle": "扫描包",
     "scanPacksHelper": "当达到月度配额时，添加额外的扫描次数。",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "包含100次扫描",
+        "desc2": "30天历史记录",
+        "desc3": "实时召回提醒"
+      },
       "foodtruckStarter": {
-        "label": "餐车 - 入门版",
+        "label": "Plus",
         "desc1": "包含500次扫描",
         "desc2": "30天历史记录",
         "desc3": "实时召回提醒"
       },
       "foodtruckPro": {
-        "label": "餐车 - 专业版",
-        "desc1": "包含2000次扫描",
-        "desc2": "90天历史记录",
-        "desc3": "PDF/CSV导出"
+        "label": "Pro",
+        "desc1": "包含1000次扫描",
+        "desc2": "PDF/CSV导出",
+        "desc3": "90天历史记录",
+        "desc4": "实时召回提醒"
       },
-      "restaurantEssential": {
-        "label": "餐厅 - 基础版",
-        "desc1": "包含5000次扫描",
-        "desc2": "180天历史记录",
-        "desc3": "最多5名员工"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "包含1500次扫描",
+        "desc2": "提醒 + 6个月历史记录",
+        "desc3": "PDF/Excel导出",
+        "desc4": "多员工（最多3名）"
       },
       "restaurantPremium": {
-        "label": "餐厅 - 高级版",
-        "desc1": "包含15,000次扫描",
-        "desc2": "无限历史记录",
-        "desc3": "合规性导出"
+        "label": "Advanced",
+        "desc1": "包含5000次扫描",
+        "desc2": "提醒 + 6个月历史记录",
+        "desc3": "PDF/Excel/CSV导出",
+        "desc4": "多员工（最多10名）"
       },
-      "collectiveBasic": {
-        "label": "团餐 - 基础版",
-        "desc1": "包含30,000次扫描",
-        "desc2": "最多20名员工",
-        "desc3": "最多3个站点"
-      },
-      "collectiveEnterprise": {
-        "label": "团餐 - 企业版",
-        "desc1": "无限扫描",
-        "desc2": "无限员工",
-        "desc3": "无限站点"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "包含2000次扫描",
+        "desc2": "提醒 + 1年历史记录",
+        "desc3": "合规格式PDF/CSV",
+        "desc4": "多员工（最多10名）"
       }
     },
     "packs": {

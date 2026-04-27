@@ -343,41 +343,45 @@
     "scanPacksTitle": "Pacchetti di scansione",
     "scanPacksHelper": "Aggiungi scansioni aggiuntive quando viene raggiunta la quota mensile.",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100 scansioni incluse",
+        "desc2": "30 giorni di cronologia",
+        "desc3": "Avvisi richiamo in tempo reale"
+      },
       "foodtruckStarter": {
-        "label": "Food Truck - Starter",
+        "label": "Plus",
         "desc1": "500 scansioni incluse",
         "desc2": "30 giorni di cronologia",
         "desc3": "Avvisi richiamo in tempo reale"
       },
       "foodtruckPro": {
-        "label": "Food Truck - Pro",
-        "desc1": "2000 scansioni incluse",
-        "desc2": "90 giorni di cronologia",
-        "desc3": "Esportazione PDF/CSV"
+        "label": "Pro",
+        "desc1": "1000 scansioni incluse",
+        "desc2": "Esportazione PDF/CSV",
+        "desc3": "90 giorni di cronologia",
+        "desc4": "Avvisi richiamo in tempo reale"
       },
-      "restaurantEssential": {
-        "label": "Ristorante - Essential",
-        "desc1": "5000 scansioni incluse",
-        "desc2": "180 giorni di cronologia",
-        "desc3": "Fino a 5 dipendenti"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "1500 scansioni incluse",
+        "desc2": "Avvisi + 6 mesi di cronologia",
+        "desc3": "Esportazione PDF/Excel",
+        "desc4": "Multi-dipendente (fino a 3)"
       },
       "restaurantPremium": {
-        "label": "Ristorante - Premium",
-        "desc1": "15.000 scansioni incluse",
-        "desc2": "Cronologia illimitata",
-        "desc3": "Esportazione normativa"
+        "label": "Advanced",
+        "desc1": "5000 scansioni incluse",
+        "desc2": "Avvisi + 6 mesi di cronologia",
+        "desc3": "Esportazione PDF/Excel/CSV",
+        "desc4": "Multi-dipendente (fino a 10)"
       },
-      "collectiveBasic": {
-        "label": "Ristorazione Collettiva - Basic",
-        "desc1": "30.000 scansioni incluse",
-        "desc2": "Fino a 20 dipendenti",
-        "desc3": "Fino a 3 siti"
-      },
-      "collectiveEnterprise": {
-        "label": "Ristorazione Collettiva - Enterprise",
-        "desc1": "Scansioni illimitate",
-        "desc2": "Dipendenti illimitati",
-        "desc3": "Siti illimitati"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "2000 scansioni incluse",
+        "desc2": "Avvisi + 1 anno di cronologia",
+        "desc3": "PDF/CSV in formato normativo",
+        "desc4": "Multi-dipendente (fino a 10)"
       }
     },
     "packs": {

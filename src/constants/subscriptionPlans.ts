@@ -1,7 +1,7 @@
 export interface SubscriptionPlan {
   id: string;
   labelKey: string; // Translation key for the label
-  category: 'foodtruck' | 'restaurant' | 'school';
+  category: 'starter' | 'foodtruck' | 'restaurant' | 'school';
   price: string;
   pricePerMonth: number; // en USD
   descriptionKeys: string[]; // Translation keys for description lines
@@ -23,6 +23,27 @@ export interface ScanPack {
 }
 
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
+  // STARTER
+  {
+    id: 'starter_basic',
+    labelKey: 'subscription.plans.starterBasic.label',
+    category: 'starter',
+    price: '$9.99 / mo',
+    pricePerMonth: 9.99,
+    descriptionKeys: [
+      'subscription.plans.starterBasic.desc1',
+      'subscription.plans.starterBasic.desc2',
+      'subscription.plans.starterBasic.desc3'
+    ],
+    scansIncluded: 100,
+    historyRetentionDays: 30,
+    exportEnabled: false,
+    exportFormats: [],
+    employeesLimit: null,
+    sitesLimit: null,
+    regulatoryFormat: false
+  },
+
   // FOOD TRUCKS
   {
     id: 'foodtruck_starter',
@@ -78,7 +99,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'subscription.plans.restaurantStandard.desc4'
     ],
     scansIncluded: 1500,
-    historyRetentionDays: 365,
+    historyRetentionDays: 180,
     exportEnabled: true,
     exportFormats: ['pdf', 'xlsx'],
     employeesLimit: 3,
@@ -98,7 +119,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'subscription.plans.restaurantPremium.desc4'
     ],
     scansIncluded: 5000,
-    historyRetentionDays: 365,
+    historyRetentionDays: 180,
     exportEnabled: true,
     exportFormats: ['pdf', 'xlsx', 'csv'],
     employeesLimit: 10,
@@ -120,7 +141,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'subscription.plans.schoolSecurity.desc4'
     ],
     scansIncluded: 2000,
-    historyRetentionDays: 'unlimited',
+    historyRetentionDays: 365,
     exportEnabled: true,
     exportFormats: ['pdf', 'csv'],
     employeesLimit: 10,
@@ -169,6 +190,6 @@ export function getPackById(packId: string): ScanPack | undefined {
   return SCAN_PACKS.find(p => p.id === packId);
 }
 
-export function getPlansByCategory(category: 'foodtruck' | 'restaurant' | 'school'): SubscriptionPlan[] {
+export function getPlansByCategory(category: 'starter' | 'foodtruck' | 'restaurant' | 'school'): SubscriptionPlan[] {
   return SUBSCRIPTION_PLANS.filter(p => p.category === category);
 }

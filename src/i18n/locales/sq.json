@@ -338,41 +338,45 @@
     "scanPacksTitle": "Paketat e skanimit",
     "scanPacksHelper": "Shtoni skanime shtesë kur arrihet kuota juaj mujore.",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100 skanime të përfshira",
+        "desc2": "30 ditë historik",
+        "desc3": "Alarme tërheqjeje në kohë reale"
+      },
       "foodtruckStarter": {
-        "label": "Food Truck - Starter",
+        "label": "Plus",
         "desc1": "500 skanime të përfshira",
         "desc2": "30 ditë historik",
         "desc3": "Alarme tërheqjeje në kohë reale"
       },
       "foodtruckPro": {
-        "label": "Food Truck - Pro",
-        "desc1": "2000 skanime të përfshira",
-        "desc2": "90 ditë historik",
-        "desc3": "Eksport PDF/CSV"
+        "label": "Pro",
+        "desc1": "1000 skanime të përfshira",
+        "desc2": "Eksport PDF/CSV",
+        "desc3": "90 ditë historik",
+        "desc4": "Alarme tërheqjeje në kohë reale"
       },
-      "restaurantEssential": {
-        "label": "Restorant - Essential",
-        "desc1": "5000 skanime të përfshira",
-        "desc2": "180 ditë historik",
-        "desc3": "Deri në 5 punonjës"
+      "restaurantStandard": {
+        "label": "Scale",
+        "desc1": "1500 skanime të përfshira",
+        "desc2": "Alarme + 6 muaj historik",
+        "desc3": "Eksport PDF/Excel",
+        "desc4": "Shumë punonjës (deri në 3)"
       },
       "restaurantPremium": {
-        "label": "Restorant - Premium",
-        "desc1": "15,000 skanime të përfshira",
-        "desc2": "Historik i pakufizuar",
-        "desc3": "Eksport rregullator"
+        "label": "Advanced",
+        "desc1": "5000 skanime të përfshira",
+        "desc2": "Alarme + 6 muaj historik",
+        "desc3": "Eksport PDF/Excel/CSV",
+        "desc4": "Shumë punonjës (deri në 10)"
       },
-      "collectiveBasic": {
-        "label": "Katering Kolektiv - Basic",
-        "desc1": "30,000 skanime të përfshira",
-        "desc2": "Deri në 20 punonjës",
-        "desc3": "Deri në 3 faqe"
-      },
-      "collectiveEnterprise": {
-        "label": "Katering Kolektiv - Enterprise",
-        "desc1": "Skanime të pakufizuara",
-        "desc2": "Punonjës të pakufizuar",
-        "desc3": "Faqe të pakufizuara"
+      "schoolSecurity": {
+        "label": "Ultimate",
+        "desc1": "2000 skanime të përfshira",
+        "desc2": "Alarme + 1 vit historik",
+        "desc3": "PDF/CSV në format rregullator",
+        "desc4": "Shumë punonjës (deri në 10)"
       }
     },
     "packs": {

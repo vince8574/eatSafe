@@ -412,37 +412,43 @@
     "scanPacksTitle": "Scan packs",
     "scanPacksHelper": "Add extra scans when your monthly quota is reached.",
     "plans": {
+      "starterBasic": {
+        "label": "Starter",
+        "desc1": "100 scans included",
+        "desc2": "30-day history",
+        "desc3": "Real-time recall alerts"
+      },
       "foodtruckStarter": {
-        "label": "Food Truck - Starter",
+        "label": "Plus",
         "desc1": "500 scans included",
         "desc2": "30-day history",
         "desc3": "Real-time recall alerts"
       },
       "foodtruckPro": {
-        "label": "Food Truck - Pro",
+        "label": "Pro",
         "desc1": "1000 scans included",
         "desc2": "PDF / CSV export",
         "desc3": "90-day history",
         "desc4": "Real-time recall alerts"
       },
       "restaurantStandard": {
-        "label": "Restaurant - Standard",
+        "label": "Scale",
         "desc1": "1500 scans included",
-        "desc2": "Alerts + 1-year history",
+        "desc2": "Alerts + 6-month history",
         "desc3": "PDF / Excel export",
         "desc4": "Multi-employee (up to 3)"
       },
       "restaurantPremium": {
-        "label": "Restaurant - Premium",
+        "label": "Advanced",
         "desc1": "5000 scans included",
-        "desc2": "Alerts + 1-year history",
+        "desc2": "Alerts + 6-month history",
         "desc3": "PDF / Excel / CSV export",
         "desc4": "Multi-employee (up to 10)"
       },
       "schoolSecurity": {
-        "label": "Daycare / School - Security",
+        "label": "Ultimate",
         "desc1": "2000 scans included",
-        "desc2": "Alerts + unlimited history",
+        "desc2": "Alerts + 1-year history",
         "desc3": "Regulatory format PDF / CSV",
         "desc4": "Multi-employee (up to 10)"
       }
