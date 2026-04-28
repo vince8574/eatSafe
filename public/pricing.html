@@ -206,7 +206,14 @@
       display: flex;
       align-items: baseline;
       gap: 6px;
-      margin: 4px 0 8px;
+      margin: 4px 0 0;
+    }
+
+    .plan-price-billed {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 2px 0 8px;
+      min-height: 16px;
     }
 
     .plan-price-amount {
@@ -448,8 +455,8 @@
       <p class="section-helper">Recurring billing through Google Play and the App Store. Cancel anytime from your store account.</p>
 
       <div class="billing-toggle" role="tablist" aria-label="Billing period">
-        <button type="button" class="billing-toggle-option active" data-period="monthly" role="tab" aria-selected="true">Monthly</button>
-        <button type="button" class="billing-toggle-option" data-period="yearly" role="tab" aria-selected="false">
+        <button type="button" class="billing-toggle-option" data-period="monthly" role="tab" aria-selected="false">Monthly</button>
+        <button type="button" class="billing-toggle-option active" data-period="yearly" role="tab" aria-selected="true">
           Yearly
           <span class="billing-toggle-savings">2 months free</span>
         </button>
@@ -459,9 +466,10 @@
         <div class="plan-card">
           <h3 class="plan-name">Starter</h3>
           <div class="plan-price">
-            <span class="plan-price-amount" data-monthly="$9.99" data-yearly="$99.90">$9.99</span>
-            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
+            <span class="plan-price-amount" data-monthly="$9.99" data-yearly="$8.33">$8.33</span>
+            <span class="plan-price-period">/ month</span>
           </div>
+          <p class="plan-price-billed" data-yearly="billed $99.90 / year"></p>
           <p class="plan-tagline">Try the essentials with a low commitment.</p>
           <ul class="plan-features">
             <li>100 scans included</li>
@@ -473,9 +481,10 @@
         <div class="plan-card">
           <h3 class="plan-name">Plus</h3>
           <div class="plan-price">
-            <span class="plan-price-amount" data-monthly="$19.99" data-yearly="$199.90">$19.99</span>
-            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
+            <span class="plan-price-amount" data-monthly="$19.99" data-yearly="$16.66">$16.66</span>
+            <span class="plan-price-period">/ month</span>
           </div>
+          <p class="plan-price-billed" data-yearly="billed $199.90 / year"></p>
           <p class="plan-tagline">For solo operators and small food trucks.</p>
           <ul class="plan-features">
             <li>500 scans included</li>
@@ -487,9 +496,10 @@
         <div class="plan-card">
           <h3 class="plan-name">Pro</h3>
           <div class="plan-price">
-            <span class="plan-price-amount" data-monthly="$29.99" data-yearly="$299.90">$29.99</span>
-            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
+            <span class="plan-price-amount" data-monthly="$29.99" data-yearly="$24.99">$24.99</span>
+            <span class="plan-price-period">/ month</span>
           </div>
+          <p class="plan-price-billed" data-yearly="billed $299.90 / year"></p>
           <p class="plan-tagline">More volume, exports, and a longer history.</p>
           <ul class="plan-features">
             <li>1,000 scans included</li>
@@ -502,9 +512,10 @@
         <div class="plan-card">
           <h3 class="plan-name">Scale</h3>
           <div class="plan-price">
-            <span class="plan-price-amount" data-monthly="$39.99" data-yearly="$399.90">$39.99</span>
-            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
+            <span class="plan-price-amount" data-monthly="$39.99" data-yearly="$33.33">$33.33</span>
+            <span class="plan-price-period">/ month</span>
           </div>
+          <p class="plan-price-billed" data-yearly="billed $399.90 / year"></p>
           <p class="plan-tagline">Built for restaurants with a small staff.</p>
           <ul class="plan-features">
             <li>1,500 scans included</li>
@@ -517,9 +528,10 @@
         <div class="plan-card">
           <h3 class="plan-name">Ultimate</h3>
           <div class="plan-price">
-            <span class="plan-price-amount" data-monthly="$59.99" data-yearly="$599.90">$59.99</span>
-            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
+            <span class="plan-price-amount" data-monthly="$59.99" data-yearly="$49.99">$49.99</span>
+            <span class="plan-price-period">/ month</span>
           </div>
+          <p class="plan-price-billed" data-yearly="billed $599.90 / year"></p>
           <p class="plan-tagline">Designed for schools, daycares and group catering.</p>
           <ul class="plan-features">
             <li>2,000 scans included</li>
@@ -532,9 +544,10 @@
         <div class="plan-card">
           <h3 class="plan-name">Advanced</h3>
           <div class="plan-price">
-            <span class="plan-price-amount" data-monthly="$69.99" data-yearly="$699.90">$69.99</span>
-            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
+            <span class="plan-price-amount" data-monthly="$69.99" data-yearly="$58.33">$58.33</span>
+            <span class="plan-price-period">/ month</span>
           </div>
+          <p class="plan-price-billed" data-yearly="billed $699.90 / year"></p>
           <p class="plan-tagline">For high-volume kitchens and growing teams.</p>
           <ul class="plan-features">
             <li>5,000 scans included</li>
@@ -623,7 +636,7 @@
       if (!toggle) return;
       var options = toggle.querySelectorAll('.billing-toggle-option');
       var amounts = document.querySelectorAll('.plan-price-amount');
-      var periods = document.querySelectorAll('.plan-price-period');
+      var billedLines = document.querySelectorAll('.plan-price-billed');
 
       function setPeriod(period) {
         options.forEach(function (opt) {
@@ -635,9 +648,8 @@
           var v = el.dataset[period];
           if (v) el.textContent = v;
         });
-        periods.forEach(function (el) {
-          var v = el.dataset[period];
-          if (v) el.textContent = v;
+        billedLines.forEach(function (el) {
+          el.textContent = period === 'yearly' ? (el.dataset.yearly || '') : '';
         });
       }
 
@@ -646,6 +658,9 @@
           setPeriod(opt.dataset.period);
         });
       });
+
+      // Initialize on the default (yearly) state to populate the "billed" line
+      setPeriod('yearly');
     })();
   </script>
 </body>

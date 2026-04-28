@@ -412,7 +412,8 @@
     "billingPeriod": {
       "monthly": "Mensuel",
       "yearly": "Annuel",
-      "savings": "2 mois offerts"
+      "savings": "2 mois offerts",
+      "billed": "facturé {amount}"
     },
     "scanPacksTitle": "Packs de scans",
     "scanPacksHelper": "Ajoutez des scans supplémentaires lorsque votre quota mensuel est atteint.",

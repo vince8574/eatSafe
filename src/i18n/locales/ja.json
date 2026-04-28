@@ -338,7 +338,8 @@
     "billingPeriod": {
       "monthly": "月額",
       "yearly": "年額",
-      "savings": "2か月無料"
+      "savings": "2か月無料",
+      "billed": "{amount} で請求"
     },
     "scanPacksTitle": "スキャンパック",
     "scanPacksHelper": "月間割り当てに達したら、追加のスキャンを追加します。",

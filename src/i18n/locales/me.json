@@ -338,7 +338,8 @@
     "billingPeriod": {
       "monthly": "Mjesečno",
       "yearly": "Godišnje",
-      "savings": "2 mjeseca besplatno"
+      "savings": "2 mjeseca besplatno",
+      "billed": "naplaćuje se {amount}"
     },
     "scanPacksTitle": "Paketi skeniranja",
     "scanPacksHelper": "Dodajte dodatna skeniranja kada je dostignut mjesečni kvota.",

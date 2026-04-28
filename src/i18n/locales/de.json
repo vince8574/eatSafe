@@ -343,7 +343,8 @@
     "billingPeriod": {
       "monthly": "Monatlich",
       "yearly": "Jährlich",
-      "savings": "2 Monate gratis"
+      "savings": "2 Monate gratis",
+      "billed": "{amount} abgerechnet"
     },
     "scanPacksTitle": "Scan-Pakete",
     "scanPacksHelper": "Fügen Sie zusätzliche Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist.",

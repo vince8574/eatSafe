@@ -376,7 +376,8 @@
     "billingPeriod": {
       "monthly": "Maandelijks",
       "yearly": "Jaarlijks",
-      "savings": "2 maanden gratis"
+      "savings": "2 maanden gratis",
+      "billed": "gefactureerd {amount}"
     },
     "scanPacksTitle": "Scanpakketten",
     "scanPacksHelper": "Voeg extra scans toe wanneer uw maandelijkse quotum is bereikt.",

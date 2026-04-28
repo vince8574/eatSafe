@@ -28,7 +28,7 @@ export default function SubscriptionScreen() {
 
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
   const [pendingPackId, setPendingPackId] = useState<string | null>(null);
-  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('yearly');
 
   const handleChoosePlan = (planId: string) => {
     if (purchasing) return;
@@ -204,7 +204,14 @@ export default function SubscriptionScreen() {
 
           {plans.map((plan) => {
             const productId = billingPeriod === 'yearly' ? plan.idYear : plan.id;
-            const displayPrice = billingPeriod === 'yearly' ? plan.priceYear : plan.price;
+            const headlinePrice =
+              billingPeriod === 'yearly'
+                ? `$${(plan.pricePerYear / 12).toFixed(2)} / mo`
+                : plan.price;
+            const billedSubtitle =
+              billingPeriod === 'yearly'
+                ? t('subscription.billingPeriod.billed', { amount: plan.priceYear })
+                : '';
             const isActive =
               (subscription?.planId === plan.id || subscription?.planId === plan.idYear) &&
               subscription?.status === 'active';
@@ -223,7 +230,12 @@ export default function SubscriptionScreen() {
               >
                 <View style={styles.planHeader}>
                   <Text style={[styles.planTitle, { color: colors.textPrimary }]}>{t(plan.labelKey)}</Text>
-                  <Text style={[styles.planPrice, { color: colors.accent }]}>{displayPrice}</Text>
+                  <View style={styles.planPriceWrap}>
+                    <Text style={[styles.planPrice, { color: colors.accent }]}>{headlinePrice}</Text>
+                    {billedSubtitle ? (
+                      <Text style={[styles.planPriceBilled, { color: colors.textSecondary }]}>{billedSubtitle}</Text>
+                    ) : null}
+                  </View>
                 </View>
                 {plan.descriptionKeys.map((key) => (
                   <Text key={key} style={[styles.planDesc, { color: colors.textSecondary }]}>
@@ -415,9 +427,17 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8
   },
+  planPriceWrap: {
+    alignItems: 'flex-end'
+  },
   planPrice: {
     fontSize: 14,
     fontWeight: '800'
+  },
+  planPriceBilled: {
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 2
   },
   planDesc: {
     fontSize: 13,

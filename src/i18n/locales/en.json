@@ -412,7 +412,8 @@
     "billingPeriod": {
       "monthly": "Monthly",
       "yearly": "Yearly",
-      "savings": "2 months free"
+      "savings": "2 months free",
+      "billed": "billed {amount}"
     },
     "scanPacksTitle": "Scan packs",
     "scanPacksHelper": "Add extra scans when your monthly quota is reached.",

@@ -376,7 +376,8 @@
     "billingPeriod": {
       "monthly": "Mensal",
       "yearly": "Anual",
-      "savings": "2 meses grátis"
+      "savings": "2 meses grátis",
+      "billed": "faturado {amount}"
     },
     "scanPacksTitle": "Pacotes de digitalização",
     "scanPacksHelper": "Adicione digitalizações extras quando sua cota mensal for atingida.",

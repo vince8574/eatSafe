@@ -338,7 +338,8 @@
     "billingPeriod": {
       "monthly": "Mujore",
       "yearly": "Vjetore",
-      "savings": "2 muaj falas"
+      "savings": "2 muaj falas",
+      "billed": "faturuar {amount}"
     },
     "scanPacksTitle": "Paketat e skanimit",
     "scanPacksHelper": "Shtoni skanime shtesë kur arrihet kuota juaj mujore.",

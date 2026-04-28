@@ -343,7 +343,8 @@
     "billingPeriod": {
       "monthly": "Mensual",
       "yearly": "Anual",
-      "savings": "2 meses gratis"
+      "savings": "2 meses gratis",
+      "billed": "facturado {amount}"
     },
     "scanPacksTitle": "Paquetes de escaneo",
     "scanPacksHelper": "Agrega escaneos adicionales cuando se alcance tu cuota mensual.",

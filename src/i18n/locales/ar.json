@@ -357,7 +357,8 @@
     "billingPeriod": {
       "monthly": "شهري",
       "yearly": "سنوي",
-      "savings": "شهران مجانًا"
+      "savings": "شهران مجانًا",
+      "billed": "تتم الفوترة {amount}"
     },
     "scanPacksTitle": "حزم المسح",
     "scanPacksHelper": "أضف عمليات مسح إضافية عند الوصول إلى حصتك الشهرية.",
