@@ -158,7 +158,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       'subscription.plans.restaurantPremium.desc4'
     ],
     scansIncluded: 5000,
-    historyRetentionDays: 180,
+    historyRetentionDays: 365,
     exportEnabled: true,
     exportFormats: ['pdf', 'xlsx', 'csv'],
     employeesLimit: 10,

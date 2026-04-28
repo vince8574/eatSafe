@@ -373,7 +373,7 @@
       "restaurantPremium": {
         "label": "Advanced",
         "desc1": "5000スキャン含む",
-        "desc2": "警告 + 6ヶ月の履歴",
+        "desc2": "警告 + 1年間の履歴",
         "desc3": "PDF/Excel/CSVエクスポート",
         "desc4": "複数従業員（最大10人）"
       },

@@ -447,7 +447,7 @@
       "restaurantPremium": {
         "label": "Advanced",
         "desc1": "5000 scans included",
-        "desc2": "Alerts + 6-month history",
+        "desc2": "Alerts + 1-year history",
         "desc3": "PDF / Excel / CSV export",
         "desc4": "Multi-employee (up to 10)"
       },

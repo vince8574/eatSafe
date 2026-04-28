@@ -373,7 +373,7 @@
       "restaurantPremium": {
         "label": "Advanced",
         "desc1": "包含5000次扫描",
-        "desc2": "提醒 + 6个月历史记录",
+        "desc2": "提醒 + 1年历史记录",
         "desc3": "PDF/Excel/CSV导出",
         "desc4": "多员工（最多10名）"
       },

@@ -411,7 +411,7 @@
       "restaurantPremium": {
         "label": "Advanced",
         "desc1": "5000 scans inbegrepen",
-        "desc2": "Waarschuwingen + 6 maanden geschiedenis",
+        "desc2": "Waarschuwingen + 1 jaar geschiedenis",
         "desc3": "PDF/Excel/CSV-export",
         "desc4": "Meerdere medewerkers (tot 10)"
       },
