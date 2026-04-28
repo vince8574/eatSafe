@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.numeline.app",
-      "buildNumber": "15",
+      "buildNumber": "16",
       "usesAppleSignIn": true,
       "jsEngine": "jsc",
       "infoPlist": {
@@ -57,7 +57,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan food labels."
+          "cameraPermission": "Numeline needs access to your camera to scan barcodes and lot numbers on food packaging."
         }
       ],
       [
