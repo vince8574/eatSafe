@@ -340,6 +340,11 @@
     "plansHelper": "Scegli il piano più adatto alle tue esigenze. Annulla in qualsiasi momento.",
     "planSelected": "Piano selezionato",
     "choosePlan": "Scegli questo piano",
+    "billingPeriod": {
+      "monthly": "Mensile",
+      "yearly": "Annuale",
+      "savings": "2 mesi gratis"
+    },
     "scanPacksTitle": "Pacchetti di scansione",
     "scanPacksHelper": "Aggiungi scansioni aggiuntive quando viene raggiunta la quota mensile.",
     "plans": {

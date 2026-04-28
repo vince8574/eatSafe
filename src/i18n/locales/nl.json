@@ -373,6 +373,11 @@
     "plansHelper": "Kies het plan dat het beste bij uw behoeften past. Op elk moment opzegbaar.",
     "planSelected": "Plan geselecteerd",
     "choosePlan": "Kies dit plan",
+    "billingPeriod": {
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks",
+      "savings": "2 maanden gratis"
+    },
     "scanPacksTitle": "Scanpakketten",
     "scanPacksHelper": "Voeg extra scans toe wanneer uw maandelijkse quotum is bereikt.",
     "plans": {

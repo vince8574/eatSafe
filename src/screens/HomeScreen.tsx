@@ -123,7 +123,7 @@ export function HomeScreen() {
               <Image
                 source={require('../../assets/logo_eatsok.png')}
                 style={styles.logoBig}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </Animated.View>
 
@@ -227,6 +227,7 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     borderRadius: 65,
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,

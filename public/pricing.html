@@ -119,6 +119,55 @@
       margin: 0 0 24px;
     }
 
+    .billing-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      margin: 0 0 24px;
+      box-shadow: 0 4px 12px rgba(10, 31, 31, 0.05);
+    }
+
+    .billing-toggle-option {
+      border: none;
+      background: transparent;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .billing-toggle-option.active {
+      background: var(--accent-dark);
+      color: #ffffff;
+    }
+
+    .billing-toggle-savings {
+      background: var(--accent);
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .billing-toggle-option.active .billing-toggle-savings {
+      background: #ffffff;
+      color: var(--accent);
+    }
+
     .plans-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -395,17 +444,25 @@
     </section>
 
     <section>
-      <h2 class="section-title">Monthly subscriptions</h2>
-      <p class="section-helper">Recurring monthly billing through Google Play and the App Store. Cancel anytime from your store account.</p>
+      <h2 class="section-title">Subscription plans</h2>
+      <p class="section-helper">Recurring billing through Google Play and the App Store. Cancel anytime from your store account.</p>
+
+      <div class="billing-toggle" role="tablist" aria-label="Billing period">
+        <button type="button" class="billing-toggle-option active" data-period="monthly" role="tab" aria-selected="true">Monthly</button>
+        <button type="button" class="billing-toggle-option" data-period="yearly" role="tab" aria-selected="false">
+          Yearly
+          <span class="billing-toggle-savings">2 months free</span>
+        </button>
+      </div>
 
       <div class="plans-grid">
         <div class="plan-card">
           <h3 class="plan-name">Starter</h3>
           <div class="plan-price">
-            <span class="plan-price-amount">$9.99</span>
-            <span class="plan-price-period">/ month</span>
+            <span class="plan-price-amount" data-monthly="$9.99" data-yearly="$99.90">$9.99</span>
+            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
           </div>
-          <p class="plan-tagline">Try the essentials with a low monthly commitment.</p>
+          <p class="plan-tagline">Try the essentials with a low commitment.</p>
           <ul class="plan-features">
             <li>100 scans included</li>
             <li>30-day history</li>
@@ -416,8 +473,8 @@
         <div class="plan-card">
           <h3 class="plan-name">Plus</h3>
           <div class="plan-price">
-            <span class="plan-price-amount">$19.99</span>
-            <span class="plan-price-period">/ month</span>
+            <span class="plan-price-amount" data-monthly="$19.99" data-yearly="$199.90">$19.99</span>
+            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
           </div>
           <p class="plan-tagline">For solo operators and small food trucks.</p>
           <ul class="plan-features">
@@ -430,8 +487,8 @@
         <div class="plan-card">
           <h3 class="plan-name">Pro</h3>
           <div class="plan-price">
-            <span class="plan-price-amount">$29.99</span>
-            <span class="plan-price-period">/ month</span>
+            <span class="plan-price-amount" data-monthly="$29.99" data-yearly="$299.90">$29.99</span>
+            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
           </div>
           <p class="plan-tagline">More volume, exports, and a longer history.</p>
           <ul class="plan-features">
@@ -445,8 +502,8 @@
         <div class="plan-card">
           <h3 class="plan-name">Scale</h3>
           <div class="plan-price">
-            <span class="plan-price-amount">$39.99</span>
-            <span class="plan-price-period">/ month</span>
+            <span class="plan-price-amount" data-monthly="$39.99" data-yearly="$399.90">$39.99</span>
+            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
           </div>
           <p class="plan-tagline">Built for restaurants with a small staff.</p>
           <ul class="plan-features">
@@ -460,8 +517,8 @@
         <div class="plan-card">
           <h3 class="plan-name">Ultimate</h3>
           <div class="plan-price">
-            <span class="plan-price-amount">$59.99</span>
-            <span class="plan-price-period">/ month</span>
+            <span class="plan-price-amount" data-monthly="$59.99" data-yearly="$599.90">$59.99</span>
+            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
           </div>
           <p class="plan-tagline">Designed for schools, daycares and group catering.</p>
           <ul class="plan-features">
@@ -475,8 +532,8 @@
         <div class="plan-card">
           <h3 class="plan-name">Advanced</h3>
           <div class="plan-price">
-            <span class="plan-price-amount">$69.99</span>
-            <span class="plan-price-period">/ month</span>
+            <span class="plan-price-amount" data-monthly="$69.99" data-yearly="$699.90">$69.99</span>
+            <span class="plan-price-period" data-monthly="/ month" data-yearly="/ year">/ month</span>
           </div>
           <p class="plan-tagline">For high-volume kitchens and growing teams.</p>
           <ul class="plan-features">
@@ -559,5 +616,37 @@
       <div>Olympe et odin - France</div>
     </footer>
   </div>
+
+  <script>
+    (function () {
+      var toggle = document.querySelector('.billing-toggle');
+      if (!toggle) return;
+      var options = toggle.querySelectorAll('.billing-toggle-option');
+      var amounts = document.querySelectorAll('.plan-price-amount');
+      var periods = document.querySelectorAll('.plan-price-period');
+
+      function setPeriod(period) {
+        options.forEach(function (opt) {
+          var active = opt.dataset.period === period;
+          opt.classList.toggle('active', active);
+          opt.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        amounts.forEach(function (el) {
+          var v = el.dataset[period];
+          if (v) el.textContent = v;
+        });
+        periods.forEach(function (el) {
+          var v = el.dataset[period];
+          if (v) el.textContent = v;
+        });
+      }
+
+      options.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          setPeriod(opt.dataset.period);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

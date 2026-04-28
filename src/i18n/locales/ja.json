@@ -335,6 +335,11 @@
     "plansHelper": "ニーズに最適なプランを選択してください。いつでもキャンセルできます。",
     "planSelected": "プランが選択されました",
     "choosePlan": "このプランを選択",
+    "billingPeriod": {
+      "monthly": "月額",
+      "yearly": "年額",
+      "savings": "2か月無料"
+    },
     "scanPacksTitle": "スキャンパック",
     "scanPacksHelper": "月間割り当てに達したら、追加のスキャンを追加します。",
     "plans": {

@@ -335,6 +335,11 @@
     "plansHelper": "Izaberite plan koji najbolje odgovara vašim potrebama. Otkažite u bilo kom trenutku.",
     "planSelected": "Plan izabran",
     "choosePlan": "Izaberite ovaj plan",
+    "billingPeriod": {
+      "monthly": "Mjesečno",
+      "yearly": "Godišnje",
+      "savings": "2 mjeseca besplatno"
+    },
     "scanPacksTitle": "Paketi skeniranja",
     "scanPacksHelper": "Dodajte dodatna skeniranja kada je dostignut mjesečni kvota.",
     "plans": {

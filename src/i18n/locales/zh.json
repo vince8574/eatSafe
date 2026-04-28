@@ -335,6 +335,11 @@
     "plansHelper": "选择最适合您需求的计划。随时可以取消。",
     "planSelected": "已选择计划",
     "choosePlan": "选择此计划",
+    "billingPeriod": {
+      "monthly": "按月",
+      "yearly": "按年",
+      "savings": "免费2个月"
+    },
     "scanPacksTitle": "扫描包",
     "scanPacksHelper": "当达到月度配额时，添加额外的扫描次数。",
     "plans": {

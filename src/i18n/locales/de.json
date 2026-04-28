@@ -340,6 +340,11 @@
     "plansHelper": "Wählen Sie den Plan, der am besten zu Ihren Bedürfnissen passt. Jederzeit kündbar.",
     "planSelected": "Plan ausgewählt",
     "choosePlan": "Diesen Plan wählen",
+    "billingPeriod": {
+      "monthly": "Monatlich",
+      "yearly": "Jährlich",
+      "savings": "2 Monate gratis"
+    },
     "scanPacksTitle": "Scan-Pakete",
     "scanPacksHelper": "Fügen Sie zusätzliche Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist.",
     "plans": {

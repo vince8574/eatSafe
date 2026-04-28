@@ -354,6 +354,11 @@
     "plansHelper": "اختر الخطة التي تناسب احتياجاتك. يمكنك الإلغاء في أي وقت.",
     "planSelected": "تم اختيار الخطة",
     "choosePlan": "اختر هذه الخطة",
+    "billingPeriod": {
+      "monthly": "شهري",
+      "yearly": "سنوي",
+      "savings": "شهران مجانًا"
+    },
     "scanPacksTitle": "حزم المسح",
     "scanPacksHelper": "أضف عمليات مسح إضافية عند الوصول إلى حصتك الشهرية.",
     "plans": {

@@ -409,6 +409,11 @@
     "plansHelper": "Choose the plan that best fits your needs. Cancel anytime.",
     "planSelected": "Plan selected",
     "choosePlan": "Choose this plan",
+    "billingPeriod": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "savings": "2 months free"
+    },
     "scanPacksTitle": "Scan packs",
     "scanPacksHelper": "Add extra scans when your monthly quota is reached.",
     "plans": {

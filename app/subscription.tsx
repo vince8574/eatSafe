@@ -6,6 +6,7 @@ import { useTheme } from '../src/theme/themeContext';
 import { useI18n } from '../src/i18n/I18nContext';
 import { useSubscription } from '../src/hooks/useSubscription';
 import { GradientBackground } from '../src/components/GradientBackground';
+import type { BillingPeriod } from '../src/constants/subscriptionPlans';
 
 export default function SubscriptionScreen() {
   const { colors } = useTheme();
@@ -27,13 +28,19 @@ export default function SubscriptionScreen() {
 
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
   const [pendingPackId, setPendingPackId] = useState<string | null>(null);
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
 
   const handleChoosePlan = (planId: string) => {
     if (purchasing) return;
-    const plan = plans.find((p) => p.id === planId);
+    const plan = plans.find((p) => p.id === planId || p.idYear === planId);
+    const displayPrice = plan
+      ? billingPeriod === 'yearly'
+        ? plan.priceYear
+        : plan.price
+      : '';
     Alert.alert(
       t('subscription.confirmTitle'),
-      plan ? `${t('subscription.confirmMessage')} ${t(plan.labelKey)} (${plan.price})?` : t('subscription.confirmMessage'),
+      plan ? `${t('subscription.confirmMessage')} ${t(plan.labelKey)} (${displayPrice})?` : t('subscription.confirmMessage'),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -154,9 +161,54 @@ export default function SubscriptionScreen() {
           <Text style={[styles.helper, { color: colors.textSecondary }]}>
             {t('subscription.plansHelper')}
           </Text>
+
+          <View style={[styles.billingToggle, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
+            <TouchableOpacity
+              style={[
+                styles.billingToggleOption,
+                billingPeriod === 'monthly' && { backgroundColor: colors.accent }
+              ]}
+              onPress={() => setBillingPeriod('monthly')}
+            >
+              <Text
+                style={[
+                  styles.billingToggleText,
+                  { color: billingPeriod === 'monthly' ? colors.surface : colors.textSecondary }
+                ]}
+              >
+                {t('subscription.billingPeriod.monthly')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.billingToggleOption,
+                billingPeriod === 'yearly' && { backgroundColor: colors.accent }
+              ]}
+              onPress={() => setBillingPeriod('yearly')}
+            >
+              <Text
+                style={[
+                  styles.billingToggleText,
+                  { color: billingPeriod === 'yearly' ? colors.surface : colors.textSecondary }
+                ]}
+              >
+                {t('subscription.billingPeriod.yearly')}
+              </Text>
+              <View style={[styles.savingsBadge, { backgroundColor: billingPeriod === 'yearly' ? colors.surface : colors.accent }]}>
+                <Text style={[styles.savingsBadgeText, { color: billingPeriod === 'yearly' ? colors.accent : colors.surface }]}>
+                  {t('subscription.billingPeriod.savings')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
           {plans.map((plan) => {
-            const isActive = subscription?.planId === plan.id && subscription?.status === 'active';
-            const isPending = pendingPlanId === plan.id;
+            const productId = billingPeriod === 'yearly' ? plan.idYear : plan.id;
+            const displayPrice = billingPeriod === 'yearly' ? plan.priceYear : plan.price;
+            const isActive =
+              (subscription?.planId === plan.id || subscription?.planId === plan.idYear) &&
+              subscription?.status === 'active';
+            const isPending = pendingPlanId === productId;
             const disabled = loading || purchasing || isActive;
             return (
               <View
@@ -171,7 +223,7 @@ export default function SubscriptionScreen() {
               >
                 <View style={styles.planHeader}>
                   <Text style={[styles.planTitle, { color: colors.textPrimary }]}>{t(plan.labelKey)}</Text>
-                  <Text style={[styles.planPrice, { color: colors.accent }]}>{plan.price}</Text>
+                  <Text style={[styles.planPrice, { color: colors.accent }]}>{displayPrice}</Text>
                 </View>
                 {plan.descriptionKeys.map((key) => (
                   <Text key={key} style={[styles.planDesc, { color: colors.textSecondary }]}>
@@ -187,7 +239,7 @@ export default function SubscriptionScreen() {
                       opacity: disabled && !isPending ? 0.5 : 1
                     }
                   ]}
-                  onPress={() => handleChoosePlan(plan.id)}
+                  onPress={() => handleChoosePlan(productId)}
                   disabled={disabled}
                 >
                   {isPending ? (
@@ -386,6 +438,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8
+  },
+  billingToggle: {
+    flexDirection: 'row',
+    borderRadius: 999,
+    borderWidth: 1,
+    padding: 4,
+    marginTop: 4,
+    marginBottom: 4
+  },
+  billingToggleOption: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    gap: 6
+  },
+  billingToggleText: {
+    fontSize: 13,
+    fontWeight: '700'
+  },
+  savingsBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 999
+  },
+  savingsBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.3
   },
   packs: {
     flexDirection: 'row',

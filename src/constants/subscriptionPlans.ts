@@ -1,9 +1,12 @@
 export interface SubscriptionPlan {
-  id: string;
+  id: string; // Monthly product ID (Google Play / App Store)
+  idYear: string; // Yearly product ID
   labelKey: string; // Translation key for the label
   category: 'starter' | 'foodtruck' | 'restaurant' | 'school';
-  price: string;
+  price: string; // Display price for monthly billing
   pricePerMonth: number; // en USD
+  priceYear: string; // Display price for yearly billing (= 10 × monthly, 2 months free)
+  pricePerYear: number; // en USD, equals pricePerMonth × 10
   descriptionKeys: string[]; // Translation keys for description lines
   scansIncluded: number;
   historyRetentionDays: number | 'unlimited';
@@ -13,6 +16,8 @@ export interface SubscriptionPlan {
   sitesLimit: number | null;
   regulatoryFormat: boolean; // Pour le format "réglementaire" des écoles/crèches
 }
+
+export type BillingPeriod = 'monthly' | 'yearly';
 
 export interface ScanPack {
   id: string;
@@ -26,10 +31,13 @@ export interface ScanPack {
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   {
     id: 'starter_basic',
+    idYear: 'starter_basic_yearly',
     labelKey: 'subscription.plans.starterBasic.label',
     category: 'starter',
     price: '$9.99 / mo',
     pricePerMonth: 9.99,
+    priceYear: '$99.90 / yr',
+    pricePerYear: 99.90,
     descriptionKeys: [
       'subscription.plans.starterBasic.desc1',
       'subscription.plans.starterBasic.desc2',
@@ -45,10 +53,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'foodtruck_starter',
+    idYear: 'foodtruck_starter_yearly',
     labelKey: 'subscription.plans.foodtruckStarter.label',
     category: 'foodtruck',
     price: '$19.99 / mo',
     pricePerMonth: 19.99,
+    priceYear: '$199.90 / yr',
+    pricePerYear: 199.90,
     descriptionKeys: [
       'subscription.plans.foodtruckStarter.desc1',
       'subscription.plans.foodtruckStarter.desc2',
@@ -64,10 +75,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'foodtruck_pro',
+    idYear: 'foodtruck_pro_yearly',
     labelKey: 'subscription.plans.foodtruckPro.label',
     category: 'foodtruck',
     price: '$29.99 / mo',
     pricePerMonth: 29.99,
+    priceYear: '$299.90 / yr',
+    pricePerYear: 299.90,
     descriptionKeys: [
       'subscription.plans.foodtruckPro.desc1',
       'subscription.plans.foodtruckPro.desc2',
@@ -84,10 +98,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'restaurant_standard',
+    idYear: 'restaurant_standard_yearly',
     labelKey: 'subscription.plans.restaurantStandard.label',
     category: 'restaurant',
     price: '$39.99 / mo',
     pricePerMonth: 39.99,
+    priceYear: '$399.90 / yr',
+    pricePerYear: 399.90,
     descriptionKeys: [
       'subscription.plans.restaurantStandard.desc1',
       'subscription.plans.restaurantStandard.desc2',
@@ -104,10 +121,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'school_security',
+    idYear: 'school_security_yearly',
     labelKey: 'subscription.plans.schoolSecurity.label',
     category: 'school',
     price: '$59.99 / mo',
     pricePerMonth: 59.99,
+    priceYear: '$599.90 / yr',
+    pricePerYear: 599.90,
     descriptionKeys: [
       'subscription.plans.schoolSecurity.desc1',
       'subscription.plans.schoolSecurity.desc2',
@@ -124,10 +144,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'restaurant_premium',
+    idYear: 'restaurant_premium_yearly',
     labelKey: 'subscription.plans.restaurantPremium.label',
     category: 'restaurant',
     price: '$69.99 / mo',
     pricePerMonth: 69.99,
+    priceYear: '$699.90 / yr',
+    pricePerYear: 699.90,
     descriptionKeys: [
       'subscription.plans.restaurantPremium.desc1',
       'subscription.plans.restaurantPremium.desc2',

@@ -23,12 +23,20 @@ import {
 
 // Product IDs - must match Google Play Console
 export const SUBSCRIPTION_PRODUCT_IDS = [
+  // Monthly
   'starter_basic',
   'foodtruck_starter',
   'foodtruck_pro',
   'restaurant_standard',
   'restaurant_premium',
   'school_security',
+  // Yearly (2 months free)
+  'starter_basic_yearly',
+  'foodtruck_starter_yearly',
+  'foodtruck_pro_yearly',
+  'restaurant_standard_yearly',
+  'restaurant_premium_yearly',
+  'school_security_yearly',
 ];
 
 export const CONSUMABLE_PRODUCT_IDS = [

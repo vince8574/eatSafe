@@ -373,6 +373,11 @@
     "plansHelper": "Escolha o plano que melhor se adapta às suas necessidades. Cancele a qualquer momento.",
     "planSelected": "Plano selecionado",
     "choosePlan": "Escolher este plano",
+    "billingPeriod": {
+      "monthly": "Mensal",
+      "yearly": "Anual",
+      "savings": "2 meses grátis"
+    },
     "scanPacksTitle": "Pacotes de digitalização",
     "scanPacksHelper": "Adicione digitalizações extras quando sua cota mensal for atingida.",
     "plans": {

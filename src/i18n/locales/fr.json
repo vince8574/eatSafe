@@ -409,6 +409,11 @@
     "plansHelper": "Choisissez le plan adapté à vos besoins. Résiliable à tout moment.",
     "planSelected": "Plan sélectionné",
     "choosePlan": "Choisir ce plan",
+    "billingPeriod": {
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "savings": "2 mois offerts"
+    },
     "scanPacksTitle": "Packs de scans",
     "scanPacksHelper": "Ajoutez des scans supplémentaires lorsque votre quota mensuel est atteint.",
     "plans": {
