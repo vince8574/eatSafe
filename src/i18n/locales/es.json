@@ -344,7 +344,8 @@
       "monthly": "Mensual",
       "yearly": "Anual",
       "savings": "2 meses gratis",
-      "billed": "facturado {amount}"
+      "billed": "facturado {amount}",
+      "equivalentMonthly": "Equivale a {amount}/mes"
     },
     "terms": {
       "title": "Términos de la suscripción",

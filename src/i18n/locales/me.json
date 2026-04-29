@@ -339,7 +339,8 @@
       "monthly": "Mjesečno",
       "yearly": "Godišnje",
       "savings": "2 mjeseca besplatno",
-      "billed": "naplaćuje se {amount}"
+      "billed": "naplaćuje se {amount}",
+      "equivalentMonthly": "Ekvivalentno {amount}/mjesec"
     },
     "terms": {
       "title": "Uslovi pretplate",

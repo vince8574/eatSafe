@@ -3,6 +3,8 @@ import '@react-native-firebase/app'; // Initialize Firebase app
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import * as Crypto from 'expo-crypto';
+import { nanoid } from 'nanoid/non-secure';
 import { deleteCurrentUserAccount } from '../services/accountDeletionService';
 
 export interface AuthContextValue {
@@ -105,11 +107,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const signInWithApple = async () => {
     try {
+      // Firebase + Apple Sign In requires a nonce: generate raw, send hashed
+      // version to Apple, then forward the raw value to Firebase so it can
+      // verify the SHA256 baked into the identityToken's `nonce` claim.
+      const rawNonce = nanoid(32);
+      const hashedNonce = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        rawNonce
+      );
+
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
+        nonce: hashedNonce,
       });
 
       const { identityToken } = credential;
@@ -117,7 +129,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         throw { code: 'NO_IDENTITY_TOKEN', message: 'Apple Sign-In did not return an identity token.' };
       }
 
-      const appleCredential = auth.AppleAuthProvider.credential(identityToken);
+      const appleCredential = auth.AppleAuthProvider.credential(identityToken, rawNonce);
       await auth().signInWithCredential(appleCredential);
     } catch (error: any) {
       if (error?.code === 'ERR_REQUEST_CANCELED') {

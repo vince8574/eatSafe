@@ -413,7 +413,8 @@
       "monthly": "Monthly",
       "yearly": "Yearly",
       "savings": "2 months free",
-      "billed": "billed {amount}"
+      "billed": "billed {amount}",
+      "equivalentMonthly": "Equivalent to {amount}/month"
     },
     "terms": {
       "title": "Subscription Terms",

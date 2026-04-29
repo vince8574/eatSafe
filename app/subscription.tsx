@@ -204,13 +204,17 @@ export default function SubscriptionScreen() {
 
           {plans.map((plan) => {
             const productId = billingPeriod === 'yearly' ? plan.idYear : plan.id;
+            // Apple guideline 3.1.2(c): the billed amount must be the most clear
+            // and conspicuous pricing element. Show the total billed price in
+            // the headline and the per-month equivalent (if any) as a smaller
+            // subordinate hint.
             const headlinePrice =
-              billingPeriod === 'yearly'
-                ? `$${(plan.pricePerYear / 12).toFixed(2)} / mo`
-                : plan.price;
+              billingPeriod === 'yearly' ? plan.priceYear : plan.price;
             const billedSubtitle =
               billingPeriod === 'yearly'
-                ? t('subscription.billingPeriod.billed', { amount: plan.priceYear })
+                ? t('subscription.billingPeriod.equivalentMonthly', {
+                    amount: `$${(plan.pricePerYear / 12).toFixed(2)}`,
+                  })
                 : '';
             const isActive =
               (subscription?.planId === plan.id || subscription?.planId === plan.idYear) &&

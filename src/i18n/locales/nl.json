@@ -377,7 +377,8 @@
       "monthly": "Maandelijks",
       "yearly": "Jaarlijks",
       "savings": "2 maanden gratis",
-      "billed": "gefactureerd {amount}"
+      "billed": "gefactureerd {amount}",
+      "equivalentMonthly": "Komt neer op {amount}/maand"
     },
     "terms": {
       "title": "Abonnementsvoorwaarden",

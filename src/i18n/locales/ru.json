@@ -372,7 +372,8 @@
       "monthly": "Ежемесячно",
       "yearly": "Ежегодно",
       "savings": "2 месяца бесплатно",
-      "billed": "оплата {amount}"
+      "billed": "оплата {amount}",
+      "equivalentMonthly": "Эквивалент {amount}/мес"
     },
     "terms": {
       "title": "Условия подписки",

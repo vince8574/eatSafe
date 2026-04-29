@@ -413,7 +413,8 @@
       "monthly": "Mensuel",
       "yearly": "Annuel",
       "savings": "2 mois offerts",
-      "billed": "facturé {amount}"
+      "billed": "facturé {amount}",
+      "equivalentMonthly": "Soit {amount}/mois"
     },
     "terms": {
       "title": "Conditions d'abonnement",

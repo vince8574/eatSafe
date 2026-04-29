@@ -358,7 +358,8 @@
       "monthly": "شهري",
       "yearly": "سنوي",
       "savings": "شهران مجانًا",
-      "billed": "تتم الفوترة {amount}"
+      "billed": "تتم الفوترة {amount}",
+      "equivalentMonthly": "ما يعادل {amount}/شهر"
     },
     "terms": {
       "title": "شروط الاشتراك",

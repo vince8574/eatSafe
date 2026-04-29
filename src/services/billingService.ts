@@ -153,21 +153,48 @@ function isConsumablePurchase(purchase: Purchase): boolean {
 }
 
 /**
- * Get available subscription products from Google Play
+ * Get available subscription products from Google Play / App Store.
+ *
+ * Resilient strategy: try a single batch call first, but if the store returns
+ * an empty list (often because one SKU is misconfigured and the whole batch
+ * fails silently on iOS), fall back to fetching SKUs one-by-one so that
+ * correctly-configured products still surface to the user.
  */
 export async function getAvailableSubscriptions(): Promise<BillingProduct[]> {
   if (!isConnected) {
     await initializeBilling();
   }
 
+  // Try batch fetch first (fastest happy path)
   try {
     const subscriptions = await fetchProducts({ skus: SUBSCRIPTION_PRODUCT_IDS, type: 'subs' });
-    console.log('[billingService] Available subscriptions:', subscriptions);
-    return subscriptions || [];
+    console.log(
+      `[billingService] Batch fetch returned ${subscriptions?.length ?? 0} subscriptions out of ${SUBSCRIPTION_PRODUCT_IDS.length} requested`
+    );
+    if (subscriptions && subscriptions.length > 0) {
+      return subscriptions;
+    }
+    console.warn('[billingService] Batch fetch returned 0 subscriptions, falling back to per-SKU fetch');
   } catch (error) {
-    console.error('[billingService] Failed to get subscriptions:', error);
-    return [];
+    console.error('[billingService] Batch subscription fetch failed:', error);
   }
+
+  // Fallback: fetch SKUs one by one. Slow but resilient to a single broken SKU.
+  const results: BillingProduct[] = [];
+  for (const sku of SUBSCRIPTION_PRODUCT_IDS) {
+    try {
+      const single = await fetchProducts({ skus: [sku], type: 'subs' });
+      if (single && single.length > 0) {
+        results.push(...single);
+      } else {
+        console.warn(`[billingService] SKU not available in store: ${sku}`);
+      }
+    } catch (err) {
+      console.warn(`[billingService] Failed to fetch SKU ${sku}:`, err);
+    }
+  }
+  console.log(`[billingService] Per-SKU fallback recovered ${results.length} subscriptions`);
+  return results;
 }
 
 /**

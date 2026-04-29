@@ -339,7 +339,8 @@
       "monthly": "Mujore",
       "yearly": "Vjetore",
       "savings": "2 muaj falas",
-      "billed": "faturuar {amount}"
+      "billed": "faturuar {amount}",
+      "equivalentMonthly": "Ekuivalente me {amount}/muaj"
     },
     "terms": {
       "title": "Kushtet e abonimit",
