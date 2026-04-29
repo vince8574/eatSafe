@@ -379,6 +379,12 @@
       "savings": "2 maanden gratis",
       "billed": "gefactureerd {amount}"
     },
+    "terms": {
+      "title": "Abonnementsvoorwaarden",
+      "disclosure": "Bij bevestiging van de aankoop wordt het bedrag in rekening gebracht op uw Apple ID-account. Het abonnement wordt automatisch verlengd, tenzij het ten minste 24 uur voor het einde van de huidige periode wordt opgezegd. Uw account wordt binnen 24 uur voor het einde van de huidige periode in rekening gebracht voor de verlenging. U kunt uw abonnementen beheren en opzeggen via uw accountinstellingen in de App Store na de aankoop.",
+      "termsOfUse": "Gebruiksvoorwaarden (EULA)",
+      "privacyPolicy": "Privacybeleid"
+    },
     "scanPacksTitle": "Scanpakketten",
     "scanPacksHelper": "Voeg extra scans toe wanneer uw maandelijkse quotum is bereikt.",
     "plans": {

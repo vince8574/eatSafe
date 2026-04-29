@@ -346,6 +346,12 @@
       "savings": "2 mesi gratis",
       "billed": "fatturato {amount}"
     },
+    "terms": {
+      "title": "Termini dell'abbonamento",
+      "disclosure": "Il pagamento sarà addebitato sul tuo account Apple ID al momento della conferma dell'acquisto. L'abbonamento si rinnova automaticamente a meno che non venga annullato almeno 24 ore prima della fine del periodo corrente. L'account sarà addebitato per il rinnovo entro 24 ore prima della fine del periodo corrente. Puoi gestire e annullare i tuoi abbonamenti dalle impostazioni del tuo account sull'App Store dopo l'acquisto.",
+      "termsOfUse": "Termini di utilizzo (EULA)",
+      "privacyPolicy": "Informativa sulla privacy"
+    },
     "scanPacksTitle": "Pacchetti di scansione",
     "scanPacksHelper": "Aggiungi scansioni aggiuntive quando viene raggiunta la quota mensile.",
     "plans": {

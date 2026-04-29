@@ -13,46 +13,83 @@ let cacheTimestamp: number = 0;
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 /**
+ * Normalize a lot number for tolerant comparison.
+ * Strips explicit prefixes (LOT/BATCH/CODE/L), all separators (spaces, dashes,
+ * dots, slashes, colons, underscores) and uppercases.
+ *
+ * Examples:
+ *   "Lot: 12345"   -> "12345"
+ *   "Lot #12345"   -> "12345"
+ *   "12345-AB"     -> "12345AB"
+ *   "12345 AB"     -> "12345AB"
+ *   "L=12345"      -> "12345"
+ *   "BATCH 12345A" -> "12345A"
+ */
+export function normalizeLotNumber(lot: string | undefined | null): string {
+  if (!lot) return '';
+  let s = String(lot).toUpperCase().trim();
+  // Strip explicit lot/batch/code prefixes followed by optional separator
+  s = s.replace(/^(LOT|LOTS|BATCH|CODE|ITEM\s*CODE|PRODUCT\s*CODE|L)\s*[:#=.\s-]*\s*/i, '');
+  // Remove all separator characters (spaces, dashes, underscores, dots, slashes, colons)
+  s = s.replace(/[\s\-_/.:]+/g, '');
+  return s;
+}
+
+/**
  * Extrait les numéros de lot du champ code_info de la FDA
- * Gère des formats comme "Lot: 58041" ou "Lot #12345" ou juste des numéros
+ * Gère des formats comme "Lot: 58041", "Lot #12345", "Lots 12255, 22265",
+ * "Batch 12345", "Code: 12345", "L#12345", "L: 12345", "L=12345", etc.
  */
 function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
   if (!codeInfo) return [];
 
   const lotNumbers: string[] = [];
+  const isDate = (s: string) => /^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}$/.test(s);
 
-  // Pattern 1: Explicit lot keywords — "Lot: XXXXX", "Lot #XXXXX", "Lots 12255, 22265"
-  const lotRegex = /\bLots?\s*[:\s#.-]*([A-Za-z0-9][A-Za-z0-9\s,\-\/]{0,80})/gi;
+  const pushIfValid = (raw: string) => {
+    const trimmed = raw.trim().replace(/[.,;:\s]+$/, '');
+    if (trimmed && trimmed.length >= 3 && !isDate(trimmed)) {
+      lotNumbers.push(trimmed);
+    }
+  };
+
+  // Pattern 1: Explicit "Lot/Lots" keywords — "Lot: XXXXX", "Lot #XXXXX", "Lots 12255, 22265"
+  const lotRegex = /\bLots?\s*[:#.=\-\s]*([A-Za-z0-9][A-Za-z0-9\s,\-\/]{0,80})/gi;
   let match;
   while ((match = lotRegex.exec(codeInfo)) !== null) {
-    // Split by comma in case of "Lots 12255, 22265, 12415"
-    const parts = match[1].split(/[,;]/);
+    // Split by comma/semicolon/" and " in case of "Lots 12255, 22265, 12415" or "Lot 1 and Lot 2"
+    const parts = match[1].split(/[,;]|\s+and\s+/i);
     for (const part of parts) {
-      const trimmed = part.trim().replace(/[.,;:\s]+$/, '');
-      // Must be alphanumeric code, not a date or sentence
-      if (trimmed && trimmed.length >= 3 && !/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(trimmed)) {
-        lotNumbers.push(trimmed);
-      }
+      pushIfValid(part);
     }
   }
 
-  // Pattern 2: "Batch" or "Code" keywords
-  const batchRegex = /\b(?:Batch|Code)\s*[:\s#.-]*([A-Za-z0-9][A-Za-z0-9\-\/\.]{2,24})/gi;
+  // Pattern 2: "Batch", "Code", "Item Code", "Product Code" keywords
+  const batchRegex = /\b(?:Batch(?:es)?|Code|Item\s+Code|Product\s+Code)\s*[:#.=\-\s]*([A-Za-z0-9][A-Za-z0-9\-\/\.]{2,24})/gi;
   while ((match = batchRegex.exec(codeInfo)) !== null) {
-    const trimmed = match[1].trim().replace(/[.,;:\s]+$/, '');
-    if (trimmed && !/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(trimmed)) {
-      lotNumbers.push(trimmed);
-    }
+    pushIfValid(match[1]);
+  }
+
+  // Pattern 3: "L#XXX", "L:XXX", "L=XXX" — single-letter L prefix with separator
+  const lShortRegex = /\bL\s*[:#=]\s*([A-Za-z0-9][A-Za-z0-9\-\/\.]{2,24})/gi;
+  while ((match = lShortRegex.exec(codeInfo)) !== null) {
+    pushIfValid(match[1]);
   }
 
   // Do NOT add full code_info text, dates, UPCs, or generic alphanumeric sequences
   // These cause false positives
 
-  // Remove duplicates (case-insensitive)
-  const uniqueLots = Array.from(new Set(lotNumbers.map(l => l.toUpperCase())))
-    .map(upper => lotNumbers.find(l => l.toUpperCase() === upper) || upper);
-
-  return uniqueLots;
+  // Remove duplicates after normalization
+  const seen = new Set<string>();
+  const unique: string[] = [];
+  for (const lot of lotNumbers) {
+    const key = normalizeLotNumber(lot);
+    if (key && !seen.has(key)) {
+      seen.add(key);
+      unique.push(lot);
+    }
+  }
+  return unique;
 }
 
 /**

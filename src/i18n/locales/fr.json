@@ -415,6 +415,12 @@
       "savings": "2 mois offerts",
       "billed": "facturé {amount}"
     },
+    "terms": {
+      "title": "Conditions d'abonnement",
+      "disclosure": "Le paiement sera prélevé sur votre compte Apple ID lors de la confirmation de l'achat. L'abonnement est automatiquement renouvelé sauf s'il est résilié au moins 24 heures avant la fin de la période en cours. Votre compte sera débité pour le renouvellement dans les 24 heures précédant la fin de la période en cours. Vous pouvez gérer et résilier vos abonnements depuis les paramètres de votre compte sur l'App Store après l'achat.",
+      "termsOfUse": "Conditions d'utilisation (CLUF)",
+      "privacyPolicy": "Politique de confidentialité"
+    },
     "scanPacksTitle": "Packs de scans",
     "scanPacksHelper": "Ajoutez des scans supplémentaires lorsque votre quota mensuel est atteint.",
     "plans": {

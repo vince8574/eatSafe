@@ -1,4 +1,5 @@
 import { fetchRecallsByCountry } from './apiService';
+import { recallMatchesProduct } from '../utils/lotMatcher';
 import type { CountryCode } from '../types';
 
 export interface RecallCheckResult {
@@ -37,14 +38,10 @@ export async function checkAllProductsForRecalls(
 
     // Pour chaque produit scanné
     for (const product of products) {
-      // Chercher les rappels correspondants
-      const matchingRecalls = recalls.filter((recall) => {
-        const brandMatch = recall.brand?.toLowerCase() === product.brand.toLowerCase();
-        const lotMatch = recall.lotNumbers.some(
-          (lot) => lot.toLowerCase() === product.lotNumber.toLowerCase() || lot === ''
-        );
-        return brandMatch && lotMatch;
-      });
+      // Chercher les rappels correspondants (lot-first matching, see recallMatchesProduct)
+      const matchingRecalls = recalls.filter((recall) =>
+        recallMatchesProduct(product, recall)
+      );
 
       // Si le produit était "safe" ou "unknown" mais a maintenant des rappels
       if (matchingRecalls.length > 0 && (product.recallStatus === 'safe' || product.recallStatus === 'unknown')) {
@@ -98,21 +95,9 @@ export async function checkProductForRecalls(
   try {
     const recalls = await fetchRecallsByCountry(country);
 
-    const matchingRecalls = recalls.filter((recall) => {
-      // Si la marque est fournie, vérifier marque ET lot
-      // Sinon, vérifier uniquement le lot (mode professionnel)
-      const lotMatch = recall.lotNumbers.some(
-        (lot) => lot.toLowerCase() === lotNumber.toLowerCase() || lot === ''
-      );
-
-      if (brand && brand.trim() !== '') {
-        const brandMatch = recall.brand?.toLowerCase() === brand.toLowerCase();
-        return brandMatch && lotMatch;
-      } else {
-        // Mode sans marque : vérifier uniquement le lot
-        return lotMatch;
-      }
-    });
+    const matchingRecalls = recalls.filter((recall) =>
+      recallMatchesProduct({ brand: brand ?? '', lotNumber }, recall)
+    );
 
     console.log(`[RecallCheck] Found ${matchingRecalls.length} matching recalls`);
 

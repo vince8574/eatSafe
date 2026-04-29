@@ -134,25 +134,35 @@ export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   return matches;
 }
 
+/**
+ * Single source of truth: does a recall record match a scanned product?
+ * Combines fuzzy brand matching, fuzzy + substring lot matching, and the
+ * "global product line recall" fallback (recall with no specific lots).
+ */
+export function recallMatchesProduct(
+  product: { brand: string; lotNumber: string },
+  recall: { brand?: string; lotNumbers?: string[] }
+): boolean {
+  const brandMatches = matchBrands(product.brand, recall.brand);
+  const lotMatches = matchLots(product as ScannedProduct, recall as RecallRecord);
+
+  // If recall has no brand info, lot match alone is enough
+  if (lotMatches && (!recall.brand || recall.brand.trim() === '')) {
+    return true;
+  }
+
+  // If recall has a brand, require both brand AND lot to match
+  if (lotMatches && brandMatches) {
+    return true;
+  }
+
+  // For recalls without explicit lot codes, require brand match
+  const hasNoLots = !recall.lotNumbers || recall.lotNumbers.length === 0;
+  return hasNoLots && brandMatches;
+}
+
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {
-  const relevant = recalls.filter((recall) => {
-    const brandMatches = matchBrands(product.brand, recall.brand);
-    const lotMatches = matchLots(product, recall);
-
-    // If recall has no brand info, lot match alone is enough
-    if (lotMatches && (!recall.brand || recall.brand.trim() === '')) {
-      return true;
-    }
-
-    // If recall has a brand, require both brand AND lot to match
-    if (lotMatches && brandMatches) {
-      return true;
-    }
-
-    // For recalls without explicit lot codes, require brand match
-    const hasNoLots = !recall.lotNumbers || recall.lotNumbers.length === 0;
-    return hasNoLots && brandMatches;
-  });
+  const relevant = recalls.filter((recall) => recallMatchesProduct(product, recall));
 
   if (relevant.length === 0) {
     return {

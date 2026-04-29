@@ -341,6 +341,12 @@
       "savings": "2 mjeseca besplatno",
       "billed": "naplaćuje se {amount}"
     },
+    "terms": {
+      "title": "Uslovi pretplate",
+      "disclosure": "Plaćanje će biti naplaćeno sa vašeg Apple ID naloga prilikom potvrde kupovine. Pretplata se automatski obnavlja osim ako se ne otkaže najmanje 24 sata prije isteka tekućeg perioda. Vaš nalog će biti naplaćen za obnavljanje u roku od 24 sata prije isteka tekućeg perioda. Pretplatama možete upravljati i otkazati ih u podešavanjima vašeg naloga na App Store-u nakon kupovine.",
+      "termsOfUse": "Uslovi korišćenja (EULA)",
+      "privacyPolicy": "Politika privatnosti"
+    },
     "scanPacksTitle": "Paketi skeniranja",
     "scanPacksHelper": "Dodajte dodatna skeniranja kada je dostignut mjesečni kvota.",
     "plans": {

@@ -341,6 +341,12 @@
       "savings": "2 muaj falas",
       "billed": "faturuar {amount}"
     },
+    "terms": {
+      "title": "Kushtet e abonimit",
+      "disclosure": "Pagesa do të ngarkohet në llogarinë tuaj Apple ID në momentin e konfirmimit të blerjes. Abonimi rinovohet automatikisht nëse nuk anulohet të paktën 24 orë para përfundimit të periudhës aktuale. Llogaria juaj do të ngarkohet për rinovimin brenda 24 orëve para përfundimit të periudhës aktuale. Mund të menaxhoni dhe anuloni abonimet tuaja duke shkuar te cilësimet e llogarisë tuaj në App Store pas blerjes.",
+      "termsOfUse": "Kushtet e përdorimit (EULA)",
+      "privacyPolicy": "Politika e privatësisë"
+    },
     "scanPacksTitle": "Paketat e skanimit",
     "scanPacksHelper": "Shtoni skanime shtesë kur arrihet kuota juaj mujore.",
     "plans": {

@@ -379,6 +379,12 @@
       "savings": "2 meses grátis",
       "billed": "faturado {amount}"
     },
+    "terms": {
+      "title": "Termos da assinatura",
+      "disclosure": "O pagamento será cobrado em sua conta Apple ID na confirmação da compra. A assinatura é renovada automaticamente, a menos que seja cancelada pelo menos 24 horas antes do final do período atual. Sua conta será cobrada pela renovação dentro de 24 horas antes do final do período atual. Você pode gerenciar e cancelar suas assinaturas nas configurações da sua conta na App Store após a compra.",
+      "termsOfUse": "Termos de uso (EULA)",
+      "privacyPolicy": "Política de privacidade"
+    },
     "scanPacksTitle": "Pacotes de digitalização",
     "scanPacksHelper": "Adicione digitalizações extras quando sua cota mensal for atingida.",
     "plans": {

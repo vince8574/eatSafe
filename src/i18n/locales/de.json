@@ -346,6 +346,12 @@
       "savings": "2 Monate gratis",
       "billed": "{amount} abgerechnet"
     },
+    "terms": {
+      "title": "Abonnementbedingungen",
+      "disclosure": "Die Zahlung wird bei Bestätigung des Kaufs Ihrem Apple-ID-Konto belastet. Das Abonnement wird automatisch verlängert, sofern es nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt wird. Ihr Konto wird innerhalb von 24 Stunden vor Ende des aktuellen Zeitraums für die Verlängerung belastet. Sie können Ihre Abonnements nach dem Kauf in Ihren Kontoeinstellungen im App Store verwalten und kündigen.",
+      "termsOfUse": "Nutzungsbedingungen (EULA)",
+      "privacyPolicy": "Datenschutzrichtlinie"
+    },
     "scanPacksTitle": "Scan-Pakete",
     "scanPacksHelper": "Fügen Sie zusätzliche Scans hinzu, wenn Ihr monatliches Kontingent erreicht ist.",
     "plans": {

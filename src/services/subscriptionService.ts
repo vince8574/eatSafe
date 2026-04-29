@@ -38,8 +38,12 @@ export type Subscription = {
 // Exporter les plans et packs pour useSubscription
 export const PLANS = SUBSCRIPTION_PLANS.map(plan => ({
   id: plan.id,
+  idYear: plan.idYear,
   labelKey: plan.labelKey,
   price: plan.price,
+  pricePerMonth: plan.pricePerMonth,
+  priceYear: plan.priceYear,
+  pricePerYear: plan.pricePerYear,
   scansIncluded: plan.scansIncluded,
   historyRetentionDays: plan.historyRetentionDays,
   exportEnabled: plan.exportEnabled,

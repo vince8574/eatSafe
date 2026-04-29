@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../src/theme/themeContext';
@@ -270,6 +270,29 @@ export default function SubscriptionScreen() {
               </View>
             );
           })}
+        </View>
+
+        {/* Subscription Terms — required by Apple App Store guideline 3.1.2 */}
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            {t('subscription.terms.title')}
+          </Text>
+          <Text style={[styles.termsText, { color: colors.textSecondary }]}>
+            {t('subscription.terms.disclosure')}
+          </Text>
+          <View style={styles.termsLinks}>
+            <TouchableOpacity onPress={() => Linking.openURL('https://numeline.vercel.app/terms-of-service.html')}>
+              <Text style={[styles.termsLink, { color: colors.accent }]}>
+                {t('subscription.terms.termsOfUse')}
+              </Text>
+            </TouchableOpacity>
+            <Text style={[styles.termsSeparator, { color: colors.textSecondary }]}>•</Text>
+            <TouchableOpacity onPress={() => Linking.openURL('https://numeline.vercel.app/privacy-policy.html')}>
+              <Text style={[styles.termsLink, { color: colors.accent }]}>
+                {t('subscription.terms.privacyPolicy')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
@@ -547,5 +570,26 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     textAlign: 'center',
     marginTop: 8
+  },
+  termsText: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '500'
+  },
+  termsLinks: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginTop: 8,
+    flexWrap: 'wrap'
+  },
+  termsLink: {
+    fontSize: 13,
+    fontWeight: '700',
+    textDecorationLine: 'underline'
+  },
+  termsSeparator: {
+    fontSize: 12
   }
 });
