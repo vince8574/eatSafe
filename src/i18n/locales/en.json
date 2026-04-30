@@ -414,7 +414,7 @@
       "yearly": "Yearly",
       "savings": "2 months free",
       "billed": "billed {amount}",
-      "equivalentMonthly": "Equivalent to {amount}/month"
+      "equivalentMonthly": "Equivalent to {{amount}}/month"
     },
     "terms": {
       "title": "Subscription Terms",

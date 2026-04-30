@@ -340,7 +340,7 @@
       "yearly": "年額",
       "savings": "2か月無料",
       "billed": "{amount} で請求",
-      "equivalentMonthly": "月額換算 {amount}"
+      "equivalentMonthly": "月額換算 {{amount}}"
     },
     "terms": {
       "title": "サブスクリプション規約",

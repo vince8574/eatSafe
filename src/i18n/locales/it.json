@@ -345,7 +345,7 @@
       "yearly": "Annuale",
       "savings": "2 mesi gratis",
       "billed": "fatturato {amount}",
-      "equivalentMonthly": "Equivalente a {amount}/mese"
+      "equivalentMonthly": "Equivalente a {{amount}}/mese"
     },
     "terms": {
       "title": "Termini dell'abbonamento",

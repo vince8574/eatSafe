@@ -378,7 +378,7 @@
       "yearly": "Anual",
       "savings": "2 meses grátis",
       "billed": "faturado {amount}",
-      "equivalentMonthly": "Equivale a {amount}/mês"
+      "equivalentMonthly": "Equivale a {{amount}}/mês"
     },
     "terms": {
       "title": "Termos da assinatura",

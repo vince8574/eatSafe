@@ -345,7 +345,7 @@
       "yearly": "Jährlich",
       "savings": "2 Monate gratis",
       "billed": "{amount} abgerechnet",
-      "equivalentMonthly": "Entspricht {amount}/Monat"
+      "equivalentMonthly": "Entspricht {{amount}}/Monat"
     },
     "terms": {
       "title": "Abonnementbedingungen",

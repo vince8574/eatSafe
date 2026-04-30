@@ -340,7 +340,7 @@
       "yearly": "Годишње",
       "savings": "2 месеца бесплатно",
       "billed": "наплаћује се {amount}",
-      "equivalentMonthly": "Еквивалентно {amount}/месец"
+      "equivalentMonthly": "Еквивалентно {{amount}}/месец"
     },
     "terms": {
       "title": "Услови претплате",
