@@ -1,0 +1,387 @@
+{
+  "aguzman-lopez@laist.com": {
+    "sentAt": "2026-04-30T22:37:38.682Z",
+    "messageId": "ca673e10-205f-4660-b899-b350e2147121",
+    "media": "LAist"
+  },
+  "smcnary@laist.com": {
+    "sentAt": "2026-04-30T22:38:10.698Z",
+    "messageId": "0cc98ee8-61d7-471d-8256-426459c1074c",
+    "media": "LAist"
+  },
+  "mplummer@laist.com": {
+    "sentAt": "2026-04-30T22:39:10.285Z",
+    "messageId": "b5b7c3fa-fe6d-40aa-a656-f4dcdf96847a",
+    "media": "LAist"
+  },
+  "dlittlefield@laist.com": {
+    "sentAt": "2026-04-30T22:39:58.549Z",
+    "messageId": "fd879ee9-d7d3-4357-b08a-af3422610a9b",
+    "media": "LAist"
+  },
+  "estone@laist.com": {
+    "sentAt": "2026-04-30T22:40:57.226Z",
+    "messageId": "fe3e104f-fe68-4165-8c1d-4bbbc5ac5e9f",
+    "media": "LAist"
+  },
+  "ashley.day@foodandwine.com": {
+    "sentAt": "2026-05-01T06:53:17.506Z",
+    "messageId": "45ed63a2-40b4-491b-8439-32286e1f3c68",
+    "media": "Food & Wine"
+  },
+  "lindsay@thekitchn.com": {
+    "sentAt": "2026-05-01T06:54:02.911Z",
+    "messageId": "3eac0dd6-925c-4ea1-96c1-6442d39f8b69",
+    "media": "The Kitchn"
+  },
+  "zoe.weiner@wellandgood.com": {
+    "sentAt": "2026-05-01T06:55:03.341Z",
+    "messageId": "27c288fd-dce8-4ab4-bfdf-f3e57e95259c",
+    "media": "Well+Good"
+  },
+  "yun-hee.kim@washingtonpost.com": {
+    "sentAt": "2026-05-01T06:55:56.847Z",
+    "messageId": "74f1cf4f-cbd1-43c0-9edd-57aec4dbac58",
+    "media": "The Washington Post"
+  },
+  "matthew.vann@cnn.com": {
+    "sentAt": "2026-05-01T06:56:44.211Z",
+    "messageId": "7a5eaef9-df82-4d17-9afb-d639140632b5",
+    "media": "CNN"
+  },
+  "lisa.mirando@cnn.com": {
+    "sentAt": "2026-05-01T06:57:42.111Z",
+    "messageId": "e4501b79-abcc-40a7-b3fd-9f046a7fc69a",
+    "media": "CNN"
+  },
+  "news@nbcnews.com": {
+    "sentAt": "2026-05-01T06:58:28.286Z",
+    "messageId": "04f1809b-5fde-47f9-a690-db4d315b2023",
+    "media": "NBC News"
+  },
+  "kayla.brown@axios.com": {
+    "sentAt": "2026-05-01T06:59:22.658Z",
+    "messageId": "4b5661d4-2f82-4e6e-83df-1cd544f7e178",
+    "media": "Axios"
+  },
+  "nbernard@politico.com": {
+    "sentAt": "2026-05-01T07:00:16.790Z",
+    "messageId": "91ac14d3-c869-41bd-a782-68f0fa7e3bb1",
+    "media": "POLITICO"
+  },
+  "mstueven@laweekly.com": {
+    "sentAt": "2026-05-01T07:01:13.156Z",
+    "messageId": "0df564d6-7f8b-47ae-b24f-9a0bf5bec234",
+    "media": "LA Weekly"
+  },
+  "ariana.morgenstern@kcrw.com": {
+    "sentAt": "2026-05-01T07:01:52.170Z",
+    "messageId": "22a3d7c9-fc70-4a2a-9e82-d098fa5df3be",
+    "media": "KCRW"
+  },
+  "allie@poosh.com": {
+    "sentAt": "2026-05-01T07:02:29.267Z",
+    "messageId": "a9316e1b-060a-4c7e-8ce5-f512ba3e2e70",
+    "media": "Poosh"
+  },
+  "erika.adams@foodandwine.com": {
+    "sentAt": "2026-05-01T07:03:13.794Z",
+    "messageId": "20aaefd8-18f0-46cf-94b2-fb434efe8bb0",
+    "media": "Food & Wine"
+  },
+  "alexis.berger@wellandgood.com": {
+    "sentAt": "2026-05-01T07:03:53.721Z",
+    "messageId": "ae78a3ba-6de5-417e-82ee-95708ea5499a",
+    "media": "Well+Good"
+  },
+  "mrusso@foodnetwork.com": {
+    "sentAt": "2026-05-01T07:04:29.666Z",
+    "messageId": "59710681-5533-47a9-84ee-fc2db0236880",
+    "media": "Food Network"
+  },
+  "eric@poosh.com": {
+    "sentAt": "2026-05-01T07:05:13.880Z",
+    "messageId": "7ac26ec8-7e26-47b2-bc48-9a9f5b5fe527",
+    "media": "Poosh"
+  },
+  "amelia.schwartz@foodandwine.com": {
+    "sentAt": "2026-05-01T07:05:58.600Z",
+    "messageId": "66f7a720-b888-4ef8-b62a-9c668a0c6a9e",
+    "media": "Food & Wine"
+  },
+  "chloe.metzger@wellandgood.com": {
+    "sentAt": "2026-05-01T07:06:58.660Z",
+    "messageId": "d7c27164-fc68-4077-9774-91a13a67795e",
+    "media": "Well+Good"
+  },
+  "czaneski@politico.com": {
+    "sentAt": "2026-05-01T07:07:34.308Z",
+    "messageId": "7c85e942-62ac-4e67-8ed7-2ed3187643cb",
+    "media": "POLITICO"
+  },
+  "beto.alvarez@latimes.com": {
+    "sentAt": "2026-05-01T07:08:09.218Z",
+    "messageId": "81c81f0a-4b6a-4260-8700-a12a54a6cd00",
+    "media": "LA Times"
+  },
+  "tracy.boucher@latimes.com": {
+    "sentAt": "2026-05-01T07:09:07.071Z",
+    "messageId": "31f36599-a015-48b4-a115-14e190d9dfd7",
+    "media": "LA Times"
+  },
+  "ahall@lamag.com": {
+    "sentAt": "2026-05-01T07:09:54.246Z",
+    "messageId": "a366cb6a-f781-4045-87da-09fc50cf45d4",
+    "media": "Los Angeles Magazine"
+  },
+  "rich.hammond@dailynews.com": {
+    "sentAt": "2026-05-01T07:10:37.083Z",
+    "messageId": "38b1ae04-48ae-4d56-a23b-4c15e98e5d0a",
+    "media": "Los Angeles Daily News"
+  },
+  "brian.martin@dailynews.com": {
+    "sentAt": "2026-05-01T07:11:21.320Z",
+    "messageId": "7ddff282-61df-4a2a-a628-8bbc81a6427c",
+    "media": "Los Angeles Daily News"
+  },
+  "julie.snyder@nytimes.com": {
+    "sentAt": "2026-05-01T07:12:17.100Z",
+    "messageId": "ffe055dd-0b42-4f21-8424-17907b4382d3",
+    "media": "The New York Times"
+  },
+  "mona.lalwani@nytimes.com": {
+    "sentAt": "2026-05-01T07:13:08.129Z",
+    "messageId": "9688bf91-1b1e-46e3-bc05-001cdcc3f621",
+    "media": "The New York Times"
+  },
+  "caitlin_martin@newyorker.com": {
+    "sentAt": "2026-05-01T07:14:06.292Z",
+    "messageId": "3c8e25e6-cf85-47fe-90a2-28bb5aed0927",
+    "media": "The New Yorker"
+  },
+  "dorothy_wickenden@newyorker.com": {
+    "sentAt": "2026-05-01T07:14:39.164Z",
+    "messageId": "c4aeff0d-5af5-4608-a224-27b7b7b9f372",
+    "media": "The New Yorker"
+  },
+  "hilary@eater.com": {
+    "sentAt": "2026-05-01T07:15:13.996Z",
+    "messageId": "7f20ffce-22ae-4587-929e-d1931dbeb98c",
+    "media": "Eater"
+  },
+  "brenna@eater.com": {
+    "sentAt": "2026-05-01T07:15:53.592Z",
+    "messageId": "9104ed51-846d-4dc1-b452-b23da5c52bda",
+    "media": "Eater"
+  },
+  "nina_moskowitz@bonappetit.com": {
+    "sentAt": "2026-05-01T07:16:48.847Z",
+    "messageId": "7958e846-7442-46df-8786-cc2b6e91c3f4",
+    "media": "BONAPPETIT"
+  },
+  "hannah@mindbodygreen.com": {
+    "sentAt": "2026-05-01T07:17:30.684Z",
+    "messageId": "6de5779e-075a-475b-a180-01835d0514b0",
+    "media": "Mindbodygreen"
+  },
+  "clucas@self.com": {
+    "sentAt": "2026-05-01T07:18:03.045Z",
+    "messageId": "b3477d60-c2a6-4620-b3c2-988c473625fa",
+    "media": "SELF"
+  },
+  "hallie@byrdie.com": {
+    "sentAt": "2026-05-01T07:18:41.231Z",
+    "messageId": "a968f507-5900-4d5c-83c9-dde250ae0a30",
+    "media": "Byrdie"
+  },
+  "pbailey@usatoday.com": {
+    "sentAt": "2026-05-01T07:19:20.563Z",
+    "messageId": "9c417476-164a-4a06-be8b-533cabedf37f",
+    "media": "USA TODAY"
+  },
+  "berline@cbsnews.com": {
+    "sentAt": "2026-05-01T07:20:15.240Z",
+    "messageId": "0309d41d-2b95-45d5-aa8f-d3cd977975f0",
+    "media": "CBS News"
+  },
+  "syenigun@npr.org": {
+    "sentAt": "2026-05-01T07:20:53.806Z",
+    "messageId": "ef6e4af1-6c2d-4df5-9a7f-112d00114b8e",
+    "media": "NPR"
+  },
+  "aherold@lamag.com": {
+    "sentAt": "2026-05-01T07:21:32.047Z",
+    "messageId": "5bbcc958-b373-4bc8-9a68-f22757c3fc75",
+    "media": "Los Angeles Magazine"
+  },
+  "aron.miller@dailynews.com": {
+    "sentAt": "2026-05-01T07:22:14.236Z",
+    "messageId": "29930130-0f2a-4e3c-9680-04e10e6728f3",
+    "media": "Los Angeles Daily News"
+  },
+  "jerry.berrios@dailynews.com": {
+    "sentAt": "2026-05-01T07:23:11.582Z",
+    "messageId": "9b21da24-5f24-4546-9e66-40c7895a8283",
+    "media": "Los Angeles Daily News"
+  },
+  "holly.andres@dailynews.com": {
+    "sentAt": "2026-05-01T07:23:52.852Z",
+    "messageId": "e6430e0f-137a-41e1-b76f-ac19d31b3113",
+    "media": "Los Angeles Daily News"
+  },
+  "alice.ellis@timeout.com": {
+    "sentAt": "2026-05-01T07:24:45.705Z",
+    "messageId": "cf5f5805-9d45-4345-b369-01429a44064e",
+    "media": "Time Out"
+  },
+  "nicholas_henriquez@newyorker.com": {
+    "sentAt": "2026-05-01T07:25:20.006Z",
+    "messageId": "6879d5e4-f032-4ec6-9bda-f13ea5103813",
+    "media": "The New Yorker"
+  },
+  "david.haskell@nymag.com": {
+    "sentAt": "2026-05-01T07:26:11.194Z",
+    "messageId": "8b29cd2e-c1d9-458f-9c94-5525060bc72c",
+    "media": "New York Magazine"
+  },
+  "carl.rosen@nymag.com": {
+    "sentAt": "2026-05-01T07:26:55.638Z",
+    "messageId": "eaa65e4e-7438-4e2a-a144-8b3561520fa9",
+    "media": "New York Magazine"
+  },
+  "kelsey_youngman@bonappetit.com": {
+    "sentAt": "2026-05-01T07:27:44.686Z",
+    "messageId": "279ae3fa-f0f8-489b-ada7-0a05ea0ea294",
+    "media": "BONAPPETIT"
+  },
+  "tommy@epicurious.com": {
+    "sentAt": "2026-05-01T07:28:19.616Z",
+    "messageId": "281a141d-d09e-4e0b-989b-49d0b8c232cf",
+    "media": "Epicurious"
+  },
+  "hrhue@byrdie.com": {
+    "sentAt": "2026-05-01T07:29:18.905Z",
+    "messageId": "0f6f5145-b346-4283-8bdf-baeb8e866fa5",
+    "media": "Byrdie"
+  },
+  "tzakaria@usatoday.com": {
+    "sentAt": "2026-05-01T07:30:05.799Z",
+    "messageId": "36a674cb-f274-47fa-8fce-95f7414bfdd4",
+    "media": "USA TODAY"
+  },
+  "jroberts@lamag.com": {
+    "sentAt": "2026-05-01T07:31:00.185Z",
+    "messageId": "66551066-c179-44f4-82fd-524d964de5d8",
+    "media": "Los Angeles Magazine"
+  },
+  "lindsay.peoples@nymag.com": {
+    "sentAt": "2026-05-01T07:31:53.322Z",
+    "messageId": "ac333a72-ef98-4b0a-9497-6f6cde27e4df",
+    "media": "New York Magazine"
+  },
+  "akshay@theinfatuation.com": {
+    "sentAt": "2026-05-01T07:32:38.889Z",
+    "messageId": "aa6f72d8-ad25-4e20-b93e-83d7e3eed4e3",
+    "media": "The Infatuation"
+  },
+  "jess@theinfatuation.com": {
+    "sentAt": "2026-05-01T07:33:34.040Z",
+    "messageId": "2c0a47bb-1df7-414a-b28d-48c270d8e283",
+    "media": "The Infatuation"
+  },
+  "arden@theinfatuation.com": {
+    "sentAt": "2026-05-01T07:34:10.953Z",
+    "messageId": "b1a5c411-8d39-4f22-921a-52b0c905e9de",
+    "media": "The Infatuation"
+  },
+  "sergio.scardigno@eater.com": {
+    "sentAt": "2026-05-01T07:34:59.078Z",
+    "messageId": "4336a0ab-1d7a-4d32-b375-a1e8ca801092",
+    "media": "Eater"
+  },
+  "jfields@self.com": {
+    "sentAt": "2026-05-01T07:35:45.262Z",
+    "messageId": "be3ec3fe-322f-45f2-8f45-4d0aa3c61bc4",
+    "media": "SELF"
+  },
+  "jryu@self.com": {
+    "sentAt": "2026-05-01T07:36:23.663Z",
+    "messageId": "ec781ebe-9608-4e46-9d0c-8422d2b69e77",
+    "media": "SELF"
+  },
+  "rochelle.bilow@seriouseats.com": {
+    "sentAt": "2026-05-01T07:37:04.045Z",
+    "messageId": "eccb0be5-2b75-4ef4-b3b4-869d8a98ce58",
+    "media": "Serious Eats"
+  },
+  "mary.gautschy@dailynews.com": {
+    "sentAt": "2026-05-01T07:37:46.763Z",
+    "messageId": "cc079420-5798-48d4-baef-1d8e2ce5505f",
+    "media": "Los Angeles Daily News"
+  },
+  "emily.venezky@eater.com": {
+    "sentAt": "2026-05-01T07:38:33.399Z",
+    "messageId": "b5a64756-eb21-4749-91a6-63604f1eeb73",
+    "media": "Eater"
+  },
+  "gazelle.emami@nymag.com": {
+    "sentAt": "2026-05-01T07:39:31.570Z",
+    "messageId": "7ba2227b-c94b-4a6b-8fc0-3f30f92c6a43",
+    "media": "New York Magazine"
+  },
+  "samantha.leal@wellandgood.com": {
+    "sentAt": "2026-05-01T07:40:13.043Z",
+    "messageId": "ec0dd90e-0b50-4481-8be9-9a9713f1c293",
+    "media": "Well+Good"
+  },
+  "hunter.lewis@foodandwine.com": {
+    "sentAt": "2026-05-01T07:40:58.201Z",
+    "messageId": "1844a294-7153-4642-86c2-ec3e80ada25d",
+    "media": "Food & Wine"
+  },
+  "kym@theinfatuation.com": {
+    "sentAt": "2026-05-01T07:41:42.953Z",
+    "messageId": "e94efbc9-d98c-4c0f-acc7-417db1b28220",
+    "media": "The Infatuation"
+  },
+  "jorge.alvarez@foodandwine.com": {
+    "sentAt": "2026-05-01T07:42:28.316Z",
+    "messageId": "dc3473aa-4d15-4d63-a3f9-b775cc6946fd",
+    "media": "Food & Wine"
+  },
+  "nadia@eater.com": {
+    "sentAt": "2026-05-01T07:43:20.032Z",
+    "messageId": "598ae091-2656-4c00-91a6-0c5029e2f49e",
+    "media": "Eater"
+  },
+  "sean.flynn@foodandwine.com": {
+    "sentAt": "2026-05-01T07:44:02.161Z",
+    "messageId": "39b952d5-f55f-4598-94a0-49a029eb9117",
+    "media": "Food & Wine"
+  },
+  "breanna.rivera@foodandwine.com": {
+    "sentAt": "2026-05-01T07:44:45.739Z",
+    "messageId": "7afacc3e-d213-4258-b659-8b8e388e173d",
+    "media": "Food & Wine"
+  },
+  "aimee.simeon@wellandgood.com": {
+    "sentAt": "2026-05-01T07:45:35.610Z",
+    "messageId": "c0d5eb1f-4c8b-4392-834d-97eceb79cf02",
+    "media": "Well+Good"
+  },
+  "jrosemberg@lamag.com": {
+    "sentAt": "2026-05-01T07:46:33.774Z",
+    "messageId": "88ade0b2-a372-4eca-bbe6-d54c2a7c0c3a",
+    "media": "Los Angeles Magazine"
+  },
+  "kat.kinsman@foodandwine.com": {
+    "sentAt": "2026-05-01T07:47:17.500Z",
+    "messageId": "628327cd-9444-4136-a1ab-569eec0811f4",
+    "media": "Food & Wine"
+  },
+  "bianca.trinidad@foodandwine.com": {
+    "sentAt": "2026-05-01T07:47:57.232Z",
+    "messageId": "93be1869-d28f-434a-ba15-ce50e755336f",
+    "media": "Food & Wine"
+  }
+}

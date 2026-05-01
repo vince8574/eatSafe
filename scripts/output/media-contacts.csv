@@ -1,0 +1,78 @@
+media,city,domain,first_name,last_name,email,position,department,seniority,confidence,linkedin,twitter,verification_status
+LAist,Los Angeles,laist.com,Adolfo,Guzman-Lopez,aguzman-lopez@laist.com,Reporter,communication,,99,https://www.linkedin.com/in/adolfo-guzman-lopez-52b00540,,valid
+LAist,Los Angeles,laist.com,Sharon,McNary,smcnary@laist.com,Sports Correspondent,communication,,99,https://www.linkedin.com/in/sharonmcnary,,valid
+LAist,Los Angeles,laist.com,Mary,Plummer,mplummer@laist.com,Managing Editor,communication,,99,https://www.linkedin.com/in/mary-plummer-92b6555,,valid
+LAist,Los Angeles,laist.com,Dana,Littlefield,dlittlefield@laist.com,Senior Editor,communication,senior,99,https://www.linkedin.com/in/dana-littlefield-a2762a5,,valid
+LAist,Los Angeles,laist.com,Erin,Stone,estone@laist.com,Environmental Journalist,communication,,99,https://www.linkedin.com/in/erin-stone-485b7098,,
+Food & Wine,New York,foodandwine.com,Ashley,Day,ashley.day@foodandwine.com,Editorial Director,communication,executive,99,https://www.linkedin.com/in/ashleynday,,valid
+The Kitchn,New York,thekitchn.com,Lindsay,Funston,lindsay@thekitchn.com,Editor-In-Chief,communication,,99,,,valid
+Well+Good,New York,wellandgood.com,Zoe,Weiner,zoe.weiner@wellandgood.com,Personal Trainer,health,executive,99,,,valid
+The Washington Post,Washington DC,washingtonpost.com,Yun-Hee,Kim,yun-hee.kim@washingtonpost.com,Editor,communication,,99,https://www.linkedin.com/in/ykim1,,valid
+CNN,Atlanta,cnn.com,Matthew,Vann,matthew.vann@cnn.com,Senior Writer,communication,senior,99,https://www.linkedin.com/in/matthew-vincent-vann-7a034313,,invalid
+CNN,Atlanta,cnn.com,Lisa,Mirando,lisa.mirando@cnn.com,Executive Producer,design,executive,99,https://www.linkedin.com/in/lisamirando,,valid
+NBC News,New York,nbcnews.com,News,Town,news@nbcnews.com,Reporter,communication,,99,https://www.linkedin.com/in/news-town-247719256,,valid
+Axios,Arlington VA,axios.com,Kayla,Brown,kayla.brown@axios.com,Chief of Staff,operations,,99,https://www.linkedin.com/in/kayla-cook-brown-746632112,,valid
+POLITICO,Arlington VA,politico.com,Natasha,Bernard,nbernard@politico.com,Chief of Staff,operations,,99,https://www.linkedin.com/in/natasha-bernard-858419139,,valid
+LA Weekly,Los Angeles,laweekly.com,Michele,Stueven,mstueven@laweekly.com,Senior Editor,communication,senior,98,https://www.linkedin.com/in/michele-stueven-949b824,,
+KCRW,Santa Monica,kcrw.com,Ariana,Morgenstern,ariana.morgenstern@kcrw.com,Executive Producer,design,executive,98,https://www.linkedin.com/in/ariana-morgenstern-4b9390304,,valid
+Poosh,Calabasas,poosh.com,Allie,Flinn,allie@poosh.com,Wellness Editor,communication,,98,https://www.linkedin.com/in/allie-flinn-13136a75,,
+Food & Wine,New York,foodandwine.com,Erika,Adams,erika.adams@foodandwine.com,Food Editor,communication,,98,https://www.linkedin.com/in/erika-adams-6a504231,,valid
+Well+Good,New York,wellandgood.com,Alexis,Berger,alexis.berger@wellandgood.com,Deputy Editor,communication,,98,,,
+Food Network,New York,foodnetwork.com,Maria,Russo,mrusso@foodnetwork.com,Editorial Director,communication,executive,98,https://www.linkedin.com/in/maria-russo-88683795,,valid
+Poosh,Calabasas,poosh.com,Eric,Graham,eric@poosh.com,Care Specialist,health,senior,97,https://www.linkedin.com/in/eric-graham-9017bb261,,
+Food & Wine,New York,foodandwine.com,Amelia,Schwartz,amelia.schwartz@foodandwine.com,Editor,communication,,97,https://www.linkedin.com/in/amelia-schwartz,,valid
+Well+Good,New York,wellandgood.com,Chloe,Metzger,chloe.metzger@wellandgood.com,Deputy Editor,communication,,97,https://www.linkedin.com/in/chloe-metzger-101,,valid
+POLITICO,Arlington VA,politico.com,Cyril,Zaneski,czaneski@politico.com,Executive Editor,communication,executive,97,https://www.linkedin.com/in/cyril-zaneski-55998211,,valid
+LA Times,Los Angeles,latimes.com,Beto,Alvarez,beto.alvarez@latimes.com,Deputy Director of Newsroom Innovation,management,executive,94,https://www.linkedin.com/in/betoalvarez,,valid
+LA Times,Los Angeles,latimes.com,Tracy,Boucher,tracy.boucher@latimes.com,Director of News,communication,executive,94,https://www.linkedin.com/in/tracy-boucher-aa45b45,tracy_boucher_,valid
+Los Angeles Magazine,Los Angeles,lamag.com,Austin,Hall,ahall@lamag.com,Editorial Intern,communication,junior,94,https://www.linkedin.com/in/austin-hall-4ba81211a,,
+Los Angeles Daily News,Los Angeles,dailynews.com,Rich,Hammond,rich.hammond@dailynews.com,"Deputy Editor, Sports",communication,,94,https://www.linkedin.com/in/rich-hammond-79784aa,,valid
+Los Angeles Daily News,Los Angeles,dailynews.com,Brian,Martin,brian.martin@dailynews.com,News Editor,communication,,94,https://www.linkedin.com/in/brian-martin-0734976,thebmartin,valid
+The New York Times,New York,nytimes.com,Julie,Snyder,julie.snyder@nytimes.com,Executive Editor,communication,executive,94,https://www.linkedin.com/in/julie-snyder-b6261432,,invalid
+The New York Times,New York,nytimes.com,Mona,Lalwani,mona.lalwani@nytimes.com,Senior Executive Producer,design,executive,94,https://www.linkedin.com/in/monalalwani,,valid
+The New Yorker,New York,newyorker.com,Caitlin,Martin,caitlin_martin@newyorker.com,Editorial Director,communication,executive,94,https://www.linkedin.com/in/caitlin-martin-393b738b,,valid
+The New Yorker,New York,newyorker.com,Dorothy,Wickenden,dorothy_wickenden@newyorker.com,Editor-in-Chief,communication,executive,94,https://www.linkedin.com/in/dorothy-wickenden-24326534,,valid
+Eater,New York,eater.com,Hilary,Pollack,hilary@eater.com,Deputy Editor,communication,,94,https://www.linkedin.com/in/hilary-pollack-52016b67,,valid
+Eater,New York,eater.com,Brenna,Houck,brenna@eater.com,Editorial Manager,communication,senior,94,https://www.linkedin.com/in/brenna-houck-77444643,,valid
+BONAPPETIT,New York,bonappetit.com,Nina,Moskowitz,nina_moskowitz@bonappetit.com,Associate Editor,communication,,94,https://www.linkedin.com/in/nina-moskowitz-117886166,,valid
+Mindbodygreen,New York,mindbodygreen.com,Hannah,Allen,hannah@mindbodygreen.com,Editor-in-Chief,communication,,94,https://www.linkedin.com/in/hannah-margaret-allen,,invalid
+SELF,New York,self.com,Ciara,Lucas,clucas@self.com,Fitness Editor,communication,,94,https://www.linkedin.com/in/ciaravlucas,,invalid
+Byrdie,New York,byrdie.com,Hallie,Gould,hallie@byrdie.com,Editor in Chief,communication,,94,https://www.linkedin.com/in/hallie-gould-48a88972,,valid
+USA TODAY,McLean VA,usatoday.com,Phillip,Bailey,pbailey@usatoday.com,Chief Political Correspondent,executive,,94,https://www.linkedin.com/in/phillip-m-bailey-97496522,covid19site,accept_all
+CBS News,New York,cbsnews.com,Eric,Berlin,berline@cbsnews.com,Executive Producer,design,executive,94,https://www.linkedin.com/in/eric-berlin-4160142,,accept_all
+NPR,Washington DC,npr.org,Sami,Yenigun,syenigun@npr.org,Executive Producer,design,executive,94,https://www.linkedin.com/in/sami-yenigun-ba35971b,,accept_all
+Los Angeles Magazine,Los Angeles,lamag.com,Ann,Herold,aherold@lamag.com,Managing Editor,communication,,93,https://www.linkedin.com/in/ann-herold-77a19ab0,,
+Los Angeles Daily News,Los Angeles,dailynews.com,Aron,Miller,aron.miller@dailynews.com,City Editor,communication,,93,https://www.linkedin.com/in/aron-miller-80b0bba,,invalid
+Los Angeles Daily News,Los Angeles,dailynews.com,Jerry,Berrios,jerry.berrios@dailynews.com,Online Editor,communication,,93,https://www.linkedin.com/in/jerry-berrios-103b713,jerryberrios,valid
+Los Angeles Daily News,Los Angeles,dailynews.com,Holly,Andres,holly.andres@dailynews.com,Editorial Assistant,communication,,93,https://www.linkedin.com/in/holly-andres-1768bb43,hollyverde,valid
+Time Out,Los Angeles,timeout.com,Alice,Ellis,alice.ellis@timeout.com,Editor in Chief,communication,,93,https://www.linkedin.com/in/alice-ellis-50425676,,accept_all
+The New Yorker,New York,newyorker.com,Nicholas,Henriquez,nicholas_henriquez@newyorker.com,Director of Editorial,communication,executive,93,https://www.linkedin.com/in/nicholas-henriquez-467889123,,valid
+New York Magazine,New York,nymag.com,David,Haskell,david.haskell@nymag.com,Editor-in-Chief,communication,,93,https://www.linkedin.com/in/david-haskell-3b432412b,,valid
+New York Magazine,New York,nymag.com,Carl,Rosen,carl.rosen@nymag.com,Senior Editor,communication,senior,93,https://www.linkedin.com/in/carl-rosen-66617a7,,valid
+BONAPPETIT,New York,bonappetit.com,Kelsey,Youngman,kelsey_youngman@bonappetit.com,Senior Editor,communication,senior,93,https://www.linkedin.com/in/kelseyjyoungman,,valid
+Epicurious,New York,epicurious.com,Tommy,Werner,tommy@epicurious.com,Producer,design,,93,,tommy_91,valid
+Byrdie,New York,byrdie.com,Holly,Rhue,hrhue@byrdie.com,Editorial Director,communication,executive,93,https://www.linkedin.com/in/holly-rhue-2aa60b119,,valid
+USA TODAY,McLean VA,usatoday.com,Tabassum,Zakaria,tzakaria@usatoday.com,Editor-in-Chief,communication,executive,93,https://www.linkedin.com/in/tabassum-zakaria-13aaa84b,,accept_all
+Los Angeles Magazine,Los Angeles,lamag.com,John,Roberts,jroberts@lamag.com,Editor,communication,,92,https://www.linkedin.com/in/john-roberts-b1a678113,,
+New York Magazine,New York,nymag.com,Lindsay,Peoples,lindsay.peoples@nymag.com,Editor-in-Chief,communication,,92,https://www.linkedin.com/in/lindsayp,,valid
+The Infatuation,Los Angeles,theinfatuation.com,Akshay,Mirchandani,akshay@theinfatuation.com,Vice President of Editorial Operations,communication,executive,91,https://www.linkedin.com/in/akshay-mirchandani-20732ba1,,valid
+The Infatuation,Los Angeles,theinfatuation.com,Jess,Sanders,jess@theinfatuation.com,"Vice President, Editorial Strategy",communication,senior,91,https://www.linkedin.com/in/jess-basser-sanders-240aaa53,jessbasser,invalid
+The Infatuation,Los Angeles,theinfatuation.com,Arden,Shore,arden@theinfatuation.com,Editor in Chief,communication,,90,https://www.linkedin.com/in/arden-shore-170aa1a4,,valid
+Eater,New York,eater.com,Sergio,Scardigno,sergio.scardigno@eater.com,Video Producer,design,,89,https://www.linkedin.com/in/sergio-scardigno-91138a1a2,,valid
+SELF,New York,self.com,Jennifer,Fields,jfields@self.com,Executive Editor,communication,executive,89,https://www.linkedin.com/in/jennifer-fields-1200174,,invalid
+SELF,New York,self.com,Jenna,Ryu,jryu@self.com,Content Writer,communication,,88,https://www.linkedin.com/in/jenna-ryu-32bb5a14b,,invalid
+Serious Eats,New York,seriouseats.com,Rochelle,Bilow,rochelle.bilow@seriouseats.com,E-commerce Editor,communication,,87,https://www.linkedin.com/in/rochelle-bilow-b689b61b4,,invalid
+Los Angeles Daily News,Los Angeles,dailynews.com,Mary,Gautschy,mary.gautschy@dailynews.com,System Editor,communication,,84,https://www.linkedin.com/in/mary-gautschy-aa263a6,,
+Eater,New York,eater.com,Emily,Venezky,emily.venezky@eater.com,Editorial Assistant,communication,,84,https://www.linkedin.com/in/emilyvenezky,,valid
+New York Magazine,New York,nymag.com,Gazelle,Emami,gazelle.emami@nymag.com,Editorial Director,communication,executive,83,https://www.linkedin.com/in/gazelleemami,,valid
+Well+Good,New York,wellandgood.com,Samantha,Leal,samantha.leal@wellandgood.com,Deputy Editor,communication,,75,,,
+Food & Wine,New York,foodandwine.com,Hunter,Lewis,hunter.lewis@foodandwine.com,Editor-in-Chief,communication,,74,https://www.linkedin.com/in/hunter-lewis-06525887,,valid
+The Infatuation,Los Angeles,theinfatuation.com,Kym,Backer,kym@theinfatuation.com,Editorial Director,communication,executive,69,https://www.linkedin.com/in/kym-allison-backer-939b504,,invalid
+Food & Wine,New York,foodandwine.com,Jorge,Alvarez,jorge.alvarez@foodandwine.com,Photo Editor,communication,,69,https://www.linkedin.com/in/jorge-alvarez-0852a036,,valid
+Eater,New York,eater.com,Nadia,Chaudhury,nadia@eater.com,Deputy Editor,communication,executive,68,https://www.linkedin.com/in/nadia-chaudhury-5a77031a,,valid
+Food & Wine,New York,foodandwine.com,Sean,Flynn,sean.flynn@foodandwine.com,Editorial Director,communication,executive,68,https://www.linkedin.com/in/sean-flynn-29779439,,valid
+Food & Wine,New York,foodandwine.com,Breanna,Rivera,breanna.rivera@foodandwine.com,Copy Editor,communication,,68,https://www.linkedin.com/in/breanna-bruening-rivera-8810a8173,,valid
+Well+Good,New York,wellandgood.com,Aimee,Simeon,aimee.simeon@wellandgood.com,Senior Editor,communication,senior,68,https://www.linkedin.com/in/aimeesimeon,,unknown
+Los Angeles Magazine,Los Angeles,lamag.com,Jasmin,Rosemberg,jrosemberg@lamag.com,Editor in Chief,communication,,67,https://www.linkedin.com/in/jasmin-rosemberg-97aa574,,valid
+Food & Wine,New York,foodandwine.com,Kat,Kinsman,kat.kinsman@foodandwine.com,Features Editor,communication,,67,https://www.linkedin.com/in/katkinsman,,valid
+Food & Wine,New York,foodandwine.com,Bianca,Trinidad,bianca.trinidad@foodandwine.com,Social Media Editor,communication,,67,https://www.linkedin.com/in/bianca-trinidad-0627,,valid
