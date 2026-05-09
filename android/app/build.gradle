@@ -105,15 +105,29 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // Release signing reads from -PRELEASE_* gradle properties (set by the
+        // GitHub Actions workflow using repo secrets). Falls back to debug for
+        // local builds where the release keystore isn't present.
+        release {
+            def releaseStoreFile = findProperty('RELEASE_STORE_FILE')
+            if (releaseStoreFile != null && file(releaseStoreFile).exists()) {
+                storeFile file(releaseStoreFile)
+                storePassword findProperty('RELEASE_STORE_PASSWORD')
+                keyAlias findProperty('RELEASE_KEY_ALIAS')
+                keyPassword findProperty('RELEASE_KEY_PASSWORD')
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Use the release config when -PRELEASE_STORE_FILE is provided
+            // (CI builds), otherwise fall back to debug so local dev still works.
+            signingConfig (findProperty('RELEASE_STORE_FILE') != null
+                ? signingConfigs.release
+                : signingConfigs.debug)
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds
