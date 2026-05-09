@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
 import { getCurrentUserId } from './authService';
 import { getCurrentOrganization } from './organizationService';
-import { SUBSCRIPTION_PLANS, SCAN_PACKS, getPlanById as getSubscriptionPlanById } from '../constants/subscriptionPlans';
+import { SUBSCRIPTION_PLANS, SCAN_PACKS, getPlanById as getSubscriptionPlanById, isYearlyPlanId } from '../constants/subscriptionPlans';
 import {
   initializeBilling,
   endBilling,
@@ -78,12 +78,17 @@ function buildSubscriptionFromPlan(planId: string): Subscription {
     throw new Error('Plan inconnu');
   }
 
+  const isYearly = isYearlyPlanId(planId);
+  const periodMs = (isYearly ? 365 : 30) * 24 * 60 * 60 * 1000;
+
   return {
-    planId: plan.id,
+    // Preserve the actual purchased productId so the UI can distinguish yearly
+    // vs monthly variants of the same plan.
+    planId,
     planName: plan.labelKey, // Store the translation key
     status: 'active',
-    // Placeholder: 30 jours de validité simulée pour dev (les stores prendront le relais plus tard)
-    expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
+    // Placeholder expiration; the store remains the source of truth.
+    expiresAt: Date.now() + periodMs,
     scansIncluded: plan.scansIncluded,
     scansRemaining: plan.scansIncluded,
     historyRetentionDays: plan.historyRetentionDays,
@@ -207,9 +212,54 @@ export async function enableExportForTesting(): Promise<void> {
   console.log(`[subscriptionService] Export enabled for testing (scope: ${scopeId})`);
 }
 
-// ============= GOOGLE PLAY BILLING INTEGRATION =============
+// ============= STORE BILLING INTEGRATION (App Store + Google Play) =============
 
 let billingInitialized = false;
+
+// Listeners that consumers (e.g. the useSubscription hook) register so they
+// can update React state when the async store callback delivers a purchase.
+// Without this bridge the UI would have to poll Firestore after requestPurchase
+// returns, which races against the listener and was the root cause of Apple's
+// 2.1(b) rejection ("products failed to apply").
+type SubscriptionChangeListener = (sub: Subscription) => void;
+type PurchaseFailureListener = (error: { message?: string; code?: string }) => void;
+
+const subscriptionChangeListeners = new Set<SubscriptionChangeListener>();
+const purchaseFailureListeners = new Set<PurchaseFailureListener>();
+
+export function onSubscriptionChange(listener: SubscriptionChangeListener): () => void {
+  subscriptionChangeListeners.add(listener);
+  return () => {
+    subscriptionChangeListeners.delete(listener);
+  };
+}
+
+export function onPurchaseFailure(listener: PurchaseFailureListener): () => void {
+  purchaseFailureListeners.add(listener);
+  return () => {
+    purchaseFailureListeners.delete(listener);
+  };
+}
+
+function emitSubscriptionChange(sub: Subscription): void {
+  subscriptionChangeListeners.forEach((listener) => {
+    try {
+      listener(sub);
+    } catch (err) {
+      console.error('[subscriptionService] Subscription listener threw:', err);
+    }
+  });
+}
+
+function emitPurchaseFailure(error: { message?: string; code?: string }): void {
+  purchaseFailureListeners.forEach((listener) => {
+    try {
+      listener(error);
+    } catch (err) {
+      console.error('[subscriptionService] Failure listener threw:', err);
+    }
+  });
+}
 
 /**
  * Initialize the billing service and set up purchase listeners
@@ -236,33 +286,52 @@ export async function cleanupBilling(): Promise<void> {
 }
 
 /**
- * Handle successful purchase from Google Play
+ * Handle successful purchase delivered by the store's purchase listener.
+ * Both subscriptions and consumable scan packs flow through here.
  */
 async function handlePurchaseSuccess(purchase: any): Promise<void> {
   const productId = purchase.productId;
   console.log('[subscriptionService] Processing successful purchase:', productId);
 
-  // Check if it's a subscription or a scan pack
+  // getSubscriptionPlanById matches both monthly and yearly product IDs.
   const plan = getSubscriptionPlanById(productId);
   if (plan) {
-    // It's a subscription
-    await activateSubscription(productId, purchase.transactionId, purchase.purchaseToken);
-  } else {
-    // It's a scan pack
-    const quantity = getScanPackQuantity(productId);
-    if (quantity > 0) {
-      await addScanPack(quantity);
-      console.log(`[subscriptionService] Added ${quantity} scans from pack ${productId}`);
-    }
+    const activated = await activateSubscription(
+      productId,
+      purchase.transactionId,
+      purchase.purchaseToken
+    );
+    emitSubscriptionChange(activated);
+    return;
   }
+
+  // Otherwise treat as a consumable scan pack
+  const quantity = getScanPackQuantity(productId);
+  if (quantity > 0) {
+    const updated = await addScanPack(quantity);
+    console.log(`[subscriptionService] Added ${quantity} scans from pack ${productId}`);
+    emitSubscriptionChange(updated);
+    return;
+  }
+
+  console.warn(
+    `[subscriptionService] Purchase ${productId} did not match any known plan or pack`
+  );
+  emitPurchaseFailure({
+    message: `Unknown product: ${productId}`,
+    code: 'UNKNOWN_PRODUCT',
+  });
 }
 
 /**
- * Handle purchase error
+ * Handle purchase error from the store listener.
  */
 function handlePurchaseError(error: any): void {
   console.error('[subscriptionService] Purchase error:', error);
-  // Error handling is done in the UI layer via the hook
+  emitPurchaseFailure({
+    message: error?.message ?? 'Purchase failed',
+    code: error?.code,
+  });
 }
 
 /**
@@ -292,12 +361,17 @@ async function activateSubscription(
     extraCredits = Math.max(0, oldRemaining - oldIncluded);
   }
 
+  const isYearly = isYearlyPlanId(planId);
+  const periodMs = (isYearly ? 365 : 30) * 24 * 60 * 60 * 1000;
+
   const payload: Subscription & { googlePlayTransactionId?: string; googlePlayPurchaseToken?: string } = {
-    planId: plan.id,
+    // Store the actual purchased product ID (monthly or yearly variant) so the
+    // UI can correctly mark the right plan + period as active.
+    planId,
     planName: plan.labelKey,
     status: 'active',
-    // Google Play manages the actual expiration, this is just for reference
-    expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
+    // The store remains the source of truth for the real expiration.
+    expiresAt: Date.now() + periodMs,
     scansIncluded: plan.scansIncluded,
     scansRemaining: plan.scansIncluded + extraCredits,
     historyRetentionDays: plan.historyRetentionDays,

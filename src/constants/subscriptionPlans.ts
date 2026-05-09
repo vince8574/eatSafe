@@ -200,7 +200,15 @@ export const SCAN_PACKS: ScanPack[] = [
 ];
 
 export function getPlanById(planId: string): SubscriptionPlan | undefined {
-  return SUBSCRIPTION_PLANS.find(p => p.id === planId);
+  // Match either the monthly product ID or the yearly product ID so callers
+  // that receive a productId from the store (e.g. *_yearly) still resolve the
+  // underlying plan metadata. Without this, yearly purchases are silently
+  // treated as unknown products and never activated.
+  return SUBSCRIPTION_PLANS.find(p => p.id === planId || p.idYear === planId);
+}
+
+export function isYearlyPlanId(planId: string): boolean {
+  return SUBSCRIPTION_PLANS.some(p => p.idYear === planId);
 }
 
 export function getPackById(packId: string): ScanPack | undefined {

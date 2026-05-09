@@ -14,6 +14,8 @@ import {
   restorePreviousPurchases,
   getStoreProducts,
   isStoreAvailable,
+  onSubscriptionChange,
+  onPurchaseFailure,
 } from '../services/subscriptionService';
 
 type UseSubscriptionState = {
@@ -33,7 +35,10 @@ export function useSubscription() {
     storeAvailable: false,
   });
 
-  // Initialize billing on mount
+  // Initialize billing on mount + subscribe to async store events.
+  // The store's purchase listener fires AFTER requestPurchase resolves, so we
+  // can't `await refresh()` synchronously after a purchase call — the Firestore
+  // doc isn't written yet. Instead we react to the emitter the service exposes.
   useEffect(() => {
     let mounted = true;
 
@@ -46,8 +51,32 @@ export function useSubscription() {
 
     init();
 
+    const unsubscribeChange = onSubscriptionChange((sub) => {
+      if (!mounted) return;
+      setState((prev) => ({
+        ...prev,
+        subscription: sub,
+        purchasing: false,
+        loading: false,
+        error: null,
+      }));
+    });
+
+    const unsubscribeFailure = onPurchaseFailure((err) => {
+      if (!mounted) return;
+      // User cancellation should NOT show as an error in the UI.
+      const cancelled = err.code === 'E_USER_CANCELLED' || err.code === 'E_USER_CANCELED';
+      setState((prev) => ({
+        ...prev,
+        purchasing: false,
+        error: cancelled ? null : err.message ?? 'Purchase failed',
+      }));
+    });
+
     return () => {
       mounted = false;
+      unsubscribeChange();
+      unsubscribeFailure();
       cleanupBilling();
     };
   }, []);
@@ -67,18 +96,33 @@ export function useSubscription() {
     }
   }, []);
 
-  // Purchase a subscription via Google Play
+  // Safety net: clear `purchasing` if the store listener never fires
+  // (e.g. dialog dismissed by the system, network drop). 90s matches the
+  // typical StoreKit dialog timeout window.
+  const armPurchaseTimeout = useCallback(() => {
+    const timer = setTimeout(() => {
+      setState((prev) => (prev.purchasing ? { ...prev, purchasing: false } : prev));
+    }, 90_000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Purchase a subscription via the store. The actual Firestore activation
+  // happens asynchronously in the service's purchase listener — we do NOT
+  // refresh() here to avoid racing the listener.
   const purchaseSubscription = useCallback(async (planId: string) => {
     setState((prev) => ({ ...prev, purchasing: true, error: null }));
     try {
       if (state.storeAvailable) {
-        // Use Google Play for real purchases
-        await purchaseSubscriptionViaStore(planId);
-        // The subscription will be activated via the purchase listener
-        // Refresh to get the updated subscription
-        await refresh();
+        const cancelTimeout = armPurchaseTimeout();
+        try {
+          await purchaseSubscriptionViaStore(planId);
+        } finally {
+          // Listener will clear `purchasing`; cancelTimeout is a backstop only.
+          // Keep the timeout armed.
+          void cancelTimeout;
+        }
       } else {
-        // Fallback for development/testing
+        // Dev/sandbox fallback when no real store is available
         const sub = await selectPlan(planId);
         setState((prev) => ({ ...prev, subscription: sub, purchasing: false, error: null }));
       }
@@ -88,23 +132,17 @@ export function useSubscription() {
         purchasing: false,
         error: error instanceof Error ? error.message : t('auth.error'),
       }));
-    } finally {
-      setState((prev) => ({ ...prev, purchasing: false }));
     }
-  }, [state.storeAvailable, refresh]);
+  }, [state.storeAvailable, armPurchaseTimeout]);
 
-  // Purchase a scan pack via Google Play
+  // Purchase a scan pack via the store. Same async pattern as above.
   const purchaseScanPack = useCallback(async (packId: string, quantity: number) => {
     setState((prev) => ({ ...prev, purchasing: true, error: null }));
     try {
       if (state.storeAvailable) {
-        // Use Google Play for real purchases
+        armPurchaseTimeout();
         await purchaseScanPackViaStore(packId);
-        // The scans will be added via the purchase listener
-        // Refresh to get the updated subscription
-        await refresh();
       } else {
-        // Fallback for development/testing
         const sub = await addScanPack(quantity);
         setState((prev) => ({ ...prev, subscription: sub, purchasing: false, error: null }));
       }
@@ -114,10 +152,8 @@ export function useSubscription() {
         purchasing: false,
         error: error instanceof Error ? error.message : t('auth.error'),
       }));
-    } finally {
-      setState((prev) => ({ ...prev, purchasing: false }));
     }
-  }, [state.storeAvailable, refresh]);
+  }, [state.storeAvailable, armPurchaseTimeout]);
 
   // Restore previous purchases. Returns the restored subscription or null
   // when no previous purchase was found. Throws on unexpected errors.

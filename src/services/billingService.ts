@@ -239,7 +239,10 @@ export async function purchaseSubscription(productId: string, offerToken?: strin
             },
           }
         : {
-            apple: { skus: [productId] },
+            // react-native-iap v14: iOS expects a single `sku`, not `skus`.
+            // Passing `skus` silently fails type-validation and the purchase
+            // dialog never opens — root cause of part of Apple's 2.1(b) flag.
+            apple: { sku: productId },
           },
       type: 'subs',
     });
@@ -267,7 +270,7 @@ export async function purchaseScanPack(productId: string): Promise<void> {
     await requestPurchase({
       request: Platform.OS === 'android'
         ? { google: { skus: [productId] } }
-        : { apple: { skus: [productId] } },
+        : { apple: { sku: productId } },
       type: 'in-app',
     });
   } catch (error) {

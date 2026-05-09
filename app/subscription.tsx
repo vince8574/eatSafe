@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Platform, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../src/theme/themeContext';
@@ -162,6 +162,31 @@ export default function SubscriptionScreen() {
             {t('subscription.plansHelper')}
           </Text>
 
+          {/*
+            Apple guideline 3.1.2(a): Title, length, price and links to Terms of
+            Use (EULA) + Privacy Policy must be visible together with the plans
+            BEFORE any purchase decision. This block stays directly above the
+            plan list so reviewers see it without scrolling past the cards.
+          */}
+          <View style={[styles.termsInline, { borderColor: colors.border, backgroundColor: colors.surfaceAlt }]}>
+            <Text style={[styles.termsInlineText, { color: colors.textSecondary }]}>
+              {t('subscription.terms.disclosure')}
+            </Text>
+            <View style={styles.termsLinks}>
+              <TouchableOpacity onPress={() => Linking.openURL('https://numeline.vercel.app/terms-of-service.html')}>
+                <Text style={[styles.termsLink, { color: colors.accent }]}>
+                  {t('subscription.terms.termsOfUse')}
+                </Text>
+              </TouchableOpacity>
+              <Text style={[styles.termsSeparator, { color: colors.textSecondary }]}>•</Text>
+              <TouchableOpacity onPress={() => Linking.openURL('https://numeline.vercel.app/privacy-policy.html')}>
+                <Text style={[styles.termsLink, { color: colors.accent }]}>
+                  {t('subscription.terms.privacyPolicy')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <View style={[styles.billingToggle, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
             <TouchableOpacity
               style={[
@@ -276,29 +301,6 @@ export default function SubscriptionScreen() {
           })}
         </View>
 
-        {/* Subscription Terms — required by Apple App Store guideline 3.1.2 */}
-        <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            {t('subscription.terms.title')}
-          </Text>
-          <Text style={[styles.termsText, { color: colors.textSecondary }]}>
-            {t('subscription.terms.disclosure')}
-          </Text>
-          <View style={styles.termsLinks}>
-            <TouchableOpacity onPress={() => Linking.openURL('https://numeline.vercel.app/terms-of-service.html')}>
-              <Text style={[styles.termsLink, { color: colors.accent }]}>
-                {t('subscription.terms.termsOfUse')}
-              </Text>
-            </TouchableOpacity>
-            <Text style={[styles.termsSeparator, { color: colors.textSecondary }]}>•</Text>
-            <TouchableOpacity onPress={() => Linking.openURL('https://numeline.vercel.app/privacy-policy.html')}>
-              <Text style={[styles.termsLink, { color: colors.accent }]}>
-                {t('subscription.terms.privacyPolicy')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
         <View style={[styles.card, { backgroundColor: colors.surface }]}>
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.scanPacksTitle')}</Text>
           <Text style={[styles.helper, { color: colors.textSecondary }]}>
@@ -337,29 +339,33 @@ export default function SubscriptionScreen() {
           </View>
         </View>
 
-        {Platform.OS === 'android' && (
-          <View style={[styles.card, { backgroundColor: colors.surface }]}>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.restoreTitle')}</Text>
-            <Text style={[styles.helper, { color: colors.textSecondary }]}>
-              {t('subscription.restoreHelper')}
+        {/*
+          Apple guideline 3.1.1: subscription apps MUST expose a "Restore
+          Purchases" button so users who reinstall or change device can recover
+          their entitlement. Shown on iOS and Android — restorePreviousPurchases
+          handles both stores.
+        */}
+        <View style={[styles.card, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.restoreTitle')}</Text>
+          <Text style={[styles.helper, { color: colors.textSecondary }]}>
+            {t('subscription.restoreHelper')}
+          </Text>
+          <TouchableOpacity
+            style={[styles.restoreButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
+            onPress={handleRestorePurchases}
+            disabled={loading || purchasing}
+          >
+            <Ionicons name="refresh-circle-outline" size={20} color={colors.accent} />
+            <Text style={[styles.restoreButtonText, { color: colors.accent }]}>
+              {t('subscription.restoreButton')}
             </Text>
-            <TouchableOpacity
-              style={[styles.restoreButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
-              onPress={handleRestorePurchases}
-              disabled={loading || purchasing}
-            >
-              <Ionicons name="refresh-circle-outline" size={20} color={colors.accent} />
-              <Text style={[styles.restoreButtonText, { color: colors.accent }]}>
-                {t('subscription.restoreButton')}
-              </Text>
-            </TouchableOpacity>
-            {!storeAvailable && (
-              <Text style={[styles.devModeText, { color: colors.textSecondary }]}>
-                {t('subscription.devMode')}
-              </Text>
-            )}
-          </View>
-        )}
+          </TouchableOpacity>
+          {!storeAvailable && (
+            <Text style={[styles.devModeText, { color: colors.textSecondary }]}>
+              {t('subscription.devMode')}
+            </Text>
+          )}
+        </View>
 
         {error ? (
           <View style={[styles.errorBox, { backgroundColor: '#FEE2E2', borderColor: '#FCA5A5' }]}>
@@ -575,9 +581,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 8
   },
-  termsText: {
+  termsInline: {
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 4,
+    gap: 8
+  },
+  termsInlineText: {
     fontSize: 12,
-    lineHeight: 18,
+    lineHeight: 17,
     fontWeight: '500'
   },
   termsLinks: {
