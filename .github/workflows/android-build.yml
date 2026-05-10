@@ -42,8 +42,12 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Generate native Android project
-        run: npx expo prebuild --platform android --no-install
+      # NOTE: `npx expo prebuild` is intentionally NOT run here. The android/
+      # folder is committed to git and contains a custom signing config in
+      # android/app/build.gradle that prebuild would wipe. If you change
+      # app.json plugins or permissions, run `npx expo prebuild --platform
+      # android` locally, re-apply the release signing block to build.gradle,
+      # and commit the regenerated android/ tree.
 
       - name: Decode Keystore
         run: |
