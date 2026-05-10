@@ -1,0 +1,73 @@
+name: Deploy Firebase Functions
+
+on:
+  workflow_dispatch:
+    inputs:
+      sync_anthropic_secret:
+        description: 'Also push ANTHROPIC_API_KEY from GitHub secrets to Google Secret Manager before deploying'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools@^14.0.0
+
+      - name: Install functions dependencies
+        working-directory: firebase/functions
+        run: npm install
+
+      # Push the Anthropic key from GitHub Actions secrets into Google Secret
+      # Manager only when the workflow input explicitly asks for it — so a
+      # routine code-only deploy does not rewrite the secret. Each call creates
+      # a new version; the function will pick it up on the next deploy.
+      - name: Sync ANTHROPIC_API_KEY to Google Secret Manager
+        if: github.event.inputs.sync_anthropic_secret == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY GitHub secret is empty; aborting." >&2
+            exit 1
+          fi
+          # Create the secret on first run; ignore "already exists" error after.
+          gcloud secrets create ANTHROPIC_API_KEY \
+            --project="$PROJECT_ID" \
+            --replication-policy=automatic 2>/dev/null || true
+          printf '%s' "$ANTHROPIC_API_KEY" | gcloud secrets versions add ANTHROPIC_API_KEY \
+            --project="$PROJECT_ID" \
+            --data-file=-
+
+      - name: Deploy ocrClaude function
+        env:
+          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          firebase deploy \
+            --only functions:ocrClaude \
+            --project "$PROJECT_ID" \
+            --non-interactive \
+            --force
