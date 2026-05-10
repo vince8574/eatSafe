@@ -19,7 +19,9 @@
       "usesAppleSignIn": true,
       "jsEngine": "jsc",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "Numeline needs microphone access to recognize voice commands like \"photo\", \"flash\", or \"flash off\" while scanning lot numbers in accessibility mode.",
+        "NSSpeechRecognitionUsageDescription": "Numeline uses speech recognition on-device to interpret voice commands during lot scanning in accessibility mode."
       }
     },
     "android": {
@@ -31,7 +33,8 @@
       "package": "com.eatsafe.app",
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECEIVE_BOOT_COMPLETED"
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "assetBundlePatterns": [
@@ -58,6 +61,14 @@
         "expo-camera",
         {
           "cameraPermission": "Numeline needs access to your camera to scan barcodes and lot numbers on food packaging."
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Numeline needs microphone access to recognize voice commands like \"photo\", \"flash\", or \"flash off\" while scanning lot numbers in accessibility mode.",
+          "speechRecognitionPermission": "Numeline uses speech recognition on-device to interpret voice commands during lot scanning in accessibility mode.",
+          "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
         }
       ],
       [
