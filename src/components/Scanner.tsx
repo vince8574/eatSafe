@@ -1,11 +1,27 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 
 type ScannerMode = 'barcode' | 'photo' | 'band';
+
+export type CoachingHint = 'blur' | 'tooFar' | 'tooClose';
+
+export type ScannerHandle = {
+  triggerCapture: () => Promise<void>;
+  setFlash: (on: boolean) => void;
+  isFlashOn: () => boolean;
+};
 
 type ScannerProps = {
   onCapture: (uri: string) => Promise<void> | void;
@@ -22,24 +38,44 @@ type ScannerProps = {
   onBack?: () => void;
   onRestart?: () => void;
   flashPosition?: 'top-left' | 'top-right';
+  previewOcrEnabled?: boolean;
+  previewOcrIntervalMs?: number;
+  onPreviewOcrText?: (text: string) => void;
+  lowLightDetectionEnabled?: boolean;
+  onLowLight?: (isLow: boolean) => void;
+  onCoachingHint?: (hint: CoachingHint) => void;
+  hideCaptureButton?: boolean;
 };
 
-export function Scanner({
-  onCapture,
-  onBarcodeScanned,
-  isProcessing = false,
-  enableBarcodeScanning = false,
-  mode = 'photo',
-  resetToken,
-  enableFlashToggle = true,
-  aiMessage,
-  onSkip,
-  onReload,
-  onManualEntry,
-  onBack,
-  onRestart,
-  flashPosition = 'top-left'
-}: ScannerProps) {
+const DEFAULT_PREVIEW_OCR_INTERVAL_MS = 1800;
+const LOW_LIGHT_EMPTY_THRESHOLD = 3;
+
+export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
+  {
+    onCapture,
+    onBarcodeScanned,
+    isProcessing = false,
+    enableBarcodeScanning = false,
+    mode = 'photo',
+    resetToken,
+    enableFlashToggle = true,
+    aiMessage,
+    onSkip,
+    onReload,
+    onManualEntry,
+    onBack,
+    onRestart,
+    flashPosition = 'top-left',
+    previewOcrEnabled = false,
+    previewOcrIntervalMs = DEFAULT_PREVIEW_OCR_INTERVAL_MS,
+    onPreviewOcrText,
+    lowLightDetectionEnabled = false,
+    onLowLight,
+    onCoachingHint,
+    hideCaptureButton = false
+  },
+  ref
+) {
   const { colors } = useTheme();
   const { t } = useI18n();
   const [permission, requestPermission] = useCameraPermissions();
@@ -47,6 +83,18 @@ export function Scanner({
   const [cameraReady, setCameraReady] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
   const [flashOn, setFlashOn] = useState(false);
+
+  const flashOnRef = useRef(flashOn);
+  flashOnRef.current = flashOn;
+
+  const isProcessingRef = useRef(isProcessing);
+  isProcessingRef.current = isProcessing;
+
+  const previewOcrLoopRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const previewOcrInFlightRef = useRef(false);
+  const emptyOcrStreakRef = useRef(0);
+  const lowLightActiveRef = useRef(false);
+  const lastCoachingHintRef = useRef<{ hint: CoachingHint; at: number } | null>(null);
 
   useEffect(() => {
     if (!permission) {
@@ -59,9 +107,7 @@ export function Scanner({
       if (!enableBarcodeScanning || isProcessing || !onBarcodeScanned) {
         return;
       }
-
       const barcode = scanningResult.data;
-
       if (barcode && barcode !== scannedBarcode) {
         console.log('[Scanner] Barcode scanned:', barcode);
         setScannedBarcode(barcode);
@@ -72,30 +118,142 @@ export function Scanner({
   );
 
   const handleCapture = useCallback(async () => {
-    if (!cameraRef.current || isProcessing || !cameraReady) {
+    if (!cameraRef.current || isProcessingRef.current || !cameraReady) {
       return;
     }
-
     try {
       const photo = await cameraRef.current.takePictureAsync({
         quality: 1.0,
         skipProcessing: false,
         shutterSound: false
       });
-
       if (photo?.uri) {
         await onCapture(photo.uri);
       }
     } catch (error) {
       console.warn('Capture failed', error);
     }
-  }, [cameraReady, isProcessing, onCapture]);
+  }, [cameraReady, onCapture]);
+
+  const emitCoachingHint = useCallback(
+    (hint: CoachingHint) => {
+      if (!onCoachingHint) return;
+      const now = Date.now();
+      const last = lastCoachingHintRef.current;
+      if (last && last.hint === hint && now - last.at < 4000) return;
+      lastCoachingHintRef.current = { hint, at: now };
+      onCoachingHint(hint);
+    },
+    [onCoachingHint]
+  );
+
+  const runPreviewOcrTick = useCallback(async () => {
+    if (previewOcrInFlightRef.current) return;
+    if (isProcessingRef.current) return;
+    if (!cameraRef.current) return;
+
+    previewOcrInFlightRef.current = true;
+    try {
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.4,
+        skipProcessing: true,
+        shutterSound: false,
+        exif: false
+      });
+      if (!photo?.uri) return;
+
+      const result = await TextRecognition.recognize(photo.uri);
+      const text = (result?.text ?? '').trim();
+
+      if (lowLightDetectionEnabled && onLowLight) {
+        if (text.length === 0) {
+          emptyOcrStreakRef.current += 1;
+          if (
+            !lowLightActiveRef.current &&
+            emptyOcrStreakRef.current >= LOW_LIGHT_EMPTY_THRESHOLD
+          ) {
+            lowLightActiveRef.current = true;
+            onLowLight(true);
+          }
+        } else {
+          emptyOcrStreakRef.current = 0;
+          if (lowLightActiveRef.current) {
+            lowLightActiveRef.current = false;
+            onLowLight(false);
+          }
+        }
+      }
+
+      if (onCoachingHint && text.length > 0 && photo.width) {
+        if (text.length < 5) {
+          emitCoachingHint('tooFar');
+        } else {
+          const widestBlock = result.blocks.reduce((max, b) => {
+            const w = b.frame?.width ?? 0;
+            return w > max ? w : max;
+          }, 0);
+          if (widestBlock > 0 && widestBlock > photo.width * 0.85) {
+            emitCoachingHint('tooClose');
+          }
+        }
+      }
+
+      if (text.length > 0 && onPreviewOcrText) {
+        onPreviewOcrText(text);
+      }
+    } catch (error) {
+      // ML Kit failures on partial frames are expected — don't spam logs.
+    } finally {
+      previewOcrInFlightRef.current = false;
+    }
+  }, [emitCoachingHint, lowLightDetectionEnabled, onCoachingHint, onLowLight, onPreviewOcrText]);
+
+  useEffect(() => {
+    if (!previewOcrEnabled || !cameraReady) {
+      if (previewOcrLoopRef.current) {
+        clearTimeout(previewOcrLoopRef.current);
+        previewOcrLoopRef.current = null;
+      }
+      return;
+    }
+
+    let cancelled = false;
+    const schedule = () => {
+      if (cancelled) return;
+      previewOcrLoopRef.current = setTimeout(async () => {
+        await runPreviewOcrTick();
+        if (!cancelled) schedule();
+      }, previewOcrIntervalMs);
+    };
+    schedule();
+
+    return () => {
+      cancelled = true;
+      if (previewOcrLoopRef.current) {
+        clearTimeout(previewOcrLoopRef.current);
+        previewOcrLoopRef.current = null;
+      }
+    };
+  }, [previewOcrEnabled, cameraReady, previewOcrIntervalMs, runPreviewOcrTick]);
 
   useEffect(() => {
     setScannedBarcode(null);
     setCameraReady(false);
     setFlashOn(false);
+    emptyOcrStreakRef.current = 0;
+    lowLightActiveRef.current = false;
+    lastCoachingHintRef.current = null;
   }, [resetToken]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      triggerCapture: handleCapture,
+      setFlash: (on: boolean) => setFlashOn(on),
+      isFlashOn: () => flashOnRef.current
+    }),
+    [handleCapture]
+  );
 
   if (!permission) {
     return (
@@ -121,7 +279,7 @@ export function Scanner({
     );
   }
 
-  const showCapture = mode === 'photo' || mode === 'band';
+  const showCapture = (mode === 'photo' || mode === 'band') && !hideCaptureButton;
 
   return (
     <View style={styles.container}>
@@ -288,7 +446,7 @@ export function Scanner({
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
