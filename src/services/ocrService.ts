@@ -6,6 +6,7 @@ import { OCRResult } from '../types';
 import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 import { tryVisionFallback, runVisionFallback, isVisionAvailable } from './visionFallbackService';
+import { tryClaudeFallback, isClaudeAvailable } from './claudeOcrFallback';
 
 const preprocessConfig = {
   resize: { width: 1800 }, // Résolution optimale pour ML Kit (trop élevé peut dégrader la précision)
@@ -827,6 +828,24 @@ export async function performOcr(uri: string, brand?: string): Promise<LotExtrac
         }
       } else {
         console.log('[Lot OCR] Vision not configured, cannot fallback');
+      }
+
+      // Niveau 3 — Claude Sonnet via Cloud Function. Déclenché uniquement si
+      // ni ML Kit ni Vision n'ont produit un texte d'où on peut extraire un
+      // numéro de lot. Le check `hasPlausibleLotPattern` interne à
+      // tryClaudeFallback fait un second gate qui couvre les cas où Vision a
+      // produit du texte exploitable mais que notre extracteur n'a pas su
+      // l'isoler.
+      const postVisionLot = await extractLotNumber(result.text, brand);
+      if (!postVisionLot && isClaudeAvailable()) {
+        console.log('[Lot OCR] Vision also produced no extractable lot, trying Claude Sonnet...');
+        const claudeResult = await tryClaudeFallback(uri, result, 'lot');
+        if (claudeResult) {
+          console.log('[Lot OCR] Using Claude fallback result');
+          result = claudeResult;
+        }
+      } else if (!postVisionLot) {
+        console.log('[Lot OCR] Claude not configured, no further fallback available');
       }
     } else {
       console.log('[Lot OCR] ML Kit found lot number, skipping Vision API');
