@@ -10,6 +10,7 @@ import { GradientBackground } from '../../src/components/GradientBackground';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { usePreferencesStore } from '../../src/stores/usePreferencesStore';
 import { updateCompanyReferral } from '../../src/services/companyReferralService';
+import { useVoiceGuide } from '../../src/hooks/useVoiceGuide';
 
 export default function LanguageScreen() {
   const { colors } = useTheme();
@@ -20,6 +21,9 @@ export default function LanguageScreen() {
   const companyName = usePreferencesStore((state) => state.companyName);
   const wantsNumelineReferral = usePreferencesStore((state) => state.wantsNumelineReferral);
   const setWantsNumelineReferral = usePreferencesStore((state) => state.setWantsNumelineReferral);
+  const accessibilityMode = usePreferencesStore((state) => state.accessibilityMode);
+  const setAccessibilityMode = usePreferencesStore((state) => state.setAccessibilityMode);
+  const { speak } = useVoiceGuide();
 
   const handleToggleReferral = async () => {
     const newValue = !wantsNumelineReferral;
@@ -30,6 +34,23 @@ export default function LanguageScreen() {
     } catch (error) {
       console.warn('Failed to update referral preference:', error);
     }
+  };
+
+  const handleToggleAccessibility = () => {
+    const newValue = !accessibilityMode;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setAccessibilityMode(newValue);
+    if (newValue) {
+      // Defer slightly so the store update is committed before useVoiceGuide reads it.
+      setTimeout(() => {
+        speak(t('accessibility.voiceTestMessage'), { priority: true });
+      }, 50);
+    }
+  };
+
+  const handleTestVoice = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    speak(t('accessibility.voiceTestMessage'), { priority: true });
   };
 
   const handleSignOut = () => {
@@ -108,6 +129,70 @@ export default function LanguageScreen() {
 
       <View style={styles.selectorWrapper}>
         <LanguageSelector />
+      </View>
+
+      {/* Section Accessibilité */}
+      <View style={styles.legalSection}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+          {t('accessibility.title')}
+        </Text>
+        <TouchableOpacity
+          style={[
+            styles.referralCard,
+            {
+              backgroundColor: colors.surface,
+              borderColor: accessibilityMode ? colors.accent : colors.border
+            }
+          ]}
+          onPress={handleToggleAccessibility}
+          activeOpacity={0.8}
+        >
+          <View style={styles.referralContent}>
+            <Ionicons name="ear-outline" size={24} color={colors.accent} />
+            <View style={styles.referralTextContainer}>
+              <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+                {t('accessibility.voiceGuide')}
+              </Text>
+              <Text style={[styles.referralDescription, { color: colors.textSecondary }]}>
+                {t('accessibility.voiceGuideDescription')}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.toggleSwitch,
+              {
+                backgroundColor: accessibilityMode ? colors.accent : colors.surfaceAlt,
+                borderColor: accessibilityMode ? colors.accent : colors.border
+              }
+            ]}
+          >
+            <View
+              style={[
+                styles.toggleKnob,
+                {
+                  backgroundColor: '#FFF',
+                  transform: [{ translateX: accessibilityMode ? 18 : 2 }]
+                }
+              ]}
+            />
+          </View>
+        </TouchableOpacity>
+
+        {accessibilityMode && (
+          <TouchableOpacity
+            style={[styles.legalButton, { backgroundColor: colors.surface }]}
+            onPress={handleTestVoice}
+          >
+            <View style={styles.legalButtonContent}>
+              <Ionicons name="volume-high-outline" size={24} color={colors.accent} />
+              <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+                {t('accessibility.voiceTest')}
+              </Text>
+            </View>
+            <Ionicons name="play-circle-outline" size={24} color={colors.textSecondary} />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Section Documents Légaux */}

@@ -8,6 +8,8 @@ import { useScannedProducts } from '../hooks/useScannedProducts';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
+import { useVoiceGuide } from '../hooks/useVoiceGuide';
 
 function StatCard({
   value,
@@ -73,6 +75,20 @@ export function HomeScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const { products } = useScannedProducts();
+  const accessibilityMode = usePreferencesStore((state) => state.accessibilityMode);
+  const setAccessibilityMode = usePreferencesStore((state) => state.setAccessibilityMode);
+  const { speak } = useVoiceGuide();
+
+  const handleToggleAccessibility = () => {
+    const newValue = !accessibilityMode;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setAccessibilityMode(newValue);
+    if (newValue) {
+      setTimeout(() => {
+        speak(t('accessibility.voiceTestMessage'), { priority: true });
+      }, 50);
+    }
+  };
 
   const logoAnim = useRef(new Animated.Value(0)).current;
   const titleAnim = useRef(new Animated.Value(0)).current;
@@ -148,6 +164,55 @@ export function HomeScreen() {
                 {t('home.subtitle')}
               </Text>
             </Animated.View>
+
+            {/* Accessibility quick toggle */}
+            <Pressable
+              onPress={handleToggleAccessibility}
+              accessibilityRole="switch"
+              accessibilityState={{ checked: accessibilityMode }}
+              accessibilityLabel={t('accessibility.voiceGuide')}
+              style={[
+                styles.accessibilityToggle,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: accessibilityMode ? colors.accent : 'rgba(255,255,255,0.08)'
+                }
+              ]}
+            >
+              <Ionicons
+                name="ear-outline"
+                size={20}
+                color={accessibilityMode ? colors.accent : colors.textSecondary}
+              />
+              <Text
+                style={[
+                  styles.accessibilityToggleLabel,
+                  { color: accessibilityMode ? colors.accent : colors.textPrimary }
+                ]}
+                numberOfLines={1}
+              >
+                {t('accessibility.voiceGuide')}
+              </Text>
+              <View
+                style={[
+                  styles.accessibilityToggleSwitch,
+                  {
+                    backgroundColor: accessibilityMode ? colors.accent : colors.surfaceAlt,
+                    borderColor: accessibilityMode ? colors.accent : 'rgba(255,255,255,0.12)'
+                  }
+                ]}
+              >
+                <View
+                  style={[
+                    styles.accessibilityToggleKnob,
+                    {
+                      backgroundColor: '#FFF',
+                      transform: [{ translateX: accessibilityMode ? 18 : 2 }]
+                    }
+                  ]}
+                />
+              </View>
+            </Pressable>
 
             {/* Stats */}
             <View style={styles.statsContainer}>
@@ -298,5 +363,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     flex: 1,
+  },
+  accessibilityToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    marginBottom: 20,
+  },
+  accessibilityToggleLabel: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  accessibilityToggleSwitch: {
+    width: 44,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1,
+    justifyContent: 'center',
+  },
+  accessibilityToggleKnob: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
   },
 });
