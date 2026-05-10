@@ -5,6 +5,8 @@ import * as https from 'https';
 import { Resend } from 'resend';
 admin.initializeApp();
 
+export { ocrClaude } from './ocrClaude';
+
 const firestore = admin.firestore();
 
 // Resend API key stored as Firebase secret:
