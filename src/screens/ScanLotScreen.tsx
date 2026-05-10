@@ -1,10 +1,11 @@
-﻿import { useCallback, useState } from 'react';
+﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert, Animated } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
+import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Scanner } from '../components/Scanner';
+import { Scanner, type ScannerHandle } from '../components/Scanner';
 import { performOcr } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
@@ -18,6 +19,27 @@ import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lot
 import { useSubscription } from '../hooks/useSubscription';
 import { decrementScanCounter } from '../services/subscriptionService';
 import * as Notifications from 'expo-notifications';
+import { useVoiceGuide } from '../hooks/useVoiceGuide';
+import { useVoiceCommands } from '../hooks/useVoiceCommands';
+
+const AUTO_CAPTURE_DELAY_VOICE_MS = 1200;
+const AUTO_CAPTURE_DELAY_SIGHTED_MS = 400;
+
+function detectLotLike(text: string): boolean {
+  const cleaned = text.replace(/\s+/g, ' ').toUpperCase();
+  if (/(?:^|[^A-Z])LOT[:\s\-.]*[A-Z0-9]{3,22}/.test(cleaned)) return true;
+  if (/(?:^|[^A-Z])L\d{3,15}[A-Z0-9]{0,10}(?:[^A-Z0-9]|$)/.test(cleaned)) return true;
+  const digitTokens = cleaned.match(/(?:^|[^\d])(\d{5,12})(?:[^\d]|$)/g);
+  if (
+    digitTokens?.some((m) => {
+      const d = m.replace(/\D/g, '');
+      return d.length >= 5 && d.length <= 12;
+    })
+  ) {
+    return true;
+  }
+  return false;
+}
 
 function normalizeLotValue(lot: string) {
   return lot.replace(/\s+/g, '').replace(/[-_\.]/g, '').toUpperCase();
@@ -34,7 +56,17 @@ export function ScanLotScreen() {
   }>();
   const { addProduct, updateRecall, updateProduct } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
+  const accessibilityMode = usePreferencesStore((state) => state.accessibilityMode);
   const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
+  const { speak } = useVoiceGuide();
+
+  const scannerRef = useRef<ScannerHandle | null>(null);
+  const lotInFrameAnnouncedRef = useRef(false);
+  const autoFlashAppliedRef = useRef(false);
+  const userOverrodeFlashRef = useRef(false);
+  const autoCaptureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flashAnim = useRef(new Animated.Value(0)).current;
+  const isProcessingRef = useRef(false);
 
   const [ocrText, setOcrText] = useState('');
   const [ocrSource, setOcrSource] = useState<string>('');
@@ -85,6 +117,9 @@ export function ScanLotScreen() {
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
       setErrorMessage('');
+      if (accessibilityMode) {
+        speak(t('accessibility.voice.lotAnalyzing'), { priority: true });
+      }
       const { lot, result, candidates } = await performOcr(lotPhoto, brand);
       setOcrText(result.text);
       setOcrSource(result.source || 'unknown');
@@ -100,6 +135,14 @@ export function ScanLotScreen() {
         await FileSystem.deleteAsync(lotPhoto, { idempotent: true });
       } catch (error) {
         console.warn('Failed to delete lot photo', error);
+      }
+
+      if (accessibilityMode) {
+        if (lot) {
+          speak(t('accessibility.voice.lotDetected', { lot }), { priority: true });
+        } else {
+          speak(t('accessibility.voice.lotNotDetected'), { priority: true });
+        }
       }
 
       // VÃ©rifier les rappels en arriÃ¨re-plan
@@ -121,6 +164,14 @@ export function ScanLotScreen() {
             // Afficher immÃ©diatement l'alerte de rappel
             setShowRecallAlert(true);
           }
+          if (accessibilityMode) {
+            speak(
+              matchResult.hasRecall
+                ? t('accessibility.voice.recallDetected')
+                : t('accessibility.voice.productSafe'),
+              { priority: true }
+            );
+          }
         } catch (error) {
           console.error('Error checking recalls:', error);
         } finally {
@@ -132,6 +183,9 @@ export function ScanLotScreen() {
     },
     onError: (error: Error) => {
       setErrorMessage(error.message || t('scan.errors.lotExtractFailed'));
+      if (accessibilityMode) {
+        speak(t('accessibility.voice.scanError'), { priority: true });
+      }
     },
     onSuccess: () => {
       setConfirmModalVisible(true);
@@ -149,7 +203,22 @@ export function ScanLotScreen() {
     setEditedLot('');
     setVerifiedAt(null);
     setScannerResetToken((token) => token + 1);
+    lotInFrameAnnouncedRef.current = false;
+    autoFlashAppliedRef.current = false;
+    userOverrodeFlashRef.current = false;
+    if (autoCaptureTimerRef.current) {
+      clearTimeout(autoCaptureTimerRef.current);
+      autoCaptureTimerRef.current = null;
+    }
   }, []);
+
+  const triggerCaptureFeedback = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    Animated.sequence([
+      Animated.timing(flashAnim, { toValue: 0.45, duration: 80, useNativeDriver: true }),
+      Animated.timing(flashAnim, { toValue: 0, duration: 200, useNativeDriver: true })
+    ]).start();
+  }, [flashAnim]);
 
   const handleCapture = useCallback(
     async (uri: string) => {
@@ -169,6 +238,99 @@ export function ScanLotScreen() {
   );
 
   const isProcessing = lotMutation.isPending || isFinalizing;
+
+  const handlePreviewOcrText = useCallback(
+    (text: string) => {
+      if (lotInFrameAnnouncedRef.current || isProcessing) return;
+      if (!detectLotLike(text)) return;
+      lotInFrameAnnouncedRef.current = true;
+      if (accessibilityMode) {
+        speak(t('accessibility.voice.lotInFrame'), { priority: true });
+      }
+      const delayMs = accessibilityMode ? AUTO_CAPTURE_DELAY_VOICE_MS : AUTO_CAPTURE_DELAY_SIGHTED_MS;
+      if (autoCaptureTimerRef.current) clearTimeout(autoCaptureTimerRef.current);
+      autoCaptureTimerRef.current = setTimeout(() => {
+        autoCaptureTimerRef.current = null;
+        if (!isProcessingRef.current) {
+          triggerCaptureFeedback();
+          scannerRef.current?.triggerCapture();
+        }
+      }, delayMs);
+    },
+    [accessibilityMode, isProcessing, speak, t, triggerCaptureFeedback]
+  );
+
+  const handleLowLight = useCallback(
+    (isLow: boolean) => {
+      if (!isLow) return;
+      if (accessibilityMode) {
+        speak(t('accessibility.voice.lowLight'), { priority: true, dedupeMs: 12000 });
+      }
+      if (
+        !autoFlashAppliedRef.current &&
+        !userOverrodeFlashRef.current &&
+        !(scannerRef.current?.isFlashOn() ?? false)
+      ) {
+        scannerRef.current?.setFlash(true);
+        autoFlashAppliedRef.current = true;
+        if (accessibilityMode) {
+          speak(t('accessibility.voice.flashOn'), { priority: true });
+        }
+      }
+    },
+    [accessibilityMode, speak, t]
+  );
+
+  const handleVoiceCommand = useCallback(
+    (command: 'photo' | 'flash_on' | 'flash_off') => {
+      if (command === 'photo') {
+        if (!isProcessingRef.current) {
+          if (accessibilityMode) {
+            speak(t('accessibility.voice.photoCommand'), { priority: true });
+          }
+          triggerCaptureFeedback();
+          scannerRef.current?.triggerCapture();
+        }
+        return;
+      }
+      if (command === 'flash_on') {
+        scannerRef.current?.setFlash(true);
+        userOverrodeFlashRef.current = false;
+        if (accessibilityMode) {
+          speak(t('accessibility.voice.flashOn'), { priority: true });
+        }
+        return;
+      }
+      if (command === 'flash_off') {
+        scannerRef.current?.setFlash(false);
+        userOverrodeFlashRef.current = true;
+        if (accessibilityMode) {
+          speak(t('accessibility.voice.flashOff'), { priority: true });
+        }
+      }
+    },
+    [accessibilityMode, speak, t, triggerCaptureFeedback]
+  );
+
+  isProcessingRef.current = isProcessing;
+
+  useEffect(() => {
+    return () => {
+      if (autoCaptureTimerRef.current) {
+        clearTimeout(autoCaptureTimerRef.current);
+        autoCaptureTimerRef.current = null;
+      }
+    };
+  }, []);
+
+  useVoiceCommands(accessibilityMode, {
+    onCommand: handleVoiceCommand,
+    onError: (code) => {
+      if (code !== 'no-speech') {
+        console.warn('[ScanLotScreen] voice command error:', code);
+      }
+    }
+  });
 
   const handleConfirm = useCallback(async () => {
     const finalLot = isEditingLot ? editedLot.trim().toUpperCase() : lotNumber;
@@ -325,6 +487,13 @@ export function ScanLotScreen() {
     setEditedLot('');
     setVerifiedAt(null);
     setScannerResetToken((token) => token + 1);
+    lotInFrameAnnouncedRef.current = false;
+    autoFlashAppliedRef.current = false;
+    userOverrodeFlashRef.current = false;
+    if (autoCaptureTimerRef.current) {
+      clearTimeout(autoCaptureTimerRef.current);
+      autoCaptureTimerRef.current = null;
+    }
   }, []);
 
   const handleEditLot = useCallback(() => {
@@ -350,13 +519,17 @@ export function ScanLotScreen() {
   useFocusEffect(
     useCallback(() => {
       setScannerResetToken((token) => token + 1);
+      if (accessibilityMode) {
+        speak(t('accessibility.voice.scanLotReady'), { priority: true });
+      }
       return () => {};
-    }, [])
+    }, [accessibilityMode, speak, t])
   );
 
   return (
     <GradientBackground>
       <Scanner
+        ref={scannerRef}
         key={`lot-scanner-${scannerResetToken}`}
         onCapture={handleCapture}
         enableBarcodeScanning={false}
@@ -367,6 +540,16 @@ export function ScanLotScreen() {
         onBack={handleGoBack}
         onRestart={handleRestart}
         onManualEntry={handleManualEntry}
+        previewOcrEnabled
+        onPreviewOcrText={handlePreviewOcrText}
+        lowLightDetectionEnabled
+        onLowLight={handleLowLight}
+        hideCaptureButton
+      />
+
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.shutterFlash, { opacity: flashAnim }]}
       />
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
@@ -919,5 +1102,14 @@ const styles = StyleSheet.create({
   scanCounterValue: {
     fontSize: 18,
     fontWeight: '800'
+  },
+  shutterFlash: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#FFFFFF',
+    zIndex: 20
   }
 });
