@@ -110,6 +110,9 @@
       "router": {},
       "eas": {
         "projectId": "3d17326d-6c82-4b80-8f4d-9ea1e120fd85"
+      },
+      "claude": {
+        "endpoint": ""
       }
     }
   }

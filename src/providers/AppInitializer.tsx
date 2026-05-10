@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { registerBackgroundTask } from '../services/backgroundService';
 import { setupNotificationHandler } from '../services/notificationService';
+import { initializeAppCheck } from '../services/appCheckService';
 import { useDatabaseWarmup } from '../services/dbService';
 import { purgeExpiredScans } from '../utils/dataCleanup';
 import { registerBackgroundRecallCheck, getAndClearNewRecalls } from '../services/backgroundRecallCheck';
@@ -19,6 +20,7 @@ export function AppInitializer() {
   const [alertProducts, setAlertProducts] = useState<ScannedProduct[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
+    void initializeAppCheck();
     setupNotificationHandler();
     void registerBackgroundTask();
     // Notification permissions are now requested via dedicated screen
