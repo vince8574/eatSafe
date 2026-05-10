@@ -561,5 +561,32 @@
     "optional": "Opcional",
     "referralConsent": "Deseo que mi empresa aparezca en numeline.com como profesional comprometido con la seguridad alimentaria de sus clientes.",
     "continue": "Continuar"
+  },
+  "accessibility": {
+    "title": "Accesibilidad",
+    "voiceGuide": "Guía por voz",
+    "voiceGuideDescription": "Activa los anuncios y comandos de voz durante el escaneo. Útil para usuarios con discapacidad visual o para uso manos libres en tabletas.",
+    "voiceTest": "Probar voz",
+    "voiceTestMessage": "La guía por voz está activada. Escucharás los anuncios durante el escaneo.",
+    "voice": {
+      "scanLotReady": "Modo número de lote. Centra el número de lote en la franja, la captura es automática. Di flash para encender la luz, flash off para apagarla.",
+      "scanLotTip": "Mantén el teléfono estable, la captura se activa en cuanto se detecta un número de lote. Di flash para encender o flash off para apagar.",
+      "lotInFrame": "Número de lote detectado. Capturando ahora.",
+      "blur": "Imagen borrosa. Estabiliza el teléfono.",
+      "tooFar": "Texto demasiado pequeño. Acerca el teléfono.",
+      "tooClose": "Texto demasiado grande. Aleja ligeramente el teléfono.",
+      "lowLight": "Poca luz. Di flash para encender la luz, di flash off para apagarla.",
+      "flashOn": "Flash encendido. Di flash off para apagarlo.",
+      "flashOff": "Flash apagado.",
+      "photoCommand": "Capturando.",
+      "voiceCommandsReady": "Comandos de voz activos. Di photo para capturar, flash para la luz, flash off para apagarla.",
+      "lotAnalyzing": "Analizando número de lote.",
+      "lotDetected": "Número de lote detectado: {{lot}}.",
+      "lotNotDetected": "No se detectó un número de lote legible. Puedes ingresarlo manualmente.",
+      "recallDetected": "Advertencia. Este producto está sujeto a una retirada. No consumir.",
+      "productSafe": "No se encontró retirada para este producto.",
+      "scanError": "Falló el escaneo. Inténtalo de nuevo.",
+      "captureBlocked": "Falló la captura."
+    }
   }
 }

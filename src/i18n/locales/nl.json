@@ -561,5 +561,32 @@
     "optional": "Optioneel",
     "referralConsent": "Ik wil dat mijn bedrijf op numeline.com wordt vermeld als professional die zich inzet voor de voedselveiligheid van zijn klanten.",
     "continue": "Doorgaan"
+  },
+  "accessibility": {
+    "title": "Toegankelijkheid",
+    "voiceGuide": "Spraakbegeleiding",
+    "voiceGuideDescription": "Schakelt spraakaankondigingen en spraakopdrachten in tijdens het scannen. Handig voor slechtziende gebruikers of voor handsfree gebruik op tablets.",
+    "voiceTest": "Stem testen",
+    "voiceTestMessage": "Spraakbegeleiding is ingeschakeld. U hoort aankondigingen tijdens het scannen.",
+    "voice": {
+      "scanLotReady": "Lotnummer-modus. Plaats het lotnummer in de strook, opname gebeurt automatisch. Zeg flash om het licht aan te zetten, flash off om het uit te zetten.",
+      "scanLotTip": "Houd de telefoon stil, de opname start zodra een lotnummer wordt gedetecteerd. Zeg flash om aan te zetten of flash off om uit te zetten.",
+      "lotInFrame": "Lotnummer gedetecteerd. Opname bezig.",
+      "blur": "Beeld onscherp. Stabiliseer de telefoon.",
+      "tooFar": "Tekst te klein. Beweeg de telefoon dichterbij.",
+      "tooClose": "Tekst te groot. Beweeg de telefoon iets verder.",
+      "lowLight": "Weinig licht. Zeg flash om het licht aan te zetten, zeg flash off om het uit te zetten.",
+      "flashOn": "Flits aan. Zeg flash off om uit te zetten.",
+      "flashOff": "Flits uit.",
+      "photoCommand": "Opname bezig.",
+      "voiceCommandsReady": "Spraakopdrachten actief. Zeg photo om op te nemen, flash voor licht, flash off om uit te zetten.",
+      "lotAnalyzing": "Lotnummer analyseren.",
+      "lotDetected": "Lotnummer gedetecteerd: {{lot}}.",
+      "lotNotDetected": "Geen leesbaar lotnummer gedetecteerd. U kunt het handmatig invoeren.",
+      "recallDetected": "Waarschuwing. Dit product is onderworpen aan een terugroeping. Niet consumeren.",
+      "productSafe": "Geen terugroeping gevonden voor dit product.",
+      "scanError": "Scan mislukt. Probeer opnieuw.",
+      "captureBlocked": "Opname mislukt."
+    }
   }
 }

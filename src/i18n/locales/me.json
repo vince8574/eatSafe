@@ -556,5 +556,32 @@
     "optional": "Opcionalno",
     "referralConsent": "Želim da moja kompanija bude navedena na numeline.com kao profesionalac posvećen bezbjednosti hrane svojih klijenata.",
     "continue": "Nastavi"
+  },
+  "accessibility": {
+    "title": "Pristupačnost",
+    "voiceGuide": "Glasovno vođenje",
+    "voiceGuideDescription": "Aktivira glasovne najave i glasovne komande tokom skeniranja. Korisno za slabovide korisnike ili za korišćenje bez ruku na tabletima.",
+    "voiceTest": "Testiraj glas",
+    "voiceTestMessage": "Glasovno vođenje je aktivirano. Čućete najave tokom skeniranja.",
+    "voice": {
+      "scanLotReady": "Režim broja serije. Centrirajte broj serije u traci, snimanje je automatsko. Recite flash da uključite svjetlo, flash off da ga isključite.",
+      "scanLotTip": "Držite telefon stabilno, snimanje se aktivira čim se otkrije broj serije. Recite flash za uključivanje ili flash off za isključivanje.",
+      "lotInFrame": "Broj serije otkriven. Snimanje u toku.",
+      "blur": "Slika je mutna. Stabilizujte telefon.",
+      "tooFar": "Tekst previše mali. Približite telefon.",
+      "tooClose": "Tekst previše velik. Lagano udaljite telefon.",
+      "lowLight": "Slabo osvjetljenje. Recite flash da uključite svjetlo, recite flash off da ga isključite.",
+      "flashOn": "Blic uključen. Recite flash off da ga isključite.",
+      "flashOff": "Blic isključen.",
+      "photoCommand": "Snimanje u toku.",
+      "voiceCommandsReady": "Glasovne komande aktivne. Recite photo za snimanje, flash za svjetlo, flash off za isključivanje.",
+      "lotAnalyzing": "Analiza broja serije.",
+      "lotDetected": "Broj serije otkriven: {{lot}}.",
+      "lotNotDetected": "Nije otkriven čitljiv broj serije. Možete ga unijeti ručno.",
+      "recallDetected": "Upozorenje. Ovaj proizvod je predmet povlačenja. Ne konzumirajte.",
+      "productSafe": "Nije pronađeno povlačenje za ovaj proizvod.",
+      "scanError": "Skeniranje nije uspjelo. Pokušajte ponovo.",
+      "captureBlocked": "Snimanje nije uspjelo."
+    }
   }
 }

@@ -619,5 +619,32 @@
     "title": "Page introuvable",
     "subtitle": "Cette page n'existe pas. Revenez à l'accueil pour continuer.",
     "goHome": "Retour à l'accueil"
+  },
+  "accessibility": {
+    "title": "Accessibilité",
+    "voiceGuide": "Guidage vocal",
+    "voiceGuideDescription": "Active les annonces et commandes vocales pendant le scan. Utile pour les personnes malvoyantes ou pour un usage mains libres sur tablette.",
+    "voiceTest": "Tester la voix",
+    "voiceTestMessage": "Le guidage vocal est activé. Vous entendrez les annonces pendant le scan.",
+    "voice": {
+      "scanLotReady": "Mode numéro de lot. Centrez le numéro de lot dans la bande, la capture est automatique. Dites flash pour allumer la lumière, flash off pour l'éteindre.",
+      "scanLotTip": "Tenez le téléphone stable, la capture se déclenche dès qu'un numéro de lot est détecté. Dites flash pour allumer ou flash off pour éteindre.",
+      "lotInFrame": "Numéro de lot détecté. Capture en cours.",
+      "blur": "Image floue. Stabilisez le téléphone.",
+      "tooFar": "Texte trop petit. Rapprochez le téléphone.",
+      "tooClose": "Texte trop grand. Éloignez légèrement le téléphone.",
+      "lowLight": "Faible luminosité. Dites flash pour allumer la lumière, dites flash off pour l'éteindre.",
+      "flashOn": "Flash allumé. Dites flash off pour l'éteindre.",
+      "flashOff": "Flash éteint.",
+      "photoCommand": "Capture en cours.",
+      "voiceCommandsReady": "Commandes vocales actives. Dites photo pour capturer, flash pour la lumière, flash off pour l'éteindre.",
+      "lotAnalyzing": "Analyse du numéro de lot.",
+      "lotDetected": "Numéro de lot détecté : {{lot}}.",
+      "lotNotDetected": "Aucun numéro de lot lisible détecté. Vous pouvez le saisir manuellement.",
+      "recallDetected": "Attention. Ce produit fait l'objet d'un rappel. Ne pas consommer.",
+      "productSafe": "Aucun rappel trouvé pour ce produit.",
+      "scanError": "Échec du scan. Veuillez réessayer.",
+      "captureBlocked": "Échec de la capture."
+    }
   }
 }

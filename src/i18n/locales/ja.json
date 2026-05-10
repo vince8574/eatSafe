@@ -556,5 +556,32 @@
     "optional": "任意",
     "referralConsent": "お客様の食品安全に取り組む専門企業として、numeline.com に当社を掲載することを希望します。",
     "continue": "続行"
+  },
+  "accessibility": {
+    "title": "アクセシビリティ",
+    "voiceGuide": "音声ガイド",
+    "voiceGuideDescription": "スキャン中の音声アナウンスと音声コマンドを有効にします。視覚に障害のあるユーザーや、タブレットでのハンズフリー使用に便利です。",
+    "voiceTest": "音声をテスト",
+    "voiceTestMessage": "音声ガイドが有効です。スキャン中にアナウンスが聞こえます。",
+    "voice": {
+      "scanLotReady": "ロット番号モード。ロット番号を枠内に合わせると、自動的に撮影されます。flash と言うとライトが点灯し、flash off で消灯します。",
+      "scanLotTip": "電話を安定させて持ってください。ロット番号が検出されると撮影が開始されます。flash でオン、flash off でオフです。",
+      "lotInFrame": "ロット番号を検出しました。撮影中です。",
+      "blur": "画像がぼやけています。電話を安定させてください。",
+      "tooFar": "文字が小さすぎます。電話を近づけてください。",
+      "tooClose": "文字が大きすぎます。電話を少し離してください。",
+      "lowLight": "光が不足しています。flash と言ってライトを点灯、flash off で消灯します。",
+      "flashOn": "フラッシュがオンです。flash off で消灯します。",
+      "flashOff": "フラッシュがオフです。",
+      "photoCommand": "撮影中です。",
+      "voiceCommandsReady": "音声コマンドが有効です。photo で撮影、flash でライト、flash off で消灯します。",
+      "lotAnalyzing": "ロット番号を解析中です。",
+      "lotDetected": "ロット番号を検出: {{lot}}。",
+      "lotNotDetected": "読み取り可能なロット番号が検出されませんでした。手動で入力できます。",
+      "recallDetected": "警告。この製品はリコール対象です。摂取しないでください。",
+      "productSafe": "この製品にリコールは見つかりませんでした。",
+      "scanError": "スキャンに失敗しました。もう一度お試しください。",
+      "captureBlocked": "撮影に失敗しました。"
+    }
   }
 }

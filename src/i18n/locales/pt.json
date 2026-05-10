@@ -561,5 +561,32 @@
     "optional": "Opcional",
     "referralConsent": "Desejo que minha empresa seja listada no numeline.com como profissional comprometido com a segurança alimentar de seus clientes.",
     "continue": "Continuar"
+  },
+  "accessibility": {
+    "title": "Acessibilidade",
+    "voiceGuide": "Guia por voz",
+    "voiceGuideDescription": "Ativa os anúncios e comandos de voz durante a digitalização. Útil para usuários com baixa visão ou para uso mãos-livres em tablets.",
+    "voiceTest": "Testar voz",
+    "voiceTestMessage": "O guia por voz está ativado. Você ouvirá os anúncios durante a digitalização.",
+    "voice": {
+      "scanLotReady": "Modo número de lote. Centralize o número de lote na faixa, a captura é automática. Diga flash para ligar a luz, flash off para desligá-la.",
+      "scanLotTip": "Mantenha o telefone estável, a captura é acionada assim que um número de lote é detectado. Diga flash para ligar ou flash off para desligar.",
+      "lotInFrame": "Número de lote detectado. Capturando agora.",
+      "blur": "Imagem desfocada. Estabilize o telefone.",
+      "tooFar": "Texto muito pequeno. Aproxime o telefone.",
+      "tooClose": "Texto muito grande. Afaste levemente o telefone.",
+      "lowLight": "Pouca luz. Diga flash para ligar a luz, diga flash off para desligá-la.",
+      "flashOn": "Flash ligado. Diga flash off para desligá-lo.",
+      "flashOff": "Flash desligado.",
+      "photoCommand": "Capturando.",
+      "voiceCommandsReady": "Comandos de voz ativos. Diga photo para capturar, flash para a luz, flash off para desligá-la.",
+      "lotAnalyzing": "Analisando número de lote.",
+      "lotDetected": "Número de lote detectado: {{lot}}.",
+      "lotNotDetected": "Nenhum número de lote legível detectado. Você pode inseri-lo manualmente.",
+      "recallDetected": "Atenção. Este produto está sujeito a um recall. Não consuma.",
+      "productSafe": "Nenhum recall encontrado para este produto.",
+      "scanError": "Falha na digitalização. Tente novamente.",
+      "captureBlocked": "Falha na captura."
+    }
   }
 }

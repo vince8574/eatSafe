@@ -561,5 +561,32 @@
     "optional": "Optional",
     "referralConsent": "Ich möchte, dass mein Unternehmen auf numeline.com als Fachbetrieb aufgeführt wird, der sich für die Lebensmittelsicherheit seiner Kunden einsetzt.",
     "continue": "Weiter"
+  },
+  "accessibility": {
+    "title": "Barrierefreiheit",
+    "voiceGuide": "Sprachführung",
+    "voiceGuideDescription": "Aktiviert Sprachansagen und Sprachbefehle während des Scans. Nützlich für sehbehinderte Nutzer oder für die freihändige Bedienung auf Tablets.",
+    "voiceTest": "Stimme testen",
+    "voiceTestMessage": "Sprachführung ist aktiviert. Sie hören Ansagen während des Scans.",
+    "voice": {
+      "scanLotReady": "Chargennummer-Modus. Zentrieren Sie die Chargennummer im Streifen, die Aufnahme erfolgt automatisch. Sagen Sie flash, um das Licht einzuschalten, flash off, um es auszuschalten.",
+      "scanLotTip": "Halten Sie das Telefon ruhig, die Aufnahme erfolgt, sobald eine Chargennummer erkannt wird. Sagen Sie flash zum Einschalten oder flash off zum Ausschalten.",
+      "lotInFrame": "Chargennummer erkannt. Aufnahme läuft.",
+      "blur": "Bild unscharf. Halten Sie das Telefon ruhig.",
+      "tooFar": "Text zu klein. Bewegen Sie das Telefon näher.",
+      "tooClose": "Text zu groß. Bewegen Sie das Telefon etwas weiter weg.",
+      "lowLight": "Wenig Licht. Sagen Sie flash, um das Licht einzuschalten, sagen Sie flash off, um es auszuschalten.",
+      "flashOn": "Blitz an. Sagen Sie flash off, um ihn auszuschalten.",
+      "flashOff": "Blitz aus.",
+      "photoCommand": "Aufnahme läuft.",
+      "voiceCommandsReady": "Sprachbefehle aktiv. Sagen Sie photo zum Aufnehmen, flash für das Licht, flash off zum Ausschalten.",
+      "lotAnalyzing": "Chargennummer wird analysiert.",
+      "lotDetected": "Chargennummer erkannt: {{lot}}.",
+      "lotNotDetected": "Keine lesbare Chargennummer erkannt. Sie können sie manuell eingeben.",
+      "recallDetected": "Achtung. Dieses Produkt unterliegt einem Rückruf. Nicht konsumieren.",
+      "productSafe": "Kein Rückruf für dieses Produkt gefunden.",
+      "scanError": "Scan fehlgeschlagen. Bitte erneut versuchen.",
+      "captureBlocked": "Aufnahme fehlgeschlagen."
+    }
   }
 }

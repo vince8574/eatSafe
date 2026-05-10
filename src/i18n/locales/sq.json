@@ -556,5 +556,32 @@
     "optional": "Opsionale",
     "referralConsent": "Dëshiroj që kompania ime të listohet në numeline.com si profesionist i angazhuar për sigurinë ushqimore të klientëve të saj.",
     "continue": "Vazhdo"
+  },
+  "accessibility": {
+    "title": "Aksesueshmëria",
+    "voiceGuide": "Udhëzimi me zë",
+    "voiceGuideDescription": "Aktivizon njoftimet dhe komandat me zë gjatë skanimit. I dobishëm për përdoruesit me shikim të dobët ose për përdorim pa duar në tabletë.",
+    "voiceTest": "Testo zërin",
+    "voiceTestMessage": "Udhëzimi me zë është aktiv. Do të dëgjoni njoftimet gjatë skanimit.",
+    "voice": {
+      "scanLotReady": "Modaliteti i numrit të lotit. Vendosni numrin e lotit në qendër të shiritit, kapja është automatike. Thoni flash për të ndezur dritën, flash off për ta fikur.",
+      "scanLotTip": "Mbajeni telefonin të qëndrueshëm, kapja aktivizohet sapo zbulohet një numër loti. Thoni flash për të ndezur ose flash off për të fikur.",
+      "lotInFrame": "Numri i lotit u zbulua. Po kapet tani.",
+      "blur": "Imazhi është i turbullt. Stabilizoni telefonin.",
+      "tooFar": "Teksti shumë i vogël. Afrojeni telefonin.",
+      "tooClose": "Teksti shumë i madh. Largojeni pak telefonin.",
+      "lowLight": "Pak dritë. Thoni flash për të ndezur dritën, thoni flash off për ta fikur.",
+      "flashOn": "Blici është aktiv. Thoni flash off për ta fikur.",
+      "flashOff": "Blici është fikur.",
+      "photoCommand": "Po kapet.",
+      "voiceCommandsReady": "Komandat me zë janë aktive. Thoni photo për të kapur, flash për dritën, flash off për ta fikur.",
+      "lotAnalyzing": "Po analizohet numri i lotit.",
+      "lotDetected": "Numri i lotit u zbulua: {{lot}}.",
+      "lotNotDetected": "Asnjë numër loti i lexueshëm nuk u zbulua. Mund ta shkruani manualisht.",
+      "recallDetected": "Kujdes. Ky produkt është subjekt i një tërheqjeje. Mos e konsumoni.",
+      "productSafe": "Nuk u gjet asnjë tërheqje për këtë produkt.",
+      "scanError": "Skanimi dështoi. Provoni përsëri.",
+      "captureBlocked": "Kapja dështoi."
+    }
   }
 }

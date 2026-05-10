@@ -561,5 +561,32 @@
     "optional": "Facoltativo",
     "referralConsent": "Desidero che la mia azienda sia presente su numeline.com come professionista impegnato nella sicurezza alimentare dei propri clienti.",
     "continue": "Continua"
+  },
+  "accessibility": {
+    "title": "Accessibilità",
+    "voiceGuide": "Guida vocale",
+    "voiceGuideDescription": "Attiva gli annunci e i comandi vocali durante la scansione. Utile per utenti ipovedenti o per l'uso a mani libere su tablet.",
+    "voiceTest": "Prova voce",
+    "voiceTestMessage": "La guida vocale è attivata. Sentirai gli annunci durante la scansione.",
+    "voice": {
+      "scanLotReady": "Modalità numero di lotto. Centra il numero di lotto nella banda, la cattura è automatica. Dì flash per accendere la luce, flash off per spegnerla.",
+      "scanLotTip": "Tieni il telefono fermo, la cattura si attiva non appena viene rilevato un numero di lotto. Dì flash per accendere o flash off per spegnere.",
+      "lotInFrame": "Numero di lotto rilevato. Cattura in corso.",
+      "blur": "Immagine sfocata. Stabilizza il telefono.",
+      "tooFar": "Testo troppo piccolo. Avvicina il telefono.",
+      "tooClose": "Testo troppo grande. Allontana leggermente il telefono.",
+      "lowLight": "Poca luce. Dì flash per accendere la luce, dì flash off per spegnerla.",
+      "flashOn": "Flash acceso. Dì flash off per spegnerlo.",
+      "flashOff": "Flash spento.",
+      "photoCommand": "Cattura in corso.",
+      "voiceCommandsReady": "Comandi vocali attivi. Dì photo per catturare, flash per la luce, flash off per spegnerla.",
+      "lotAnalyzing": "Analisi del numero di lotto.",
+      "lotDetected": "Numero di lotto rilevato: {{lot}}.",
+      "lotNotDetected": "Nessun numero di lotto leggibile rilevato. Puoi inserirlo manualmente.",
+      "recallDetected": "Attenzione. Questo prodotto è soggetto a un richiamo. Non consumare.",
+      "productSafe": "Nessun richiamo trovato per questo prodotto.",
+      "scanError": "Scansione fallita. Riprova.",
+      "captureBlocked": "Cattura fallita."
+    }
   }
 }
