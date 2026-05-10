@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import * as functions from 'firebase-functions/v1';
 import { defineSecret } from 'firebase-functions/params';
 import * as admin from 'firebase-admin';
 import * as https from 'https';
@@ -108,7 +108,7 @@ export const sendInvitationEmail = functions
   .region('europe-west1')
   .runWith({ secrets: [RESEND_API_KEY] })
   .firestore.document('organizationInvites/{inviteId}')
-  .onCreate(async (snapshot) => {
+  .onCreate(async (snapshot: FirebaseFirestore.QueryDocumentSnapshot) => {
     const resendApiKey = process.env.RESEND_API_KEY ?? '';
     if (!resendApiKey) {
       console.error('[sendInvitationEmail] RESEND_API_KEY secret not set. Run: firebase functions:secrets:set RESEND_API_KEY');
@@ -290,7 +290,8 @@ export const notifyRecallMatch = functions
     });
 
     const messaging = admin.messaging();
-    await messaging.sendToTopic(`recall-${recall.id}`, {
+    await messaging.send({
+      topic: `recall-${recall.id}`,
       notification: {
         title: 'Rappel produit détecté',
         body: `${recall.title} fait l'objet d'un rappel.`
