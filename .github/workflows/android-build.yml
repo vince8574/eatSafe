@@ -6,16 +6,11 @@ on:
       build_type:
         description: 'Build type'
         required: true
-        default: 'apk'
+        default: 'aab'
         type: choice
         options:
           - aab
           - apk
-  push:
-    branches: [main]
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
 
 jobs:
   build:
