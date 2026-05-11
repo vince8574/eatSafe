@@ -383,5 +383,1945 @@
     "sentAt": "2026-05-01T07:47:57.232Z",
     "messageId": "93be1869-d28f-434a-ba15-ce50e755336f",
     "media": "Food & Wine"
+  },
+  "monika.khare@latimes.com": {
+    "sentAt": "2026-05-06T13:57:13.955Z",
+    "messageId": "4446bb5a-47c0-4d85-97d2-f57a6d89ac0d",
+    "media": "Los Angeles Times"
+  },
+  "tony.jackson@dailynews.com": {
+    "sentAt": "2026-05-06T13:58:12.861Z",
+    "messageId": "5595ab5d-11c2-487a-933b-cccbd12eb756",
+    "media": "LA Daily News"
+  },
+  "lauren.starke@nymag.com": {
+    "sentAt": "2026-05-06T13:58:51.157Z",
+    "messageId": "fb315dc9-785f-4302-a0f1-8da42cd4e190",
+    "media": "New York Magazine / Grub Street"
+  },
+  "dane.mcmillan@voxmedia.com": {
+    "sentAt": "2026-05-06T13:59:27.514Z",
+    "messageId": "f014a5ec-ecab-4c9b-849a-08938a9682cd",
+    "media": "New York Magazine / Grub Street"
+  },
+  "katy.schneider@nymag.com": {
+    "sentAt": "2026-05-06T14:00:04.797Z",
+    "messageId": "fd0c0919-7fea-492f-babd-cd174ce0d76a",
+    "media": "New York Magazine / Grub Street"
+  },
+  "mary.porto@voxmedia.com": {
+    "sentAt": "2026-05-06T14:00:44.310Z",
+    "messageId": "49e0e2ef-df96-40ec-82c9-9aed71c8d556",
+    "media": "Eater (national)"
+  },
+  "masood.shah@voxmedia.com": {
+    "sentAt": "2026-05-06T14:01:47.578Z",
+    "messageId": "24f9cbc7-f327-4f0b-840f-d764f64b2c85",
+    "media": "Eater (national)"
+  },
+  "kristen.mcnicholas@voxmedia.com": {
+    "sentAt": "2026-05-06T14:02:20.185Z",
+    "messageId": "50ba665c-8fc8-4e2d-b90b-244431e910ad",
+    "media": "Eater (national)"
+  },
+  "anique.halliday@voxmedia.com": {
+    "sentAt": "2026-05-06T14:02:57.436Z",
+    "messageId": "9c5b128b-d65a-486e-9e14-b7ce4a7dfc64",
+    "media": "Eater (national)"
+  },
+  "jill.dehnert@voxmedia.com": {
+    "sentAt": "2026-05-06T14:03:30.885Z",
+    "messageId": "f26878c6-87d7-4a13-a450-755bf282444f",
+    "media": "Eater (national)"
+  },
+  "cristina.cerullo@voxmedia.com": {
+    "sentAt": "2026-05-06T14:20:30.884Z",
+    "messageId": "33a6e10a-46b1-4bd8-bdd4-e9439aac763f",
+    "media": "Eater (national)"
+  },
+  "meg.vallurupalli@voxmedia.com": {
+    "sentAt": "2026-05-06T14:21:04.299Z",
+    "messageId": "21235368-8410-4063-9aeb-ed10a0c5375f",
+    "media": "Eater (national)"
+  },
+  "kaitlin.bray@voxmedia.com": {
+    "sentAt": "2026-05-06T14:21:45.388Z",
+    "messageId": "023f1031-3036-4aba-94f4-e1727e638996",
+    "media": "Eater (national)"
+  },
+  "zoe.becker@voxmedia.com": {
+    "sentAt": "2026-05-06T14:22:39.579Z",
+    "messageId": "9dc7d364-2b9f-4efb-bfe3-d3a22525c959",
+    "media": "Eater (national)"
+  },
+  "avery.dalal@voxmedia.com": {
+    "sentAt": "2026-05-06T14:23:29.525Z",
+    "messageId": "06eaf7cf-e4ac-44c6-9665-383080c06be9",
+    "media": "Eater (national)"
+  },
+  "stephen.pelletteri@voxmedia.com": {
+    "sentAt": "2026-05-06T14:24:20.541Z",
+    "messageId": "696e9314-4692-4268-8d62-4ca9754c1ae2",
+    "media": "Eater (national)"
+  },
+  "michelle.fox@voxmedia.com": {
+    "sentAt": "2026-05-06T14:24:58.330Z",
+    "messageId": "21926a56-1891-499d-a12c-e09ba4b4ffd9",
+    "media": "Eater (national)"
+  },
+  "connor.reid@voxmedia.com": {
+    "sentAt": "2026-05-06T14:25:53.118Z",
+    "messageId": "99d3fd00-b140-46f7-bce8-5ae2dbbe60d2",
+    "media": "Eater (national)"
+  },
+  "thomas.daly@voxmedia.com": {
+    "sentAt": "2026-05-06T14:26:42.790Z",
+    "messageId": "e8b0e377-a214-4fa8-bbe0-f61f9281cea5",
+    "media": "Eater (national)"
+  },
+  "gabby.lozano@voxmedia.com": {
+    "sentAt": "2026-05-06T14:27:16.175Z",
+    "messageId": "6894a236-d764-400e-9d2f-1ebb2784c421",
+    "media": "Eater (national)"
+  },
+  "george.chrysiliou@voxmedia.com": {
+    "sentAt": "2026-05-06T14:27:52.430Z",
+    "messageId": "e13f16b3-7610-48ea-8d8b-137e1b0be9ea",
+    "media": "Eater (national)"
+  },
+  "howie.burbidge@voxmedia.com": {
+    "sentAt": "2026-05-06T14:28:41.173Z",
+    "messageId": "94cf7558-cd61-437d-9f6c-f58edf93a00c",
+    "media": "Eater (national)"
+  },
+  "jordan.shalhoub@voxmedia.com": {
+    "sentAt": "2026-05-06T14:29:22.503Z",
+    "messageId": "37b2d520-4716-4ab4-8e50-92a791e62d1a",
+    "media": "Eater (national)"
+  },
+  "lauren.starke@voxmedia.com": {
+    "sentAt": "2026-05-06T14:30:16.385Z",
+    "messageId": "0c8775c4-50fa-484a-aa4b-1a2c239d09c4",
+    "media": "Eater (national)"
+  },
+  "erin_kaplan@condenast.com": {
+    "sentAt": "2026-05-06T14:31:05.174Z",
+    "messageId": "a8a0e6cb-3d53-44ee-a229-a7aebc554cbf",
+    "media": "Epicurious"
+  },
+  "andrew.solender@axios.com": {
+    "sentAt": "2026-05-06T14:31:56.011Z",
+    "messageId": "1a73518e-00c3-46d8-a115-fadfc215abe4",
+    "media": "Axios"
+  },
+  "josephine.walker@axios.com": {
+    "sentAt": "2026-05-06T14:32:47.237Z",
+    "messageId": "470a358d-f79d-4acb-aee1-d931af729ae1",
+    "media": "Axios"
+  },
+  "barak.ravid@axios.com": {
+    "sentAt": "2026-05-06T14:33:44.486Z",
+    "messageId": "8b5b8cd0-f2a3-4863-b485-b20eeb0e8f0d",
+    "media": "Axios"
+  },
+  "marc.caputo@axios.com": {
+    "sentAt": "2026-05-06T14:34:28.002Z",
+    "messageId": "1c6295f8-80d1-44ef-8dee-b793ff13ac71",
+    "media": "Axios"
+  },
+  "maggie.angst@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:35:02.985Z",
+    "messageId": "192e0303-5713-4aa2-8478-a4c4dd9ff872",
+    "media": "San Francisco Chronicle"
+  },
+  "stjohn.smith@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:35:52.798Z",
+    "messageId": "c3817cb3-edd5-41a0-bc9d-c2a5131567cd",
+    "media": "San Francisco Chronicle"
+  },
+  "janelle.bitker@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:36:30.169Z",
+    "messageId": "0028e172-832e-4e8f-8c2b-f1ae837a60b7",
+    "media": "San Francisco Chronicle"
+  },
+  "sophia.bollag@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:37:15.822Z",
+    "messageId": "f86f1f7e-fcab-40f7-9efc-789d01910af3",
+    "media": "San Francisco Chronicle"
+  },
+  "anna.buchmann@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:38:11.483Z",
+    "messageId": "6511a734-683f-445f-9334-905e2a92009e",
+    "media": "San Francisco Chronicle"
+  },
+  "demian.bulwa@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:38:46.763Z",
+    "messageId": "0cb66227-b4e8-42ec-ab1f-176e4bcd61dd",
+    "media": "San Francisco Chronicle"
+  },
+  "megan.cassidy@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:39:39.994Z",
+    "messageId": "6f916be4-048d-47d9-bdf3-c4b41a9e108e",
+    "media": "San Francisco Chronicle"
+  },
+  "erin.caughey@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:40:16.427Z",
+    "messageId": "4d91619f-b8e7-4811-b01d-197cab215b0f",
+    "media": "San Francisco Chronicle"
+  },
+  "jessica.christian@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:40:51.191Z",
+    "messageId": "761148cc-1e46-4d12-a70f-d4a305599820",
+    "media": "San Francisco Chronicle"
+  },
+  "mario.cortez@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:41:46.494Z",
+    "messageId": "f95c45f4-9b52-4df2-8821-f7f8a26b39df",
+    "media": "San Francisco Chronicle"
+  },
+  "sriharsha.devulapalli@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:42:18.606Z",
+    "messageId": "308718e5-25f5-4f2b-b415-d96954410b0c",
+    "media": "San Francisco Chronicle"
+  },
+  "kolyn.cheang@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:43:06.563Z",
+    "messageId": "363d68b8-2be7-426a-bfbf-c3ef1f3dfdaf",
+    "media": "San Francisco Chronicle"
+  },
+  "mackenziechung.fegan@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:43:48.359Z",
+    "messageId": "d48883f0-7caf-41fd-94dd-5733f3f8db77",
+    "media": "San Francisco Chronicle"
+  },
+  "danielle.echeverria@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:44:25.559Z",
+    "messageId": "eaf88f4d-3d10-47d6-b699-36028ad619cd",
+    "media": "San Francisco Chronicle"
+  },
+  "anthony.edwards@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:45:09.851Z",
+    "messageId": "4ce78b08-8451-40c5-b62a-ca3470397730",
+    "media": "San Francisco Chronicle"
+  },
+  "megan.munce@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:45:47.376Z",
+    "messageId": "d9523ce8-68da-401d-8419-b5655086145d",
+    "media": "San Francisco Chronicle"
+  },
+  "emily.fancher@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:46:21.192Z",
+    "messageId": "6278c417-7988-4cf1-9c73-35506c0b0038",
+    "media": "San Francisco Chronicle"
+  },
+  "matt.fleischer@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:46:59.360Z",
+    "messageId": "f0e760b3-b6d2-47ab-bd60-cf5aa1b5cccb",
+    "media": "San Francisco Chronicle"
+  },
+  "jessica.flores@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:47:48.071Z",
+    "messageId": "9a03af53-c168-4352-ba24-189f7088a558",
+    "media": "San Francisco Chronicle"
+  },
+  "emilio.garcia-ruiz@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:48:20.385Z",
+    "messageId": "ff2c037e-6a17-42ff-882f-b101256a7de8",
+    "media": "San Francisco Chronicle"
+  },
+  "matthias.gafni@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:49:06.649Z",
+    "messageId": "57f99f31-2785-44bc-b80c-e6ba3bc87c75",
+    "media": "San Francisco Chronicle"
+  },
+  "jennifer.gollan@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:49:47.692Z",
+    "messageId": "3d3b67b6-b896-4a5f-a3b3-f60c42e0b045",
+    "media": "San Francisco Chronicle"
+  },
+  "sam.gordon@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:50:35.496Z",
+    "messageId": "a715e133-3ba9-4f3b-b527-a88eff4ee689",
+    "media": "San Francisco Chronicle"
+  },
+  "greg.griffin@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:51:21.593Z",
+    "messageId": "71be64d5-b349-4461-b244-cfad540fad46",
+    "media": "San Francisco Chronicle"
+  },
+  "angel.guerrero@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:52:19.607Z",
+    "messageId": "275117c6-f86d-43c5-a9cb-5f9ba37773e9",
+    "media": "San Francisco Chronicle"
+  },
+  "hannah.hagemann@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:52:51.176Z",
+    "messageId": "a28b15d8-e2d1-4955-9dde-bdbfba3f2b85",
+    "media": "San Francisco Chronicle"
+  },
+  "noel.harris@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:53:35.487Z",
+    "messageId": "b7083fb9-6811-4def-b1ae-20bff5cd808c",
+    "media": "San Francisco Chronicle"
+  },
+  "raheem.hosseini@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:54:34.559Z",
+    "messageId": "cd622336-66cf-48b7-b547-16cee46e9e02",
+    "media": "San Francisco Chronicle"
+  },
+  "kellie.hwang@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:55:19.744Z",
+    "messageId": "e77fe932-f462-429b-96a2-11b9e51c8371",
+    "media": "San Francisco Chronicle"
+  },
+  "marisa.ingemi@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:56:20.295Z",
+    "messageId": "b561dda2-5690-4bb0-b898-1e5ffb11ff60",
+    "media": "San Francisco Chronicle"
+  },
+  "yoshi.james@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:57:04.973Z",
+    "messageId": "56987e15-b4fe-4fac-b7f6-fd398950290c",
+    "media": "San Francisco Chronicle"
+  },
+  "emily.jan@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:57:56.395Z",
+    "messageId": "3dca4770-326b-4758-a593-c6937f8b6f04",
+    "media": "San Francisco Chronicle"
+  },
+  "julie.johnson@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:58:42.853Z",
+    "messageId": "46cc9748-acd1-47db-a868-3827c3f6421a",
+    "media": "San Francisco Chronicle"
+  },
+  "alvin.jornada@sfchronicle.com": {
+    "sentAt": "2026-05-06T14:59:15.195Z",
+    "messageId": "ec849a72-c481-4526-899c-e3c7ec89184e",
+    "media": "San Francisco Chronicle"
+  },
+  "elena.kadvany@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:00:11.117Z",
+    "messageId": "bacf51dc-8503-4dbe-bde3-2394bb1bb8b0",
+    "media": "San Francisco Chronicle"
+  },
+  "christina.kahrl@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:01:05.764Z",
+    "messageId": "573d4f88-7a9f-4787-81b2-a87c8e5ebeea",
+    "media": "San Francisco Chronicle"
+  },
+  "dan.kopf@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:01:50.228Z",
+    "messageId": "a52a34ea-8376-4096-9566-05c4c975009c",
+    "media": "San Francisco Chronicle"
+  },
+  "vanessa.labi@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:02:40.697Z",
+    "messageId": "62a0b7e8-9fdb-494d-a566-381c03637f32",
+    "media": "San Francisco Chronicle"
+  },
+  "stephen.lam@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:03:17.605Z",
+    "messageId": "195e6365-b812-4b59-9176-007a4a12d850",
+    "media": "San Francisco Chronicle"
+  },
+  "jess.lander@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:03:55.397Z",
+    "messageId": "7b4c5f64-09de-48fd-af13-b03c1d80d6d6",
+    "media": "San Francisco Chronicle"
+  },
+  "jack.lee@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:04:28.978Z",
+    "messageId": "c26fd4c0-2041-4ceb-ad34-bc62c32e13c9",
+    "media": "San Francisco Chronicle"
+  },
+  "roland.li@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:05:06.370Z",
+    "messageId": "b5372191-59d3-4a11-94d9-1088969559e5",
+    "media": "San Francisco Chronicle"
+  },
+  "sara.libby@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:05:58.050Z",
+    "messageId": "1be4c622-02f0-471f-a3cd-d4eb6e2801fb",
+    "media": "San Francisco Chronicle"
+  },
+  "robert.morast@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:06:40.371Z",
+    "messageId": "0a744bd8-32a6-4ae6-8b41-eee875a92ba7",
+    "media": "San Francisco Chronicle"
+  },
+  "jd.morris@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:07:21.615Z",
+    "messageId": "a9cf05bb-61df-4042-be15-44640ba4eff3",
+    "media": "San Francisco Chronicle"
+  },
+  "shwanika.narayan@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:08:05.716Z",
+    "messageId": "f6823adb-dc34-42d2-81c6-512bc3ee2bff",
+    "media": "San Francisco Chronicle"
+  },
+  "susan.neilson@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:09:06.669Z",
+    "messageId": "3de5731c-e727-4e1f-8a94-394b84f3cc23",
+    "media": "San Francisco Chronicle"
+  },
+  "caleb.pershan@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:10:06.712Z",
+    "messageId": "fe2c7878-87d9-4733-96dd-4a0e583eba19",
+    "media": "San Francisco Chronicle"
+  },
+  "ramin.rahimian@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:10:50.732Z",
+    "messageId": "98d41b06-a2d8-4966-a095-736dcd55ea69",
+    "media": "San Francisco Chronicle"
+  },
+  "jon.schultz@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:11:49.916Z",
+    "messageId": "713cca9c-f45d-4ecd-98a3-c462578a8665",
+    "media": "San Francisco Chronicle"
+  },
+  "jess.shaw@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:12:27.941Z",
+    "messageId": "f634d16b-f5fb-4352-b0cd-aa8af391d779",
+    "media": "San Francisco Chronicle"
+  },
+  "elisabeth.smith@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:13:02.419Z",
+    "messageId": "bfc23874-220c-4afb-b9f9-83c96a78c4a7",
+    "media": "San Francisco Chronicle"
+  },
+  "emma.stiefel@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:14:03.456Z",
+    "messageId": "9e0d189f-24ec-4dc6-a291-40ddf0d9057f",
+    "media": "San Francisco Chronicle"
+  },
+  "nami.sumida@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:14:53.933Z",
+    "messageId": "47fa0f33-bac9-44d3-bc24-cfbbaa56cbdb",
+    "media": "San Francisco Chronicle"
+  },
+  "aldo.toledo@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:15:47.444Z",
+    "messageId": "8f2e0f6c-b2b0-4474-83c5-cc024e918bd4",
+    "media": "San Francisco Chronicle"
+  },
+  "laura.waxmann@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:16:34.251Z",
+    "messageId": "eec11112-7708-4b9f-ac8c-5876e5214b1f",
+    "media": "San Francisco Chronicle"
+  },
+  "bronte.wittpenn@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:17:29.548Z",
+    "messageId": "1f4f4b55-f772-4da3-8ecc-a6881e57d993",
+    "media": "San Francisco Chronicle"
+  },
+  "stephanie.zhu@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:18:03.166Z",
+    "messageId": "97ec5f2e-c717-4648-bf8a-9483e705759a",
+    "media": "San Francisco Chronicle"
+  },
+  "alexei.koseff@sfchronicle.com": {
+    "sentAt": "2026-05-06T15:18:48.688Z",
+    "messageId": "f603be26-0568-4a76-81ef-fa8a4ab28c94",
+    "media": "San Francisco Chronicle"
+  },
+  "grant.marek@sfgate.com": {
+    "sentAt": "2026-05-06T15:19:44.188Z",
+    "messageId": "c5fca5ff-f1eb-4e4d-9c85-76959cbe6a36",
+    "media": "SFGate"
+  },
+  "katie.dowd@sfgate.com": {
+    "sentAt": "2026-05-06T15:20:19.606Z",
+    "messageId": "4ff04915-9261-4eb6-8d41-6b6a133634d0",
+    "media": "SFGate"
+  },
+  "kimberly.alters@sfgate.com": {
+    "sentAt": "2026-05-06T15:21:08.449Z",
+    "messageId": "d55c02ad-9b6e-42c7-8deb-19a87cc727f0",
+    "media": "SFGate"
+  },
+  "fiona.lee@sfgate.com": {
+    "sentAt": "2026-05-06T15:21:59.453Z",
+    "messageId": "6957f66b-7e6a-4288-9535-6f3ca96b0857",
+    "media": "SFGate"
+  },
+  "kendra.smith@sfgate.com": {
+    "sentAt": "2026-05-06T15:22:41.129Z",
+    "messageId": "c1899965-57c2-4384-9d9f-a3da3cdad3ab",
+    "media": "SFGate"
+  },
+  "gillian.mohney@sfgate.com": {
+    "sentAt": "2026-05-06T15:23:35.844Z",
+    "messageId": "1a412665-7fe7-474c-9822-9fd8e317e360",
+    "media": "SFGate"
+  },
+  "kent.german@sfgate.com": {
+    "sentAt": "2026-05-06T15:24:18.389Z",
+    "messageId": "7b34e414-4f3a-4e61-aff2-eb915a931c57",
+    "media": "SFGate"
+  },
+  "lester.black@sfgate.com": {
+    "sentAt": "2026-05-06T15:25:06.850Z",
+    "messageId": "c6e1bfe9-1444-46b3-b6b1-609568a7da49",
+    "media": "SFGate"
+  },
+  "susana.guerrero@sfgate.com": {
+    "sentAt": "2026-05-06T15:25:57.151Z",
+    "messageId": "e518bab4-fffd-44b3-bcd2-af83575f9786",
+    "media": "SFGate"
+  },
+  "olivia.harden@sfgate.com": {
+    "sentAt": "2026-05-06T15:26:49.044Z",
+    "messageId": "72f5bcd2-331e-4027-abcd-2479d2527e00",
+    "media": "SFGate"
+  },
+  "olivia.hebert@sfgate.com": {
+    "sentAt": "2026-05-06T15:27:33.071Z",
+    "messageId": "01be0d09-bfb5-43e6-8cb4-cbdba96c43ff",
+    "media": "SFGate"
+  },
+  "madilynne.medina@sfgate.com": {
+    "sentAt": "2026-05-06T15:28:23.553Z",
+    "messageId": "1f525f40-e1c3-4f39-924a-d902566a7fc8",
+    "media": "SFGate"
+  },
+  "stephen.council@sfgate.com": {
+    "sentAt": "2026-05-06T15:29:02.454Z",
+    "messageId": "4db84cb4-efc3-4ab1-b736-e61e842eee05",
+    "media": "SFGate"
+  },
+  "anna.guth@sfgate.com": {
+    "sentAt": "2026-05-06T15:29:45.743Z",
+    "messageId": "3f180302-ed48-42f4-b6f9-084b2df24753",
+    "media": "SFGate"
+  },
+  "anabel.sosa@sfgate.com": {
+    "sentAt": "2026-05-06T15:30:40.192Z",
+    "messageId": "7a47d99c-b9fa-41bf-bbbb-cb0430b20f3a",
+    "media": "SFGate"
+  },
+  "dan.gentile@sfgate.com": {
+    "sentAt": "2026-05-06T15:31:32.417Z",
+    "messageId": "b86d2d95-ef57-4f6e-a29a-bf1c0dc87464",
+    "media": "SFGate"
+  },
+  "timothy.karoff@sfgate.com": {
+    "sentAt": "2026-05-06T15:32:13.223Z",
+    "messageId": "135fd5dc-8069-4f90-8e04-61e45430de6d",
+    "media": "SFGate"
+  },
+  "tessa.mclean@sfgate.com": {
+    "sentAt": "2026-05-06T15:32:52.439Z",
+    "messageId": "91825932-9776-4834-894f-192b8413c3ba",
+    "media": "SFGate"
+  },
+  "alex.simon@sfgate.com": {
+    "sentAt": "2026-05-06T15:33:32.915Z",
+    "messageId": "4b6239c2-ae32-4b1c-a148-1e806ac24a56",
+    "media": "SFGate"
+  },
+  "gabe.fernandez@sfgate.com": {
+    "sentAt": "2026-05-06T15:34:28.327Z",
+    "messageId": "0b0fb97e-c80a-48c0-ad1c-65451faed526",
+    "media": "SFGate"
+  },
+  "silas.valentino@sfgate.com": {
+    "sentAt": "2026-05-06T15:35:27.343Z",
+    "messageId": "21b9a1fa-6f28-4391-90b2-863e3ae4b7cf",
+    "media": "SFGate"
+  },
+  "julie.tremaine@sfgate.com": {
+    "sentAt": "2026-05-06T15:36:09.636Z",
+    "messageId": "dfba1c69-7425-4efe-bf4b-4e712ca88560",
+    "media": "SFGate"
+  },
+  "jessica.yadegaran@sfgate.com": {
+    "sentAt": "2026-05-06T15:36:57.916Z",
+    "messageId": "6f588c12-a24c-4964-b339-30068f22ae0b",
+    "media": "SFGate"
+  },
+  "madeline.wells@sfgate.com": {
+    "sentAt": "2026-05-06T15:37:59.240Z",
+    "messageId": "352721d0-4337-495e-b101-098e4058c92b",
+    "media": "SFGate"
+  },
+  "nico.madrigal-yankowski@sfgate.com": {
+    "sentAt": "2026-05-06T15:38:41.830Z",
+    "messageId": "fdcf6b67-6633-4712-af8a-f05f45d716f4",
+    "media": "SFGate"
+  },
+  "andrew.chamings@sfgate.com": {
+    "sentAt": "2026-05-06T15:39:19.640Z",
+    "messageId": "842c3201-514d-417b-852c-fd4380c099b8",
+    "media": "SFGate"
+  },
+  "ariana.bindman@sfgate.com": {
+    "sentAt": "2026-05-06T15:40:09.534Z",
+    "messageId": "8b6ca184-c6a8-40f2-91c9-11f393639f6c",
+    "media": "SFGate"
+  },
+  "kasia.pawlowska@sfgate.com": {
+    "sentAt": "2026-05-06T15:41:09.461Z",
+    "messageId": "a11deb5f-0a8e-4524-82d8-4b317577adbd",
+    "media": "SFGate"
+  },
+  "amanda.bartlett@sfgate.com": {
+    "sentAt": "2026-05-06T15:42:04.609Z",
+    "messageId": "8a4f2c19-35b1-4a50-9c8b-6c7126664b66",
+    "media": "SFGate"
+  },
+  "ashley.harrell@sfgate.com": {
+    "sentAt": "2026-05-06T15:43:02.242Z",
+    "messageId": "192c35c3-ce15-4f51-872a-55040c6a7f73",
+    "media": "SFGate"
+  },
+  "kylie.mohr@sfgate.com": {
+    "sentAt": "2026-05-06T15:43:58.459Z",
+    "messageId": "3b2e5d87-598d-4c2a-87b7-fbadeffcfe0f",
+    "media": "SFGate"
+  },
+  "sam.hill@sfgate.com": {
+    "sentAt": "2026-05-06T15:44:55.836Z",
+    "messageId": "727c2ac5-31be-4180-813d-b5f0d81bbec7",
+    "media": "SFGate"
+  },
+  "amanda.heidt@sfgate.com": {
+    "sentAt": "2026-05-06T15:45:45.491Z",
+    "messageId": "0306d5fa-cf7f-49ee-a5d2-d6b36ac789e1",
+    "media": "SFGate"
+  },
+  "sam.moore@sfgate.com": {
+    "sentAt": "2026-05-06T15:46:39.907Z",
+    "messageId": "bfcc3b4d-aad9-40e4-a8cd-73ea4da8a713",
+    "media": "SFGate"
+  },
+  "farley.elliott@sfgate.com": {
+    "sentAt": "2026-05-06T15:47:25.992Z",
+    "messageId": "eb9d6d88-6b0c-4715-9aeb-881f23547c80",
+    "media": "SFGate"
+  },
+  "karen.palmer@sfgate.com": {
+    "sentAt": "2026-05-06T15:48:01.580Z",
+    "messageId": "22f4ce7d-1156-4ad9-ba7c-4a6241fb1319",
+    "media": "SFGate"
+  },
+  "paula.mejia@sfgate.com": {
+    "sentAt": "2026-05-06T15:48:37.384Z",
+    "messageId": "6e89ab5a-6a99-475b-b39d-c36164a0fb68",
+    "media": "SFGate"
+  },
+  "erin.rode@sfgate.com": {
+    "sentAt": "2026-05-06T15:49:37.102Z",
+    "messageId": "3beac9c3-1a69-438f-bd08-256500a4dac4",
+    "media": "SFGate"
+  },
+  "julie.browndavis@sfgate.com": {
+    "sentAt": "2026-05-06T15:50:20.902Z",
+    "messageId": "345fb5ec-f7c7-4aa9-a3c6-8f1d17525dca",
+    "media": "SFGate"
+  },
+  "andrew.pridgen@sfgate.com": {
+    "sentAt": "2026-05-06T15:50:54.111Z",
+    "messageId": "141a06e7-bb30-4d54-ae41-9feddb7cee74",
+    "media": "SFGate"
+  },
+  "christine.hitt@sfgate.com": {
+    "sentAt": "2026-05-06T15:51:36.796Z",
+    "messageId": "f2c38873-0547-4782-bfee-03949e7ee0b4",
+    "media": "SFGate"
+  },
+  "victoria.sepulveda@sfgate.com": {
+    "sentAt": "2026-05-06T15:52:37.182Z",
+    "messageId": "29e2fd00-cbe1-40b2-8492-0b29a8f2550e",
+    "media": "SFGate"
+  },
+  "morena.calvo@sfgate.com": {
+    "sentAt": "2026-05-06T15:53:20.483Z",
+    "messageId": "6a595275-1941-4a74-8713-6b43095b0516",
+    "media": "SFGate"
+  },
+  "kelsey.adams@sfgate.com": {
+    "sentAt": "2026-05-06T15:54:03.034Z",
+    "messageId": "b1caf6b8-df0c-4b35-883a-e9811589baf7",
+    "media": "SFGate"
+  },
+  "antonio.bayucan@sfgate.com": {
+    "sentAt": "2026-05-06T15:54:57.318Z",
+    "messageId": "388a6167-0bd3-4157-8f07-79dcc73c53f1",
+    "media": "SFGate"
+  },
+  "charles.russo@sfgate.com": {
+    "sentAt": "2026-05-06T15:55:35.122Z",
+    "messageId": "6cff5139-3554-42fe-a885-0230ec9ad3cb",
+    "media": "SFGate"
+  },
+  "lance.yamamoto@sfgate.com": {
+    "sentAt": "2026-05-06T15:56:16.606Z",
+    "messageId": "8c8dc8a6-ce4f-4c20-94f8-c87ad96010a6",
+    "media": "SFGate"
+  },
+  "jessie.alcheh@sfgate.com": {
+    "sentAt": "2026-05-06T15:57:10.989Z",
+    "messageId": "506dcd39-f28f-45d6-9e58-d0fb7b6027e9",
+    "media": "SFGate"
+  },
+  "jacob.montero@sfgate.com": {
+    "sentAt": "2026-05-06T15:58:09.058Z",
+    "messageId": "ba232a0e-43dc-4dca-a539-01ce328c56c3",
+    "media": "SFGate"
+  },
+  "cole.chapman@sfgate.com": {
+    "sentAt": "2026-05-06T15:58:52.876Z",
+    "messageId": "b24a6423-5e38-48ea-aa04-073501645ce2",
+    "media": "SFGate"
+  },
+  "melissa.cho@sfgate.com": {
+    "sentAt": "2026-05-06T15:59:25.312Z",
+    "messageId": "5026166c-5ede-4171-a75d-780df42e3c07",
+    "media": "SFGate"
+  },
+  "jessie.fisher@sfgate.com": {
+    "sentAt": "2026-05-06T16:00:09.464Z",
+    "messageId": "9f21f074-f198-4cba-8c4e-3b9e1eb97a46",
+    "media": "SFGate"
+  },
+  "greg.keraghosian@sfgate.com": {
+    "sentAt": "2026-05-06T16:01:04.713Z",
+    "messageId": "ff131d62-feb7-4d8a-835f-3525dced2f04",
+    "media": "SFGate"
+  },
+  "gabriel.lehman@sfgate.com": {
+    "sentAt": "2026-05-06T16:01:56.649Z",
+    "messageId": "dbdb6e55-edb8-4773-b2f3-e49fb70bd10c",
+    "media": "SFGate"
+  },
+  "jeff.carillo@sfgate.com": {
+    "sentAt": "2026-05-06T16:02:33.187Z",
+    "messageId": "45f4f76d-c041-4865-97d8-0d624b805b79",
+    "media": "SFGate"
+  },
+  "catherine.odom@miamiherald.com": {
+    "sentAt": "2026-05-06T16:03:16.484Z",
+    "messageId": "4846ccfb-9f34-4346-987c-658629f1e3cb",
+    "media": "Miami Herald"
+  },
+  "nicole.lopez-alvar@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:04:11.025Z",
+    "messageId": "e302380a-f688-472e-a39b-c03707135a81",
+    "media": "Miami New Times"
+  },
+  "flor.franceschetti@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:05:01.692Z",
+    "messageId": "8dc863a5-2219-4901-81d4-ea7d721e2363",
+    "media": "Miami New Times"
+  },
+  "celia.almeida@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:05:44.151Z",
+    "messageId": "96902c26-76c9-49af-85bd-01bde14c3dae",
+    "media": "Miami New Times"
+  },
+  "edysmar.diaz-cruz@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:06:20.924Z",
+    "messageId": "b1ba67b4-30dc-44b3-a416-058a93434a20",
+    "media": "Miami New Times"
+  },
+  "alex.deluca@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:07:17.026Z",
+    "messageId": "23f859fe-5d34-44d7-9116-358e85ed9b10",
+    "media": "Miami New Times"
+  },
+  "scott.mclendon@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:08:14.168Z",
+    "messageId": "aafdbd1c-1376-4cd5-bab0-d8d9e2cd61bf",
+    "media": "Miami New Times"
+  },
+  "don.farrell@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:08:51.283Z",
+    "messageId": "77af2c98-8c64-4283-96bf-8d37934ea2a0",
+    "media": "Miami New Times"
+  },
+  "adam.simon@miaminewtimes.com": {
+    "sentAt": "2026-05-06T16:09:30.231Z",
+    "messageId": "96225729-77a9-4c0f-a79f-62b50d760d54",
+    "media": "Miami New Times"
+  },
+  "kelly.scott@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:10:19.067Z",
+    "messageId": "e29c6c2d-4ff8-4474-b102-d2a93bb7dd0b",
+    "media": "Houston Chronicle"
+  },
+  "jennifer.chang@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:11:14.090Z",
+    "messageId": "77ae570a-3f4c-4d82-9498-f10f2194c1af",
+    "media": "Houston Chronicle"
+  },
+  "yaffa.fredrick@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:11:50.278Z",
+    "messageId": "53153a83-4803-46e3-aa05-e4bbf7fc2c4f",
+    "media": "Houston Chronicle"
+  },
+  "raj.mankad@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:12:36.105Z",
+    "messageId": "289853a0-6fbe-44ea-829a-31ba0ecd81d2",
+    "media": "Houston Chronicle"
+  },
+  "lisa.gray@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:13:34.122Z",
+    "messageId": "01027e3d-2e70-43ee-8bde-93787fd8d060",
+    "media": "Houston Chronicle"
+  },
+  "roberto.villalpando@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:14:07.135Z",
+    "messageId": "8da033f8-fd19-4037-b4cd-462cc77a91aa",
+    "media": "Houston Chronicle"
+  },
+  "codell.rodriguez@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:15:04.295Z",
+    "messageId": "48998c18-65b8-4e97-9c65-6a793d166ba2",
+    "media": "Houston Chronicle"
+  },
+  "dana.burke@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:16:03.524Z",
+    "messageId": "011d82bd-9c3b-4940-9333-fff717e705bf",
+    "media": "Houston Chronicle"
+  },
+  "jennifer.radcliffe@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:16:44.784Z",
+    "messageId": "56ba604d-2dfd-4959-a9e6-ecfaad6b48d9",
+    "media": "Houston Chronicle"
+  },
+  "michela.garcia@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:17:27.917Z",
+    "messageId": "35d1978a-da82-4f0b-a93b-b296cc042d30",
+    "media": "Houston Chronicle"
+  },
+  "matt.degrood@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:18:15.127Z",
+    "messageId": "aa3f2fa3-7b6f-4851-acac-048c963a52bb",
+    "media": "Houston Chronicle"
+  },
+  "megan.menchaca@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:19:04.774Z",
+    "messageId": "58b01ef3-9770-4a39-a714-353d1fb86f7f",
+    "media": "Houston Chronicle"
+  },
+  "ryan.nickerson@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:19:51.979Z",
+    "messageId": "f958bc2c-f17d-42de-adc7-5bb30bdbba68",
+    "media": "Houston Chronicle"
+  },
+  "nicole.hensley@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:20:30.758Z",
+    "messageId": "2b7e2f74-7928-45f2-9330-77e7a4a81b8c",
+    "media": "Houston Chronicle"
+  },
+  "octavia.johnson@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:21:28.585Z",
+    "messageId": "66107dc0-e669-4bf5-81b8-52b85903edd0",
+    "media": "Houston Chronicle"
+  },
+  "abby.church@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:22:28.472Z",
+    "messageId": "05620804-9542-4415-940f-9d63025841ed",
+    "media": "Houston Chronicle"
+  },
+  "shakari.briggs@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:23:05.084Z",
+    "messageId": "304c6422-0157-4f72-ac88-3506b24f1518",
+    "media": "Houston Chronicle"
+  },
+  "john.ferguson@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:23:39.303Z",
+    "messageId": "0bc9b585-9c23-4dfd-8c0b-9634151edc30",
+    "media": "Houston Chronicle"
+  },
+  "peter.warren@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:24:23.484Z",
+    "messageId": "9e0b8b56-6829-42a4-bb57-b82f2d14447b",
+    "media": "Houston Chronicle"
+  },
+  "samantha.ketterer@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:24:58.969Z",
+    "messageId": "20646b70-e6df-4d25-a7dc-f86cee1e68d9",
+    "media": "Houston Chronicle"
+  },
+  "doug.begley@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:25:57.665Z",
+    "messageId": "f89d6018-6248-41ed-8c6c-f6d17fa00126",
+    "media": "Houston Chronicle"
+  },
+  "justin.ballard@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:26:39.266Z",
+    "messageId": "f38ddc89-9981-486e-a606-25ea7dd4c572",
+    "media": "Houston Chronicle"
+  },
+  "sam.kelly@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:27:13.481Z",
+    "messageId": "ea420260-630d-4548-a64d-d90dd4b9076f",
+    "media": "Houston Chronicle"
+  },
+  "nathan.boley@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:28:05.630Z",
+    "messageId": "91ce5cde-9b18-4eae-802c-00d71d5276bd",
+    "media": "Houston Chronicle"
+  },
+  "fatima.farha@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:28:50.495Z",
+    "messageId": "e413c4fd-33ba-4075-8a53-d6d4b7f8c2c9",
+    "media": "Houston Chronicle"
+  },
+  "jordan.ray-hart@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:29:47.756Z",
+    "messageId": "164a7cb9-ac4a-4a89-bb94-50d3a9c1e01c",
+    "media": "Houston Chronicle"
+  },
+  "rebecca.hennes@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:30:33.927Z",
+    "messageId": "5cb8839d-2ddf-4343-a8b6-d68fca3db78e",
+    "media": "Houston Chronicle"
+  },
+  "leah.binkovitz@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:31:18.183Z",
+    "messageId": "62dc2629-d841-4d87-8f8a-ed7d68280f14",
+    "media": "Houston Chronicle"
+  },
+  "regina.lankenau@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:32:14.015Z",
+    "messageId": "62ec4cc3-e421-4206-9fae-a38b9b5ae44d",
+    "media": "Houston Chronicle"
+  },
+  "nick.powell@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:32:49.198Z",
+    "messageId": "61448305-53a9-49cd-9a12-2dee00c2cda5",
+    "media": "Houston Chronicle"
+  },
+  "jonathan.diamond@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:33:46.044Z",
+    "messageId": "b12c70b4-4218-42d2-84e5-3e1400a3f8d6",
+    "media": "Houston Chronicle"
+  },
+  "brian.rausch@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:34:46.131Z",
+    "messageId": "91e18050-7f03-4940-b80a-21cf7325ea33",
+    "media": "Houston Chronicle"
+  },
+  "chris.tomlinson@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:35:34.650Z",
+    "messageId": "f509be67-f68b-4726-b68a-c8e34d139e1f",
+    "media": "Houston Chronicle"
+  },
+  "nusaiba.mizan@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:36:29.282Z",
+    "messageId": "31d026a0-b4d6-4bf9-8330-d90f0913f1b9",
+    "media": "Houston Chronicle"
+  },
+  "james.osborne@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:37:05.041Z",
+    "messageId": "41cab105-5ded-4864-9664-026d992543a5",
+    "media": "Houston Chronicle"
+  },
+  "claire.hao@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:38:03.941Z",
+    "messageId": "58d2c670-9250-47eb-8ade-5a0ab6b4777b",
+    "media": "Houston Chronicle"
+  },
+  "rebekah.ward@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:39:03.814Z",
+    "messageId": "55a47399-a06f-4f05-a8c8-1fecfb346247",
+    "media": "Houston Chronicle"
+  },
+  "marissa.luck@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:39:40.319Z",
+    "messageId": "87dcd36f-7e93-44d8-a3ab-45781575494f",
+    "media": "Houston Chronicle"
+  },
+  "erica.grieder@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:40:33.664Z",
+    "messageId": "a2fb330a-c88c-41ed-b277-2043b7093aab",
+    "media": "Houston Chronicle"
+  },
+  "cary.darling@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:41:07.473Z",
+    "messageId": "0f0c8e0f-7b88-4827-badb-3d4e032f9a2b",
+    "media": "Houston Chronicle"
+  },
+  "carol.motsinger@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:41:57.663Z",
+    "messageId": "c2ae26bb-fe61-422a-845c-9270064c5720",
+    "media": "Houston Chronicle"
+  },
+  "jody.schmal@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:42:46.362Z",
+    "messageId": "9830885c-fedf-44ec-b7d6-4a25f1373e92",
+    "media": "Houston Chronicle"
+  },
+  "alison.cook@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:43:29.372Z",
+    "messageId": "eec158b8-b1e2-47d0-84a2-7f2650c7f594",
+    "media": "Houston Chronicle"
+  },
+  "bao.ong@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:44:03.608Z",
+    "messageId": "50643f8f-d589-4a5e-be06-b659e5bddb36",
+    "media": "Houston Chronicle"
+  },
+  "jhair.romero@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:44:58.573Z",
+    "messageId": "8d3289fd-b5bd-41c1-9592-3db616437b9d",
+    "media": "Houston Chronicle"
+  },
+  "joey.guerra@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:45:54.369Z",
+    "messageId": "bc5a6221-a320-4d1e-97fa-4e8fdbc5e23e",
+    "media": "Houston Chronicle"
+  },
+  "rebecca.schuetz@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:46:32.805Z",
+    "messageId": "68b8909a-7074-4c3e-a573-8bc509d70699",
+    "media": "Houston Chronicle"
+  },
+  "evan.macdonald@houstonchronicle.com": {
+    "sentAt": "2026-05-06T16:47:25.707Z",
+    "messageId": "d358df09-8bb3-46f2-83f9-d269da70522b",
+    "media": "Houston Chronicle"
+  },
+  "tina.reed@axios.com": {
+    "sentAt": "2026-05-07T06:27:49.566Z",
+    "messageId": "67691091-7c46-476d-ba52-7883e69c79c1",
+    "media": "Axios"
+  },
+  "sonia.garcia@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:28:37.323Z",
+    "messageId": "f2b9487e-4376-4f7d-bc44-4609c4d9cbfc",
+    "media": "Houston Chronicle"
+  },
+  "amber.elliott@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:29:33.670Z",
+    "messageId": "0603af43-1cba-42f3-b51c-bced635d2f13",
+    "media": "Houston Chronicle"
+  },
+  "alexandra.kanik@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:30:09.864Z",
+    "messageId": "962bc51d-94c5-43a1-8e59-a74b8452daae",
+    "media": "Houston Chronicle"
+  },
+  "amelia.winger@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:30:42.653Z",
+    "messageId": "d3c407d0-8d76-4e3a-8b56-00a11e933a4e",
+    "media": "Houston Chronicle"
+  },
+  "ana.goodwin@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:31:26.642Z",
+    "messageId": "692a3807-7efd-463c-b115-34d563d46492",
+    "media": "Houston Chronicle"
+  },
+  "matt.zdun@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:32:01.626Z",
+    "messageId": "99bbaaa1-0165-4e9b-b63c-5934764d58ef",
+    "media": "Houston Chronicle"
+  },
+  "robert.eckhart@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:32:48.061Z",
+    "messageId": "3890f242-0565-4f1b-a425-1f1890789c37",
+    "media": "Houston Chronicle"
+  },
+  "andrea.ball@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:33:22.062Z",
+    "messageId": "9df05ca5-35e4-46d9-b1e2-26fe8e249a44",
+    "media": "Houston Chronicle"
+  },
+  "eric.dexheimer@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:34:11.719Z",
+    "messageId": "b3a96063-fe60-4def-92fa-95f5ad423a39",
+    "media": "Houston Chronicle"
+  },
+  "caroline.ghisolfi@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:34:46.357Z",
+    "messageId": "c1ed7b81-1815-4152-82ad-a742a6661ea1",
+    "media": "Houston Chronicle"
+  },
+  "neena.satija@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:35:31.225Z",
+    "messageId": "6182fe15-8759-4606-be51-f515e3841265",
+    "media": "Houston Chronicle"
+  },
+  "mike.morris@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:36:24.924Z",
+    "messageId": "75a3477e-b0d4-48cf-8aa1-08537585bde0",
+    "media": "Houston Chronicle"
+  },
+  "julian.gill@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:37:19.877Z",
+    "messageId": "d1c36e87-1797-47b0-8989-657de10974cc",
+    "media": "Houston Chronicle"
+  },
+  "amanda.drane@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:38:16.110Z",
+    "messageId": "168ca04a-8ac5-41b9-935d-67a83cccd167",
+    "media": "Houston Chronicle"
+  },
+  "dylan.mcguinness@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:39:11.710Z",
+    "messageId": "4141f4f9-928f-4ddd-bc76-67ed6e200aca",
+    "media": "Houston Chronicle"
+  },
+  "dug.begley@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:40:11.369Z",
+    "messageId": "f6fad60c-47ad-46c7-8222-3c125d79f96d",
+    "media": "Houston Chronicle"
+  },
+  "yilun.cheng@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:40:43.601Z",
+    "messageId": "57a437a1-e85f-4357-a46a-471a9d7afbdf",
+    "media": "Houston Chronicle"
+  },
+  "joy.sewing@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:41:22.985Z",
+    "messageId": "cd2503a0-448b-4526-aebd-9c32d14de4dc",
+    "media": "Houston Chronicle"
+  },
+  "benjamin.hager@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:41:56.673Z",
+    "messageId": "f7e0b0db-c13a-4fc3-92ae-cf255ec9e56b",
+    "media": "Houston Chronicle"
+  },
+  "jill.karnicki@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:42:29.652Z",
+    "messageId": "932d665b-dac6-4c4e-9965-d4ae1087a853",
+    "media": "Houston Chronicle"
+  },
+  "reid.laymance@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:43:07.601Z",
+    "messageId": "4f348f0a-c25c-481e-80c7-6b3e1a18b158",
+    "media": "Houston Chronicle"
+  },
+  "greg.rajan@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:44:06.011Z",
+    "messageId": "d60d440b-ace9-4e7b-a273-92d9fd895905",
+    "media": "Houston Chronicle"
+  },
+  "joseph.duarte@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:45:00.438Z",
+    "messageId": "fac38a37-c8e7-4885-8679-72afcc3e73c5",
+    "media": "Houston Chronicle"
+  },
+  "matt.young@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:45:32.248Z",
+    "messageId": "8e03a727-1a14-4014-8789-13a192a4ce48",
+    "media": "Houston Chronicle"
+  },
+  "jonathan.alexander@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:46:03.699Z",
+    "messageId": "bba6c893-c19f-4b11-8aec-a68b68b1646d",
+    "media": "Houston Chronicle"
+  },
+  "danielle.lerner@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:46:34.925Z",
+    "messageId": "185367f2-6b15-487c-8533-2772460de41f",
+    "media": "Houston Chronicle"
+  },
+  "matt.kawahara@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:47:17.491Z",
+    "messageId": "5c49e42f-b703-4550-b0a3-e4bcfc259897",
+    "media": "Houston Chronicle"
+  },
+  "kirk.bohls@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:48:02.250Z",
+    "messageId": "bb10fa41-4f9a-42bf-86a0-55b21dbae0f2",
+    "media": "Houston Chronicle"
+  },
+  "sam.warren@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:48:56.851Z",
+    "messageId": "b01720df-8ba9-4a3a-9a94-4a152f064e57",
+    "media": "Houston Chronicle"
+  },
+  "jeremy.blackman@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:49:57.220Z",
+    "messageId": "531f0814-c9b6-4a98-9bfb-228236ab2d49",
+    "media": "Houston Chronicle"
+  },
+  "allie.morris@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:50:56.457Z",
+    "messageId": "1487f939-7716-4d78-b24b-d85adc1463ef",
+    "media": "Houston Chronicle"
+  },
+  "andrea.leinfelder@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:51:49.706Z",
+    "messageId": "5c434041-bdbe-49fc-b287-c6141771fd62",
+    "media": "Houston Chronicle"
+  },
+  "jasper.scherer@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:52:41.001Z",
+    "messageId": "f2c93cf1-6196-4319-94b2-a3a642957ebc",
+    "media": "Houston Chronicle"
+  },
+  "edward.mckinley@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:53:24.712Z",
+    "messageId": "1b8192be-1ae3-4e28-bc9e-604939253d2f",
+    "media": "Houston Chronicle"
+  },
+  "taylor.goldenstein@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:54:03.115Z",
+    "messageId": "fc4117f5-68d2-4df6-8de9-077c56ad8cad",
+    "media": "Houston Chronicle"
+  },
+  "jeremy.wallace@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:54:42.649Z",
+    "messageId": "080e27d6-bea4-4c0e-91f1-a8b21b08b2a6",
+    "media": "Houston Chronicle"
+  },
+  "ben.wermund@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:55:15.204Z",
+    "messageId": "8cad9776-e536-4e6f-b640-1198f833a848",
+    "media": "Houston Chronicle"
+  },
+  "morgan.severson@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:55:52.857Z",
+    "messageId": "7a638887-c84d-4799-9333-943e4f254bab",
+    "media": "Houston Chronicle"
+  },
+  "aviva.bechky@houstonchronicle.com": {
+    "sentAt": "2026-05-07T06:56:35.314Z",
+    "messageId": "646fcbde-eef4-4be4-889c-4343aa456210",
+    "media": "Houston Chronicle"
+  },
+  "zacharia.washington@dallasnews.com": {
+    "sentAt": "2026-05-07T06:57:28.171Z",
+    "messageId": "db1ab05f-5584-4247-83c2-398c9b5118b2",
+    "media": "Dallas Morning News"
+  },
+  "jose.sanchezcordova@dallasnews.com": {
+    "sentAt": "2026-05-07T06:58:16.562Z",
+    "messageId": "01b39808-ccc1-4fab-9077-a4decee8377a",
+    "media": "Dallas Morning News"
+  },
+  "lia.assimakopoulos@dallasnews.com": {
+    "sentAt": "2026-05-07T06:59:11.608Z",
+    "messageId": "89b8b156-fab1-4f48-acf4-ebc64a0f0fd2",
+    "media": "Dallas Morning News"
+  },
+  "alice.bazerghi@statesman.com": {
+    "sentAt": "2026-05-07T06:59:42.189Z",
+    "messageId": "e82f6642-a36f-4f3d-9c0e-0c643980e520",
+    "media": "Austin American-Statesman"
+  },
+  "katey.psencik@statesman.com": {
+    "sentAt": "2026-05-07T07:00:34.808Z",
+    "messageId": "e76f6ede-930b-4cb9-ba37-3875c2252288",
+    "media": "Austin American-Statesman"
+  },
+  "robbie.farias@statesman.com": {
+    "sentAt": "2026-05-07T07:01:27.360Z",
+    "messageId": "f4c82535-c398-4b5f-8db2-c017bf236e87",
+    "media": "Austin American-Statesman"
+  },
+  "sanchali.singh@statesman.com": {
+    "sentAt": "2026-05-07T07:02:20.222Z",
+    "messageId": "0c8aacdd-8c49-4663-be79-ea34471ad851",
+    "media": "Austin American-Statesman"
+  },
+  "tyler.davis@statesman.com": {
+    "sentAt": "2026-05-07T07:02:52.124Z",
+    "messageId": "5264a242-671c-4b6f-ad36-ba2ac21540cb",
+    "media": "Austin American-Statesman"
+  },
+  "alexis.simmerman@statesman.com": {
+    "sentAt": "2026-05-07T07:03:27.839Z",
+    "messageId": "3158dabd-1bed-4399-b888-db236c6c777c",
+    "media": "Austin American-Statesman"
+  },
+  "austin.sanders@statesman.com": {
+    "sentAt": "2026-05-07T07:04:16.201Z",
+    "messageId": "266734b5-43d4-489d-abb3-edec27cbcc3b",
+    "media": "Austin American-Statesman"
+  },
+  "chaya.tong@statesman.com": {
+    "sentAt": "2026-05-07T07:05:13.878Z",
+    "messageId": "8b313568-e791-46a1-b5e4-2e997da6126a",
+    "media": "Austin American-Statesman"
+  },
+  "dante.motley@statesman.com": {
+    "sentAt": "2026-05-07T07:05:55.508Z",
+    "messageId": "aacd79de-6067-4060-9762-3f8a2d24f520",
+    "media": "Austin American-Statesman"
+  },
+  "faith.bugenhagen@statesman.com": {
+    "sentAt": "2026-05-07T07:06:31.346Z",
+    "messageId": "dd3257d0-f8c9-4f94-8b52-8c08d5bb71f5",
+    "media": "Austin American-Statesman"
+  },
+  "julianna.russ@statesman.com": {
+    "sentAt": "2026-05-07T07:07:13.261Z",
+    "messageId": "41ba90a1-a9b5-4fed-89cf-f8e345a8b892",
+    "media": "Austin American-Statesman"
+  },
+  "paul.flahive@statesman.com": {
+    "sentAt": "2026-05-07T07:07:48.761Z",
+    "messageId": "f983f23b-0607-4529-b003-34a03d51679c",
+    "media": "Austin American-Statesman"
+  },
+  "caleb.yum@statesman.com": {
+    "sentAt": "2026-05-07T07:08:28.516Z",
+    "messageId": "9cf69fff-c910-47b0-b7d5-1d2cecafdc47",
+    "media": "Austin American-Statesman"
+  },
+  "david.eckert@statesman.com": {
+    "sentAt": "2026-05-07T07:09:11.000Z",
+    "messageId": "723761f4-2461-4919-a8ca-8a7e666e1c16",
+    "media": "Austin American-Statesman"
+  },
+  "anthony.catalina@statesman.com": {
+    "sentAt": "2026-05-07T07:09:52.761Z",
+    "messageId": "9f11068e-b36b-4397-ad6a-8abc5a82f4b3",
+    "media": "Austin American-Statesman"
+  },
+  "zoe.collinsrath@statesman.com": {
+    "sentAt": "2026-05-07T07:10:49.331Z",
+    "messageId": "f0ded043-3d36-4d3c-8e86-dfbeb03a76b1",
+    "media": "Austin American-Statesman"
+  },
+  "cody.copeland@statesman.com": {
+    "sentAt": "2026-05-07T07:11:48.226Z",
+    "messageId": "a324c2f8-c226-4a74-989c-79931be7e442",
+    "media": "Austin American-Statesman"
+  },
+  "ana.gutierrez@statesman.com": {
+    "sentAt": "2026-05-07T07:12:29.260Z",
+    "messageId": "26d5af73-3a87-417a-814f-6e51d7d18dd0",
+    "media": "Austin American-Statesman"
+  },
+  "efren.salinas@statesman.com": {
+    "sentAt": "2026-05-07T07:13:10.536Z",
+    "messageId": "839d8072-7336-49d5-997d-12eec32ad072",
+    "media": "Austin American-Statesman"
+  },
+  "mariya.abate@ajc.com": {
+    "sentAt": "2026-05-07T07:13:59.669Z",
+    "messageId": "3ca5accc-8762-41c2-bfa3-1d74925a1a3a",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "shaddi.abusaid@ajc.com": {
+    "sentAt": "2026-05-07T07:14:38.949Z",
+    "messageId": "ac203f4f-7a24-4bf6-bad4-65a321f2206f",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "cassidy.alexander@ajc.com": {
+    "sentAt": "2026-05-07T07:15:27.951Z",
+    "messageId": "a6c192ed-43a8-4600-a646-ba48f43e68aa",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "jason.armesto@ajc.com": {
+    "sentAt": "2026-05-07T07:16:13.604Z",
+    "messageId": "2043d611-3e66-46c6-843c-2b6446be55ab",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "kelly.audette@ajc.com": {
+    "sentAt": "2026-05-07T07:17:12.785Z",
+    "messageId": "6ae85676-4db6-4a5b-9237-f74b1d61ec68",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "adam.beam@ajc.com": {
+    "sentAt": "2026-05-07T07:17:45.553Z",
+    "messageId": "538d92bf-2996-4da5-a809-2eb20051b828",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "rod.beard@ajc.com": {
+    "sentAt": "2026-05-07T07:18:37.086Z",
+    "messageId": "fe77cf84-19c8-4f60-9b5c-eddd317365ba",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "nicole.bennett@ajc.com": {
+    "sentAt": "2026-05-07T07:19:14.877Z",
+    "messageId": "58086509-9777-4469-a719-4150ef1c72f6",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "chad.bishop@ajc.com": {
+    "sentAt": "2026-05-07T07:20:13.809Z",
+    "messageId": "fb8a73c9-4167-498e-a5da-9f13f97e42a0",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "jay.black@ajc.com": {
+    "sentAt": "2026-05-07T07:21:04.823Z",
+    "messageId": "4e7f84f7-88fc-45ed-b4c7-1001e79480b4",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "hunter.boyce@ajc.com": {
+    "sentAt": "2026-05-07T07:21:56.104Z",
+    "messageId": "8dc0c5d7-66e3-4e21-a9b1-dfe33170659d",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "sandra.brown@ajc.com": {
+    "sentAt": "2026-05-07T07:22:56.271Z",
+    "messageId": "cd4e4818-1a2a-483a-aa15-ce21af9ca125",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "riley.bunch@ajc.com": {
+    "sentAt": "2026-05-07T07:23:31.548Z",
+    "messageId": "2effe047-977e-45e7-aba7-5314a3da3cb2",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "asia.burns@ajc.com": {
+    "sentAt": "2026-05-07T07:24:08.605Z",
+    "messageId": "ea856cc0-a55e-4dac-9fd1-8b2dd380e30c",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "gabriel.burns@ajc.com": {
+    "sentAt": "2026-05-07T07:25:00.579Z",
+    "messageId": "8c335680-0fd9-4dd8-8922-50ad91316dea",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "monti.carlo@ajc.com": {
+    "sentAt": "2026-05-07T07:25:38.693Z",
+    "messageId": "122038ac-f357-44ae-bba4-290c1d3a7ae4",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "cody.chaffins@ajc.com": {
+    "sentAt": "2026-05-07T07:26:34.424Z",
+    "messageId": "636bb286-870f-445a-a786-1c3a541765cf",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "leroy.chapman@ajc.com": {
+    "sentAt": "2026-05-07T07:27:33.750Z",
+    "messageId": "a9835885-b7d8-47c7-8955-e54aa4104352",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "rose.ciotta@ajc.com": {
+    "sentAt": "2026-05-07T07:28:23.077Z",
+    "messageId": "62ef1eb4-8007-47c2-92ed-48a57d4b6924",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "nancy.clanton@ajc.com": {
+    "sentAt": "2026-05-07T07:29:05.539Z",
+    "messageId": "71756d6c-2546-41d5-8094-39a6b422d559",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "taylor.croft@ajc.com": {
+    "sentAt": "2026-05-07T07:30:00.633Z",
+    "messageId": "2e129767-0b77-4a59-8057-2f64f5c12637",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "michael.cunningham@ajc.com": {
+    "sentAt": "2026-05-07T07:30:47.127Z",
+    "messageId": "107d846e-3fc2-43d2-9145-6f22b28b67eb",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "martha.dalton@ajc.com": {
+    "sentAt": "2026-05-07T07:31:46.147Z",
+    "messageId": "6e4463a2-6736-4c94-8d57-5cbf012529b1",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "christopher.daniel@ajc.com": {
+    "sentAt": "2026-05-07T07:32:20.258Z",
+    "messageId": "04ea1b4c-494d-4a32-b40f-6d6c999e37de",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "janel.davis@ajc.com": {
+    "sentAt": "2026-05-07T07:33:08.249Z",
+    "messageId": "2430031e-13db-433c-9efa-fed3c6dc05d9",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "amanda.dearmon@ajc.com": {
+    "sentAt": "2026-05-07T07:33:46.409Z",
+    "messageId": "38680d3a-99dc-41eb-aea1-0d21c942166d",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "lindsay.deutsch@ajc.com": {
+    "sentAt": "2026-05-07T07:34:29.691Z",
+    "messageId": "7406ab75-e424-4530-b00d-9d231a01a841",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "mirtha.donastorg@ajc.com": {
+    "sentAt": "2026-05-07T07:35:08.189Z",
+    "messageId": "b637d065-957f-459f-b36d-a5445d28ea61",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "sharif.durhams@ajc.com": {
+    "sentAt": "2026-05-07T07:35:57.891Z",
+    "messageId": "ca12b2d6-155f-454a-baad-b429c1826f57",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "abbey.edmonson@ajc.com": {
+    "sentAt": "2026-05-07T07:36:44.328Z",
+    "messageId": "9855cb3c-6df1-44b1-bc0a-3bdad286a981",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "tyler.estep@ajc.com": {
+    "sentAt": "2026-05-07T07:37:26.137Z",
+    "messageId": "c9f1fc24-6938-4532-9f95-2d22788b5bd0",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "mike.esterl@ajc.com": {
+    "sentAt": "2026-05-07T07:38:06.866Z",
+    "messageId": "4decb892-aadd-4098-87c4-aeb2e56a98e5",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "rose.french@ajc.com": {
+    "sentAt": "2026-05-07T07:38:48.046Z",
+    "messageId": "4e3f559f-851e-475d-bddd-f7c50d43b4c1",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "gavin.godfrey@ajc.com": {
+    "sentAt": "2026-05-07T07:39:41.893Z",
+    "messageId": "b3877410-5c4f-437a-8838-b5989bc92b15",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "sara.gregory@ajc.com": {
+    "sentAt": "2026-05-07T07:40:24.715Z",
+    "messageId": "54ebb579-4af0-44aa-a96b-73200e5423b7",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "lautaro.grinspan@ajc.com": {
+    "sentAt": "2026-05-07T07:41:01.002Z",
+    "messageId": "93f5dd20-fc95-4530-b551-eeacd993bb68",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "caleb.groves@ajc.com": {
+    "sentAt": "2026-05-07T07:41:39.442Z",
+    "messageId": "c3086450-f8fa-4683-af53-84ca95d22c16",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "melissa.hall@ajc.com": {
+    "sentAt": "2026-05-07T07:42:24.746Z",
+    "messageId": "8e288aca-52c8-4217-b59e-037333c802c0",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "tamar.hallerman@ajc.com": {
+    "sentAt": "2026-05-07T07:43:04.388Z",
+    "messageId": "38d72d44-6aad-4dde-8a3d-8a49f8d39504",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "george.hanns@ajc.com": {
+    "sentAt": "2026-05-07T07:43:59.801Z",
+    "messageId": "6ba734d6-6983-471b-9c53-53c1c9142d1c",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "zachary.hansen@ajc.com": {
+    "sentAt": "2026-05-07T07:44:56.882Z",
+    "messageId": "844e96fe-6095-4de2-bce8-2b2340cfac41",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "rodney.ho@ajc.com": {
+    "sentAt": "2026-05-07T07:45:35.868Z",
+    "messageId": "9e459aaf-dbe6-4f27-a38c-38a08711b4a9",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "samantha.hogan@ajc.com": {
+    "sentAt": "2026-05-07T07:46:24.305Z",
+    "messageId": "f5f2e87f-d8b6-4670-b73a-b2234242d199",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "todd.holcomb@ajc.com": {
+    "sentAt": "2026-05-07T07:47:10.070Z",
+    "messageId": "5dce1a5f-c4bf-4dff-a808-04acf5bfa4aa",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "henri.hollis@ajc.com": {
+    "sentAt": "2026-05-07T07:48:07.409Z",
+    "messageId": "c97d0827-b21b-4904-8c43-066463dbf84b",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "bita.honarvar@ajc.com": {
+    "sentAt": "2026-05-07T07:48:43.194Z",
+    "messageId": "7f0a6155-1a90-4519-a79a-64579b359089",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "jessica.horne@ajc.com": {
+    "sentAt": "2026-05-07T07:49:32.083Z",
+    "messageId": "1026ecb5-29d3-425f-9d2b-df56cb49dd40",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "michael.horton@ajc.com": {
+    "sentAt": "2026-05-07T07:50:17.936Z",
+    "messageId": "1b7301b9-8c73-4e55-b3d5-25d9c42d3764",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "brooke.howard@ajc.com": {
+    "sentAt": "2026-05-07T07:51:08.435Z",
+    "messageId": "e6da5c79-8f9e-41dd-b3f2-7b0e5fd4731e",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "dylan.jackson@ajc.com": {
+    "sentAt": "2026-05-07T07:51:50.245Z",
+    "messageId": "d1abb8c9-5e7c-45a5-89c0-65ee374dacdb",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "samira.jafari@ajc.com": {
+    "sentAt": "2026-05-07T07:52:31.749Z",
+    "messageId": "d541656d-aeb9-4e89-bb7c-c573d8dbb81f",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "kimberly.johnson@ajc.com": {
+    "sentAt": "2026-05-07T07:53:18.844Z",
+    "messageId": "265ac5b7-feda-497c-980b-bcce63b18497",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "david.joiner@ajc.com": {
+    "sentAt": "2026-05-07T07:54:17.249Z",
+    "messageId": "e4e93724-649b-4112-877a-ee10f88e7d24",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "mike.jordan@ajc.com": {
+    "sentAt": "2026-05-07T07:55:11.163Z",
+    "messageId": "128faf16-da4b-4434-8fe3-0f02d64dc416",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "chris.joyner@ajc.com": {
+    "sentAt": "2026-05-07T07:55:54.015Z",
+    "messageId": "dba952d0-e074-41b7-8b1f-5c40e55cb4c4",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "drew.kann@ajc.com": {
+    "sentAt": "2026-05-07T07:56:34.875Z",
+    "messageId": "4686e18f-5f62-4352-8345-15c01456cfca",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "dan.klepal@ajc.com": {
+    "sentAt": "2026-05-07T07:57:28.415Z",
+    "messageId": "2eaee8a0-4954-4c8b-89f1-e41da9f266d3",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "joe.kovac@ajc.com": {
+    "sentAt": "2026-05-07T07:58:08.488Z",
+    "messageId": "821d7098-f6b6-4ed8-8349-6a92310c9b13",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "thomas.lake@ajc.com": {
+    "sentAt": "2026-05-07T07:58:58.241Z",
+    "messageId": "2c78d689-4e8c-4749-9013-e5b1cf530199",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "stephanie.lamm@ajc.com": {
+    "sentAt": "2026-05-07T07:59:29.271Z",
+    "messageId": "32e1f03c-d754-4a70-a173-cbd847e5177c",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "katherine.landergan@ajc.com": {
+    "sentAt": "2026-05-07T08:00:00.419Z",
+    "messageId": "4fa9f939-675a-4cc2-becb-1dfa91e5ac09",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "keith.lovelyjr@ajc.com": {
+    "sentAt": "2026-05-07T08:00:43.711Z",
+    "messageId": "fc501b43-7e7d-4a7a-9282-142571d30b79",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "mike.luckovich@ajc.com": {
+    "sentAt": "2026-05-07T08:01:21.192Z",
+    "messageId": "c3cbbfd6-d35a-4ba4-8df4-494643bc1a35",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "eric.mandel@ajc.com": {
+    "sentAt": "2026-05-07T08:02:11.261Z",
+    "messageId": "55db9f4e-e26e-4f53-8a97-36056582fde3",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "rosie.manins@ajc.com": {
+    "sentAt": "2026-05-07T08:02:43.504Z",
+    "messageId": "182108d4-9688-4d0a-861e-937030208a8f",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "miguel.martinezjiminez@ajc.com": {
+    "sentAt": "2026-05-07T08:03:15.633Z",
+    "messageId": "e0f3eb90-5e9f-4f9d-ae25-18312c3f6001",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "tyler.mcbrien@ajc.com": {
+    "sentAt": "2026-05-07T08:04:05.863Z",
+    "messageId": "2b03e4e1-2644-47cd-bd8b-9d4c5a5dbb6d",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "shannon.mccaffrey@ajc.com": {
+    "sentAt": "2026-05-07T08:04:45.996Z",
+    "messageId": "9d68f48c-c359-4ab8-bbe0-b3e367e5dced",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "vanessa.mccray@ajc.com": {
+    "sentAt": "2026-05-07T08:05:25.791Z",
+    "messageId": "cda6c1c6-2392-4016-9818-ab4ac824be87",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "charles.minshew@ajc.com": {
+    "sentAt": "2026-05-07T08:06:00.806Z",
+    "messageId": "35546ff0-4d7f-4be8-aaf9-68eab4ae4695",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "tia.mitchell@ajc.com": {
+    "sentAt": "2026-05-07T08:06:31.881Z",
+    "messageId": "e7432c71-5a32-4132-afc0-b7e311d87ec1",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "thad.moore@ajc.com": {
+    "sentAt": "2026-05-07T08:07:16.325Z",
+    "messageId": "811fd6f0-261d-41ca-87e1-e2b844fed9e9",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "andrew.morse@ajc.com": {
+    "sentAt": "2026-05-07T08:07:57.883Z",
+    "messageId": "5b26d74a-5fdb-4853-8672-6df0d79b51bd",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "patricia.murphy@ajc.com": {
+    "sentAt": "2026-05-07T08:08:47.928Z",
+    "messageId": "f79bfc34-7d3e-47f2-88fd-d613dafe0efc",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "jason.newman@ajc.com": {
+    "sentAt": "2026-05-07T08:09:41.849Z",
+    "messageId": "dc9cc2c3-e3e0-47dc-9a1a-71025c15b00d",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "avery.newmark@ajc.com": {
+    "sentAt": "2026-05-07T08:10:20.147Z",
+    "messageId": "6fe3aa2f-b3fc-42d7-93e2-3cc5e649afe4",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "fletcher.page@ajc.com": {
+    "sentAt": "2026-05-07T08:10:54.964Z",
+    "messageId": "d614200f-7942-474c-b5ee-7ecfbbc25a12",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "deasia.paige@ajc.com": {
+    "sentAt": "2026-05-07T08:11:27.211Z",
+    "messageId": "a70ae288-04da-4fc5-96ac-f082b94d6c0c",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "najja.parker@ajc.com": {
+    "sentAt": "2026-05-07T08:12:03.398Z",
+    "messageId": "7e03f321-9eb8-4e1e-a3c1-790d574bb689",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "jennifer.peebles@ajc.com": {
+    "sentAt": "2026-05-07T08:12:56.834Z",
+    "messageId": "b1685ce4-96c6-43ab-9604-f318239853b1",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "david.plazas@ajc.com": {
+    "sentAt": "2026-05-07T08:13:30.542Z",
+    "messageId": "51ecfeab-7302-46ec-8a65-b4770d2dd4b4",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "monte.plott@ajc.com": {
+    "sentAt": "2026-05-07T08:14:03.589Z",
+    "messageId": "e1766a7b-900b-4f6c-976f-ab42be131dcc",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "justin.price@ajc.com": {
+    "sentAt": "2026-05-07T08:14:35.445Z",
+    "messageId": "a215a105-5287-427f-b589-76c39dfa8ad6",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "phoebe.quinton@ajc.com": {
+    "sentAt": "2026-05-07T08:15:16.116Z",
+    "messageId": "0af2a5f2-73e3-4951-aeb8-3bc8709b56c5",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "nedra.rhone@ajc.com": {
+    "sentAt": "2026-05-07T08:15:55.029Z",
+    "messageId": "6df5d12a-0a23-467f-b98f-9732f5802731",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "danny.robbins@ajc.com": {
+    "sentAt": "2026-05-07T08:16:42.768Z",
+    "messageId": "0bf6ef0d-6af0-4f69-8eff-3cffb3f0b185",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "chip.saye@ajc.com": {
+    "sentAt": "2026-05-07T08:17:25.364Z",
+    "messageId": "750c2516-a622-4c47-9627-21eb22bebaa6",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "allison.schein@ajc.com": {
+    "sentAt": "2026-05-07T08:18:12.204Z",
+    "messageId": "81fe24e0-4e13-4905-88b5-38fe2b8af403",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "brad.schrade@ajc.com": {
+    "sentAt": "2026-05-07T08:19:08.775Z",
+    "messageId": "93039253-34b6-4484-b66f-8afcbd2e0958",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "hyosub.shin@ajc.com": {
+    "sentAt": "2026-05-07T08:20:01.372Z",
+    "messageId": "b7232fb0-e7a4-4f75-b1e1-988f8d74349b",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "caroline.silva@ajc.com": {
+    "sentAt": "2026-05-07T08:20:56.394Z",
+    "messageId": "198d2bed-2ecd-4c0a-b80c-44407e4e84a6",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "maegan.smith@ajc.com": {
+    "sentAt": "2026-05-07T08:21:40.507Z",
+    "messageId": "0542a06c-1e75-462b-a8c9-aa51270217c2",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "samantha.stamler@ajc.com": {
+    "sentAt": "2026-05-07T08:22:25.924Z",
+    "messageId": "beb693cc-47a3-4c8e-840a-8baeb7e47c81",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "sabrina.starrett@ajc.com": {
+    "sentAt": "2026-05-07T08:23:10.061Z",
+    "messageId": "4bf6bc52-fc4c-4dc3-93cb-70a16c8543a0",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "holly.steel@ajc.com": {
+    "sentAt": "2026-05-07T08:24:02.942Z",
+    "messageId": "8380d0d1-81c7-4e27-be29-9404fe258fa7",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "eric.stirgus@ajc.com": {
+    "sentAt": "2026-05-07T08:24:35.183Z",
+    "messageId": "97233d10-b644-4a27-8cea-5d370c866946",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "caitlyn.strohpage@ajc.com": {
+    "sentAt": "2026-05-07T08:25:30.662Z",
+    "messageId": "011fa1f5-cb13-4d2a-8a57-a2679e15f4ea",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "ernie.suggs@ajc.com": {
+    "sentAt": "2026-05-07T08:26:05.752Z",
+    "messageId": "ae0a0c17-47e7-4ec3-9ca8-1035ed5f8bd2",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "ken.sugiura@ajc.com": {
+    "sentAt": "2026-05-07T08:27:00.438Z",
+    "messageId": "e06f7482-ff3b-4781-a7c9-947505aec71d",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "kristi.swartz@ajc.com": {
+    "sentAt": "2026-05-07T08:27:44.384Z",
+    "messageId": "ab842161-d6cb-4fa0-8224-004eac6012f0",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "carrie.teegardin@ajc.com": {
+    "sentAt": "2026-05-07T08:28:16.803Z",
+    "messageId": "f23fd0fc-5bd3-496c-ac41-2a9dd00713b8",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "arvin.temkar@ajc.com": {
+    "sentAt": "2026-05-07T08:29:17.116Z",
+    "messageId": "2e10d399-ba7c-45ac-ae86-8db33c558cb5",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "scott.trubey@ajc.com": {
+    "sentAt": "2026-05-07T08:29:59.976Z",
+    "messageId": "376f7de7-a5e7-42d6-a482-e17be098d40a",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "adam.vanbrimmer@ajc.com": {
+    "sentAt": "2026-05-07T08:30:39.366Z",
+    "messageId": "9546aa5b-d0b9-44f4-969c-825f67a0acbc",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "olivia.wakim@ajc.com": {
+    "sentAt": "2026-05-07T08:31:38.948Z",
+    "messageId": "b4b51b71-6d52-47c6-ae89-ff3aabcaee13",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "richard.watkins@ajc.com": {
+    "sentAt": "2026-05-07T08:32:21.833Z",
+    "messageId": "347956c3-7ef5-4ccb-8e98-a69c05e08f14",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "amy.wenk@ajc.com": {
+    "sentAt": "2026-05-07T08:32:55.579Z",
+    "messageId": "3f570523-3bcb-4399-87be-7fd4e76adb50",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "lauren.williams@ajc.com": {
+    "sentAt": "2026-05-07T08:33:35.810Z",
+    "messageId": "1647bec5-fe22-4494-a44b-fbc90e95602c",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "nicole.williams@ajc.com": {
+    "sentAt": "2026-05-07T08:34:19.613Z",
+    "messageId": "0e839b12-8a2e-4121-b96f-a66f7c4dfa59",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "reed.williams@ajc.com": {
+    "sentAt": "2026-05-07T08:35:04.472Z",
+    "messageId": "ee19987a-829c-462f-8594-542e34d75ad7",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "aj.willingham@ajc.com": {
+    "sentAt": "2026-05-07T08:35:59.150Z",
+    "messageId": "448683fc-08a6-4d32-a667-fbd79d0bffe7",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "kelly.yamanouchi@ajc.com": {
+    "sentAt": "2026-05-07T08:36:41.851Z",
+    "messageId": "e8b4bb80-a256-4f8e-9f02-1c5cfadd6bea",
+    "media": "Atlanta Journal-Constitution"
+  },
+  "sports.daily@inquirer.com": {
+    "sentAt": "2026-05-07T08:37:24.964Z",
+    "messageId": "0b395263-5fab-4589-b28b-eb6e5f18ae10",
+    "media": "Philadelphia Inquirer"
+  },
+  "hali.smith@idahostatesman.com": {
+    "sentAt": "2026-05-07T08:38:05.689Z",
+    "messageId": "ebcb32b7-3827-4371-a110-d0c2dcec9879",
+    "media": "Idaho Statesman"
+  },
+  "kristen.wright@tulsaworld.com": {
+    "sentAt": "2026-05-07T08:38:46.424Z",
+    "messageId": "56da3f2b-78ee-49bd-87ba-56833b35351c",
+    "media": "Tulsa World"
+  },
+  "toyloy.brown@theadvocate.com": {
+    "sentAt": "2026-05-07T08:39:44.442Z",
+    "messageId": "3180f6cf-287a-465f-a6fd-ab0f7da2e356",
+    "media": "The Advocate"
+  },
+  "marco.cartolano@theadvocate.com": {
+    "sentAt": "2026-05-07T08:40:17.425Z",
+    "messageId": "372258cc-0267-4e82-b144-fa4356d1c0e0",
+    "media": "The Advocate"
+  },
+  "jackson.reyes@theadvocate.com": {
+    "sentAt": "2026-05-07T08:41:16.685Z",
+    "messageId": "d1708918-e88b-4190-a380-106fe30123d3",
+    "media": "The Advocate"
+  },
+  "ianne.salvosa@theadvocate.com": {
+    "sentAt": "2026-05-07T08:42:13.732Z",
+    "messageId": "94c33faf-5516-468b-9106-75397a4b0476",
+    "media": "The Advocate"
+  },
+  "art_director@ourstate.com": {
+    "sentAt": "2026-05-07T08:43:07.248Z",
+    "messageId": "d4f25916-0c72-4ad8-928a-79b3b9427392",
+    "media": "Our State"
+  },
+  "greg.lacour@charlottemagazine.com": {
+    "sentAt": "2026-05-07T08:43:44.867Z",
+    "messageId": "419e7ae0-7090-4386-a949-bb7a0a8e841a",
+    "media": "Charlotte Magazine"
+  },
+  "taylor.bowler@charlottemagazine.com": {
+    "sentAt": "2026-05-07T08:44:40.513Z",
+    "messageId": "a1bf7b86-6d48-4496-b65b-5ed09bd7aa0d",
+    "media": "Charlotte Magazine"
+  },
+  "tess.allen@charlottemagazine.com": {
+    "sentAt": "2026-05-07T08:45:22.306Z",
+    "messageId": "f0235a0f-5b90-47b5-844f-e66bb7843e9f",
+    "media": "Charlotte Magazine"
+  },
+  "jane.fields@charlottemagazine.com": {
+    "sentAt": "2026-05-07T08:46:13.615Z",
+    "messageId": "ffd34689-59cb-4913-bf8b-f33900b7ea1e",
+    "media": "Charlotte Magazine"
+  },
+  "jesse.longshore@charlottemagazine.com": {
+    "sentAt": "2026-05-07T08:46:44.342Z",
+    "messageId": "e23f01d8-57ab-472d-86d0-c5947e1ac873",
+    "media": "Charlotte Magazine"
+  },
+  "katie.williams@milwaukeemag.com": {
+    "sentAt": "2026-05-07T08:47:42.652Z",
+    "messageId": "da027e4a-d071-4ba8-97fd-457c35a72519",
+    "media": "Milwaukee Magazine"
   }
 }

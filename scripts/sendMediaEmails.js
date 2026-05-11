@@ -209,7 +209,7 @@ async function main() {
     process.exit(1);
   }
 
-  const csvPath = path.join(__dirname, 'output', 'media-contacts.csv');
+  const csvPath = path.join(__dirname, 'output', 'media-contacts-scraped.csv');
   const templatePath = path.join(__dirname, '..', 'public', 'email-template.html');
   const headerImagePath = path.join(__dirname, '..', 'public', 'numeline-email-header.png');
   const sentPath = path.join(__dirname, 'output', 'sent.json');
@@ -244,8 +244,44 @@ async function main() {
 
   if (!fs.existsSync(csvPath)) { log(`❌ CSV introuvable: ${csvPath}`, 'red'); process.exit(1); }
 
-  const contacts = parseCSV(fs.readFileSync(csvPath, 'utf8'));
+  const allContacts = parseCSV(fs.readFileSync(csvPath, 'utf8'));
   const sent = fs.existsSync(sentPath) ? JSON.parse(fs.readFileSync(sentPath, 'utf8')) : {};
+
+  // Garder uniquement kind=personal (vrais journalistes), exclure generic/unknown/maybe_personal
+  const personalContacts = allContacts.filter((c) => (c.kind || '').trim().toLowerCase() === 'personal');
+
+  // Filtre additionnel : exclure les patterns génériques (départements, exemples, faux positifs scraping)
+  const EMAIL_BAD_PATTERNS = [
+    'firstname.lastname', '_relations', '_licensing', '_administration', '_shouts',
+    '_inquiries', 'investor', 'privacy', 'legal@', 'careers@', 'subscriptions',
+    'support@', 'noreply', 'no-reply', 'webmaster', 'postmaster', 'admin@',
+    'info@', 'contact@', 'press@', 'pr@', 'media@', 'editor@', 'editorial@',
+    'newsletter', 'feedback', 'help@', 'sales@', 'marketing@', 'advertising',
+    'commsdept', 'studiosdevelopment', 'tips@', 'news@', 'office@'
+  ];
+  const FIRSTNAME_BAD = new Set([
+    'investor', 'image', 'privacy', 'readers', 'firstname', 'press', 'media',
+    'commsdept', 'studiosdevelopment', 'tips', 'feedback', 'guides', 'find',
+    'atcomments', 'engagement', 'bestthingstodo', 'events', 'partnerships',
+    'laistinternships', 'online', 'support', 'and', 'careers', 'subscriptions',
+    'legal', 'editor', 'editorial', 'news', 'office', 'admin', 'info', 'contact',
+    'newsletter', 'help', 'sales', 'marketing', 'advertising', 'pr', 'communications',
+    'tny', 'sarah', // 'sarah' alone is too generic — false positives like "sarah.media"
+  ]);
+
+  const contacts = personalContacts.filter((c) => {
+    const email = (c.email || '').trim().toLowerCase();
+    const firstName = (c.first_name || '').trim().toLowerCase();
+    if (!email) return false;
+    // Exclure si l'email contient un pattern générique
+    if (EMAIL_BAD_PATTERNS.some((p) => email.includes(p))) return false;
+    // Exclure si le first_name est une étiquette générique (et pas un vrai prénom)
+    if (FIRSTNAME_BAD.has(firstName)) return false;
+    // Exiger un last_name non vide (vrai journaliste = prénom + nom)
+    const lastName = (c.last_name || '').trim();
+    if (!lastName) return false;
+    return true;
+  });
 
   const toSend = contacts.filter((c) => {
     const e = (c.email || '').trim().toLowerCase();
@@ -253,7 +289,7 @@ async function main() {
   });
 
   log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'gray');
-  log(`📋 ${contacts.length} contacts dans le CSV`, 'cyan');
+  log(`📋 ${allContacts.length} contacts CSV → ${personalContacts.length} (kind=personal) → ${contacts.length} après filtre anti-générique`, 'cyan');
   log(`✉️  ${Object.keys(sent).length} déjà envoyés (skip)`, 'gray');
   log(`📤 ${Math.min(toSend.length, limit)} à envoyer maintenant`, 'cyan');
   log(`📨 From: ${FROM}`, 'gray');
@@ -283,7 +319,8 @@ async function main() {
     const html = buildHtml(template, contact);
     const text = buildText(contact);
 
-    log(`\n→ ${email} (${contact.media || ''} — ${contact.position || ''})`, 'cyan');
+    const fullName = `${contact.first_name || ''} ${contact.last_name || ''}`.trim();
+    log(`\n→ ${email} (${contact.media || ''}${fullName ? ' — ' + fullName : ''})`, 'cyan');
     if (dryRun) {
       log(`  [dry-run] taille HTML: ${html.length} chars`, 'gray');
       sentCount++;

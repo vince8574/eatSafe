@@ -71,7 +71,7 @@ jobs:
             -PRELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}
 
       - name: Build APK
-        if: github.event.inputs.build_type != 'aab'
+        if: github.event.inputs.build_type == 'apk'
         working-directory: android
         run: |
           ./gradlew assembleRelease \
@@ -88,7 +88,7 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload APK
-        if: github.event.inputs.build_type != 'aab'
+        if: github.event.inputs.build_type == 'apk'
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
