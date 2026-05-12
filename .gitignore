@@ -3,6 +3,9 @@ node_modules/
 .expo-shared/
 dist/
 build/
+artifacts/
+*.aab
+*.apk
 *.log
 yarn.lock
 firebase/functions/lib/
