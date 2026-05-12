@@ -386,13 +386,13 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
     return excludeKeywords.some(keyword => upperText.includes(keyword));
   };
 
-  // Fonction pour vérifier si c'est un numéro de téléphone (format français: 0 XXX XXX XXX ou 0XXXXXXXXX)
   const isPhoneNumber = (text: string): boolean => {
-    // Nettoyer le texte (enlever espaces, tirets, points)
     const cleaned = text.replace(/[\s\-\.]/g, '');
-    // Vérifier si c'est un numéro français (10 chiffres commençant par 0)
     return /^0\d{9}$/.test(cleaned);
   };
+
+  // UPC codes (exactly 12 digits) are not lot numbers
+  const isUpc = (text: string): boolean => /^\d{12}$/.test(text.replace(/[\s\-\.]/g, ''));
 
   // Stop keywords — if these appear after the LOT prefix, truncate before them
   const stopKeywords = ['DLC', 'DLUO', 'DDM', 'EXP', 'BEST', 'USE BY', 'BBD', 'BB', 'BEFORE', 'À CONSOMMER', 'CONSUME', 'DATE', 'GTIN', 'EAN', 'UPC'];
@@ -423,7 +423,7 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
         while ((match = regex.exec(text)) !== null) {
           const raw = match[1];
           const code = extractTightCode(raw);
-          if (code.length >= 2 && !isPhoneNumber(code) && !containsExcludedKeyword(code)) {
+          if (code.length >= 2 && /\d/.test(code) && !isPhoneNumber(code) && !isUpc(code) && !containsExcludedKeyword(code)) {
             results.push(code);
           }
         }
@@ -431,7 +431,7 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
         const lRegex = /(?:^|[\s\n])L[:\s][:\s]*([A-Z0-9]{3,20})/gi;
         while ((match = lRegex.exec(text)) !== null) {
           const code = extractTightCode(match[1]);
-          if (code.length >= 3 && !isPhoneNumber(code)) {
+          if (code.length >= 3 && /\d/.test(code) && !isPhoneNumber(code)) {
             results.push(code);
           }
         }
@@ -484,6 +484,24 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
         while ((match = regex.exec(text)) !== null) {
           const lotNum = match[1];
           if (lotNum.length <= 12 && !containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
+            results.push(lotNum);
+          }
+        }
+        return results;
+      }
+    },
+
+    // 4b. FDA date-embedded format: letters + 4-8 digits + letter suffix (ex: WN012117E, SE102922A, MS040421J)
+    {
+      name: 'Letters+digits+letter suffix (FDA)',
+      priority: 4,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\b([A-Z]{1,3}\d{4,8}[A-Z]{1,2})\b/gi;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+          const lotNum = match[1];
+          if (!containsExcludedKeyword(match[0]) && !isPhoneNumber(lotNum)) {
             results.push(lotNum);
           }
         }
