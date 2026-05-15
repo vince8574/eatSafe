@@ -18,6 +18,9 @@
  *      node scripts/sendMediaEmails.js --limit=5
  *   4) Envoi complet:
  *      node scripts/sendMediaEmails.js
+ *   5) Renvoyer le nouveau template à tous les contacts déjà contactés:
+ *      node scripts/sendMediaEmails.js --resend
+ *      (skips unsubscribed + already-resent, tracks in sent-resend.json)
  */
 
 const https = require('https');
@@ -31,17 +34,15 @@ const colors = {
 const log = (msg, c = 'reset') => console.log(`${colors[c]}${msg}${colors.reset}`);
 
 // --- Config ---
-// FROM utilise le sous-domaine vérifié dans Resend (send.numeline.com).
+// FROM utilise le sous-domaine vérifié dans Resend (numeline.com).
 // REPLY_TO pointe vers la vraie boîte mail pour recevoir les réponses.
-const FROM = 'Vincent Gaillard <contact@send.numeline.com>';
-const REPLY_TO = 'contact@numeline.com';
-const SUBJECT = 'An innovation that could change food recall management in the United States';
+const FROM = 'Vincent Gaillard <vincent@numeline.com>';
+const REPLY_TO = 'vincent@numeline.com';
+const SUBJECT = '6 listeria deaths, 0 lot-level recall alerts';
 const POSTAL_ADDRESS = '1620 route des Alpes du Léman, 74420 Villard, France';
-const UNSUBSCRIBE_MAILTO = 'mailto:contact@numeline.com?subject=Unsubscribe';
+const UNSUBSCRIBE_MAILTO = 'mailto:vincent@numeline.com?subject=Unsubscribe';
 const MIN_DELAY_MS = 30_000;  // 30s
 const MAX_DELAY_MS = 60_000;  // 60s
-const HEADER_CID = 'numeline-header';
-const HEADER_IMAGE_FILENAME = 'numeline-header.png';
 
 // --- Env ---
 function loadEnv() {
@@ -95,9 +96,6 @@ function buildHtml(template, contact) {
   // Replace greeting
   let html = template.replace(/>\s*Hello,\s*</, `>${greeting}<`);
 
-  // Replace inlined base64 image with CID reference (image attached separately)
-  html = html.replace(/src="data:image\/png;base64,[A-Za-z0-9+/=]+"/, `src="cid:${HEADER_CID}"`);
-
   // Inject CAN-SPAM footer before </table> (closing card table) — find last footer <tr>
   const footerHtml = `
           <!-- CAN-SPAM compliance footer -->
@@ -123,20 +121,20 @@ function buildText(contact) {
   const greeting = firstName ? `Hi ${firstName},` : 'Hello,';
   return `${greeting}
 
-Every year in the United States, many food products are recalled. Apps that scan barcodes exist today, but they remain rudimentary — the burden of manually verifying lot numbers (and the risk of mistakes) still falls on users.
+In June 2025, Nate's Fine Foods recalled pre-cooked pasta sold at Trader Joe's, Walmart, and Kroger. Before the shelves were emptied, listeria had already killed 6 people and hospitalized 25 across 18 states. Most consumers — and most existing recall apps — only see brand-level alerts. The actual lot numbers, where the contamination lives, slip through.
 
-This is why we developed Numeline, an Android and iOS app that centralizes official FDA and USDA FSIS recall data and lets anyone instantly check a lot number with a scan. It transforms access to recall information from a slow, fragmented system into a fast, everyday tool.
+That's the gap Numeline closes. It's a mobile scanner (iOS + Android) that reads the lot number directly from a package and cross-checks it in real time against FDA and USDA FSIS recall data. Lot-level, not brand-level. Same-day, not next-week.
 
-Numeline is also designed for any business handling food: restaurants, hotels, cinemas, daycares, distributors. I think this innovation could interest your readers in coverage of public health and consumer technology.
+A second angle that may interest your readers: Numeline is also designed for visually impaired users, with voice guidance and automatic lot-number detection by camera — making food safety verification accessible to people who can't read the fine print on packaging.
 
-I'd be happy to share additional materials and provide trial access if you'd like to test it.
+I'd be glad to send you a press kit (high-res screenshots, demo video, founder bios) or give you free trial access if you'd like to test the app yourself.
 
-Discover Numeline → https://numeline.com
+Would either of those work for your beat?
 
 —
-Sofia Ait-Bahate & Vincent Gaillard
+Vincent Gaillard & Sofia Ait-Bahate
 Numeline — Food Recall Scanner
-https://numeline.com · contact@numeline.com
+https://numeline.com · vincent@numeline.com
 
 You're receiving this because you cover food, health, or wellness in the US press. To unsubscribe, reply with "unsubscribe".
 Numeline · ${POSTAL_ADDRESS}
@@ -144,7 +142,7 @@ Numeline · ${POSTAL_ADDRESS}
 }
 
 // --- Resend REST API ---
-function sendEmail({ apiKey, to, html, text, headerImageBase64 }) {
+function sendEmail({ apiKey, to, html, text }) {
   return new Promise((resolve, reject) => {
     const payload = JSON.stringify({
       from: FROM,
@@ -156,13 +154,7 @@ function sendEmail({ apiKey, to, html, text, headerImageBase64 }) {
       headers: {
         'List-Unsubscribe': `<${UNSUBSCRIBE_MAILTO}>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
-      },
-      attachments: [{
-        filename: HEADER_IMAGE_FILENAME,
-        content: headerImageBase64,
-        content_id: HEADER_CID,
-        content_type: 'image/png'
-      }]
+      }
     });
 
     const req = https.request({
@@ -200,8 +192,29 @@ async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
   const testMode = args.includes('--test');
+  const resendMode = args.includes('--resend');
   const limitArg = args.find((a) => a.startsWith('--limit='));
   const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : Infinity;
+  const unsubscribeArg = args.find((a) => a.startsWith('--unsubscribe='));
+
+  const csvPath = path.join(__dirname, 'output', 'media-contacts-scraped.csv');
+  const templatePath = path.join(__dirname, '..', 'public', 'email-template-press.html');
+  const sentPath = path.join(__dirname, 'output', 'sent.json');
+  const sentResendPath = path.join(__dirname, 'output', 'sent-resend.json');
+  const unsubscribedPath = path.join(__dirname, 'output', 'unsubscribed.json');
+
+  const unsubscribed = fs.existsSync(unsubscribedPath) ? JSON.parse(fs.readFileSync(unsubscribedPath, 'utf8')) : {};
+
+  // --unsubscribe=email : ajoute à la liste et quitte
+  if (unsubscribeArg) {
+    const email = unsubscribeArg.split('=')[1].trim().toLowerCase();
+    if (!email) { log('❌ Email manquant : --unsubscribe=email@example.com', 'red'); process.exit(1); }
+    unsubscribed[email] = { unsubscribedAt: new Date().toISOString() };
+    fs.writeFileSync(unsubscribedPath, JSON.stringify(unsubscribed, null, 2));
+    log(`✓ ${email} ajouté à la liste des désinscrits`, 'green');
+    log(`📁 ${unsubscribedPath}`, 'gray');
+    return;
+  }
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey && !dryRun) {
@@ -209,16 +222,9 @@ async function main() {
     process.exit(1);
   }
 
-  const csvPath = path.join(__dirname, 'output', 'media-contacts-scraped.csv');
-  const templatePath = path.join(__dirname, '..', 'public', 'email-template.html');
-  const headerImagePath = path.join(__dirname, '..', 'public', 'numeline-email-header.png');
-  const sentPath = path.join(__dirname, 'output', 'sent.json');
-
   if (!fs.existsSync(templatePath)) { log(`❌ Template introuvable: ${templatePath}`, 'red'); process.exit(1); }
-  if (!fs.existsSync(headerImagePath)) { log(`❌ Image header introuvable: ${headerImagePath}`, 'red'); process.exit(1); }
 
   const template = fs.readFileSync(templatePath, 'utf8');
-  const headerImageBase64 = fs.readFileSync(headerImagePath).toString('base64');
 
   // --test: send only to TEST_EMAIL (or arg after --test)
   if (testMode) {
@@ -233,7 +239,7 @@ async function main() {
     log(`\n🧪 Mode TEST → envoi à ${testEmail}`, 'yellow');
     log(`   (vérifie le rendu Gmail + Outlook avant de lancer le bulk)`, 'gray');
     try {
-      const res = await sendEmail({ apiKey, to: testEmail, html, text, headerImageBase64 });
+      const res = await sendEmail({ apiKey, to: testEmail, html, text });
       log(`✓ envoyé — id: ${res.id || 'unknown'}`, 'green');
     } catch (err) {
       log(`✗ échec: ${err.message}`, 'red');
@@ -245,10 +251,89 @@ async function main() {
   if (!fs.existsSync(csvPath)) { log(`❌ CSV introuvable: ${csvPath}`, 'red'); process.exit(1); }
 
   const allContacts = parseCSV(fs.readFileSync(csvPath, 'utf8'));
+
+  // --resend: re-envoyer le nouveau template à tous les contacts déjà contactés
+  if (resendMode) {
+    const sent = fs.existsSync(sentPath) ? JSON.parse(fs.readFileSync(sentPath, 'utf8')) : {};
+    const sentResend = fs.existsSync(sentResendPath) ? JSON.parse(fs.readFileSync(sentResendPath, 'utf8')) : {};
+
+    // Build contactMap from CSV for first-name lookup
+    const contactMap = {};
+    for (const c of allContacts) {
+      const e = (c.email || '').trim().toLowerCase();
+      if (e) contactMap[e] = c;
+    }
+
+    const targets = Object.keys(sent).filter((e) => !unsubscribed[e] && !sentResend[e]);
+    const toResend = limit < Infinity ? targets.slice(0, limit) : targets;
+
+    log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'gray');
+    log(`🔁 Mode --resend`, 'cyan');
+    log(`🚫 ${Object.keys(unsubscribed).length} désinscrits (skip)`, 'yellow');
+    log(`✅ ${Object.keys(sentResend).length} déjà re-envoyés (skip)`, 'gray');
+    log(`📤 ${toResend.length} à re-envoyer maintenant`, 'cyan');
+    log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'gray');
+
+    if (dryRun) {
+      log('🧪 DRY RUN — aucun envoi réel\n', 'yellow');
+      for (const email of toResend) {
+        const contact = contactMap[email] || {};
+        const firstName = (contact.first_name || '').trim();
+        log(`  [dry-run] → ${email}${firstName ? ' (' + firstName + ')' : ''}`, 'gray');
+      }
+      return;
+    }
+
+    log(`\n⚠  Envoi réel dans 5 secondes... (Ctrl+C pour annuler)`, 'yellow');
+    for (let i = 5; i > 0; i--) {
+      process.stdout.write(`\r   ${i}...  `);
+      await sleep(1000);
+    }
+    process.stdout.write('\r            \r');
+
+    let sentCount = 0, failCount = 0, consecutiveFails = 0;
+
+    for (const email of toResend) {
+      if (consecutiveFails >= 3) { log(`\n⏹  3 échecs consécutifs — arrêt`, 'red'); break; }
+
+      const contact = contactMap[email] || {};
+      const html = buildHtml(template, contact);
+      const text = buildText(contact);
+      const fullName = `${contact.first_name || ''} ${contact.last_name || ''}`.trim();
+      log(`\n→ ${email}${fullName ? ' (' + fullName + ')' : ''}`, 'cyan');
+
+      try {
+        const res = await sendEmail({ apiKey, to: email, html, text });
+        log(`  ✓ envoyé — id: ${res.id || 'unknown'}`, 'green');
+        sentResend[email] = { sentAt: new Date().toISOString(), messageId: res.id || null };
+        fs.writeFileSync(sentResendPath, JSON.stringify(sentResend, null, 2));
+        sentCount++;
+        consecutiveFails = 0;
+      } catch (err) {
+        log(`  ✗ échec: ${err.message}`, 'red');
+        failCount++;
+        consecutiveFails++;
+        continue;
+      }
+
+      const delay = randDelay();
+      log(`  ⏱  pause ${Math.round(delay / 1000)}s avant le suivant...`, 'gray');
+      await sleep(delay);
+    }
+
+    log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'gray');
+    log(`✓ re-envoyés: ${sentCount}`, 'green');
+    if (failCount) log(`✗ échecs: ${failCount}`, 'red');
+    log(`📁 log: ${sentResendPath}`, 'cyan');
+    return;
+  }
   const sent = fs.existsSync(sentPath) ? JSON.parse(fs.readFileSync(sentPath, 'utf8')) : {};
 
-  // Garder uniquement kind=personal (vrais journalistes), exclure generic/unknown/maybe_personal
-  const personalContacts = allContacts.filter((c) => (c.kind || '').trim().toLowerCase() === 'personal');
+  // Garder kind=personal + kind=maybe_personal, exclure generic/unknown/press_generic
+  const personalContacts = allContacts.filter((c) => {
+    const kind = (c.kind || '').trim().toLowerCase();
+    return kind === 'personal' || kind === 'maybe_personal';
+  });
 
   // Filtre additionnel : exclure les patterns génériques (départements, exemples, faux positifs scraping)
   const EMAIL_BAD_PATTERNS = [
@@ -290,6 +375,7 @@ async function main() {
 
   log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'gray');
   log(`📋 ${allContacts.length} contacts CSV → ${personalContacts.length} (kind=personal) → ${contacts.length} après filtre anti-générique`, 'cyan');
+  log(`🚫 ${Object.keys(unsubscribed).length} désinscrits (skip)`, 'yellow');
   log(`✉️  ${Object.keys(sent).length} déjà envoyés (skip)`, 'gray');
   log(`📤 ${Math.min(toSend.length, limit)} à envoyer maintenant`, 'cyan');
   log(`📨 From: ${FROM}`, 'gray');
@@ -314,6 +400,7 @@ async function main() {
 
     const email = (contact.email || '').trim().toLowerCase();
     if (!email) continue;
+    if (unsubscribed[email]) { log(`  skip ${email} (désinscrit)`, 'yellow'); continue; }
     if (sent[email]) { log(`  skip ${email} (déjà envoyé)`, 'gray'); continue; }
 
     const html = buildHtml(template, contact);
@@ -328,7 +415,7 @@ async function main() {
     }
 
     try {
-      const res = await sendEmail({ apiKey, to: email, html, text, headerImageBase64 });
+      const res = await sendEmail({ apiKey, to: email, html, text });
       log(`  ✓ envoyé — id: ${res.id || 'unknown'}`, 'green');
       sent[email] = { sentAt: new Date().toISOString(), messageId: res.id || null, media: contact.media };
       fs.writeFileSync(sentPath, JSON.stringify(sent, null, 2));

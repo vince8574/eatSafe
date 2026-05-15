@@ -1,0 +1,846 @@
+[90mHunter chargé : 77 emails à exclure[0m
+[36m📂 Reprise : 2124 contacts déjà sauvegardés, 144 domaines déjà scrapés[0m
+[36m
+[2/394] → Eater LA (la.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[3/394] → Los Angeles Magazine (lamag.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[5/394] → LA Weekly (laweekly.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[7/394] → Tastemade (tastemade.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (tastemade.com)[0m
+[36m
+[12/394] → The Chalkboard Mag (thechalkboardmag.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[13/394] → Poosh (poosh.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[14/394] → New York Times (nytimes.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[18/394] → Bon Appétit (bonappetit.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[19/394] → Food & Wine (foodandwine.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[21/394] → Serious Eats (seriouseats.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[23/394] → Tasting Table (tastingtable.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[25/394] → Well+Good (wellandgood.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[28/394] → Health (health.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[29/394] → Shape (shape.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[31/394] → Men's Health (menshealth.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[33/394] → Byrdie (byrdie.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[34/394] → Food Network (foodnetwork.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[35/394] → Washington Post (washingtonpost.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[36/394] → Wall Street Journal (wsj.com)[0m
+[33m  homepage inaccessible : HTTP 401[0m
+[90m  aucun email trouvé[0m
+[36m
+[37/394] → USA Today (usatoday.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[39/394] → NBC News (nbcnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[40/394] → CBS News (cbsnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[41/394] → ABC News (abcnews.go.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[44/394] → Politico (politico.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (politico.com)[0m
+[36m
+[45/394] → Chicago Tribune (chicagotribune.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[46/394] → Chicago Sun-Times (chicago.suntimes.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[47/394] → Eater Chicago (chicago.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[48/394] → Time Out Chicago (timeoutchicago.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[51/394] → Eater SF (sf.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[54/394] → Boston Globe (bostonglobe.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (bostonglobe.com)[0m
+[36m
+[55/394] → Eater Boston (boston.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[56/394] → Boston Magazine (bostonmagazine.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[59/394] → Eater Miami (miami.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[63/394] → Eater Austin (austin.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[64/394] → Texas Monthly (texasmonthly.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[66/394] → Eater Seattle (seattle.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[67/394] → The Oregonian (oregonlive.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[68/394] → Eater Portland (pdx.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[70/394] → Eater Atlanta (atlanta.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[72/394] → Eater Denver (denver.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[74/394] → Eater Philly (philly.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[76/394] → Eater DC (dc.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[78/394] → Healthline (healthline.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[79/394] → Verywell Health (verywellhealth.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[80/394] → Medical News Today (medicalnewstoday.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[82/394] → Consumer Reports (consumerreports.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[83/394] → Food Safety News (foodsafetynews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[84/394] → FoodNavigator USA (foodnavigator-usa.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[85/394] → Food Dive (fooddive.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[86/394] → Food Business News (foodbusinessnews.net)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (foodbusinessnews.net)[0m
+[36m
+[87/394] → Supermarket News (supermarketnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[89/394] → Restaurant Business (restaurantbusinessonline.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[90/394] → Civil Eats (civileats.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[91/394] → The Counter (thecounter.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[92/394] → Modern Farmer (modernfarmer.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[93/394] → Progressive Grocer (progressivegrocer.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (progressivegrocer.com)[0m
+[36m
+[95/394] → Orlando Sentinel (orlandosentinel.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[96/394] → South Florida Sun-Sentinel (sun-sentinel.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[97/394] → The Florida Times-Union (jacksonville.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[98/394] → Edible Orlando (edibleorlando.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[100/394] → Las Vegas Weekly (lasvegasweekly.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[101/394] → Eater Vegas (vegas.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[102/394] → Reno Gazette Journal (rgj.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[104/394] → PHOENIX magazine (phoenixmag.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[106/394] → Phoenix New Times (phoenixnewtimes.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[108/394] → The Santa Fe New Mexican (santafenewmexican.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[117/394] → Argus Leader (argusleader.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[118/394] → Omaha World-Herald (omaha.com)[0m
+[32m  +1 emails (perso 1 / press 0 / generic 0)[0m
+[36m
+[119/394] → The Wichita Eagle (kansas.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[120/394] → The Des Moines Register (desmoinesregister.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[124/394] → The Oklahoman (oklahoman.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[127/394] → The Times-Picayune | NOLA.com (nola.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[129/394] → New Orleans Magazine (neworleansmagazine.com)[0m
+[33m  homepage inaccessible : write EPROTO 687B0000:error:0A000458:SSL routines:ssl3_read_bytes:tlsv1 unrecognized name:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 112
+[0m
+[90m  aucun email trouvé[0m
+[36m
+[130/394] → The Clarion-Ledger (clarionledger.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[131/394] → AL.com (al.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[132/394] → Birmingham Magazine (birminghammag.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[133/394] → The Tennessean (tennessean.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[134/394] → The Commercial Appeal (commercialappeal.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[136/394] → Eater Nashville (nashville.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[137/394] → The Courier-Journal (courier-journal.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[138/394] → Lexington Herald-Leader (kentucky.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[139/394] → Louisville Magazine (louisvillemagazine.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[145/394] → Eater Carolinas (charlotte.eater.com)[0m
+[33m  homepage inaccessible : getaddrinfo ENOTFOUND www.charlotte.eater.com[0m
+[90m  aucun email trouvé[0m
+[36m
+[152/394] → Baltimore Magazine (baltimoremagazine.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[153/394] → The News Journal (delawareonline.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[154/394] → NJ.com (nj.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[155/394] → The Record (northjersey.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[158/394] → CT Insider (ctinsider.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[159/394] → The Providence Journal (providencejournal.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[161/394] → Burlington Free Press (burlingtonfreepress.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[164/394] → Portland Press Herald (pressherald.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[165/394] → Cleveland.com / The Plain Dealer (cleveland.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[166/394] → The Columbus Dispatch (dispatch.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[167/394] → The Cincinnati Enquirer (enquirer.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[170/394] → Columbus Monthly (columbusmonthly.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[171/394] → Detroit Free Press (freep.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[172/394] → The Detroit News (detroitnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[173/394] → MLive (mlive.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[174/394] → Hour Detroit (hourdetroit.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[175/394] → Eater Detroit (detroit.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[176/394] → The Indianapolis Star (indystar.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[178/394] → Milwaukee Journal Sentinel (jsonline.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[181/394] → Star Tribune (startribune.com)[0m
+[33m  ↻ fallback Playwright (HTTP 429)[0m
+[31m  ⚠ erreur: timeout 90000ms (startribune.com)[0m
+[36m
+[183/394] → Eater Twin Cities (twincities.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[184/394] → San Antonio Express-News (expressnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[186/394] → Eater Houston (houston.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[187/394] → Eater Dallas (dallas.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[188/394] → The San Diego Union-Tribune (sandiegouniontribune.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[189/394] → San Diego Magazine (sdmag.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (sdmag.com)[0m
+[36m
+[190/394] → Eater San Diego (sandiego.eater.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[194/394] → Honolulu Magazine (honolulumagazine.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (honolulumagazine.com)[0m
+[36m
+[196/394] → MSNBC (msnbc.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[197/394] → Fox News (foxnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[198/394] → Fox Business (foxbusiness.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[199/394] → CNBC (cnbc.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[200/394] → Bloomberg (bloomberg.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[201/394] → NewsNation (newsnationnow.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[202/394] → Scripps News (scrippsnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[204/394] → Newsmax (newsmax.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (newsmax.com)[0m
+[36m
+[205/394] → KABC-TV (ABC LA) (abc7.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[206/394] → WABC-TV (ABC NY) (abc7ny.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[207/394] → WLS-TV (ABC Chicago) (abc7chicago.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[208/394] → WPVI-TV (ABC Philly) (6abc.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[210/394] → KGO-TV (ABC SF Bay) (abc7news.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[211/394] → WFAA (ABC Dallas) (wfaa.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[212/394] → WSB-TV (ABC Atlanta) (wsbtv.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[214/394] → WFTV (ABC Orlando) (wftv.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[215/394] → WCVB (ABC Boston) (wcvb.com)[0m
+[33m  ↻ fallback Playwright (HTTP 451)[0m
+[90m  aucun email trouvé[0m
+[36m
+[220/394] → KCBS-TV (CBS LA) (cbsnews.com/losangeles)[0m
+[90m  aucun email trouvé[0m
+[36m
+[221/394] → WCBS-TV (CBS NY) (cbsnews.com/newyork)[0m
+[90m  aucun email trouvé[0m
+[36m
+[222/394] → WBBM-TV (CBS Chicago) (cbsnews.com/chicago)[0m
+[90m  aucun email trouvé[0m
+[36m
+[223/394] → KYW-TV (CBS Philly) (cbsnews.com/philadelphia)[0m
+[90m  aucun email trouvé[0m
+[36m
+[224/394] → WBZ (CBS Boston) (cbsnews.com/boston)[0m
+[90m  aucun email trouvé[0m
+[36m
+[225/394] → KPIX (CBS SF) (cbsnews.com/sanfrancisco)[0m
+[90m  aucun email trouvé[0m
+[36m
+[226/394] → WFOR (CBS Miami) (cbsnews.com/miami)[0m
+[90m  aucun email trouvé[0m
+[36m
+[227/394] → WJZ (CBS Baltimore) (cbsnews.com/baltimore)[0m
+[90m  aucun email trouvé[0m
+[36m
+[228/394] → WCCO (CBS Minneapolis) (cbsnews.com/minnesota)[0m
+[90m  aucun email trouvé[0m
+[36m
+[229/394] → KOVR (CBS Sacramento) (cbsnews.com/sacramento)[0m
+[90m  aucun email trouvé[0m
+[36m
+[230/394] → KCNC (CBS Denver) (cbsnews.com/colorado)[0m
+[90m  aucun email trouvé[0m
+[36m
+[231/394] → KDKA (CBS Pittsburgh) (cbsnews.com/pittsburgh)[0m
+[90m  aucun email trouvé[0m
+[36m
+[233/394] → WTSP (CBS Tampa) (wtsp.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[235/394] → WNBC (NBC NY) (nbcnewyork.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[236/394] → KNBC (NBC LA) (nbclosangeles.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[238/394] → KNTV (NBC SF Bay) (nbcbayarea.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[244/394] → KXAS (NBC Dallas) (nbcdfw.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[245/394] → WTVJ (NBC Miami) (nbcmiami.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[246/394] → KPRC (NBC Houston) (click2houston.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[249/394] → KARE (NBC Minneapolis) (kare11.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[250/394] → WNYW (Fox NY) (fox5ny.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[251/394] → KTTV (Fox LA) (foxla.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (foxla.com)[0m
+[36m
+[253/394] → WTTG (Fox DC) (fox5dc.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (fox5dc.com)[0m
+[36m
+[254/394] → KRIV (Fox Houston) (fox26houston.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (fox26houston.com)[0m
+[36m
+[257/394] → KDFW (Fox Dallas) (fox4news.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[258/394] → WTXF (Fox Philly) (fox29.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (fox29.com)[0m
+[36m
+[259/394] → WTVT (Fox Tampa) (fox13news.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[260/394] → KCPQ (Fox Seattle) (q13fox.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (q13fox.com)[0m
+[36m
+[261/394] → WJBK (Fox Detroit) (fox2detroit.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (fox2detroit.com)[0m
+[36m
+[262/394] → KMSP (Fox Minneapolis) (fox9.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (fox9.com)[0m
+[36m
+[263/394] → WOFL (Fox Orlando) (fox35orlando.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[265/394] → Vox (vox.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[270/394] → The Atlantic (theatlantic.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[271/394] → BuzzFeed News (buzzfeednews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[272/394] → Mashable (mashable.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[274/394] → The Hill (thehill.com)[0m
+[32m  +1 emails (perso 1 / press 0 / generic 0)[0m
+[36m
+[278/394] → Reuters (reuters.com)[0m
+[33m  homepage inaccessible : HTTP 401[0m
+[90m  aucun email trouvé[0m
+[36m
+[279/394] → Associated Press (apnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[282/394] → Fast Company (fastcompany.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[283/394] → Inc. (inc.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[284/394] → Entrepreneur (entrepreneur.com)[0m
+[33m  homepage inaccessible : timeout[0m
+[90m  aucun email trouvé[0m
+[36m
+[287/394] → Engadget (engadget.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[289/394] → Gizmodo (gizmodo.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[290/394] → Ars Technica (arstechnica.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[291/394] → Protocol (protocol.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[292/394] → The Information (theinformation.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (theinformation.com)[0m
+[36m
+[295/394] → Punchbowl News (punchbowl.news)[0m
+[90m  aucun email trouvé[0m
+[36m
+[298/394] → The Spruce Eats (thespruceeats.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[299/394] → The Spruce (thespruce.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[300/394] → Allrecipes (allrecipes.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[301/394] → Food52 (food52.com)[0m
+[33m  ↻ fallback Playwright (HTTP 429)[0m
+[31m  ⚠ erreur: timeout 90000ms (food52.com)[0m
+[36m
+[302/394] → The Daily Meal (thedailymeal.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[304/394] → MyRecipes (myrecipes.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[305/394] → EatingWell (eatingwell.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[306/394] → Cooking Light (cookinglight.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[307/394] → Real Simple (realsimple.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[308/394] → Southern Living (southernliving.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[310/394] → Martha Stewart (marthastewart.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[312/394] → Parade (parade.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[314/394] → Oprah Daily (oprah.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[315/394] → Men's Journal (mensjournal.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[316/394] → Outside (outsideonline.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (outsideonline.com)[0m
+[36m
+[317/394] → Runner's World (runnersworld.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[318/394] → Bicycling (bicycling.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[319/394] → Cosmopolitan (cosmopolitan.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[321/394] → Harper's Bazaar (harpersbazaar.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[322/394] → InStyle (instyle.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[326/394] → GQ (gq.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[328/394] → QSR Magazine (qsrmagazine.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[329/394] → Restaurant Hospitality (restaurant-hospitality.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[330/394] → FSR Magazine (fsrmagazine.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[331/394] → Hotel Management (hotelmanagement.net)[0m
+[90m  aucun email trouvé[0m
+[36m
+[332/394] → Hotel News Now (hotelnewsnow.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[333/394] → Hospitality Net (hospitalitynet.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[334/394] → Grocery Dive (grocerydive.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[335/394] → Retail Dive (retaildive.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[336/394] → Convenience Store News (csnews.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (csnews.com)[0m
+[36m
+[337/394] → CSP Daily News (cspdailynews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[338/394] → Beverage Industry (beverageindustry.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[339/394] → Beverage Daily (beveragedaily.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[340/394] → Wine Industry Advisor (wineindustryadvisor.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (wineindustryadvisor.com)[0m
+[36m
+[341/394] → Food Engineering (foodengineeringmag.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[342/394] → Food Processing (foodprocessing.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[343/394] → Prepared Foods (preparedfoods.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[344/394] → Meat+Poultry (meatpoultry.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (meatpoultry.com)[0m
+[36m
+[345/394] → Natural Products Insider (naturalproductsinsider.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[347/394] → Baking Business (bakingbusiness.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (bakingbusiness.com)[0m
+[36m
+[348/394] → Food Manufacturing (foodmanufacturing.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (foodmanufacturing.com)[0m
+[36m
+[349/394] → Snack and Bakery (snackandbakery.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[350/394] → Dairy Foods (dairyfoods.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[351/394] → Food Logistics (foodlogistics.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (foodlogistics.com)[0m
+[36m
+[352/394] → Progressive Grocer (progressivegrocer.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (progressivegrocer.com)[0m
+[36m
+[353/394] → Winsight Grocery Business (winsightgrocerybusiness.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[355/394] → STAT News (statnews.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[356/394] → Fierce Pharma (fiercepharma.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[357/394] → Fierce Healthcare (fiercehealthcare.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[358/394] → KFF Health News (kffhealthnews.org)[0m
+[31m  ⚠ erreur: timeout 90000ms (kffhealthnews.org)[0m
+[36m
+[359/394] → Medscape (medscape.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (medscape.com)[0m
+[36m
+[360/394] → Healthcare Dive (healthcaredive.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[362/394] → Becker's Hospital Review (beckershospitalreview.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[33m  homepage inaccessible : still blocked after browser[0m
+[90m  aucun email trouvé[0m
+[36m
+[363/394] → iHeartMedia (iheart.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[364/394] → Audacy (audacy.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[365/394] → WNYC (wnyc.org)[0m
+[31m  ⚠ erreur: timeout 90000ms (wnyc.org)[0m
+[36m
+[369/394] → MPR News (mprnews.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[371/394] → KPCC / LAist Studios (kpcc.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[372/394] → WABE Atlanta (wabe.org)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[31m  ⚠ erreur: timeout 90000ms (wabe.org)[0m
+[36m
+[376/394] → KERA Dallas (kera.org)[0m
+[32m  +5 emails (perso 4 / press 0 / generic 0)[0m
+[36m
+[378/394] → Marketplace (APM) (mprmarketplace.org)[0m
+[33m  homepage inaccessible : getaddrinfo ENOTFOUND www.mprmarketplace.org[0m
+[90m  aucun email trouvé[0m
+[36m
+[379/394] → This American Life (thisamericanlife.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[380/394] → Gimlet Media (gimletmedia.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[382/394] → Edible Manhattan (edible-manhattan.com)[0m
+[33m  homepage inaccessible : getaddrinfo ENOTFOUND www.edible-manhattan.com[0m
+[90m  aucun email trouvé[0m
+[36m
+[383/394] → Edible Brooklyn (ediblebrooklyn.com)[0m
+[33m  ↻ fallback Playwright (HTTP 403)[0m
+[90m  aucun email trouvé[0m
+[36m
+[384/394] → Edible East End (edibleeastend.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[385/394] → Edible San Francisco (ediblesf.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[387/394] → Cherry Bombe (cherrybombe.com)[0m
+[32m  +2 emails (perso 0 / press 0 / generic 2)[0m
+[36m
+[388/394] → Whetstone Magazine (whetstonemagazine.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[389/394] → Food Tank (foodtank.com)[0m
+[31m  ⚠ erreur: timeout 90000ms (foodtank.com)[0m
+[36m
+[390/394] → Gastronomica (gastronomica.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[392/394] → Crafted Magazine (craftedmag.com)[0m
+[90m  aucun email trouvé[0m
+[36m
+[393/394] → Plant Based News (plantbasednews.org)[0m
+[90m  aucun email trouvé[0m
+[36m
+[394/394] → VegNews (vegnews.com)[0m
+[90m  aucun email trouvé[0m
+[90m
+📂 145 domaines skippés (déjà scrapés)[0m
+[36m
+--- Bilan ---[0m
+[90mDomaines traités       : 394[0m
+[32mNouveaux emails extraits : 2133[0m
+[90mRépartition : {"personal":469,"maybe_personal":1471,"press_generic":44,"generic":90,"unknown":59}[0m
+[36mCSV : C:\Users\vgail\Documents\projets\eatSafe\scripts\output\media-contacts-scraped.csv[0m
