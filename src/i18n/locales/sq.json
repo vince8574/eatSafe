@@ -254,7 +254,9 @@
     "resetPasswordFailed": "Dërgimi i emailit të rivendosjes dështoi",
     "signOutFailed": "Dilsja dështoi",
     "passwordTooShort": "Fjalëkalimi duhet të ketë të paktën 6 karaktere",
-    "passwordsDoNotMatch": "Fjalëkalimet nuk përputhen"
+    "passwordsDoNotMatch": "Fjalëkalimet nuk përputhen",
+    "name": "Emri",
+    "namePlaceholder": "Emri juaj"
   },
   "team": {
     "title": "Menaxhimi i ekipit",
@@ -415,7 +417,10 @@
     "pack500": "Paketë +500 skanime",
     "cannotAdd": "Nuk mund të shtohet paketa në këtë moment.",
     "loading": "Duke ngarkuar kuotën...",
-    "remaining": "Skanimet e mbetura:"
+    "remaining": "Skanimet e mbetura:",
+    "upsellTitle": "Keni përdorur të gjitha skanimet falas",
+    "upsellMessage": "Ju pëlqen EatSafe? Provoni çdo plan falas për 14 ditë dhe skanoni pa kufi.",
+    "viewPlans": "Shiko planet"
   },
   "immediateRecallAlert": {
     "lotDetected": "Numri i lotit u zbulua:",

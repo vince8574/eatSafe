@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
 import { getCurrentUserId } from './authService';
 import { getCurrentOrganization } from './organizationService';
-import { SUBSCRIPTION_PLANS, SCAN_PACKS, getPlanById as getSubscriptionPlanById, isYearlyPlanId } from '../constants/subscriptionPlans';
+import { SUBSCRIPTION_PLANS, SCAN_PACKS, FREE_SCANS_ON_INSTALL, getPlanById as getSubscriptionPlanById, isYearlyPlanId } from '../constants/subscriptionPlans';
 import {
   initializeBilling,
   endBilling,
@@ -113,8 +113,9 @@ export async function fetchSubscription(): Promise<Subscription> {
       planName: null,
       status: 'none',
       expiresAt: null,
-      scansIncluded: 0,
-      scansRemaining: 0,
+      // Scans gratuits offerts d'office à la première installation (Android + iOS)
+      scansIncluded: FREE_SCANS_ON_INSTALL,
+      scansRemaining: FREE_SCANS_ON_INSTALL,
       historyRetentionDays: 0,
       exportEnabled: true,  // Activé pour les tests
       exportFormats: ['pdf', 'csv', 'xlsx'],

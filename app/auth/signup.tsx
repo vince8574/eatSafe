@@ -149,6 +149,7 @@ export default function SignupScreen() {
   const { colors } = useTheme();
   const { signUpWithEmail, signInWithGoogle } = useAuth();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -167,7 +168,7 @@ export default function SignupScreen() {
   }, []);
 
   const validateForm = () => {
-    if (!email || !password || !confirmPassword) {
+    if (!name.trim() || !email || !password || !confirmPassword) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       Alert.alert(t('auth.error'), t('auth.fillAllFields'));
       return false;
@@ -190,7 +191,7 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      await signUpWithEmail(email, password);
+      await signUpWithEmail(email, password, name);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (error: any) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -277,6 +278,17 @@ export default function SignupScreen() {
 
           {/* Form Card */}
           <View style={styles.formCard}>
+            <AnimatedInput
+              icon="person-outline"
+              label={t('auth.name')}
+              value={name}
+              onChangeText={setName}
+              placeholder={t('auth.namePlaceholder')}
+              editable={!loading}
+              colors={colors}
+              delay={150}
+            />
+
             <AnimatedInput
               icon="mail-outline"
               label={t('auth.email')}

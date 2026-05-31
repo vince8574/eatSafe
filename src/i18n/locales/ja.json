@@ -254,7 +254,9 @@
     "resetPasswordFailed": "リセットメールの送信に失敗しました",
     "signOutFailed": "ログアウトに失敗しました",
     "passwordTooShort": "パスワードは最低6文字である必要があります",
-    "passwordsDoNotMatch": "パスワードが一致しません"
+    "passwordsDoNotMatch": "パスワードが一致しません",
+    "name": "名前",
+    "namePlaceholder": "お名前"
   },
   "team": {
     "title": "チーム管理",
@@ -415,7 +417,10 @@
     "pack500": "+500スキャンパック",
     "cannotAdd": "現在パックを追加できません。",
     "loading": "割り当てを読み込み中...",
-    "remaining": "残りのスキャン："
+    "remaining": "残りのスキャン：",
+    "upsellTitle": "無料スキャンをすべて使い切りました",
+    "upsellMessage": "EatSafeは気に入りましたか？どのプランも14日間無料でお試しいただけます。無制限にスキャンできます。",
+    "viewPlans": "プランを見る"
   },
   "immediateRecallAlert": {
     "lotDetected": "ロット番号が検出されました：",

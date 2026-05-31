@@ -12,19 +12,15 @@ export function AuthGuard({ children }: PropsWithChildren) {
     if (loading) return;
 
     const inAuthGroup = segments[0] === 'auth';
-    const inOnboardingFlow =
-      segments[0] === 'onboarding' ||
-      segments[0] === 'welcome' ||
-      segments[0] === 'notification-permissions' ||
-      segments[0] === 'welcome-daily' ||
-      segments.length === 0; // Root redirect (index.tsx)
 
-    if (!isAuthenticated && !inAuthGroup && !inOnboardingFlow) {
-      // Redirect to login if not authenticated and not in auth screens or onboarding flow
+    if (!isAuthenticated && !inAuthGroup) {
+      // Auth obligatoire : tout écran hors du groupe "auth" exige une session.
+      // L'onboarding/welcome ne sont accessibles qu'une fois connecté.
       router.replace('/auth/login');
     } else if (isAuthenticated && inAuthGroup) {
-      // Redirect to main app if authenticated and in auth screens
-      router.replace('/(tabs)');
+      // Connecté mais sur un écran d'auth : renvoyer vers la racine qui décide
+      // de la suite (onboarding pour un nouveau compte, sinon l'app).
+      router.replace('/');
     }
   }, [user, loading, segments, isAuthenticated]);
 

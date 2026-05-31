@@ -259,7 +259,9 @@
     "resetPasswordFailed": "Verzenden van reset e-mail mislukt",
     "signOutFailed": "Uitloggen mislukt",
     "passwordTooShort": "Wachtwoord moet minimaal 6 tekens zijn",
-    "passwordsDoNotMatch": "Wachtwoorden komen niet overeen"
+    "passwordsDoNotMatch": "Wachtwoorden komen niet overeen",
+    "name": "Naam",
+    "namePlaceholder": "Je naam"
   },
   "pendingInvite": {
     "title": "U heeft een openstaande uitnodiging",
@@ -453,7 +455,10 @@
     "pack500": "+500 scans pakket",
     "cannotAdd": "Kan pakket momenteel niet toevoegen.",
     "loading": "Quotum laden...",
-    "remaining": "Resterende scans:"
+    "remaining": "Resterende scans:",
+    "upsellTitle": "Je hebt al je gratis scans gebruikt",
+    "upsellMessage": "Bevalt EatSafe? Probeer elk abonnement 14 dagen gratis en scan onbeperkt.",
+    "viewPlans": "Abonnementen bekijken"
   },
   "immediateRecallAlert": {
     "lotDetected": "Lotnummer gedetecteerd:",

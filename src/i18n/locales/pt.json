@@ -259,7 +259,9 @@
     "resetPasswordFailed": "Falha ao enviar e-mail de redefinição",
     "signOutFailed": "Falha ao sair",
     "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
-    "passwordsDoNotMatch": "As senhas não correspondem"
+    "passwordsDoNotMatch": "As senhas não correspondem",
+    "name": "Nome",
+    "namePlaceholder": "Seu nome"
   },
   "pendingInvite": {
     "title": "Você tem um convite pendente",
@@ -453,7 +455,10 @@
     "pack500": "Pacote de +500 digitalizações",
     "cannotAdd": "Não é possível adicionar o pacote no momento.",
     "loading": "Carregando cota...",
-    "remaining": "Digitalizações restantes:"
+    "remaining": "Digitalizações restantes:",
+    "upsellTitle": "Você usou todos os seus scans gratuitos",
+    "upsellMessage": "Gostou do EatSafe? Experimente qualquer plano grátis por 14 dias e escaneie sem limites.",
+    "viewPlans": "Ver planos"
   },
   "immediateRecallAlert": {
     "lotDetected": "Número de lote detectado:",

@@ -19,6 +19,10 @@ export interface SubscriptionPlan {
 
 export type BillingPeriod = 'monthly' | 'yearly';
 
+// Scans gratuits offerts d'office à l'installation (Android et iOS),
+// avant tout abonnement ou achat de pack.
+export const FREE_SCANS_ON_INSTALL = 5;
+
 export interface ScanPack {
   id: string;
   labelKey: string; // Translation key for the label

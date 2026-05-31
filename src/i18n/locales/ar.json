@@ -273,7 +273,9 @@
     "resetPasswordFailed": "فشل إرسال رابط إعادة التعيين",
     "signOutFailed": "فشل تسجيل الخروج",
     "passwordTooShort": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
-    "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين"
+    "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+    "name": "الاسم",
+    "namePlaceholder": "اسمك"
   },
   "team": {
     "title": "إدارة الفريق",
@@ -434,7 +436,10 @@
     "pack500": "حزمة +500 عملية مسح",
     "cannotAdd": "لا يمكن إضافة الحزمة حالياً.",
     "loading": "جارٍ تحميل الحصة...",
-    "remaining": "عمليات المسح المتبقية:"
+    "remaining": "عمليات المسح المتبقية:",
+    "upsellTitle": "لقد استخدمت كل عمليات المسح المجانية",
+    "upsellMessage": "هل أعجبك EatSafe؟ جرّب أي باقة مجانًا لمدة 14 يومًا وامسح بلا حدود.",
+    "viewPlans": "عرض الباقات"
   },
   "immediateRecallAlert": {
     "lotDetected": "تم اكتشاف رقم الدفعة:",

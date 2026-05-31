@@ -89,30 +89,56 @@ export function ScanLotScreen() {
     const remaining = subscription?.scansRemaining ?? 0;
     if (remaining > 0) return true;
 
+    // Utilisateur sans abonnement ayant épuisé ses scans gratuits :
+    // message orienté conversion qui pousse vers la prise d'abonnement.
+    const isFreeUser = (subscription?.status ?? 'none') === 'none';
+
     return new Promise((resolve) => {
+      const packButton = {
+        text: t('quota.pack500'),
+        onPress: async () => {
+          try {
+            await buyPack(500);
+            await refresh();
+            resolve(true);
+          } catch (error) {
+            Alert.alert(t('auth.error'), t('quota.cannotAdd'));
+            resolve(false);
+          }
+        }
+      };
+
+      if (isFreeUser) {
+        Alert.alert(
+          t('quota.upsellTitle'),
+          t('quota.upsellMessage'),
+          [
+            { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+            packButton,
+            {
+              text: t('quota.viewPlans'),
+              onPress: () => {
+                resolve(false);
+                router.push('/subscription');
+              }
+            }
+          ],
+          { cancelable: true }
+        );
+        return;
+      }
+
       Alert.alert(
         t('quota.reached'),
         t('quota.addPack'),
         [
           { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
-          {
-            text: t('quota.pack500'),
-            onPress: async () => {
-              try {
-                await buyPack(500);
-                await refresh();
-                resolve(true);
-              } catch (error) {
-                Alert.alert(t('auth.error'), t('quota.cannotAdd'));
-                resolve(false);
-              }
-            }
-          }
+          packButton
         ],
         { cancelable: true }
       );
     });
-  }, [subscription?.scansRemaining, buyPack, refresh, t]);
+  }, [subscription?.scansRemaining, subscription?.status, buyPack, refresh, router, t]);
 
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
