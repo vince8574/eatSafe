@@ -40,6 +40,8 @@
     "lotInstruction": "Clearly frame the lot number and capture the photo.",
     "brandAnalyzing": "Analyzing brand...",
     "lotAnalyzing": "Analyzing lot number...",
+    "stageVision": "Enhancing recognition...",
+    "stageClaude": "Deep analysis in progress...",
     "confirmBrandTitle": "Confirm detected brand",
     "confirmBrandMessage": "Detected brand: {{brand}}",
     "confirmLotTitle": "Confirm lot number",

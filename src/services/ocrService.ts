@@ -15,9 +15,12 @@ const preprocessConfig = {
 } as const;
 
 const visionPreprocessConfig = {
-  resize: { width: 3000 }, // Résolution très élevée pour Google Vision (maximiser la détection du texte)
-  format: SaveFormat.PNG,
-  compress: 1
+  // Format imposé pour l'IA (Vision ET Claude) : une SEULE image JPEG 2000px,
+  // calculée une fois puis réutilisée. JPEG 0.85 ≈ payload 5-10× plus léger
+  // qu'un PNG 3000px → lecture base64 + upload nettement plus rapides.
+  resize: { width: 2000 },
+  format: SaveFormat.JPEG,
+  compress: 0.85
 } as const;
 
 const MLKIT_UNAVAILABLE_MESSAGE =
@@ -47,8 +50,6 @@ export async function preprocessImage(uri: string, options?: PreprocessOptions) 
     }
   );
 
-  let processedUri = resized.uri;
-
   // Étape 2 : recadrer une bande centrale pour les numéros de lot (réduit le bruit de fond)
   if (options?.cropForLot && resized.width && resized.height) {
     // Utiliser les mêmes dimensions que le cadre visible dans l'UI (Scanner mode "band")
@@ -60,6 +61,8 @@ export async function preprocessImage(uri: string, options?: PreprocessOptions) 
     const cropWidth = Math.floor(resized.width * bandWidthFactor);
     const originX = Math.floor((resized.width - cropWidth) / 2);
 
+    // Recadrer en sortant DIRECTEMENT dans le format cible (JPEG 2000px pour
+    // l'IA, PNG 1800px pour ML Kit). Évite la 3e passe d'encodage à vide.
     const cropped = await manipulateAsync(
       resized.uri,
       [
@@ -73,25 +76,15 @@ export async function preprocessImage(uri: string, options?: PreprocessOptions) 
         }
       ],
       {
-        compress: preprocessConfig.compress,
-        format: preprocessConfig.format
+        compress: config.compress,
+        format: config.format
       }
     );
 
-    processedUri = cropped.uri;
+    return cropped.uri;
   }
 
-  // Étape 3 : Finaliser avec la config appropriée
-  const enhanced = await manipulateAsync(
-    processedUri,
-    [],
-    {
-      compress: config.compress,
-      format: config.format
-    }
-  );
-
-  return enhanced.uri;
+  return resized.uri;
 }
 
 export async function runMlkit(uri: string): Promise<OCRResult> {
@@ -803,7 +796,14 @@ export interface LotExtractionResult {
   candidates?: string[]; // Tous les candidats de numéros de lot détectés
 }
 
-export async function performOcr(uri: string, brand?: string): Promise<LotExtractionResult> {
+// Étapes du pipeline OCR, remontées au fur et à mesure pour le feedback UI.
+export type OcrStage = 'mlkit' | 'vision' | 'claude';
+
+export async function performOcr(
+  uri: string,
+  brand?: string,
+  onStage?: (stage: OcrStage) => void
+): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
 
   try {
@@ -811,6 +811,7 @@ export async function performOcr(uri: string, brand?: string): Promise<LotExtrac
     let result: OCRResult;
 
     console.log('[Lot OCR] Trying ML Kit first (local, fast)...');
+    onStage?.('mlkit');
 
     const processedForMlkit = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
     result = await runMlkit(processedForMlkit);
@@ -821,49 +822,68 @@ export async function performOcr(uri: string, brand?: string): Promise<LotExtrac
       console.warn('Failed to delete mlkit processed image', error);
     }
 
-    // Si ML Kit n'a trouvé aucun lot, forcer Google Vision en fallback
+    // Si ML Kit n'a trouvé aucun lot, basculer sur les fallbacks distants.
     const mlkitLot = await extractLotNumber(result.text, brand);
     if (!mlkitLot) {
-      if (isVisionAvailable()) {
-        console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
-        const processedForVision = await preprocessImage(uri, {
-          cropForLot: true,
-          narrowBand: true,
-          useVisionConfig: true
-        });
+      // Image IA UNIQUE : 2000px JPEG 0.85 (visionPreprocessConfig), calculée
+      // une seule fois ici puis réutilisée pour Vision PUIS Claude. Évite de
+      // re-préprocesser et garantit que Claude (tier le plus lent) ne lit plus
+      // l'image brute pleine résolution mais la même image légère que Vision.
+      let aiImageUri: string | null = null;
+      if (isVisionAvailable() || isClaudeAvailable()) {
         try {
-          const visionResult = await runVisionFallback(processedForVision);
-          console.log('[Lot OCR] Using Google Vision fallback result');
-          result = visionResult;
+          aiImageUri = await preprocessImage(uri, {
+            cropForLot: true,
+            narrowBand: true,
+            useVisionConfig: true
+          });
         } catch (error) {
-          console.warn('[Lot OCR] Vision fallback failed, keeping ML Kit result', error);
-        } finally {
-          try {
-            await FileSystem.deleteAsync(processedForVision, { idempotent: true });
-          } catch (error) {
-            console.warn('Failed to delete vision processed image', error);
-          }
+          console.warn('[Lot OCR] Failed to build AI image (2000px JPEG)', error);
         }
-      } else {
-        console.log('[Lot OCR] Vision not configured, cannot fallback');
       }
 
-      // Niveau 3 — Claude Sonnet via Cloud Function. Déclenché uniquement si
-      // ni ML Kit ni Vision n'ont produit un texte d'où on peut extraire un
-      // numéro de lot. Le check `hasPlausibleLotPattern` interne à
-      // tryClaudeFallback fait un second gate qui couvre les cas où Vision a
-      // produit du texte exploitable mais que notre extracteur n'a pas su
-      // l'isoler.
-      const postVisionLot = await extractLotNumber(result.text, brand);
-      if (!postVisionLot && isClaudeAvailable()) {
-        console.log('[Lot OCR] Vision also produced no extractable lot, trying Claude Sonnet...');
-        const claudeResult = await tryClaudeFallback(uri, result, 'lot');
-        if (claudeResult) {
-          console.log('[Lot OCR] Using Claude fallback result');
-          result = claudeResult;
+      try {
+        if (isVisionAvailable() && aiImageUri) {
+          console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
+          onStage?.('vision');
+          try {
+            const visionResult = await runVisionFallback(aiImageUri);
+            console.log('[Lot OCR] Using Google Vision fallback result');
+            result = visionResult;
+          } catch (error) {
+            console.warn('[Lot OCR] Vision fallback failed, keeping ML Kit result', error);
+          }
+        } else if (!isVisionAvailable()) {
+          console.log('[Lot OCR] Vision not configured, cannot fallback');
         }
-      } else if (!postVisionLot) {
-        console.log('[Lot OCR] Claude not configured, no further fallback available');
+
+        // Niveau 3 — Claude Sonnet via Cloud Function. Déclenché uniquement si
+        // ni ML Kit ni Vision n'ont produit un texte d'où on peut extraire un
+        // numéro de lot. Le check `hasPlausibleLotPattern` interne à
+        // tryClaudeFallback fait un second gate qui couvre les cas où Vision a
+        // produit du texte exploitable mais que notre extracteur n'a pas su
+        // l'isoler. Réutilise la MÊME image 2000px JPEG que Vision.
+        const postVisionLot = await extractLotNumber(result.text, brand);
+        if (!postVisionLot && isClaudeAvailable() && aiImageUri) {
+          console.log('[Lot OCR] Vision also produced no extractable lot, trying Claude Sonnet...');
+          onStage?.('claude');
+          const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot');
+          if (claudeResult) {
+            console.log('[Lot OCR] Using Claude fallback result');
+            result = claudeResult;
+          }
+        } else if (!postVisionLot && !isClaudeAvailable()) {
+          console.log('[Lot OCR] Claude not configured, no further fallback available');
+        }
+      } finally {
+        // Supprimer l'image IA une seule fois, après Vision ET Claude.
+        if (aiImageUri) {
+          try {
+            await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
+          } catch (error) {
+            console.warn('Failed to delete AI processed image', error);
+          }
+        }
       }
     } else {
       console.log('[Lot OCR] ML Kit found lot number, skipping Vision API');

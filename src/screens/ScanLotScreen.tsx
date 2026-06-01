@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Scanner, type ScannerHandle } from '../components/Scanner';
-import { performOcr } from '../services/ocrService';
+import { performOcr, type OcrStage } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -70,6 +70,7 @@ export function ScanLotScreen() {
 
   const [ocrText, setOcrText] = useState('');
   const [ocrSource, setOcrSource] = useState<string>('');
+  const [ocrStage, setOcrStage] = useState<OcrStage | null>(null);
   const [lotNumber, setLotNumber] = useState('');
   const [lotCandidates, setLotCandidates] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -143,10 +144,11 @@ export function ScanLotScreen() {
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string) => {
       setErrorMessage('');
+      setOcrStage('mlkit');
       if (accessibilityMode) {
         speak(t('accessibility.voice.lotAnalyzing'), { priority: true });
       }
-      const { lot, result, candidates } = await performOcr(lotPhoto, brand);
+      const { lot, result, candidates } = await performOcr(lotPhoto, brand, setOcrStage);
       setOcrText(result.text);
       setOcrSource(result.source || 'unknown');
       setLotNumber(lot);
@@ -208,12 +210,14 @@ export function ScanLotScreen() {
       return result.text; // Retourner le texte OCR complet
     },
     onError: (error: Error) => {
+      setOcrStage(null);
       setErrorMessage(error.message || t('scan.errors.lotExtractFailed'));
       if (accessibilityMode) {
         speak(t('accessibility.voice.scanError'), { priority: true });
       }
     },
     onSuccess: () => {
+      setOcrStage(null);
       setConfirmModalVisible(true);
     }
   });
@@ -221,6 +225,7 @@ export function ScanLotScreen() {
   const resetFlow = useCallback(() => {
     setOcrText('');
     setOcrSource('');
+    setOcrStage(null);
     setLotNumber('');
     setLotCandidates([]);
     setErrorMessage('');
@@ -264,6 +269,13 @@ export function ScanLotScreen() {
   );
 
   const isProcessing = lotMutation.isPending || isFinalizing;
+  // Libellé par étape : ML Kit (rapide) → Vision (renforcé) → Claude (approfondi).
+  const processingLabel =
+    ocrStage === 'vision'
+      ? t('scan.stageVision')
+      : ocrStage === 'claude'
+        ? t('scan.stageClaude')
+        : t('scan.lotAnalyzing');
 
   const handlePreviewOcrText = useCallback(
     (text: string) => {
@@ -615,7 +627,7 @@ export function ScanLotScreen() {
               { color: colors.textPrimary }
             ]}
           >
-            {isProcessing ? t('scan.lotAnalyzing') : t('scan.lotInstruction')}
+            {isProcessing ? processingLabel : t('scan.lotInstruction')}
           </Text>
         </View>
 

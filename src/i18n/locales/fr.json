@@ -40,6 +40,8 @@
     "lotInstruction": "Cadrez clairement le numéro de lot et capturez la photo.",
     "brandAnalyzing": "Analyse de la marque en cours...",
     "lotAnalyzing": "Analyse du numéro de lot en cours...",
+    "stageVision": "Lecture renforcée en cours...",
+    "stageClaude": "Analyse approfondie en cours...",
     "confirmBrandTitle": "Valider la marque détectée",
     "confirmBrandMessage": "Marque détectée : {{brand}}",
     "confirmLotTitle": "Valider le numéro de lot",
