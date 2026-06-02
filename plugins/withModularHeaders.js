@@ -41,8 +41,11 @@ module.exports = function withModularHeaders(config) {
         podfileContent = podfileContent.replace(
           'post_install do |installer|',
           `post_install do |installer|
-    # Pods that need special module handling
-    rnfb_pods = ['RNFBApp', 'RNFBAuth', 'RNFBFirestore']
+    # Pods that need special module handling: Obj-C pods that import React
+    # (s.dependency 'React-Core') hit "include of non-modular header inside
+    # framework module" under $RNFirebaseAsStaticFramework, fixed by disabling
+    # Clang modules below. RNFBAppCheck added with @react-native-firebase/app-check.
+    rnfb_pods = ['RNFBApp', 'RNFBAuth', 'RNFBFirestore', 'RNFBAppCheck']
 
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
@@ -58,8 +61,18 @@ module.exports = function withModularHeaders(config) {
         end
 
         # Suppress nullability warnings (expo-file-system)
-        if target.name == 'expo-file-system'
+        if target.name == 'ExpoFileSystem'
           config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
+        end
+
+        # expo-image's podspec declares swift_version '6.0' (Swift 6 language
+        # mode), which makes SDWebImage's non-Sendable completion-block captures
+        # in BlurhashLoader/ThumbhashLoader HARD errors and ignores the
+        # SWIFT_STRICT_CONCURRENCY = 'minimal' set above. Pin it back to Swift 5
+        # so those data-race diagnostics are non-fatal. The pod's source uses no
+        # Swift-6-only syntax, so it still compiles cleanly.
+        if target.name == 'ExpoImage'
+          config.build_settings['SWIFT_VERSION'] = '5.0'
         end
       end
     end`
