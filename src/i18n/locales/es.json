@@ -259,7 +259,9 @@
     "resetPasswordFailed": "Error al enviar correo de restablecimiento",
     "signOutFailed": "Error al cerrar sesión",
     "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
-    "passwordsDoNotMatch": "Las contraseñas no coinciden"
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre"
   },
   "team": {
     "title": "Gestión de equipo",
@@ -420,7 +422,10 @@
     "pack500": "Paquete de +500 escaneos",
     "cannotAdd": "No se puede agregar el paquete en este momento.",
     "loading": "Cargando cuota...",
-    "remaining": "Escaneos restantes:"
+    "remaining": "Escaneos restantes:",
+    "upsellTitle": "Has usado todos tus escaneos gratuitos",
+    "upsellMessage": "¿Te gusta EatSafe? Prueba cualquier plan gratis durante 14 días y escanea sin límites.",
+    "viewPlans": "Ver planes"
   },
   "immediateRecallAlert": {
     "lotDetected": "Número de lote detectado:",

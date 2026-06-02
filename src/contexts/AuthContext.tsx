@@ -12,7 +12,7 @@ export interface AuthContextValue {
   loading: boolean;
   isAuthenticated: boolean;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  signUpWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, displayName?: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -27,9 +27,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Configure Google Sign-In
+    // Configure Google Sign-In.
+    // Web client ID is project-level (shared with the sister app NumelineFR), so it
+    // can be injected via env var. Fallback keeps existing builds working if the env
+    // var is missing. A wrong/empty value is the classic cause of DEVELOPER_ERROR.
     GoogleSignin.configure({
-      webClientId: '577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com',
+      webClientId:
+        process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
+        '577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com',
       offlineAccess: true,
       forceCodeForRefreshToken: true
     });
@@ -53,9 +58,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const signUpWithEmail = async (email: string, password: string) => {
+  const signUpWithEmail = async (email: string, password: string, displayName?: string) => {
     try {
-      await auth().createUserWithEmailAndPassword(email, password);
+      const result = await auth().createUserWithEmailAndPassword(email, password);
+      const name = displayName?.trim();
+      if (name) {
+        await result.user.updateProfile({ displayName: name });
+      }
+      await result.user.sendEmailVerification();
     } catch (error: any) {
       console.error('[AuthContext] Sign up error:', error);
       throw error;

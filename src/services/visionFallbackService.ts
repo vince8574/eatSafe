@@ -2,6 +2,8 @@ import * as FileSystem from 'expo-file-system/legacy';
 import Constants from 'expo-constants';
 import { OCRResult } from '../types';
 
+const VISION_TIMEOUT_MS = 10000;
+
 type VisionConfig = {
   endpoint?: string;
   apiKey?: string;
@@ -119,13 +121,22 @@ export async function runVisionFallback(uri: string): Promise<OCRResult> {
   };
 
   console.log('[VisionFallback] Calling Google Cloud Vision API...');
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(requestBody)
-  });
+  // Timeout réseau : on abandonne après 10s pour ne pas bloquer le scan.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), VISION_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => '');

@@ -40,6 +40,8 @@
     "lotInstruction": "Clearly frame the lot number and capture the photo.",
     "brandAnalyzing": "Analyzing brand...",
     "lotAnalyzing": "Analyzing lot number...",
+    "stageVision": "Enhancing recognition...",
+    "stageClaude": "Deep analysis in progress...",
     "confirmBrandTitle": "Confirm detected brand",
     "confirmBrandMessage": "Detected brand: {{brand}}",
     "confirmLotTitle": "Confirm lot number",
@@ -328,7 +330,9 @@
     "resetPasswordFailed": "Failed to send reset email",
     "signOutFailed": "Failed to sign out",
     "passwordTooShort": "Password must be at least 6 characters",
-    "passwordsDoNotMatch": "Passwords do not match"
+    "passwordsDoNotMatch": "Passwords do not match",
+    "name": "Name",
+    "namePlaceholder": "Your name"
   },
   "team": {
     "title": "Team Management",
@@ -490,7 +494,10 @@
     "pack500": "+500 scans pack",
     "cannotAdd": "Cannot add pack at this time.",
     "loading": "Loading quota...",
-    "remaining": "Scans remaining:"
+    "remaining": "Scans remaining:",
+    "upsellTitle": "You've used all your free scans",
+    "upsellMessage": "Enjoying EatSafe? Try any plan free for 14 days, then scan without limits.",
+    "viewPlans": "View plans"
   },
   "immediateRecallAlert": {
     "lotDetected": "Lot number detected:",

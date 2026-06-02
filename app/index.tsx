@@ -1,9 +1,11 @@
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { usePreferencesStore } from '../src/stores/usePreferencesStore';
+import { useAuth } from '../src/contexts/AuthContext';
 
 export default function RootRedirect() {
   const { firstName, hasSeenWelcome, hasSeenNotificationPrompt } = usePreferencesStore();
+  const { isAuthenticated, loading } = useAuth();
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -18,8 +20,13 @@ export default function RootRedirect() {
   }, []);
 
   // Attendre que les données soient chargées
-  if (!hydrated) {
+  if (!hydrated || loading) {
     return null;
+  }
+
+  // Auth obligatoire : pas de session => écran de connexion.
+  if (!isAuthenticated) {
+    return <Redirect href="/auth/login" />;
   }
 
   // Déterminer la destination (l'animation sera affichée dans WelcomeScreen)

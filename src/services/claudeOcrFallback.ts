@@ -3,6 +3,8 @@ import Constants from 'expo-constants';
 import type { OCRResult } from '../types';
 import { getAppCheckToken } from './appCheckService';
 
+const CLAUDE_TIMEOUT_MS = 20000;
+
 type ClaudeConfig = {
   endpoint?: string;
 };
@@ -32,15 +34,21 @@ function hasPlausibleLotPattern(text: string): boolean {
   if (!text) return false;
   const cleaned = text.replace(/\s+/g, ' ').toUpperCase();
 
+  // Signal fort : préfixe "LOT" suivi d'un code.
   if (/(?:^|[^A-Z])LOT[:\s\-.]*[A-Z0-9]{3,22}/.test(cleaned)) return true;
+  // Signal fort : "L" + 3-15 chiffres (format FR très fréquent).
   if (/(?:^|[^A-Z])L\d{3,15}/.test(cleaned)) return true;
 
+  // Sinon, n'accepter QU'UN token mêlant lettres ET chiffres (vrai motif de
+  // lot type "AB1234", "7H234K"). On REJETTE désormais les tokens purement
+  // numériques (dates jj/mm/aaaa dé-espacées, poids, prix, n° de téléphone,
+  // EAN/GTIN) qui déclenchaient des faux positifs et faisaient sauter à tort
+  // le fallback Claude alors qu'aucun vrai lot n'avait été extrait.
   const tokens = cleaned.match(/[A-Z0-9]{4,22}/g) || [];
   return tokens.some((t) => {
     const digits = (t.match(/\d/g) || []).length;
-    // Exclude EAN/GTIN (13-14 pure-digit codes)
-    if (t.length >= 13 && digits === t.length) return false;
-    return digits >= 2;
+    const letters = (t.match(/[A-Z]/g) || []).length;
+    return digits >= 1 && letters >= 1;
   });
 }
 
@@ -78,11 +86,21 @@ async function runClaudeFallback(uri: string): Promise<OCRResult> {
   const appCheckToken = await getAppCheckToken();
   if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ imageBase64: base64Image, mediaType })
-  });
+  // Timeout réseau : Claude est le tier le plus lent ; on abandonne après 20s
+  // pour ne pas laisser le scan bloqué indéfiniment sur un réseau capricieux.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), CLAUDE_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ imageBase64: base64Image, mediaType }),
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const errText = await response.text().catch(() => '');

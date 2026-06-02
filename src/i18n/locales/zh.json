@@ -254,7 +254,9 @@
     "resetPasswordFailed": "发送重置电子邮件失败",
     "signOutFailed": "登出失败",
     "passwordTooShort": "密码至少必须为6个字符",
-    "passwordsDoNotMatch": "密码不匹配"
+    "passwordsDoNotMatch": "密码不匹配",
+    "name": "姓名",
+    "namePlaceholder": "您的姓名"
   },
   "team": {
     "title": "团队管理",
@@ -415,7 +417,10 @@
     "pack500": "+500次扫描包",
     "cannotAdd": "目前无法添加包。",
     "loading": "正在加载配额...",
-    "remaining": "剩余扫描次数："
+    "remaining": "剩余扫描次数：",
+    "upsellTitle": "您已用完所有免费扫描",
+    "upsellMessage": "喜欢 EatSafe 吗？任意套餐免费试用 14 天，无限扫描。",
+    "viewPlans": "查看套餐"
   },
   "immediateRecallAlert": {
     "lotDetected": "检测到批号：",

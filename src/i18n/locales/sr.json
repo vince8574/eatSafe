@@ -254,7 +254,9 @@
     "resetPasswordFailed": "Слање е-поште за поновно постављање није успело",
     "signOutFailed": "Одјава није успела",
     "passwordTooShort": "Лозинка мора имати минимум 6 карактера",
-    "passwordsDoNotMatch": "Лозинке се не поклапају"
+    "passwordsDoNotMatch": "Лозинке се не поклапају",
+    "name": "Ime",
+    "namePlaceholder": "Vaše ime"
   },
   "team": {
     "title": "Управљање тимом",
@@ -415,7 +417,10 @@
     "pack500": "Пакет +500 скенирања",
     "cannotAdd": "Не може се додати пакет у овом тренутку.",
     "loading": "Учитавање квоте...",
-    "remaining": "Преостала скенирања:"
+    "remaining": "Преостала скенирања:",
+    "upsellTitle": "Iskoristili ste sva besplatna skeniranja",
+    "upsellMessage": "Sviđa vam se EatSafe? Isprobajte bilo koji plan besplatno 14 dana i skenirajte bez ograničenja.",
+    "viewPlans": "Pogledaj planove"
   },
   "immediateRecallAlert": {
     "lotDetected": "Број серије откривен:",

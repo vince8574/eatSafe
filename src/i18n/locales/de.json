@@ -259,7 +259,9 @@
     "resetPasswordFailed": "Fehler beim Senden der Zurücksetzen-E-Mail",
     "signOutFailed": "Abmeldung fehlgeschlagen",
     "passwordTooShort": "Passwort muss mindestens 6 Zeichen lang sein",
-    "passwordsDoNotMatch": "Passwörter stimmen nicht überein"
+    "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+    "name": "Name",
+    "namePlaceholder": "Ihr Name"
   },
   "team": {
     "title": "Teamverwaltung",
@@ -420,7 +422,10 @@
     "pack500": "+500 Scans Paket",
     "cannotAdd": "Paket kann derzeit nicht hinzugefügt werden.",
     "loading": "Kontingent wird geladen...",
-    "remaining": "Verbleibende Scans:"
+    "remaining": "Verbleibende Scans:",
+    "upsellTitle": "Sie haben alle kostenlosen Scans verbraucht",
+    "upsellMessage": "Gefällt Ihnen EatSafe? Testen Sie jedes Abo 14 Tage kostenlos und scannen Sie ohne Limit.",
+    "viewPlans": "Abos ansehen"
   },
   "immediateRecallAlert": {
     "lotDetected": "Chargennummer erkannt:",
