@@ -1,6 +1,6 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert, Animated } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert, Animated, KeyboardAvoidingView, Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
@@ -13,6 +13,7 @@ import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
+import { ResultBottomNav } from '../components/ResultBottomNav';
 import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { Ionicons } from '@expo/vector-icons';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
@@ -22,7 +23,9 @@ import * as Notifications from 'expo-notifications';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
 import { useVoiceCommands } from '../hooks/useVoiceCommands';
 
-const AUTO_CAPTURE_DELAY_VOICE_MS = 1200;
+// En mode malvoyant on laisse beaucoup plus de temps avant la capture auto :
+// l'utilisateur a besoin de stabiliser le téléphone face à l'étiquette.
+const AUTO_CAPTURE_DELAY_VOICE_MS = 3000;
 const AUTO_CAPTURE_DELAY_SIGHTED_MS = 400;
 
 function detectLotLike(text: string): boolean {
@@ -310,19 +313,11 @@ export function ScanLotScreen() {
   const handleLowLight = useCallback(
     (isLow: boolean) => {
       if (!isLow) return;
+      // On NE déclenche PLUS le flash automatiquement : sur une boîte de conserve
+      // (surface réfléchissante) le flash crée des reflets qui empêchent l'OCR de
+      // lire le lot. Le flash reste disponible manuellement via le bouton.
       if (accessibilityMode) {
         speak(t('accessibility.voice.lowLight'), { priority: true, dedupeMs: 12000 });
-      }
-      if (
-        !autoFlashAppliedRef.current &&
-        !userOverrodeFlashRef.current &&
-        !(scannerRef.current?.isFlashOn() ?? false)
-      ) {
-        scannerRef.current?.setFlash(true);
-        autoFlashAppliedRef.current = true;
-        if (accessibilityMode) {
-          speak(t('accessibility.voice.flashOn'), { priority: true });
-        }
       }
     },
     [accessibilityMode, speak, t]
@@ -584,7 +579,7 @@ export function ScanLotScreen() {
         mode="band"
         resetToken={scannerResetToken}
         flashPosition="top-right"
-        multiFrameCount={2}
+        multiFrameCount={3}
         multiFrameDelayMs={200}
         onBack={handleGoBack}
         onRestart={handleRestart}
@@ -710,13 +705,18 @@ export function ScanLotScreen() {
         </View>
       </ScrollView>
 
+      <ResultBottomNav />
+
       <Modal
         visible={isConfirmModalVisible}
         transparent
         animationType="fade"
         onRequestClose={() => setConfirmModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
               {t('scan.confirmLotTitle')}
@@ -850,7 +850,7 @@ export function ScanLotScreen() {
               </>
             )}
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       <ImmediateRecallAlert
