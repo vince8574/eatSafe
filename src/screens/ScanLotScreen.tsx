@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Scanner, type ScannerHandle } from '../components/Scanner';
-import { performOcr, type OcrStage } from '../services/ocrService';
+import { performOcr, looksLikeNonLot, type OcrStage } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -756,7 +756,11 @@ export function ScanLotScreen() {
                 </Text>
                 <View style={[styles.ocrTextContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
                   <Text style={[styles.ocrText, { color: colors.textPrimary }]}>
-                    {lotNumber || (lotCandidates.length > 0 ? lotCandidates.join(' / ') : t('scanLot.noText'))}
+                    {lotNumber || (() => {
+                      // N'afficher que des candidats plausibles (jamais un poids/date/heure).
+                      const shown = lotCandidates.filter((c) => !looksLikeNonLot(c));
+                      return shown.length > 0 ? shown.join(' / ') : t('scanLot.noText');
+                    })()}
                   </Text>
                 </View>
 

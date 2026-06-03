@@ -352,6 +352,31 @@ async function extractLotFromGTIN(rawText: string, brand: string): Promise<strin
   }
 }
 
+/**
+ * Détecte les tokens qui ne sont JAMAIS un numéro de lot : poids/volumes
+ * (250G, 500ML), prix, pourcentages, dates délimitées (15/03/2026) et heures
+ * (12:34). Sert à n'afficher à l'utilisateur qu'un vrai numéro de lot. Le
+ * matching de rappel, lui, conserve tous les candidats — un token parasite ne
+ * matchera de toute façon aucun lot de rappel réel.
+ */
+export function looksLikeNonLot(raw: string): boolean {
+  const t = (raw || '').trim().toUpperCase();
+  if (!t) return true;
+  // Poids / volumes : 1-4 chiffres (+ décimale) suivis d'une unité, et rien
+  // d'autre. Le garde-fou 1-4 chiffres évite d'exclure un vrai lot long
+  // terminé par une lettre (ex. un code à 5+ chiffres).
+  if (/^\d{1,4}(?:[.,]\d+)?\s?(?:MG|KG|G|GR|ML|CL|DL|L|OZ|LB|LBS)$/.test(t)) return true;
+  // Prix / devises / pourcentages.
+  if (/[€$£]/.test(t) || /\b(?:EUR|USD)\b/.test(t)) return true;
+  if (/^\d+(?:[.,]\d+)?\s?%$/.test(t)) return true;
+  // Dates délimitées : JJ/MM/AAAA et AAAA-MM-JJ (séparateurs / . -).
+  if (/^\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{2,4}$/.test(t)) return true;
+  if (/^\d{4}[\/.\-]\d{1,2}[\/.\-]\d{1,2}$/.test(t)) return true;
+  // Heures HH:MM(:SS).
+  if (/^\d{1,2}:\d{2}(?::\d{2})?$/.test(t)) return true;
+  return false;
+}
+
 export async function extractLotNumber(rawText: string, brand?: string): Promise<string> {
   console.log('[extractLotNumber] Extracting lot number from OCR text');
   console.log('[extractLotNumber] Raw text:', rawText);
@@ -546,15 +571,18 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
     }
   }
 
-  // Retourner le premier candidat (pour compatibilité)
-  // mais tous les candidats seront disponibles via une nouvelle fonction
-  if (allCandidates.length > 0) {
-    const lotNumber = allCandidates[0];
-    console.log(`✅ Returning first lot number: ${lotNumber} (${allCandidates.length} total candidates)`);
+  // Ne retenir, pour l'affichage, que les candidats qui ressemblent vraiment à
+  // un lot : on écarte poids, prix, dates et heures (looksLikeNonLot). Si tous
+  // les candidats sont des parasites, on n'affiche RIEN plutôt qu'une valeur
+  // trompeuse. (Le matching de rappel garde la liste complète via extractAllLotCandidates.)
+  const realLots = allCandidates.filter((c) => !looksLikeNonLot(c));
+  if (realLots.length > 0) {
+    const lotNumber = realLots[0];
+    console.log(`✅ Returning first lot number: ${lotNumber} (${realLots.length}/${allCandidates.length} retenus après filtrage)`);
     return lotNumber;
   }
 
-  console.log('[extractLotNumber] No pattern matched with strict rules');
+  console.log('[extractLotNumber] No pattern matched (ou tous les candidats ressemblaient à un poids/date/heure)');
   console.log('❌ No lot number found');
   return '';
 }
