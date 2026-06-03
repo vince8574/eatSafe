@@ -27,8 +27,12 @@ export type ScannerHandle = {
 };
 
 type ScannerProps = {
-  onCapture: (uri: string) => Promise<void> | void;
+  onCapture: (uri: string | string[]) => Promise<void> | void;
   onBarcodeScanned?: (barcode: string) => void;
+  // Capture multi-frames : prend N photos par déclenchement (rafale) pour que
+  // l'OCR puisse choisir la meilleure (plus robuste sur photo floue/bougée).
+  multiFrameCount?: number;
+  multiFrameDelayMs?: number;
   isProcessing?: boolean;
   enableBarcodeScanning?: boolean;
   mode?: ScannerMode;
@@ -57,6 +61,8 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   {
     onCapture,
     onBarcodeScanned,
+    multiFrameCount = 1,
+    multiFrameDelayMs = 200,
     isProcessing = false,
     enableBarcodeScanning = false,
     mode = 'photo',
@@ -136,18 +142,33 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       return;
     }
     try {
-      const photo = await cameraRef.current.takePictureAsync({
-        quality: 1.0,
-        skipProcessing: false,
-        shutterSound: false
-      });
-      if (photo?.uri) {
-        await onCapture(photo.uri);
+      // Rafale de N photos (multiFrameCount) : l'OCR choisira la meilleure.
+      const frameCount = Math.max(1, multiFrameCount);
+      const uris: string[] = [];
+      for (let i = 0; i < frameCount; i++) {
+        if (!cameraRef.current) break;
+        try {
+          const photo = await cameraRef.current.takePictureAsync({
+            quality: 1.0,
+            skipProcessing: false,
+            shutterSound: false
+          });
+          if (photo?.uri) uris.push(photo.uri);
+        } catch (frameError) {
+          console.warn(`Capture frame ${i + 1}/${frameCount} failed`, frameError);
+        }
+        if (i < frameCount - 1 && multiFrameDelayMs > 0) {
+          await new Promise((resolve) => setTimeout(resolve, multiFrameDelayMs));
+        }
+      }
+      if (uris.length > 0) {
+        // Une seule frame → on garde la signature uri:string (rétrocompat).
+        await onCapture(uris.length === 1 ? uris[0] : uris);
       }
     } catch (error) {
       console.warn('Capture failed', error);
     }
-  }, [cameraReady, onCapture]);
+  }, [cameraReady, onCapture, multiFrameCount, multiFrameDelayMs]);
 
   const emitCoachingHint = useCallback(
     (hint: CoachingHint) => {
