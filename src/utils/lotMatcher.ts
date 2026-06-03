@@ -95,43 +95,36 @@ function matchBrands(productBrand: string, recallBrand: string | undefined) {
 export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   const normalized = normalizeLot(product.lotNumber);
 
-  // Ignore very short lot numbers — too likely to cause false positives
-  if (normalized.length < 3) {
+  // Lots trop courts → trop de faux positifs.
+  if (normalized.length < 4) {
     return false;
   }
 
-  const matches = (recall.lotNumbers ?? []).some((lot) => {
+  return (recall.lotNumbers ?? []).some((lot) => {
     const candidate = normalizeLot(lot);
 
-    if (!candidate || candidate.length < 3) {
+    if (!candidate || candidate.length < 4) {
       return false;
     }
 
-    // Exact match
+    // Match exact (après normalisation).
     if (candidate === normalized) {
       return true;
     }
 
-    // Substring match only if the scanned lot is long enough (≥6 chars)
-    // to avoid short codes matching inside longer ones
-    if (normalized.length >= 6) {
-      if (candidate.includes(normalized) || normalized.includes(candidate)) {
-        return true;
-      }
+    // Sous-chaîne UNIQUEMENT si la PLUS COURTE des deux fait ≥6 caractères,
+    // pour éviter qu'un code court ("2026") matche dans un plus long ("APR2026").
+    const shorter = normalized.length <= candidate.length ? normalized : candidate;
+    const longer = normalized.length > candidate.length ? normalized : candidate;
+    if (shorter.length >= 6 && longer.includes(shorter)) {
+      return true;
     }
 
-    // Fuzzy match: scale threshold with lot length
-    if (Math.abs(candidate.length - normalized.length) > 2) {
-      return false;
-    }
-
-    const distance = levenshteinDistance(candidate, normalized);
-    // Allow 1 edit for lots < 8 chars, 2 edits for longer lots
-    const maxDistance = normalized.length < 8 ? 1 : 2;
-    return distance <= maxDistance;
+    // PAS de matching flou (Levenshtein) sur les lots : c'était la source
+    // majeure de fausses alertes — un lot-poubelle de 4 caractères tombait à
+    // 1 édition d'un vrai lot de rappel, déclenchant "DO NOT CONSUME" à tort.
+    return false;
   });
-
-  return matches;
 }
 
 /**
@@ -143,6 +136,18 @@ export function recallMatchesProduct(
   product: { brand: string; lotNumber: string },
   recall: { brand?: string; lotNumbers?: string[] }
 ): boolean {
+  // Marque INCONNUE : aucune corroboration possible par la marque, donc on
+  // exige un match de lot EXACT (ni sous-chaîne ni flou) et assez long. Sinon
+  // un lot-poubelle ("GRFG", "APR2026"…) matche n'importe quel rappel de la
+  // base FDA/USDA → fausses notifications "DO NOT CONSUME".
+  if (isUnknownBrand(product.brand)) {
+    const normalized = normalizeLot(product.lotNumber);
+    if (normalized.length < 5) {
+      return false;
+    }
+    return (recall.lotNumbers ?? []).some((lot) => normalizeLot(lot) === normalized);
+  }
+
   const brandMatches = matchBrands(product.brand, recall.brand);
   const lotMatches = matchLots(product as ScannedProduct, recall as RecallRecord);
 
