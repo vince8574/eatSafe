@@ -44,14 +44,9 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" | base64 -D > GoogleService-Info.plist
 
-      - name: Create .env file
-        run: |
-          # EXPO_PUBLIC_* vars are inlined by Metro during the bundle phase of the
-          # archive. Without them the OCR fallbacks stay disabled and only ML Kit
-          # runs (isVisionAvailable/isClaudeAvailable read these at build time).
-          echo "EXPO_PUBLIC_VISION_ENDPOINT=${{ secrets.EXPO_PUBLIC_VISION_ENDPOINT }}" >> .env
-          echo "EXPO_PUBLIC_VISION_API_KEY=${{ secrets.EXPO_PUBLIC_VISION_API_KEY }}" >> .env
-          echo "EXPO_PUBLIC_CLAUDE_ENDPOINT=${{ secrets.EXPO_PUBLIC_CLAUDE_ENDPOINT }}" >> .env
+      # No .env needed: Vision and Claude now go through Cloud Functions whose
+      # endpoints live in app.json (extra.vision / extra.claude). The API keys
+      # stay server-side as Firebase secrets, so nothing sensitive is bundled.
 
       - name: Set iOS build number (auto-increment)
         run: |
