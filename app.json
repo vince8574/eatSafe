@@ -113,7 +113,7 @@
         "projectId": "3d17326d-6c82-4b80-8f4d-9ea1e120fd85"
       },
       "claude": {
-        "endpoint": ""
+        "endpoint": "https://us-central1-eatsok-6d19f.cloudfunctions.net/ocrClaude"
       }
     }
   }
