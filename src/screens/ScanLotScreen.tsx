@@ -68,6 +68,7 @@ export function ScanLotScreen() {
   const autoFlashAppliedRef = useRef(false);
   const userOverrodeFlashRef = useRef(false);
   const autoCaptureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fallbackCaptureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const flashAnim = useRef(new Animated.Value(0)).current;
   const isProcessingRef = useRef(false);
 
@@ -568,6 +569,31 @@ export function ScanLotScreen() {
     }, [accessibilityMode, speak, t])
   );
 
+  // Auto-capture de secours (mains libres) : si la pré-détection par preview
+  // n'a rien donné au bout de quelques secondes (étiquette peu contrastée,
+  // faible lumière sans flash, impression point-matrice), on force une capture
+  // pleine résolution qui déclenche l'OCR complet (ML Kit + Vision + Claude).
+  // Indispensable pour l'accessibilité : un malvoyant ne peut pas viser un
+  // bouton. Ré-armé à chaque (ré)init du scanner (focus, "Recommencer").
+  useEffect(() => {
+    lotInFrameAnnouncedRef.current = false;
+    const delayMs = accessibilityMode ? 5000 : 3000;
+    if (fallbackCaptureTimerRef.current) clearTimeout(fallbackCaptureTimerRef.current);
+    fallbackCaptureTimerRef.current = setTimeout(() => {
+      if (!lotInFrameAnnouncedRef.current && !isProcessingRef.current) {
+        lotInFrameAnnouncedRef.current = true;
+        triggerCaptureFeedback();
+        scannerRef.current?.triggerCapture();
+      }
+    }, delayMs);
+    return () => {
+      if (fallbackCaptureTimerRef.current) {
+        clearTimeout(fallbackCaptureTimerRef.current);
+        fallbackCaptureTimerRef.current = null;
+      }
+    };
+  }, [scannerResetToken, accessibilityMode, triggerCaptureFeedback]);
+
   return (
     <GradientBackground>
       <Scanner
@@ -588,6 +614,7 @@ export function ScanLotScreen() {
         onPreviewOcrText={handlePreviewOcrText}
         lowLightDetectionEnabled
         onLowLight={handleLowLight}
+        hideCaptureButton
       />
 
       <Animated.View
