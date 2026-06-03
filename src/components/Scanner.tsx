@@ -6,7 +6,7 @@ import {
   useRef,
   useState
 } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
@@ -266,14 +266,23 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   }
 
   if (!permission.granted) {
+    // iOS ne réaffiche pas le prompt système une fois la permission refusée
+    // (canAskAgain === false) : on renvoie alors vers les Réglages du téléphone.
+    const handlePermissionPress = permission.canAskAgain
+      ? requestPermission
+      : () => Linking.openSettings();
     return (
       <View style={styles.permissionContainer}>
         <Ionicons name="camera-outline" size={48} color={colors.accent} style={{ marginBottom: 16 }} />
         <Text style={[styles.permissionText, { color: colors.textPrimary }]}>
-          {t('scanner.cameraPermissionNeeded')}
+          {permission.canAskAgain
+            ? t('scanner.cameraPermissionNeeded')
+            : t('scanner.cameraPermissionDenied')}
         </Text>
-        <TouchableOpacity style={[styles.permissionButton, { backgroundColor: colors.accent }]} onPress={requestPermission}>
-          <Text style={[styles.permissionButtonText, { color: colors.surface }]}>{t('scanner.allowCamera')}</Text>
+        <TouchableOpacity style={[styles.permissionButton, { backgroundColor: colors.accent }]} onPress={handlePermissionPress}>
+          <Text style={[styles.permissionButtonText, { color: colors.surface }]}>
+            {permission.canAskAgain ? t('scanner.allowCamera') : t('scanner.openSettings')}
+          </Text>
         </TouchableOpacity>
       </View>
     );
