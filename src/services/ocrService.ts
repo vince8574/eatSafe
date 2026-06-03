@@ -377,6 +377,10 @@ export function looksLikeNonLot(raw: string): boolean {
   if (/^\d{4}[\/.\-]\d{1,2}[\/.\-]\d{1,2}$/.test(t)) return true;
   // Heures HH:MM(:SS).
   if (/^\d{1,2}:\d{2}(?::\d{2})?$/.test(t)) return true;
+  // Année isolée (1900-2099) : c'est l'année d'une DLC ("BEST BY JAN 5 2026"),
+  // pas un numéro de lot. (Un vrai lot à 4 chiffres = année reste dans la liste
+  // de matching ; on l'écarte seulement de l'affichage.)
+  if (/^(?:19|20)\d{2}$/.test(t)) return true;
   // Dates "mois abrégé + année/jour" : c'est une DLC/DDM, pas un lot.
   //   APR22, DEC2024, MAY24  → mois + 2-4 chiffres
   //   22APR, 15MAR24         → jour + mois (+ année)
