@@ -276,7 +276,10 @@ async function extractLotFromGTIN(rawText: string, brand: string): Promise<strin
   try {
     // Récupérer TOUS les rappels pour cette marque
     const { fetchRecallsByCountry } = await import('./apiService');
-    const recalls = await fetchRecallsByCountry('FR');
+    // eatSafe est l'app US : la correspondance lot doit se faire sur les
+    // rappels FDA/USDA, pas FR (vestige copié de l'app sœur). Le pays est
+    // toujours 'US' dans ce projet (usePreferencesStore).
+    const recalls = await fetchRecallsByCountry('US');
 
     const brandRecalls = recalls.filter(recall =>
       recall.brand?.toLowerCase() === brand.toLowerCase()
@@ -383,6 +386,36 @@ export function looksLikeNonLot(raw: string): boolean {
   if (new RegExp(`^(?:${MONTHS})\\d{2,4}$`).test(t)) return true;
   if (new RegExp(`^\\d{1,2}(?:${MONTHS})\\d{0,4}$`).test(t)) return true;
   return false;
+}
+
+// Score qualité d'un candidat lot (format-agnostique, valable FDA/USDA comme
+// FR) : favorise les codes mêlant lettres ET chiffres, de longueur plausible,
+// et les "batch codes" (1-4 lettres + chiffres : WN012117E, SE102922A, L693…).
+// Pénalise fortement les fragments de date/heure. Sert à choisir LE meilleur
+// candidat au lieu du premier rencontré.
+function scoreLotCandidate(candidate: string): number {
+  const c = candidate.toUpperCase();
+  // Fragments de date/heure (16/02, 23:52) → éliminés d'office.
+  if (/^\d{1,2}[:/]\d{2}/.test(c)) return -1000;
+
+  let score = 0;
+  const hasLetters = /[A-Z]/.test(c);
+  const hasDigits = /\d/.test(c);
+  const len = c.length;
+
+  if (hasLetters && hasDigits) score += 40; // mixte = signature typique d'un lot
+  else if (hasDigits && !hasLetters) score += 10; // lot purement numérique (FDA "58041")
+  else score -= 50; // que des lettres → peu probable
+
+  if (len >= 6 && len <= 16) score += 25;
+  else if (len >= 4 && len <= 5) score += 5;
+  else if (len > 16) score -= 10;
+  else score -= 20; // < 4 caractères
+
+  // Bonus "batch code" : 1-4 lettres puis des chiffres (WN012117E, AB1234, L693…).
+  if (/^[A-Z]{1,4}\d{3,}/.test(c)) score += 25;
+
+  return score;
 }
 
 export async function extractLotNumber(rawText: string, brand?: string): Promise<string> {
@@ -568,25 +601,34 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
     }
   ];
 
-  // Collecter TOUS les candidats de tous les patterns
-  const allCandidates: string[] = [];
+  // Collecter TOUS les candidats. Les patterns à préfixe explicite (LOT/BATCH,
+  // "Numeric-only lot" qui exige le mot LOT, N°) reçoivent un gros bonus :
+  // quand l'étiquette dit "LOT xxx", c'est la vérité (priorité <= 3 ici).
+  const allCandidates: Array<{ value: string; bonus: number }> = [];
 
   for (const pattern of patterns) {
     const matches = pattern.extract(cleaned);
     if (matches.length > 0) {
       console.log(`✅ Found ${matches.length} candidate(s) with pattern "${pattern.name}": ${matches.join(', ')}`);
-      allCandidates.push(...matches.map(m => m.toUpperCase()));
+      const bonus = pattern.priority <= 3 ? 1000 : 0;
+      for (const m of matches) allCandidates.push({ value: m.toUpperCase(), bonus });
     }
   }
 
-  // Ne retenir, pour l'affichage, que les candidats qui ressemblent vraiment à
-  // un lot : on écarte poids, prix, dates et heures (looksLikeNonLot). Si tous
-  // les candidats sont des parasites, on n'affiche RIEN plutôt qu'une valeur
+  // Ne garder, pour l'affichage, que les candidats qui ressemblent vraiment à
+  // un lot : on écarte poids, prix, dates et heures (looksLikeNonLot). Puis on
+  // sélectionne LE MEILLEUR par score qualité (au lieu du premier trouvé), pour
+  // éviter qu'un fragment l'emporte sur un vrai code de lot. Si tous les
+  // candidats sont des parasites, on n'affiche RIEN plutôt qu'une valeur
   // trompeuse. (Le matching de rappel garde la liste complète via extractAllLotCandidates.)
-  const realLots = allCandidates.filter((c) => !looksLikeNonLot(c));
-  if (realLots.length > 0) {
-    const lotNumber = realLots[0];
-    console.log(`✅ Returning first lot number: ${lotNumber} (${realLots.length}/${allCandidates.length} retenus après filtrage)`);
+  const ranked = allCandidates
+    .filter((c) => !looksLikeNonLot(c.value))
+    .map((c) => ({ value: c.value, score: c.bonus + scoreLotCandidate(c.value) }))
+    .sort((a, b) => b.score - a.score);
+
+  if (ranked.length > 0) {
+    const lotNumber = ranked[0].value;
+    console.log(`✅ Best lot number: ${lotNumber} (score ${ranked[0].score}, ${allCandidates.length} candidats)`);
     return lotNumber;
   }
 
