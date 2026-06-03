@@ -573,7 +573,9 @@
   "scanner": {
     "cameraLoading": "Loading camera...",
     "cameraPermissionNeeded": "Camera access is needed to scan products.",
+    "cameraPermissionDenied": "Camera access is turned off. Enable it in Settings to scan products.",
     "allowCamera": "Allow Camera",
+    "openSettings": "Open Settings",
     "skip": "Skip",
     "tipBarcode": "Center the barcode inside the frame",
     "tipBand": "Frame the lot number and hold steady",

@@ -573,7 +573,9 @@
   "scanner": {
     "cameraLoading": "Chargement de la caméra...",
     "cameraPermissionNeeded": "L'accès à la caméra est nécessaire pour scanner les produits.",
+    "cameraPermissionDenied": "L'accès à la caméra est désactivé. Activez-le dans les Réglages pour scanner les produits.",
     "allowCamera": "Autoriser la caméra",
+    "openSettings": "Ouvrir les Réglages",
     "skip": "Passer",
     "tipBarcode": "Centrez le code-barres dans le cadre",
     "tipBand": "Cadrez le numéro de lot et restez immobile",
