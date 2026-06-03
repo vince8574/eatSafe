@@ -155,7 +155,7 @@ export function DetailScreen() {
 
           <TouchableOpacity
             style={[styles.scanAnotherButton, { backgroundColor: colors.accent }]}
-            onPress={() => router.replace('/(tabs)')}
+            onPress={() => router.replace('/(tabs)/scan')}
           >
             <Text style={styles.scanAnotherText}>{t('details.actions.scanAnother')}</Text>
           </TouchableOpacity>
