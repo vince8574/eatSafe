@@ -52,10 +52,9 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
 
-      - name: Create .env file
-        run: |
-          echo "EXPO_PUBLIC_VISION_ENDPOINT=${{ secrets.EXPO_PUBLIC_VISION_ENDPOINT }}" >> .env
-          echo "EXPO_PUBLIC_VISION_API_KEY=${{ secrets.EXPO_PUBLIC_VISION_API_KEY }}" >> .env
+      # No .env needed: Vision/Claude go through Cloud Functions whose endpoints
+      # live in app.json. Setting EXPO_PUBLIC_VISION_ENDPOINT to the old direct
+      # Google API URL would now override that and break the Cloud Function call.
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew

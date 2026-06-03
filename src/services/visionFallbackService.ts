@@ -1,12 +1,10 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import Constants from 'expo-constants';
 import { OCRResult } from '../types';
-
-const VISION_TIMEOUT_MS = 10000;
+import { getAppCheckToken } from './appCheckService';
 
 type VisionConfig = {
   endpoint?: string;
-  apiKey?: string;
 };
 
 type OcrQualityAssessment = {
@@ -20,14 +18,25 @@ type OcrQualityAssessment = {
   reasons: string[];
 };
 
+/**
+ * URL de la Cloud Function `ocrVision` qui sert de proxy vers Google Vision
+ * côté serveur. La clé API Vision n'est PAS embarquée dans l'app : elle est
+ * stockée comme secret Firebase et lue uniquement dans la Cloud Function.
+ * Ainsi Vision fonctionne toujours (pas de dépendance à un secret de build),
+ * comme dans l'app sœur FR.
+ *
+ * Override possible via :
+ *   - app.json → expo.extra.vision.endpoint
+ *   - variable d'env EXPO_PUBLIC_VISION_ENDPOINT (doit alors pointer une
+ *     Cloud Function ocrVision, pas l'API Google directe)
+ */
 function getVisionConfig(): VisionConfig {
   const extra = (Constants.expoConfig?.extra as any) ?? {};
   const visionExtra = (extra.vision as VisionConfig) ?? {};
   const env = (globalThis as any)?.process?.env;
 
   return {
-    endpoint: env?.EXPO_PUBLIC_VISION_ENDPOINT || visionExtra.endpoint,
-    apiKey: env?.EXPO_PUBLIC_VISION_API_KEY || visionExtra.apiKey
+    endpoint: env?.EXPO_PUBLIC_VISION_ENDPOINT || visionExtra.endpoint
   };
 }
 
@@ -91,97 +100,51 @@ export function shouldUseVisionFallback(result: OCRResult) {
 }
 
 export async function runVisionFallback(uri: string): Promise<OCRResult> {
-  const { endpoint, apiKey } = getVisionConfig();
+  const { endpoint } = getVisionConfig();
 
-  if (!endpoint || !apiKey) {
-    throw new Error('Google Cloud Vision API non configurée');
+  if (!endpoint) {
+    throw new Error('Cloud Function ocrVision non configurée');
   }
 
   console.log('[VisionFallback] Reading image as base64...');
-  const base64Image = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+  const base64Image = await FileSystem.readAsStringAsync(uri, {
+    encoding: FileSystem.EncodingType.Base64
+  });
 
-  // Format correct pour Google Cloud Vision API
-  const apiUrl = `${endpoint}?key=${apiKey}`;
-  const requestBody = {
-    requests: [
-      {
-        image: {
-          content: base64Image
-        },
-        features: [
-          {
-            type: 'DOCUMENT_TEXT_DETECTION'
-          }
-        ],
-        imageContext: {
-          languageHints: ['fr', 'en']
-        }
-      }
-    ]
-  };
-
-  console.log('[VisionFallback] Calling Google Cloud Vision API...');
-  // Timeout réseau : on abandonne après 10s pour ne pas bloquer le scan.
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), VISION_TIMEOUT_MS);
-  let response: Response;
-  try {
-    response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody),
-      signal: controller.signal
-    });
-  } finally {
-    clearTimeout(timeout);
+  const appCheckToken = await getAppCheckToken();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (appCheckToken) {
+    headers['X-Firebase-AppCheck'] = appCheckToken;
   }
+
+  console.log('[VisionFallback] Calling ocrVision Cloud Function...');
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      imageBase64: base64Image,
+      languageHints: ['fr', 'en']
+    })
+  });
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => '');
-    console.error('[VisionFallback] API Error:', response.status, errorText);
-    throw new Error(`Google Vision API failed: ${response.status} ${errorText}`);
+    console.error('[VisionFallback] ocrVision error', response.status, errorText);
+    throw new Error(`ocrVision failed: ${response.status} ${errorText}`);
   }
 
-  const data = await response.json();
-  console.log('[VisionFallback] API Response received');
+  const data: {
+    text?: string;
+    lines?: Array<{ content: string; confidence?: number }>;
+    confidence?: number;
+  } = await response.json();
 
-  // Parser la réponse de Google Cloud Vision API
-  const visionResponse = data.responses?.[0];
-  if (!visionResponse || visionResponse.error) {
-    const errorMsg = visionResponse?.error?.message || 'Unknown error';
-    throw new Error(`Vision API error: ${errorMsg}`);
-  }
-
-  // Extraire le texte complet
-  const fullText = visionResponse.fullTextAnnotation?.text || '';
-
-  // Extraire les lignes de texte
-  const textAnnotations = visionResponse.textAnnotations || [];
-  const lines: Array<{ content: string; confidence?: number }> = [];
-
-  // La première annotation contient tout le texte, les suivantes sont les mots individuels
-  // On extrait les lignes en regroupant par position Y
-  if (fullText) {
-    const textLines = fullText.split('\n').filter(Boolean);
-    textLines.forEach((lineText: string) => {
-      lines.push({
-        content: lineText,
-        confidence: textAnnotations[0]?.confidence
-      });
-    });
-  }
-
-  const confidence = textAnnotations[0]?.confidence;
-
-  console.log('[VisionFallback] Extracted text length:', fullText.length);
-  console.log('[VisionFallback] Lines count:', lines.length);
+  console.log('[VisionFallback] Response received - text length:', data.text?.length || 0);
 
   return {
-    text: fullText,
-    lines,
-    confidence,
+    text: data.text || '',
+    lines: data.lines || [],
+    confidence: data.confidence,
     source: 'vision-fallback'
   };
 }
@@ -193,14 +156,14 @@ export async function tryVisionFallback(uri: string, result: OCRResult, context:
       return null;
     }
 
-    console.log(`[VisionFallback] Forced call for ${context} - using Google Vision directly`);
+    console.log(`[VisionFallback] Forced call for ${context} - using Cloud Function directly`);
 
     try {
       const fallbackResult = await runVisionFallback(uri);
       console.log('[VisionFallback] Success - using vision result');
       return fallbackResult;
     } catch (error) {
-      console.warn('[VisionFallback] Vision call failed', error);
+      console.warn('[VisionFallback] Cloud Function call failed', error);
       return null;
     }
   }
