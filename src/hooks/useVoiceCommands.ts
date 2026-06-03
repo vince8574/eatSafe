@@ -45,7 +45,16 @@ export function useVoiceCommands(enabled: boolean, handlers: Handlers) {
         continuous: true,
         contextualStrings: cfg.contextualStrings,
         addsPunctuation: false,
-        requiresOnDeviceRecognition: false
+        requiresOnDeviceRecognition: false,
+        // Le micro (reconnaissance) garde la session audio ouverte ; par défaut
+        // iOS bascule en mode "voiceChat" → la synthèse vocale sort par l'écouteur
+        // à faible volume et hachée (effet "liaison téléphonique"). On force la
+        // sortie HAUT-PARLEUR, mode "default", pour une voix claire et forte.
+        iosCategory: {
+          category: 'playAndRecord',
+          categoryOptions: ['defaultToSpeaker', 'duckOthers'],
+          mode: 'default'
+        }
       });
     } catch (err: any) {
       handlersRef.current.onError?.('start-failed', err?.message);
