@@ -283,8 +283,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   }, [previewOcrEnabled, cameraReady, isFocused, previewOcrIntervalMs, runPreviewOcrTick]);
 
   useEffect(() => {
+    // Réinitialisation d'un nouveau scan SANS remonter la caméra : on garde la
+    // session vivante (un remount de CameraView fige la caméra sur iOS lors d'un
+    // "Recommencer"). On ne remet donc PAS cameraReady à false — la caméra reste
+    // prête (onCameraReady ne se redéclenchera pas sans remontage).
     setScannedBarcode(null);
-    setCameraReady(false);
     setFlashOn(false);
     emptyOcrStreakRef.current = 0;
     lowLightActiveRef.current = false;
@@ -340,7 +343,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
         <CameraView
-          key={resetToken}
           ref={cameraRef}
           style={styles.camera}
           facing="back"

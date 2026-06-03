@@ -598,7 +598,6 @@ export function ScanLotScreen() {
     <GradientBackground>
       <Scanner
         ref={scannerRef}
-        key={`lot-scanner-${scannerResetToken}`}
         onCapture={handleCapture}
         enableBarcodeScanning={false}
         isProcessing={isProcessing}
