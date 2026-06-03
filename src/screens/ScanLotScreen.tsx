@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Scanner, type ScannerHandle } from '../components/Scanner';
-import { performOcr, looksLikeNonLot, type OcrStage } from '../services/ocrService';
+import { performOcr, performOcrMultiFrame, looksLikeNonLot, type OcrStage } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -142,13 +142,15 @@ export function ScanLotScreen() {
   }, [subscription?.scansRemaining, subscription?.status, buyPack, refresh, router, t]);
 
   const lotMutation = useMutation({
-    mutationFn: async (lotPhoto: string) => {
+    mutationFn: async (lotPhoto: string | string[]) => {
       setErrorMessage('');
       setOcrStage('mlkit');
       if (accessibilityMode) {
         speak(t('accessibility.voice.lotAnalyzing'), { priority: true });
       }
-      const { lot, result, candidates } = await performOcr(lotPhoto, brand, setOcrStage);
+      const { lot, result, candidates } = Array.isArray(lotPhoto)
+        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage)
+        : await performOcr(lotPhoto, brand, setOcrStage);
       // Toujours afficher UN SEUL numéro de lot : le lot extrait, sinon le
       // meilleur candidat plausible. On n'affiche jamais une liste de tokens
       // séparés par des '/' (ce que renvoyait l'ancien repli sur les candidats).
@@ -167,10 +169,14 @@ export function ScanLotScreen() {
       //   throw new Error(t('scan.errors.lotExtractFailed'));
       // }
 
-      try {
-        await FileSystem.deleteAsync(lotPhoto, { idempotent: true });
-      } catch (error) {
-        console.warn('Failed to delete lot photo', error);
+      // performOcrMultiFrame nettoie ses frames en interne ; ici on ne supprime
+      // que la frame unique (cas performOcr).
+      if (typeof lotPhoto === 'string') {
+        try {
+          await FileSystem.deleteAsync(lotPhoto, { idempotent: true });
+        } catch (error) {
+          console.warn('Failed to delete lot photo', error);
+        }
       }
 
       if (accessibilityMode) {
@@ -260,7 +266,7 @@ export function ScanLotScreen() {
   }, [flashAnim]);
 
   const handleCapture = useCallback(
-    async (uri: string) => {
+    async (uri: string | string[]) => {
       // Le lot peut être scanné SANS marque : l'utilisateur a sauté l'étape
       // marque (bouton Passer) ou le code-barres n'a pas résolu de marque.
       // performOcr et le matching de rappel fonctionnent sans marque (param
@@ -578,6 +584,8 @@ export function ScanLotScreen() {
         mode="band"
         resetToken={scannerResetToken}
         flashPosition="top-right"
+        multiFrameCount={2}
+        multiFrameDelayMs={200}
         onBack={handleGoBack}
         onRestart={handleRestart}
         onManualEntry={handleManualEntry}

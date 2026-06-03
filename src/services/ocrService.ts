@@ -5,7 +5,7 @@ import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { OCRResult } from '../types';
 import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
-import { tryVisionFallback, runVisionFallback, isVisionAvailable } from './visionFallbackService';
+import { tryVisionFallback, runVisionFallback, isVisionAvailable, assessOcrQuality } from './visionFallbackService';
 import { tryClaudeFallback, isClaudeAvailable } from './claudeOcrFallback';
 
 const preprocessConfig = {
@@ -1005,4 +1005,159 @@ export async function performOcr(
     console.error('[Lot OCR] Error:', error);
     throw error;
   }
+}
+
+/**
+ * Note un résultat OCR pour choisir la MEILLEURE frame parmi plusieurs.
+ * Plus le score est élevé, plus la frame est exploitable (confiance, densité,
+ * faible bruit, présence d'un motif de lot type LOT/L+chiffres). Format-agnostique.
+ */
+function scoreOcrResult(result: OCRResult): number {
+  const text = result.text || '';
+  if (!text.trim()) return 0;
+
+  const quality = assessOcrQuality(result);
+  let score = 0;
+
+  if (quality.averageConfidence !== null) {
+    score += quality.averageConfidence * 100;
+  } else {
+    score += 50;
+  }
+
+  score += Math.min(40, text.trim().length / 2);
+  score += Math.min(20, quality.lineCount * 4);
+  score -= quality.noiseRatio * 50;
+
+  const upper = text.toUpperCase();
+  if (/(?:^|[^A-Z])LOT[:\s\-.]*[A-Z0-9]{3,}/.test(upper)) {
+    score += 50; // motif "LOT xxx" explicite
+  } else if (/(?:^|[^A-Z])L\d{3,}/.test(upper)) {
+    score += 30; // motif L+chiffres
+  } else if (/\b\d{5,12}\b/.test(upper)) {
+    score += 15; // série de chiffres
+  }
+
+  return score;
+}
+
+/**
+ * Capture multi-frames : ML Kit sur N images en parallèle, on garde la
+ * meilleure (scoreOcrResult), puis Vision → Claude UNIQUEMENT si la meilleure
+ * frame ne donne pas de lot. Plus robuste sur photo floue/bougée que la frame
+ * unique. Conserve les patterns FDA/USDA (extractLotNumber) et le feedback
+ * d'étape `onStage`. Porté de l'app sœur FR.
+ */
+export async function performOcrMultiFrame(
+  uris: string[],
+  brand?: string,
+  onStage?: (stage: OcrStage) => void
+): Promise<LotExtractionResult> {
+  ensureMlkitAvailable();
+
+  if (!uris || uris.length === 0) {
+    throw new Error('No frames provided to performOcrMultiFrame');
+  }
+  if (uris.length === 1) {
+    return performOcr(uris[0], brand, onStage);
+  }
+
+  console.log(`[Multi-frame OCR] Processing ${uris.length} frames with ML Kit...`);
+  onStage?.('mlkit');
+
+  // 1) ML Kit sur chaque frame en parallèle.
+  const frameResults = await Promise.all(
+    uris.map(async (uri, index) => {
+      try {
+        const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+        let mlkitResult: OCRResult;
+        try {
+          mlkitResult = await runMlkit(processed);
+        } finally {
+          try {
+            await FileSystem.deleteAsync(processed, { idempotent: true });
+          } catch {
+            /* noop */
+          }
+        }
+        const score = scoreOcrResult(mlkitResult);
+        console.log(`[Multi-frame OCR] Frame ${index + 1}/${uris.length} score=${score.toFixed(1)}, len=${mlkitResult.text.length}`);
+        return { uri, result: mlkitResult, score };
+      } catch (error) {
+        console.warn(`[Multi-frame OCR] Frame ${index + 1} failed`, error);
+        return { uri, result: { text: '', lines: [], source: 'mlkit' as const }, score: 0 };
+      }
+    })
+  );
+
+  // 2) Meilleure frame.
+  frameResults.sort((a, b) => b.score - a.score);
+  const best = frameResults[0];
+  console.log(`[Multi-frame OCR] Best frame score=${best.score.toFixed(1)}`);
+
+  // 3) Vision puis Claude seulement si la meilleure frame ne donne pas de lot.
+  let result: OCRResult = best.result;
+  const bestLot = await extractLotNumber(best.result.text, brand);
+  if (!bestLot) {
+    let aiImageUri: string | null = null;
+    if (isVisionAvailable() || isClaudeAvailable()) {
+      try {
+        aiImageUri = await preprocessImage(best.uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
+      } catch (error) {
+        console.warn('[Multi-frame OCR] Failed to build AI image', error);
+      }
+    }
+    try {
+      if (isVisionAvailable() && aiImageUri) {
+        onStage?.('vision');
+        try {
+          result = await runVisionFallback(aiImageUri);
+          console.log('[Multi-frame OCR] Vision fallback used');
+        } catch (error) {
+          console.warn('[Multi-frame OCR] Vision fallback failed, keeping ML Kit result', error);
+        }
+      }
+      const postVisionLot = await extractLotNumber(result.text, brand);
+      if (!postVisionLot && isClaudeAvailable() && aiImageUri) {
+        onStage?.('claude');
+        const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot');
+        if (claudeResult) {
+          console.log('[Multi-frame OCR] Claude fallback used');
+          result = claudeResult;
+        }
+      }
+    } finally {
+      if (aiImageUri) {
+        try {
+          await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
+        } catch {
+          /* noop */
+        }
+      }
+    }
+  }
+
+  // 4) Nettoyer toutes les frames capturées.
+  for (const frame of frameResults) {
+    try {
+      await FileSystem.deleteAsync(frame.uri, { idempotent: true });
+    } catch {
+      /* noop */
+    }
+  }
+
+  // 5) Filtrer la marque (comme performOcr) puis extraire lot + candidats.
+  let filteredText = result.text;
+  if (brand) {
+    const brandUpper = brand.toUpperCase();
+    filteredText = result.text
+      .split('\n')
+      .filter((line) => !line.trim().toUpperCase().includes(brandUpper))
+      .join('\n');
+  }
+
+  const lot = await extractLotNumber(filteredText, brand);
+  const candidates = await extractAllLotCandidates(filteredText, brand);
+
+  return { lot, result, candidates };
 }

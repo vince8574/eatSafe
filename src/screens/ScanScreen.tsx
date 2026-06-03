@@ -119,7 +119,7 @@ export function ScanScreen() {
     }
   }, [brandText, t, router]);
 
-  const handleCapture = useCallback(async (uri: string) => {
+  const handleCapture = useCallback(async (uri: string | string[]) => {
     // Pas de capture de photo pour l'écran de scan de code-barres
     console.log('[ScanScreen] Photo capture not needed for barcode screen');
   }, []);
