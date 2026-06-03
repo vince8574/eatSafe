@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { useTheme } from '../theme/themeContext';
@@ -78,6 +79,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
 ) {
   const { colors } = useTheme();
   const { t } = useI18n();
+  const insets = useSafeAreaInsets();
+  // Décalage sûr pour les boutons du haut : sous la barre d'état / Dynamic
+  // Island. Sans ça, sur iPhone à encoche, le bouton retour tombe sous la
+  // status bar et iOS intercepte le tap → impossible de revenir en arrière.
+  const topInset = insets.top + 8;
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
@@ -328,7 +334,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         {/* Back button */}
         {onBack && (
           <TouchableOpacity
-            style={[styles.backButtonTop, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
+            style={[styles.backButtonTop, { backgroundColor: 'rgba(0,0,0,0.5)', top: topInset }]}
             onPress={onBack}
           >
             <Ionicons name="arrow-back" size={24} color={colors.surface} />
@@ -338,7 +344,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         {/* Flash button */}
         {enableFlashToggle && (
           <TouchableOpacity
-            style={flashPosition === 'top-right' ? styles.flashButtonTopRight : styles.flashButtonTop}
+            style={[flashPosition === 'top-right' ? styles.flashButtonTopRight : styles.flashButtonTop, { top: topInset }]}
             onPress={() => setFlashOn((prev) => !prev)}
             disabled={!cameraReady}
           >
