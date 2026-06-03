@@ -588,7 +588,6 @@ export function ScanLotScreen() {
         onPreviewOcrText={handlePreviewOcrText}
         lowLightDetectionEnabled
         onLowLight={handleLowLight}
-        hideCaptureButton
       />
 
       <Animated.View

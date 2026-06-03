@@ -141,6 +141,15 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     if (!cameraRef.current || isProcessingRef.current || !cameraReady) {
       return;
     }
+    // Attendre qu'une snapshot OCR de prévisualisation en cours se libère, puis
+    // verrouiller : sinon la rafale et la boucle OCR se télescopent sur
+    // takePictureAsync (capture qui échoue/bloque, scan qui ne se déclenche pas).
+    let waited = 0;
+    while (previewOcrInFlightRef.current && waited < 2000) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      waited += 100;
+    }
+    previewOcrInFlightRef.current = true;
     try {
       // Rafale de N photos (multiFrameCount) : l'OCR choisira la meilleure.
       const frameCount = Math.max(1, multiFrameCount);
@@ -167,6 +176,8 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       }
     } catch (error) {
       console.warn('Capture failed', error);
+    } finally {
+      previewOcrInFlightRef.current = false;
     }
   }, [cameraReady, onCapture, multiFrameCount, multiFrameDelayMs]);
 
