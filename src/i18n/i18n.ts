@@ -70,11 +70,19 @@ export async function initializeI18n(): Promise<string> {
       return savedLanguage;
     }
 
-    // Force English as default language (US market)
-    i18n.locale = 'en';
-    await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, 'en');
-    console.log(`✓ Language set to default: en (US market)`);
-    return 'en';
+    // Premier lancement : suivre la langue du téléphone si elle est supportée,
+    // sinon retomber sur l'anglais (marché US). On persiste le choix pour que
+    // l'utilisateur puisse ensuite le changer manuellement sans être réécrasé.
+    const deviceLanguage = Localization.getLocales()[0]?.languageCode?.toLowerCase();
+    const initialLanguage: SupportedLanguage =
+      deviceLanguage && SUPPORTED_LANGUAGES.includes(deviceLanguage as SupportedLanguage)
+        ? (deviceLanguage as SupportedLanguage)
+        : 'en';
+
+    i18n.locale = initialLanguage;
+    await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, initialLanguage);
+    console.log(`✓ Language set from device: ${initialLanguage} (device=${deviceLanguage ?? 'unknown'})`);
+    return initialLanguage;
   } catch (error) {
     console.warn('Failed to initialize i18n, using default (en)', error);
     i18n.locale = 'en';

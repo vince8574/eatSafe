@@ -253,19 +253,14 @@ export function ScanLotScreen() {
 
   const handleCapture = useCallback(
     async (uri: string) => {
-      if (!brand) {
-        setErrorMessage(t('scan.errors.brandFirst'));
-        try {
-          await FileSystem.deleteAsync(uri, { idempotent: true });
-        } catch (error) {
-          console.warn('Failed to delete unexpected capture', error);
-        }
-        return;
-      }
-
+      // Le lot peut être scanné SANS marque : l'utilisateur a sauté l'étape
+      // marque (bouton Passer) ou le code-barres n'a pas résolu de marque.
+      // performOcr et le matching de rappel fonctionnent sans marque (param
+      // optionnel) et la confirmation retombe sur "Unknown". On ne bloque donc
+      // plus l'OCR ici — sinon la capture flashe mais l'analyse ne démarre jamais.
       lotMutation.mutate(uri);
     },
-    [brand, lotMutation, t]
+    [lotMutation]
   );
 
   const isProcessing = lotMutation.isPending || isFinalizing;
