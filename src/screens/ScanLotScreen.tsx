@@ -149,9 +149,13 @@ export function ScanLotScreen() {
         speak(t('accessibility.voice.lotAnalyzing'), { priority: true });
       }
       const { lot, result, candidates } = await performOcr(lotPhoto, brand, setOcrStage);
+      // Toujours afficher UN SEUL numéro de lot : le lot extrait, sinon le
+      // meilleur candidat plausible. On n'affiche jamais une liste de tokens
+      // séparés par des '/' (ce que renvoyait l'ancien repli sur les candidats).
+      const displayLot = lot || (candidates || []).find((c) => !looksLikeNonLot(c)) || '';
       setOcrText(result.text);
       setOcrSource(result.source || 'unknown');
-      setLotNumber(lot);
+      setLotNumber(displayLot);
       setLotCandidates(candidates || []);
 
       // Ne pas exiger qu'un lot soit dÃ©tectÃ© - on affiche tout le texte OCR
@@ -166,8 +170,8 @@ export function ScanLotScreen() {
       }
 
       if (accessibilityMode) {
-        if (lot) {
-          speak(t('accessibility.voice.lotDetected', { lot }), { priority: true });
+        if (displayLot) {
+          speak(t('accessibility.voice.lotDetected', { lot: displayLot }), { priority: true });
         } else {
           speak(t('accessibility.voice.lotNotDetected'), { priority: true });
         }
@@ -751,11 +755,7 @@ export function ScanLotScreen() {
                 </Text>
                 <View style={[styles.ocrTextContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
                   <Text style={[styles.ocrText, { color: colors.textPrimary }]}>
-                    {lotNumber || (() => {
-                      // N'afficher que des candidats plausibles (jamais un poids/date/heure).
-                      const shown = lotCandidates.filter((c) => !looksLikeNonLot(c));
-                      return shown.length > 0 ? shown.join(' / ') : t('scanLot.noText');
-                    })()}
+                    {lotNumber || t('scanLot.noText')}
                   </Text>
                 </View>
 
