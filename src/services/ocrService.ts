@@ -374,6 +374,14 @@ export function looksLikeNonLot(raw: string): boolean {
   if (/^\d{4}[\/.\-]\d{1,2}[\/.\-]\d{1,2}$/.test(t)) return true;
   // Heures HH:MM(:SS).
   if (/^\d{1,2}:\d{2}(?::\d{2})?$/.test(t)) return true;
+  // Dates "mois abrégé + année/jour" : c'est une DLC/DDM, pas un lot.
+  //   APR22, DEC2024, MAY24  → mois + 2-4 chiffres
+  //   22APR, 15MAR24         → jour + mois (+ année)
+  // EN + abréviations FR distinctes (AVR, JANV, FEV, AOUT, SEPT, OCT...).
+  const MONTHS =
+    'JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC|JANV|FEV|AVR|MAI|JUIN|JUIL|AOUT|SEPT';
+  if (new RegExp(`^(?:${MONTHS})\\d{2,4}$`).test(t)) return true;
+  if (new RegExp(`^\\d{1,2}(?:${MONTHS})\\d{0,4}$`).test(t)) return true;
   return false;
 }
 

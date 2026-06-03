@@ -9,6 +9,7 @@ import {
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { useTheme } from '../theme/themeContext';
@@ -80,6 +81,10 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   const { colors } = useTheme();
   const { t } = useI18n();
   const insets = useSafeAreaInsets();
+  // Quand l'écran n'est plus au premier plan (navigation vers Réglages, etc.),
+  // on coupe la caméra, la boucle OCR de prévisualisation et la torche — sinon
+  // l'auto-capture et le flash continuent de se déclencher sur les autres pages.
+  const isFocused = useIsFocused();
   // Décalage sûr pour les boutons du haut : sous la barre d'état / Dynamic
   // Island. Sans ça, sur iPhone à encoche, le bouton retour tombe sous la
   // status bar et iOS intercepte le tap → impossible de revenir en arrière.
@@ -215,7 +220,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   }, [emitCoachingHint, lowLightDetectionEnabled, onCoachingHint, onLowLight, onPreviewOcrText]);
 
   useEffect(() => {
-    if (!previewOcrEnabled || !cameraReady) {
+    if (!previewOcrEnabled || !cameraReady || !isFocused) {
       if (previewOcrLoopRef.current) {
         clearTimeout(previewOcrLoopRef.current);
         previewOcrLoopRef.current = null;
@@ -240,7 +245,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         previewOcrLoopRef.current = null;
       }
     };
-  }, [previewOcrEnabled, cameraReady, previewOcrIntervalMs, runPreviewOcrTick]);
+  }, [previewOcrEnabled, cameraReady, isFocused, previewOcrIntervalMs, runPreviewOcrTick]);
 
   useEffect(() => {
     setScannedBarcode(null);
@@ -304,8 +309,9 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           ref={cameraRef}
           style={styles.camera}
           facing="back"
-          flash={flashOn ? 'on' : 'off'}
-          enableTorch={flashOn}
+          active={isFocused}
+          flash={flashOn && isFocused ? 'on' : 'off'}
+          enableTorch={flashOn && isFocused}
           onCameraReady={() => setCameraReady(true)}
           barcodeScannerSettings={
             enableBarcodeScanning
