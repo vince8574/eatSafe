@@ -44,6 +44,15 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" | base64 -D > GoogleService-Info.plist
 
+      - name: Set iOS build number (auto-increment)
+        run: |
+          # Unix timestamp: strictly increasing on every run (incl. re-runs),
+          # always unique, always > previous, and < 2^32 (valid until 2106).
+          # Patches app.json *before* prebuild so it bakes CFBundleVersion in.
+          BUILD_NUMBER=$(date -u +%s)
+          echo "iOS build number: $BUILD_NUMBER"
+          node -e "const fs=require('fs');const p='./app.json';const c=JSON.parse(fs.readFileSync(p,'utf8'));c.expo.ios.buildNumber=String($BUILD_NUMBER);fs.writeFileSync(p,JSON.stringify(c,null,2)+'\n');"
+
       - name: Expo Prebuild
         run: npx expo prebuild --platform ios --clean
 
