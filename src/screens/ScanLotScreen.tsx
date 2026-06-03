@@ -153,6 +153,10 @@ export function ScanLotScreen() {
       // meilleur candidat plausible. On n'affiche jamais une liste de tokens
       // séparés par des '/' (ce que renvoyait l'ancien repli sur les candidats).
       const displayLot = lot || (candidates || []).find((c) => !looksLikeNonLot(c)) || '';
+      // Vibration de confirmation dès qu'un numéro de lot est détecté.
+      if (displayLot) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+      }
       setOcrText(result.text);
       setOcrSource(result.source || 'unknown');
       setLotNumber(displayLot);

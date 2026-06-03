@@ -10,6 +10,7 @@ import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking } 
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { useTheme } from '../theme/themeContext';
@@ -121,6 +122,8 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       const barcode = scanningResult.data;
       if (barcode && barcode !== scannedBarcode) {
         console.log('[Scanner] Barcode scanned:', barcode);
+        // Vibration de confirmation dès qu'un code-barres est détecté.
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
         setScannedBarcode(barcode);
         onBarcodeScanned(barcode);
       }
