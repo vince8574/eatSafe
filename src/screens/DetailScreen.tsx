@@ -9,6 +9,7 @@ import { fetchAllRecalls } from '../services/apiService';
 import { RecallAlert } from '../components/RecallAlert';
 import { extractRecallReason } from '../utils/recallUtils';
 import { GradientBackground } from '../components/GradientBackground';
+import { ResultBottomNav } from '../components/ResultBottomNav';
 import { Ionicons } from '@expo/vector-icons';
 
 export function DetailScreen() {
@@ -44,7 +45,7 @@ export function DetailScreen() {
 
   return (
     <GradientBackground>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {/* Alerte de rappel en haut si le produit est contaminé */}
         {isRecalled && recall && (
           <View style={styles.section}>
@@ -171,6 +172,7 @@ export function DetailScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <ResultBottomNav />
     </GradientBackground>
   );
 }
@@ -205,6 +207,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent'
+  },
+  scroll: {
+    flex: 1
   },
   content: {
     padding: 24
