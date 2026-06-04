@@ -294,6 +294,15 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     lastCoachingHintRef.current = null;
   }, [resetToken]);
 
+  // La CameraView est démontée hors focus : on marque la caméra non prête pour
+  // que toute capture attende le onCameraReady de la caméra fraîche au retour.
+  useEffect(() => {
+    if (!isFocused) {
+      setCameraReady(false);
+      setScannedBarcode(null);
+    }
+  }, [isFocused]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -342,6 +351,12 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   return (
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
+        {/* Monter la CameraView seulement quand l'écran est au premier plan :
+            une seule caméra active à la fois (évite le conflit entre l'écran
+            code-barres et l'écran lot), et une caméra FRAÎCHE au retour (sinon
+            la détection code-barres ne reprend pas). "Recommencer" ne change
+            pas le focus → pas de remontage → pas de freeze sur l'écran lot. */}
+        {isFocused && (
         <CameraView
           ref={cameraRef}
           style={styles.camera}
@@ -372,6 +387,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           }
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
+        )}
 
         {/* Back button */}
         {onBack && (
