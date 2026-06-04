@@ -445,6 +445,20 @@ function scoreLotCandidate(candidate: string): number {
   return score;
 }
 
+/**
+ * Parmi une liste de candidats, renvoie LE meilleur lot à afficher : on écarte
+ * les parasites (poids/dates/heures via looksLikeNonLot) puis on prend le mieux
+ * scoré (scoreLotCandidate favorise les codes longs/mixtes). Évite d'afficher un
+ * fragment court ("2493") quand le vrai lot complet ("249334315") est présent.
+ */
+export function bestDisplayLot(candidates: string[]): string {
+  const plausible = (candidates || []).filter((c) => c && !looksLikeNonLot(c));
+  if (plausible.length === 0) return '';
+  return plausible
+    .map((c) => ({ value: c, score: scoreLotCandidate(c) }))
+    .sort((a, b) => b.score - a.score)[0].value;
+}
+
 export async function extractLotNumber(rawText: string, brand?: string): Promise<string> {
   console.log('[extractLotNumber] Extracting lot number from OCR text');
   console.log('[extractLotNumber] Raw text:', rawText);

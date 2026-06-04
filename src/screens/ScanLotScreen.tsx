@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Scanner, type ScannerHandle } from '../components/Scanner';
-import { performOcr, performOcrMultiFrame, looksLikeNonLot, type OcrStage } from '../services/ocrService';
+import { performOcr, performOcrMultiFrame, bestDisplayLot, type OcrStage } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -158,7 +158,9 @@ export function ScanLotScreen() {
       // Toujours afficher UN SEUL numéro de lot : le lot extrait, sinon le
       // meilleur candidat plausible. On n'affiche jamais une liste de tokens
       // séparés par des '/' (ce que renvoyait l'ancien repli sur les candidats).
-      const displayLot = lot || (candidates || []).find((c) => !looksLikeNonLot(c)) || '';
+      // lot extrait, sinon LE MEILLEUR candidat (le plus long/lot-like), pas le
+      // premier — pour afficher "249334315" et non un fragment "2493".
+      const displayLot = lot || bestDisplayLot(candidates || []);
       // Vibration de confirmation dès qu'un numéro de lot est détecté.
       if (displayLot) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});

@@ -350,6 +350,12 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
             provoquait une boucle de navigation + crash sur l'écran code-barres).
             On coupe seulement la boucle OCR de preview et la torche hors focus. */}
         <CameraView
+          // En mode CODE-BARRES seulement : on remonte la caméra à chaque
+          // (re)focus (resetToken est incrémenté au focus) pour repartir sur une
+          // session fraîche qui re-détecte le code (sinon, au retour de l'écran
+          // lot, la session interrompue ne rescanne plus). En mode LOT, pas de
+          // key → jamais de remontage (évite le freeze "Recommencer").
+          key={enableBarcodeScanning ? `bc-${resetToken}` : undefined}
           ref={cameraRef}
           style={styles.camera}
           facing="back"
