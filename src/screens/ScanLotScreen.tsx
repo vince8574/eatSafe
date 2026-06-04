@@ -213,11 +213,12 @@ export function ScanLotScreen() {
             setShowRecallAlert(true);
           }
           if (accessibilityMode) {
+            // Non-prioritaire : s'enchaîne après "analyse"/"lot détecté" au lieu
+            // de les couper (sinon la voix paraît tronquée pendant le scan).
             speak(
               matchResult.hasRecall
                 ? t('accessibility.voice.recallDetected')
-                : t('accessibility.voice.productSafe'),
-              { priority: true }
+                : t('accessibility.voice.productSafe')
             );
           }
         } catch (error) {

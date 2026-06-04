@@ -130,7 +130,7 @@ export function ScanScreen() {
         onCapture={handleCapture}
         onBarcodeScanned={handleBarcodeScanned}
         enableBarcodeScanning={true}
-        isProcessing={false}
+        isProcessing={isConfirmModalVisible || !!brandText}
         mode="barcode"
         resetToken={scannerResetToken}
         onSkip={() => router.push('/scan-lot' as any)}
