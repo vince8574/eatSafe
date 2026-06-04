@@ -369,7 +369,12 @@ export function ScanLotScreen() {
     };
   }, []);
 
-  useVoiceCommands(accessibilityMode, {
+  // Micro COUPÉ : sur iOS, la reconnaissance vocale (micro) en continu se bat
+  // avec la synthèse pour la session audio → le guidage vocal était tronqué.
+  // On désactive donc les commandes vocales ici ; l'auto-capture mains-libres
+  // (détection + secours 3s/5s) remplace la commande "photo". Le guidage vocal
+  // reste, et il est désormais net.
+  useVoiceCommands(false, {
     onCommand: handleVoiceCommand,
     onError: (code) => {
       if (code !== 'no-speech') {
