@@ -813,6 +813,16 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
         addCandidate(token);
       }
     }
+    // Ligne faite UNIQUEMENT de groupes de chiffres (ex. "2 493 34315"), sans
+    // lettre ni heure (":") : un lot numérique est souvent imprimé ainsi avec
+    // des espaces. On ajoute la concaténation complète des chiffres ("249334315")
+    // pour ne pas n'afficher qu'un fragment ("2493" / "34315").
+    if (/^[\d\s]+$/.test(line)) {
+      const joined = line.replace(/\D/g, '');
+      if (joined.length >= 5 && joined.length <= 16) {
+        addCandidate(joined);
+      }
+    }
     for (let i = 0; i < tokens.length; i++) {
       for (let size = 2; size <= 3; size++) {
         const slice = tokens.slice(i, i + size);
