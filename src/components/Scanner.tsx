@@ -359,6 +359,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           ref={cameraRef}
           style={styles.camera}
           facing="back"
+          // active={isFocused} : l'écran en arrière-plan LIBÈRE la session caméra
+          // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
+          // Pas de freeze de reprise sur le code-barres car il remonte une caméra
+          // fraîche au focus (key ci-dessus) ; l'écran lot ne remonte pas.
+          active={isFocused}
           flash={flashOn && isFocused ? 'on' : 'off'}
           enableTorch={flashOn && isFocused}
           onCameraReady={() => setCameraReady(true)}
