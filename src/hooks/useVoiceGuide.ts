@@ -10,32 +10,94 @@ type SpeakOptions = {
   dedupeMs?: number;
 };
 
-type DedupeRecord = {
-  text: string;
-  at: number;
-};
-
 const DEFAULT_DEDUPE_MS = 4000;
+
+// Cache module-level partagé : la liste des voix ne change pas pendant la vie
+// de l'app. On la récupère une fois et on choisit la meilleure voix par locale.
+// Sans sélection explicite, le moteur TTS retombe souvent sur une voix
+// "compacte" de basse qualité → rendu robotique/haché ("liaison téléphonique").
+let cachedVoices: Speech.Voice[] | null = null;
+let cachedVoicesPromise: Promise<Speech.Voice[]> | null = null;
+const voiceIdByLocale = new Map<string, string | null>();
+let hasWarmedUp = false;
+
+function getVoicesAsync(): Promise<Speech.Voice[]> {
+  if (cachedVoices) return Promise.resolve(cachedVoices);
+  if (cachedVoicesPromise) return cachedVoicesPromise;
+  cachedVoicesPromise = Speech.getAvailableVoicesAsync()
+    .then((list) => {
+      cachedVoices = list || [];
+      console.log(`[VoiceGuide] ${cachedVoices.length} voices cached`);
+      return cachedVoices;
+    })
+    .catch((error) => {
+      console.warn('[VoiceGuide] Failed to fetch available voices', error);
+      cachedVoices = [];
+      return cachedVoices;
+    });
+  return cachedVoicesPromise;
+}
+
+// Meilleure voix installée pour une locale BCP-47 : match exact (en-US), puis
+// même langue (en-*), puis préfixe seul. null → la voix système par défaut.
+function pickBestVoice(voices: Speech.Voice[], speechLocale: string): string | null {
+  if (voiceIdByLocale.has(speechLocale)) {
+    return voiceIdByLocale.get(speechLocale) ?? null;
+  }
+  if (!voices || voices.length === 0) {
+    voiceIdByLocale.set(speechLocale, null);
+    return null;
+  }
+  const targetLang = speechLocale.toLowerCase();
+  const targetPrefix = targetLang.split('-')[0];
+
+  const exact = voices.find((v) => v.language?.toLowerCase() === targetLang);
+  const sameLang =
+    exact ?? voices.find((v) => v.language?.toLowerCase().startsWith(`${targetPrefix}-`));
+  const best = sameLang ?? voices.find((v) => v.language?.toLowerCase() === targetPrefix) ?? null;
+
+  const id = best ? best.identifier : null;
+  voiceIdByLocale.set(speechLocale, id);
+  return id;
+}
+
+// Pré-chauffe le moteur TTS (un point quasi-inaudible) pour éviter la troncature
+// "cold-start" du tout premier message.
+function warmUpVoiceEngine(speechLocale?: string) {
+  if (hasWarmedUp) return;
+  hasWarmedUp = true;
+  try {
+    Speech.speak('.', { language: speechLocale, rate: 1.5, pitch: 1.0, volume: 0.01 } as any);
+  } catch {
+    /* noop */
+  }
+}
 
 export function useVoiceGuide() {
   const accessibilityMode = usePreferencesStore((s) => s.accessibilityMode);
-  const lastSpeechRef = useRef<DedupeRecord | null>(null);
+  const lastSpeechRef = useRef<{ text: string; at: number } | null>(null);
   const enabledRef = useRef(accessibilityMode);
-
   enabledRef.current = accessibilityMode;
 
+  // Pré-charge les voix et pré-chauffe le moteur dès que le mode malvoyant est
+  // actif → premier message net, pas de latence ni de troncature.
   useEffect(() => {
+    void getVoicesAsync();
+    if (accessibilityMode) {
+      warmUpVoiceEngine(getSpeechLocale(getCurrentLanguage()));
+    }
     return () => {
       Speech.stop().catch(() => {});
     };
-  }, []);
+  }, [accessibilityMode]);
 
   const stop = useCallback(async () => {
     try {
       await Speech.stop();
     } catch {
-      // Speech.stop can throw if nothing is speaking; ignore.
+      // Speech.stop peut throw si rien ne parle ; on ignore.
     }
+    lastSpeechRef.current = null;
   }, []);
 
   const speak = useCallback(async (text: string, options: SpeakOptions = {}) => {
@@ -45,7 +107,7 @@ export function useVoiceGuide() {
     const dedupeMs = options.dedupeMs ?? DEFAULT_DEDUPE_MS;
     const now = Date.now();
     const last = lastSpeechRef.current;
-    if (last && last.text === text && now - last.at < dedupeMs) {
+    if (!options.priority && last && last.text === text && now - last.at < dedupeMs) {
       return;
     }
     lastSpeechRef.current = { text, at: now };
@@ -58,8 +120,16 @@ export function useVoiceGuide() {
       }
     }
 
-    const language = getSpeechLocale(getCurrentLanguage());
-    Speech.speak(text, { language });
+    const speechLocale = getSpeechLocale(getCurrentLanguage());
+    const voiceId = pickBestVoice(cachedVoices ?? [], speechLocale);
+    hasWarmedUp = true; // tout speak réel sert aussi de warm-up
+
+    Speech.speak(text, {
+      language: speechLocale,
+      ...(voiceId ? { voice: voiceId } : {}),
+      pitch: 1.0,
+      rate: 1.0
+    });
   }, []);
 
   return { speak, stop, enabled: accessibilityMode };
