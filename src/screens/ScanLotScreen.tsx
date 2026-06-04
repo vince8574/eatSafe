@@ -185,7 +185,9 @@ export function ScanLotScreen() {
 
       if (accessibilityMode) {
         if (displayLot) {
-          speak(t('accessibility.voice.lotDetected', { lot: displayLot }), { priority: true });
+          // Non-prioritaire : on laisse l'annonce "analyse" se terminer au lieu
+          // de la couper (sinon la voix paraît tronquée pendant le scan).
+          speak(t('accessibility.voice.lotDetected', { lot: displayLot }));
         } else {
           speak(t('accessibility.voice.lotNotDetected'), { priority: true });
         }
