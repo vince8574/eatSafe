@@ -4,6 +4,8 @@ import {
   useSpeechRecognitionEvent
 } from 'expo-speech-recognition';
 
+import { isSpeaking, onSpeakingChange } from './voiceBus';
+
 import { getCurrentLanguage } from '../i18n/i18n';
 import {
   getVoiceLocale,
@@ -31,6 +33,10 @@ export function useVoiceCommands(enabled: boolean, handlers: Handlers) {
 
   const startRecognition = useCallback(async () => {
     if (!enabledRef.current) return;
+    // Ne pas (ré)ouvrir le micro pendant que la voix parle : sinon la session
+    // audio est reconfigurée et la voix se tronque. On reprendra quand la voix
+    // se taira (voir l'abonnement onSpeakingChange plus bas).
+    if (isSpeaking()) return;
     try {
       const granted = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
       if (!granted.granted) {
@@ -111,4 +117,26 @@ export function useVoiceCommands(enabled: boolean, handlers: Handlers) {
       stopRecognition();
     };
   }, [enabled, startRecognition, stopRecognition]);
+
+  // Met le micro en pause pendant que la voix parle, le relance (avec débounce
+  // via scheduleRestart) quand elle se tait → plus de troncature du guidage.
+  useEffect(() => {
+    const unsubscribe = onSpeakingChange((speaking) => {
+      if (!enabledRef.current) return;
+      if (speaking) {
+        if (restartTimerRef.current) {
+          clearTimeout(restartTimerRef.current);
+          restartTimerRef.current = null;
+        }
+        try {
+          ExpoSpeechRecognitionModule.stop();
+        } catch {
+          /* noop */
+        }
+      } else {
+        scheduleRestart();
+      }
+    });
+    return unsubscribe;
+  }, [scheduleRestart]);
 }
