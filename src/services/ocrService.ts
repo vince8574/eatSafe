@@ -362,6 +362,22 @@ async function extractLotFromGTIN(rawText: string, brand: string): Promise<strin
  * matching de rappel, lui, conserve tous les candidats — un token parasite ne
  * matchera de toute façon aucun lot de rappel réel.
  */
+// Vrai si a et b sont identiques ou à une seule édition près (insertion,
+// suppression ou substitution). Sert à reconnaître un mois mal lu par l'OCR.
+function withinOneEdit(a: string, b: string): boolean {
+  if (a === b) return true;
+  const la = a.length;
+  const lb = b.length;
+  if (Math.abs(la - lb) > 1) return false;
+  let i = 0;
+  while (i < la && i < lb && a[i] === b[i]) i++;
+  if (la === lb) return a.slice(i + 1) === b.slice(i + 1); // substitution
+  if (la > lb) return a.slice(i + 1) === b.slice(i); // suppression dans a
+  return a.slice(i) === b.slice(i + 1); // insertion dans a
+}
+
+const MONTHS_EN = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
 export function looksLikeNonLot(raw: string): boolean {
   const t = (raw || '').trim().toUpperCase();
   if (!t) return true;
@@ -382,6 +398,12 @@ export function looksLikeNonLot(raw: string): boolean {
   // mal reconnu). Ce n'est jamais un lot. (Le matching de rappel garde tout ;
   // on l'écarte seulement de l'AFFICHAGE.)
   if (/^[A-Z]{0,3}(?:19|20)\d{2}$/.test(t)) return true;
+  // Mois (mal lu par l'OCR) + chiffres : "APR2026" → "AFR202", "APR226"…
+  // 2-4 lettres proches (≤1 faute) d'un mois abrégé, suivies de 2-4 chiffres
+  // = une date, jamais un lot. (Un vrai batch code a plus de chiffres ou un
+  // suffixe lettre, ex. WN012117E, et n'est pas proche d'un mois.)
+  const monthish = t.match(/^([A-Z]{2,4})(\d{2,4})$/);
+  if (monthish && MONTHS_EN.some((mo) => withinOneEdit(monthish[1], mo))) return true;
   // Dates "mois abrégé + année/jour" : c'est une DLC/DDM, pas un lot.
   //   APR22, DEC2024, MAY24  → mois + 2-4 chiffres
   //   22APR, 15MAR24         → jour + mois (+ année)
