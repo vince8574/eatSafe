@@ -4,6 +4,7 @@ import * as Speech from 'expo-speech';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { getCurrentLanguage } from '../i18n/i18n';
 import { getSpeechLocale } from '../i18n/voiceLocales';
+import { setSpeaking } from './voiceBus';
 
 type SpeakOptions = {
   priority?: boolean;
@@ -97,6 +98,7 @@ export function useVoiceGuide() {
     } catch {
       // Speech.stop peut throw si rien ne parle ; on ignore.
     }
+    setSpeaking(false);
     lastSpeechRef.current = null;
   }, []);
 
@@ -124,11 +126,17 @@ export function useVoiceGuide() {
     const voiceId = pickBestVoice(cachedVoices ?? [], speechLocale);
     hasWarmedUp = true; // tout speak réel sert aussi de warm-up
 
+    // On signale "en train de parler" pour que le micro (reconnaissance) se mette
+    // en pause le temps de l'annonce → la voix n'est plus tronquée.
+    setSpeaking(true);
     Speech.speak(text, {
       language: speechLocale,
       ...(voiceId ? { voice: voiceId } : {}),
       pitch: 1.0,
-      rate: 1.0
+      rate: 1.0,
+      onDone: () => setSpeaking(false),
+      onStopped: () => setSpeaking(false),
+      onError: () => setSpeaking(false)
     });
   }, []);
 

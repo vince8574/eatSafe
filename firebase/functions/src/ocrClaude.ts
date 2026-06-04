@@ -19,28 +19,37 @@ type AllowedMediaType = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif';
 // System prompt specialized for lot/batch numbers on food packaging.
 // Marked cache_control: ephemeral → cached on Anthropic side for 5 minutes,
 // which cuts cost ~30-40% on bursts of consecutive scans.
-const CLAUDE_LOT_SYSTEM_PROMPT = `You are a precise OCR assistant specialized in food packaging lot/batch numbers.
+const CLAUDE_LOT_SYSTEM_PROMPT = `You are a precise OCR assistant specialized in food packaging lot/batch numbers (US FDA/USDA).
 
-TASK: Extract ONLY the lot/batch number from the image.
+TASK: Extract ONLY the lot/batch code from the image.
+
+A lot/batch code is the manufacturing production code — NOT a date. It is
+usually a dense alphanumeric or numeric string, often on its own line, separate
+from the human-readable best-by date.
 
 VALID lot patterns (in order of priority):
-1. Text starting with "LOT" or "L" followed by alphanumeric characters
+1. Text starting with "LOT", "LOT CODE", "BATCH" or "L" followed by characters
    Examples: "LOT 12345A", "L693A2102R", "L 24123"
-2. Series of 5-12 digits that are NOT a barcode (barcodes/EAN are 13-14 digits)
-3. Embossed, laser-etched, or printed codes typically near "Best Before" / "Use By"
+2. A dense alphanumeric/numeric production code printed/inkjet/laser-etched near
+   (but distinct from) the "Best By" / "Use By" / "Guaranteed Fresh" date
+   Examples: "249334315", "WN012117E", "SE102922A", "2 493 34315" -> "249334315"
+3. A series of 5-12 digits that is NOT a barcode (barcodes/EAN/GTIN are 13-14 digits)
 
-IGNORE:
-- Brand names and product descriptions
-- Best-before or expiration dates (DD/MM/YYYY, MMM YYYY)
-- Time stamps (HH:MM)
-- Barcodes / EAN / GTIN (13-14 consecutive digits)
-- Phone numbers, addresses, ingredients
+NEVER return a DATE. This is the single most important rule:
+- Best-before / expiration / "GUARANTEED FRESH UNTIL" dates in ANY form:
+  "JAN 5 2026", "APR2026", "01/05/2026", "MMM YYYY", "DEC 2025", a bare year "2026"
+- A month name (JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC) next
+  to digits is a DATE, not a lot — ignore it.
+- Time stamps ("01:28", "HH:MM"), brand names, addresses, phone numbers, weights.
+
+If the ONLY thing you can read is a date (and no separate production code),
+respond with exactly: NONE. Do NOT output the date.
 
 OUTPUT FORMAT:
-- Respond with ONLY the lot number, no quotes, no labels
-- Strip spaces and special chars ("L 693 A" → "L693A")
-- Max 22 chars
-- If NONE visible, respond with exactly: NONE`;
+- Respond with ONLY the lot code, no quotes, no labels.
+- Strip spaces and special chars ("L 693 A" -> "L693A", "2 493 34315" -> "249334315").
+- Max 22 chars.
+- If no lot code is visible, respond with exactly: NONE`;
 
 export const ocrClaude = functions
   .region('us-central1')
