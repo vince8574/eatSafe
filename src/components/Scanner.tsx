@@ -122,7 +122,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
 
   const handleBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
-      if (!enableBarcodeScanning || isProcessing || !onBarcodeScanned) {
+      // !isFocused : on ne traite plus les codes-barres quand l'écran n'est pas
+      // au premier plan (ex. on est passé à l'écran de scan de lot) — sinon la
+      // caméra (toujours montée) continue de scanner en arrière-plan et peut
+      // relancer une navigation en boucle.
+      if (!enableBarcodeScanning || isProcessing || !isFocused || !onBarcodeScanned) {
         return;
       }
       const barcode = scanningResult.data;
@@ -134,7 +138,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         onBarcodeScanned(barcode);
       }
     },
-    [enableBarcodeScanning, isProcessing, onBarcodeScanned, scannedBarcode]
+    [enableBarcodeScanning, isProcessing, isFocused, onBarcodeScanned, scannedBarcode]
   );
 
   const handleCapture = useCallback(async () => {
