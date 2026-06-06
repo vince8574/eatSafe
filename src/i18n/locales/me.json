@@ -90,7 +90,8 @@
     "recallInfo": "Информације о повлачењу",
     "actions": {
       "delete": "Обриши",
-      "viewRecall": "Погледај повлачење"
+      "viewRecall": "Погледај повлачење",
+      "scanAnother": "Skeniraj drugi proizvod"
     }
   },
   "history": {
@@ -569,9 +570,10 @@
     "voiceTest": "Testiraj glas",
     "voiceTestMessage": "Glasovno vođenje je aktivirano. Čućete najave tokom skeniranja.",
     "voice": {
-      "scanLotReady": "Režim broja serije. Centrirajte broj serije u traci, snimanje je automatsko. Recite flash da uključite svjetlo, flash off da ga isključite.",
+      "scanBarcodeReady": "Režim barkoda. Držite telefon na oko osam inča od proizvoda, barkod okrenut prema kameri. Skeniranje je automatsko.",
+      "scanLotReady": "Režim broja serije. Držite telefon na oko osam inča od proizvoda. Snimanje je automatsko, okrećite proizvod polako.",
       "scanLotTip": "Držite telefon stabilno, snimanje se aktivira čim se otkrije broj serije. Recite flash za uključivanje ili flash off za isključivanje.",
-      "lotInFrame": "Broj serije otkriven. Snimanje u toku.",
+      "lotInFrame": "Mislim da vidim broj serije. Držite mirno, čitam ga.",
       "blur": "Slika je mutna. Stabilizujte telefon.",
       "tooFar": "Tekst previše mali. Približite telefon.",
       "tooClose": "Tekst previše velik. Lagano udaljite telefon.",
@@ -581,7 +583,7 @@
       "photoCommand": "Snimanje u toku.",
       "voiceCommandsReady": "Glasovne komande aktivne. Recite photo za snimanje, flash za svjetlo, flash off za isključivanje.",
       "lotAnalyzing": "Analiza broja serije.",
-      "lotDetected": "Broj serije otkriven: {{lot}}.",
+      "lotDetected": "Mislim da sam pronašao broj serije: {{lot}}.",
       "lotNotDetected": "Nije otkriven čitljiv broj serije. Možete ga unijeti ručno.",
       "recallDetected": "Upozorenje. Ovaj proizvod je predmet povlačenja. Ne konzumirajte.",
       "productSafe": "Nije pronađeno povlačenje za ovaj proizvod.",

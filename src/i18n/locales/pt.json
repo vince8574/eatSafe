@@ -90,7 +90,8 @@
     "recallInfo": "Informações do recall",
     "actions": {
       "delete": "Excluir",
-      "viewRecall": "Ver recall"
+      "viewRecall": "Ver recall",
+      "scanAnother": "Escanear outro produto"
     }
   },
   "history": {
@@ -574,9 +575,10 @@
     "voiceTest": "Testar voz",
     "voiceTestMessage": "O guia por voz está ativado. Você ouvirá os anúncios durante a digitalização.",
     "voice": {
-      "scanLotReady": "Modo número de lote. Centralize o número de lote na faixa, a captura é automática. Diga flash para ligar a luz, flash off para desligá-la.",
+      "scanBarcodeReady": "Modo código de barras. Mantenha o telefone a cerca de oito polegadas do produto, com o código de barras voltado para a câmera. A digitalização é automática.",
+      "scanLotReady": "Modo número de lote. Mantenha o telefone a cerca de oito polegadas do produto. A captura é automática, gire o produto lentamente.",
       "scanLotTip": "Mantenha o telefone estável, a captura é acionada assim que um número de lote é detectado. Diga flash para ligar ou flash off para desligar.",
-      "lotInFrame": "Número de lote detectado. Capturando agora.",
+      "lotInFrame": "Acho que vejo um número de lote. Fique parado, estou lendo.",
       "blur": "Imagem desfocada. Estabilize o telefone.",
       "tooFar": "Texto muito pequeno. Aproxime o telefone.",
       "tooClose": "Texto muito grande. Afaste levemente o telefone.",
@@ -586,7 +588,7 @@
       "photoCommand": "Capturando.",
       "voiceCommandsReady": "Comandos de voz ativos. Diga photo para capturar, flash para a luz, flash off para desligá-la.",
       "lotAnalyzing": "Analisando número de lote.",
-      "lotDetected": "Número de lote detectado: {{lot}}.",
+      "lotDetected": "Acho que encontrei o número de lote: {{lot}}.",
       "lotNotDetected": "Nenhum número de lote legível detectado. Você pode inseri-lo manualmente.",
       "recallDetected": "Atenção. Este produto está sujeito a um recall. Não consuma.",
       "productSafe": "Nenhum recall encontrado para este produto.",

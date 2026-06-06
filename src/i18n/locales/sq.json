@@ -90,7 +90,8 @@
     "recallInfo": "Informacione mbi rikujtimin",
     "actions": {
       "delete": "Fshi",
-      "viewRecall": "Shiko rikujtimin"
+      "viewRecall": "Shiko rikujtimin",
+      "scanAnother": "Skano një produkt tjetër"
     }
   },
   "history": {
@@ -569,9 +570,10 @@
     "voiceTest": "Testo zërin",
     "voiceTestMessage": "Udhëzimi me zë është aktiv. Do të dëgjoni njoftimet gjatë skanimit.",
     "voice": {
-      "scanLotReady": "Modaliteti i numrit të lotit. Vendosni numrin e lotit në qendër të shiritit, kapja është automatike. Thoni flash për të ndezur dritën, flash off për ta fikur.",
+      "scanBarcodeReady": "Modaliteti i barkodit. Mbajeni telefonin rreth tetë inç nga produkti, me barkodin nga kamera. Skanon automatikisht.",
+      "scanLotReady": "Modaliteti i numrit të lotit. Mbajeni telefonin rreth tetë inç nga produkti. Kapja është automatike, rrotullojeni produktin ngadalë.",
       "scanLotTip": "Mbajeni telefonin të qëndrueshëm, kapja aktivizohet sapo zbulohet një numër loti. Thoni flash për të ndezur ose flash off për të fikur.",
-      "lotInFrame": "Numri i lotit u zbulua. Po kapet tani.",
+      "lotInFrame": "Më duket se shoh një numër loti. Qëndroni pa lëvizur, po e lexoj.",
       "blur": "Imazhi është i turbullt. Stabilizoni telefonin.",
       "tooFar": "Teksti shumë i vogël. Afrojeni telefonin.",
       "tooClose": "Teksti shumë i madh. Largojeni pak telefonin.",
@@ -581,7 +583,7 @@
       "photoCommand": "Po kapet.",
       "voiceCommandsReady": "Komandat me zë janë aktive. Thoni photo për të kapur, flash për dritën, flash off për ta fikur.",
       "lotAnalyzing": "Po analizohet numri i lotit.",
-      "lotDetected": "Numri i lotit u zbulua: {{lot}}.",
+      "lotDetected": "Më duket se gjeta numrin e lotit: {{lot}}.",
       "lotNotDetected": "Asnjë numër loti i lexueshëm nuk u zbulua. Mund ta shkruani manualisht.",
       "recallDetected": "Kujdes. Ky produkt është subjekt i një tërheqjeje. Mos e konsumoni.",
       "productSafe": "Nuk u gjet asnjë tërheqje për këtë produkt.",

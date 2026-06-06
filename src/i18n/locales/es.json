@@ -90,7 +90,8 @@
     "recallInfo": "Información del retiro",
     "actions": {
       "delete": "Eliminar",
-      "viewRecall": "Ver retiro"
+      "viewRecall": "Ver retiro",
+      "scanAnother": "Escanear otro producto"
     }
   },
   "history": {
@@ -574,9 +575,10 @@
     "voiceTest": "Probar voz",
     "voiceTestMessage": "La guía por voz está activada. Escucharás los anuncios durante el escaneo.",
     "voice": {
-      "scanLotReady": "Modo número de lote. Centra el número de lote en la franja, la captura es automática. Di flash para encender la luz, flash off para apagarla.",
+      "scanBarcodeReady": "Modo código de barras. Mantén el teléfono a unas ocho pulgadas del producto, con el código de barras frente a la cámara. Se escanea automáticamente.",
+      "scanLotReady": "Modo número de lote. Mantén el teléfono a unas ocho pulgadas del producto. La captura es automática, gira el producto lentamente.",
       "scanLotTip": "Mantén el teléfono estable, la captura se activa en cuanto se detecta un número de lote. Di flash para encender o flash off para apagar.",
-      "lotInFrame": "Número de lote detectado. Capturando ahora.",
+      "lotInFrame": "Creo que veo un número de lote. No te muevas, lo estoy leyendo.",
       "blur": "Imagen borrosa. Estabiliza el teléfono.",
       "tooFar": "Texto demasiado pequeño. Acerca el teléfono.",
       "tooClose": "Texto demasiado grande. Aleja ligeramente el teléfono.",
@@ -586,7 +588,7 @@
       "photoCommand": "Capturando.",
       "voiceCommandsReady": "Comandos de voz activos. Di photo para capturar, flash para la luz, flash off para apagarla.",
       "lotAnalyzing": "Analizando número de lote.",
-      "lotDetected": "Número de lote detectado: {{lot}}.",
+      "lotDetected": "Creo que encontré el número de lote: {{lot}}.",
       "lotNotDetected": "No se detectó un número de lote legible. Puedes ingresarlo manualmente.",
       "recallDetected": "Advertencia. Este producto está sujeto a una retirada. No consumir.",
       "productSafe": "No se encontró retirada para este producto.",

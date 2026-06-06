@@ -90,7 +90,8 @@
     "recallInfo": "Rückrufinformationen",
     "actions": {
       "delete": "Löschen",
-      "viewRecall": "Rückruf ansehen"
+      "viewRecall": "Rückruf ansehen",
+      "scanAnother": "Weiteres Produkt scannen"
     }
   },
   "history": {
@@ -574,9 +575,10 @@
     "voiceTest": "Stimme testen",
     "voiceTestMessage": "Sprachführung ist aktiviert. Sie hören Ansagen während des Scans.",
     "voice": {
-      "scanLotReady": "Chargennummer-Modus. Zentrieren Sie die Chargennummer im Streifen, die Aufnahme erfolgt automatisch. Sagen Sie flash, um das Licht einzuschalten, flash off, um es auszuschalten.",
+      "scanBarcodeReady": "Barcode-Modus. Halten Sie das Telefon etwa acht Zoll vom Produkt entfernt, der Barcode zur Kamera gerichtet. Der Scan erfolgt automatisch.",
+      "scanLotReady": "Chargennummer-Modus. Halten Sie das Telefon etwa acht Zoll vom Produkt entfernt. Die Aufnahme erfolgt automatisch, drehen Sie das Produkt langsam.",
       "scanLotTip": "Halten Sie das Telefon ruhig, die Aufnahme erfolgt, sobald eine Chargennummer erkannt wird. Sagen Sie flash zum Einschalten oder flash off zum Ausschalten.",
-      "lotInFrame": "Chargennummer erkannt. Aufnahme läuft.",
+      "lotInFrame": "Ich glaube, ich sehe eine Chargennummer. Halten Sie still, ich lese sie ab.",
       "blur": "Bild unscharf. Halten Sie das Telefon ruhig.",
       "tooFar": "Text zu klein. Bewegen Sie das Telefon näher.",
       "tooClose": "Text zu groß. Bewegen Sie das Telefon etwas weiter weg.",
@@ -586,7 +588,7 @@
       "photoCommand": "Aufnahme läuft.",
       "voiceCommandsReady": "Sprachbefehle aktiv. Sagen Sie photo zum Aufnehmen, flash für das Licht, flash off zum Ausschalten.",
       "lotAnalyzing": "Chargennummer wird analysiert.",
-      "lotDetected": "Chargennummer erkannt: {{lot}}.",
+      "lotDetected": "Ich glaube, ich habe die Chargennummer gefunden: {{lot}}.",
       "lotNotDetected": "Keine lesbare Chargennummer erkannt. Sie können sie manuell eingeben.",
       "recallDetected": "Achtung. Dieses Produkt unterliegt einem Rückruf. Nicht konsumieren.",
       "productSafe": "Kein Rückruf für dieses Produkt gefunden.",

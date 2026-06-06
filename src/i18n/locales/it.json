@@ -90,7 +90,8 @@
     "recallInfo": "Informazioni sul richiamo",
     "actions": {
       "delete": "Elimina",
-      "viewRecall": "Visualizza richiamo"
+      "viewRecall": "Visualizza richiamo",
+      "scanAnother": "Scansiona un altro prodotto"
     }
   },
   "history": {
@@ -574,9 +575,10 @@
     "voiceTest": "Prova voce",
     "voiceTestMessage": "La guida vocale è attivata. Sentirai gli annunci durante la scansione.",
     "voice": {
-      "scanLotReady": "Modalità numero di lotto. Centra il numero di lotto nella banda, la cattura è automatica. Dì flash per accendere la luce, flash off per spegnerla.",
+      "scanBarcodeReady": "Modalità codice a barre. Tieni il telefono a circa otto pollici dal prodotto, con il codice a barre rivolto verso la fotocamera. La scansione è automatica.",
+      "scanLotReady": "Modalità numero di lotto. Tieni il telefono a circa otto pollici dal prodotto. La cattura è automatica, gira lentamente il prodotto.",
       "scanLotTip": "Tieni il telefono fermo, la cattura si attiva non appena viene rilevato un numero di lotto. Dì flash per accendere o flash off per spegnere.",
-      "lotInFrame": "Numero di lotto rilevato. Cattura in corso.",
+      "lotInFrame": "Credo di vedere un numero di lotto. Tieni fermo, lo sto leggendo.",
       "blur": "Immagine sfocata. Stabilizza il telefono.",
       "tooFar": "Testo troppo piccolo. Avvicina il telefono.",
       "tooClose": "Testo troppo grande. Allontana leggermente il telefono.",
@@ -586,7 +588,7 @@
       "photoCommand": "Cattura in corso.",
       "voiceCommandsReady": "Comandi vocali attivi. Dì photo per catturare, flash per la luce, flash off per spegnerla.",
       "lotAnalyzing": "Analisi del numero di lotto.",
-      "lotDetected": "Numero di lotto rilevato: {{lot}}.",
+      "lotDetected": "Credo di aver trovato il numero di lotto: {{lot}}.",
       "lotNotDetected": "Nessun numero di lotto leggibile rilevato. Puoi inserirlo manualmente.",
       "recallDetected": "Attenzione. Questo prodotto è soggetto a un richiamo. Non consumare.",
       "productSafe": "Nessun richiamo trovato per questo prodotto.",
