@@ -634,7 +634,11 @@
       "lotKeepSteady": "还没找到批号。请把手机稳定地对准批号。",
       "lotPartialSeen": "我看到了一个代码,但不完整。请展示完整的代码,并慢慢转动产品。",
       "productFound": "找到产品:{{brand}}。现在请扫描批号。",
-      "productNotFound": "未找到产品。正在切换到批号扫描。"
+      "productNotFound": "未找到产品。正在切换到批号扫描。",
+      "barcodeCoach1": "我还在寻找条形码。请将产品放在手机前方约八英寸处，条形码朝向摄像头。",
+      "barcodeCoach2": "请缓慢地将产品靠近或远离，直到我找到条形码。",
+      "barcodeCoach3": "转动产品，将条形码对准摄像头。系统会自动扫描。",
+      "barcodeGiveUp": "我仍然找不到条形码。即将切换到扫描批号。"
     }
   },
   "notificationPermissions": {

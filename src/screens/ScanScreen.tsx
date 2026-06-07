@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, AppState } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Scanner } from '../components/Scanner';
 import { useTheme } from '../theme/themeContext';
@@ -11,6 +11,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
 import { useKeepAwake } from 'expo-keep-awake';
+
+// Hands-free voice coaching for blind users on the barcode screen: after the
+// intro, repeat rotating guidance every few seconds until a barcode is read.
+// After MAX_BARCODE_COACH cues with nothing found, fall back to the lot scan —
+// the accessible equivalent of the on-screen "Skip" button a blind user can't see.
+const BARCODE_COACH_KEYS = ['barcodeCoach1', 'barcodeCoach2', 'barcodeCoach3'];
+const BARCODE_COACH_INTERVAL_MS = 9000;
+const MAX_BARCODE_COACH = 5;
 
 export function ScanScreen() {
   // Prevent the screen from sleeping during scanning (detection can be long).
@@ -43,20 +51,87 @@ export function ScanScreen() {
   // Track if we navigated away so we only reset when coming BACK
   const hasNavigatedAway = useRef(false);
 
+  // Accessibility (blind users): keep guiding by voice until a barcode is read.
+  const isFocusedRef = useRef(false);
+  const barcodeHandledRef = useRef(false);
+  const coachTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const coachCountRef = useRef(0);
+  const appStateRef = useRef(AppState.currentState);
+
+  const stopBarcodeCoaching = useCallback(() => {
+    if (coachTimerRef.current) {
+      clearInterval(coachTimerRef.current);
+      coachTimerRef.current = null;
+    }
+  }, []);
+
+  const startBarcodeCoaching = useCallback(() => {
+    if (!accessibilityMode) return;
+    stopBarcodeCoaching();
+    coachCountRef.current = 0;
+    coachTimerRef.current = setInterval(() => {
+      if (!isFocusedRef.current || barcodeHandledRef.current) return;
+      coachCountRef.current += 1;
+      const n = coachCountRef.current;
+      if (n >= MAX_BARCODE_COACH) {
+        // Stuck without a barcode → switch to the lot scan (which guides too).
+        stopBarcodeCoaching();
+        barcodeHandledRef.current = true;
+        speak(t('accessibility.voice.barcodeGiveUp'), { priority: true });
+        setTimeout(() => {
+          if (isFocusedRef.current) {
+            hasNavigatedAway.current = true;
+            router.push('/scan-lot' as any);
+          }
+        }, 2600);
+        return;
+      }
+      const key = BARCODE_COACH_KEYS[(n - 1) % BARCODE_COACH_KEYS.length];
+      speak(t(`accessibility.voice.${key}`), { priority: false, dedupeMs: 7000 });
+    }, BARCODE_COACH_INTERVAL_MS);
+  }, [accessibilityMode, speak, t, router, stopBarcodeCoaching]);
+
   useFocusEffect(
     useCallback(() => {
       if (hasNavigatedAway.current) {
         resetFlow();
         hasNavigatedAway.current = false;
       }
+      isFocusedRef.current = true;
+      barcodeHandledRef.current = false;
       if (accessibilityMode) {
         speak(t('accessibility.voice.scanBarcodeReady'), { priority: true });
+        startBarcodeCoaching();
       }
       return () => {
+        isFocusedRef.current = false;
+        stopBarcodeCoaching();
         hasNavigatedAway.current = true;
       };
-    }, [resetFlow, accessibilityMode, speak, t])
+    }, [resetFlow, accessibilityMode, speak, t, startBarcodeCoaching, stopBarcodeCoaching])
   );
+
+  // Blind users: useFocusEffect does NOT fire when the app is merely backgrounded
+  // and resumed (no navigation), so the guidance would go silent. Re-announce the
+  // intro and restart coaching when the app returns to the foreground on this screen.
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (next) => {
+      const prev = appStateRef.current;
+      appStateRef.current = next;
+      if (
+        prev.match(/inactive|background/) &&
+        next === 'active' &&
+        accessibilityMode &&
+        isFocusedRef.current &&
+        !barcodeHandledRef.current &&
+        !brandText
+      ) {
+        speak(t('accessibility.voice.scanBarcodeReady'), { priority: true });
+        startBarcodeCoaching();
+      }
+    });
+    return () => sub.remove();
+  }, [accessibilityMode, speak, t, brandText, startBarcodeCoaching]);
 
   const handleConfirm = useCallback(() => {
     const finalBrand = isEditingBrand ? editedBrand.trim() : brandText;
@@ -95,6 +170,10 @@ export function ScanScreen() {
     if (brandText) {
       return;
     }
+
+    // A barcode was read → stop the hands-free voice coaching loop.
+    barcodeHandledRef.current = true;
+    stopBarcodeCoaching();
 
     console.log('[ScanScreen] Barcode scanned:', barcode);
     setErrorMessage('');

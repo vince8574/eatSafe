@@ -637,7 +637,11 @@
     "voiceTest": "Test voice",
     "voiceTestMessage": "Voice guidance is enabled. You will hear announcements during scanning.",
     "voice": {
-      "scanBarcodeReady": "Barcode mode. Hold your phone about eight inches from the product, barcode facing the camera. It scans automatically.",
+      "scanBarcodeReady": "Barcode mode. Place the product about eight inches in front of the phone, with the barcode facing the camera. It scans on its own.",
+      "barcodeCoach1": "Still looking for the barcode. Keep the product about eight inches in front of the phone, barcode facing the camera.",
+      "barcodeCoach2": "Slowly move the product a little nearer or farther until I find the barcode.",
+      "barcodeCoach3": "Turn the product to show the barcode to the camera. It scans on its own.",
+      "barcodeGiveUp": "I still can't find a barcode. Switching to scanning the lot number.",
       "productFound": "Product found: {{brand}}. Now scan the lot number.",
       "productNotFound": "Product not found. Switching to the lot number scan.",
       "lotKeepSteady": "No lot number yet. Keep the phone steady on the lot number.",

@@ -634,7 +634,11 @@
       "lotKeepSteady": "Još nema broja serije. Držite telefon mirno na broju serije.",
       "lotPartialSeen": "Vidim kod, ali ne cijeli. Pokažite cijeli kod i polako okrećite proizvod.",
       "productFound": "Proizvod pronađen: {{brand}}. Sada skenirajte broj serije.",
-      "productNotFound": "Proizvod nije pronađen. Prelazim na skeniranje broja serije."
+      "productNotFound": "Proizvod nije pronađen. Prelazim na skeniranje broja serije.",
+      "barcodeCoach1": "Još uvijek tražim barkod. Držite proizvod na oko osam inča ispred telefona, sa barkodom okrenutim ka kameri.",
+      "barcodeCoach2": "Polako približavajte ili udaljavajte proizvod dok ne pronađem barkod.",
+      "barcodeCoach3": "Okrenite proizvod da pokažete barkod kameri. Skeniranje je automatsko.",
+      "barcodeGiveUp": "Još uvijek ne mogu pronaći barkod. Prelazim na skeniranje broja serije."
     }
   },
   "notificationPermissions": {
