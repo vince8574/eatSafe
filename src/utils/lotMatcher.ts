@@ -35,7 +35,9 @@ function isUnknownBrand(brand: string) {
     'NONE'
   ];
 
-  return unknownTokens.includes(normalized);
+  // startsWith so the real defaults "Unknown Brand" / "Unknown Product" (normalized
+  // to "UNKNOWNBRAND" / "UNKNOWNPRODUCT") and localized "Inconnue", etc. are caught.
+  return unknownTokens.some((tok) => normalized === tok || normalized.startsWith(tok));
 }
 
 function levenshteinDistance(a: string, b: string) {

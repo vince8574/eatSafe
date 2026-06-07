@@ -64,6 +64,9 @@ export function DetailScreen() {
         <View style={styles.section}>
           <View style={[styles.card, { backgroundColor: colors.surface }]}>
             <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
+            {product.productName ? (
+              <Text style={[styles.productNameSub, { color: colors.textSecondary }]}>{product.productName}</Text>
+            ) : null}
             <Text style={[styles.label, { color: colors.textSecondary }]}>{t('details.lotNumber')}</Text>
             {isEditingLot ? (
               <View style={styles.lotEditContainer}>
@@ -240,6 +243,11 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 24,
     fontWeight: '800'
+  },
+  productNameSub: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 6
   },
   label: {
     fontSize: 12,
