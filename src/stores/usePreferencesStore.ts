@@ -35,7 +35,10 @@ export const usePreferencesStore = create<PreferencesState>()(
       wantsNumelineReferral: false,
       hasSeenWelcome: false,
       hasSeenNotificationPrompt: false,
-      accessibilityMode: false,
+      // Accessibility (voice guidance) is ON by default — this app is built first
+      // for blind / low-vision users. New installs start in accessibility mode;
+      // existing users keep whatever they had persisted. Toggle in Settings.
+      accessibilityMode: true,
       // setCountry removed - country is always 'US'
       setNotificationsEnabled: (notificationsEnabled) => set({ notificationsEnabled }),
       setDarkMode: (darkMode) => set({ darkMode }),
