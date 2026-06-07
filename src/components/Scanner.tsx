@@ -99,6 +99,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [activeDelayPassed, setActiveDelayPassed] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
   const [flashOn, setFlashOn] = useState(false);
 
@@ -119,6 +120,26 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       requestPermission();
     }
   }, [permission, requestPermission]);
+
+  // iOS releases the camera session lazily. When returning to the barcode screen
+  // for a NEW scan, activating the fresh camera while the previous screen's
+  // session is still tearing down leaves barcode detection dead ("2nd product
+  // not detected"). Delay activation briefly on (re)focus — barcode mode only —
+  // so the prior session fully releases first. The lot screen keeps its old
+  // immediate behaviour.
+  useEffect(() => {
+    if (!isFocused) {
+      setActiveDelayPassed(false);
+      return;
+    }
+    if (!enableBarcodeScanning) {
+      setActiveDelayPassed(true);
+      return;
+    }
+    setActiveDelayPassed(false);
+    const id = setTimeout(() => setActiveDelayPassed(true), 450);
+    return () => clearTimeout(id);
+  }, [isFocused, enableBarcodeScanning]);
 
   const handleBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
@@ -363,7 +384,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
           // fraîche au focus (key ci-dessus) ; l'écran lot ne remonte pas.
-          active={isFocused}
+          active={isFocused && activeDelayPassed}
           flash={flashOn && isFocused ? 'on' : 'off'}
           enableTorch={flashOn && isFocused}
           onCameraReady={() => setCameraReady(true)}

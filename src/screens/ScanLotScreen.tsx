@@ -31,7 +31,10 @@ const AUTO_CAPTURE_DELAY_SIGHTED_MS = 400;
 
 // Accessibility-mode constants for blind lot scanning.
 const MAX_ACCESSIBILITY_RETRIES = 10;
-const MAX_PAID_OCR_PER_SESSION = 2;
+// Blind users can't aim, so they need many accurate (Vision/Claude) reads to reach
+// the 2-read consensus — a cap of 2 left them on weak on-device ML Kit and the lot
+// was "never detected". Allow more paid reads across the continuous scan session.
+const MAX_PAID_OCR_PER_SESSION = 6;
 const LOT_CONSENSUS_THRESHOLD = 2; // same reliable lot read >=2x before confirming
 const COACHING_SUPPRESS_MS = 7000;
 const LOT_COACH_ROTATION = {

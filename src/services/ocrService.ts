@@ -514,12 +514,14 @@ export function isConfidentLot(candidate: string): boolean {
   if (/^\d{13,14}$/.test(compact)) return false; // EAN/GTIN
   // Slash-separated numeric code (e.g. 4100/01473).
   if (/^\d{3,}\/\d{3,}$/.test(raw) && compact.length >= 6 && compact.length <= 18) return true;
-  // Letter+digit mix: require enough digits, else it's a word with a digit (OMEGA3).
-  if (hasLetters && hasDigits && compact.length >= 5 && compact.length <= 20) {
-    return digitCount >= 3 || digitCount / compact.length >= 0.4;
+  // Letter+digit batch codes (L693, AB12, WN012117E): need >=2 digits, len 4-20.
+  // Dates / weights / prices / month-words are already excluded above; a plain
+  // word-with-one-digit (OMEGA3) has a single digit → still rejected here.
+  if (hasLetters && hasDigits && compact.length >= 4 && compact.length <= 20) {
+    return digitCount >= 2;
   }
-  // Purely numeric code, 6-13 digits, not a date.
-  if (!hasLetters && hasDigits && compact.length >= 6 && compact.length <= 13) return true;
+  // Purely numeric code, 5-13 digits, not a date/year (FDA lots are often 5 digits).
+  if (!hasLetters && hasDigits && compact.length >= 5 && compact.length <= 13) return true;
   return false;
 }
 export function isReliableLot(candidate: string): boolean {
