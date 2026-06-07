@@ -637,7 +637,11 @@
     "voiceTest": "Tester la voix",
     "voiceTestMessage": "Le guidage vocal est activé. Vous entendrez les annonces pendant le scan.",
     "voice": {
-      "scanBarcodeReady": "Mode code-barres. Tenez votre téléphone à environ huit pouces du produit, le code-barres face à la caméra. La lecture est automatique.",
+      "scanBarcodeReady": "Mode code-barres. Placez le produit à environ huit pouces devant le téléphone, le code-barres face à la caméra. La lecture est automatique.",
+      "barcodeCoach1": "Je cherche encore le code-barres. Gardez le produit à environ huit pouces devant le téléphone, le code-barres face à la caméra.",
+      "barcodeCoach2": "Approchez ou éloignez lentement le produit jusqu'à ce que je trouve le code-barres.",
+      "barcodeCoach3": "Tournez le produit pour présenter le code-barres à la caméra. La lecture est automatique.",
+      "barcodeGiveUp": "Je ne trouve toujours pas de code-barres. Je passe au scan du numéro de lot.",
       "productFound": "Produit trouvé : {{brand}}. Scannez maintenant le numéro de lot.",
       "productNotFound": "Produit introuvable. Passage au scan du numéro de lot.",
       "lotKeepSteady": "Pas encore de numéro de lot. Gardez le téléphone stable sur le numéro de lot.",

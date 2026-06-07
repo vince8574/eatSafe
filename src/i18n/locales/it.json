@@ -634,7 +634,11 @@
       "lotKeepSteady": "Nessun numero di lotto ancora. Tieni il telefono fermo sul numero di lotto.",
       "lotPartialSeen": "Vedo un codice ma non tutto. Mostra l'intero codice e gira lentamente il prodotto.",
       "productFound": "Prodotto trovato: {{brand}}. Ora scansiona il numero di lotto.",
-      "productNotFound": "Prodotto non trovato. Passo alla scansione del numero di lotto."
+      "productNotFound": "Prodotto non trovato. Passo alla scansione del numero di lotto.",
+      "barcodeCoach1": "Sto ancora cercando il codice a barre. Tieni il prodotto a circa otto pollici davanti al telefono, con il codice a barre rivolto verso la fotocamera.",
+      "barcodeCoach2": "Avvicina o allontana lentamente il prodotto finché non trovo il codice a barre.",
+      "barcodeCoach3": "Gira il prodotto per mostrare il codice a barre alla fotocamera. La scansione è automatica.",
+      "barcodeGiveUp": "Non riesco ancora a trovare un codice a barre. Passo alla scansione del numero di lotto."
     }
   },
   "notificationPermissions": {

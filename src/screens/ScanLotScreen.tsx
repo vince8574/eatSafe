@@ -1,6 +1,6 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert, Animated, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert, Animated, KeyboardAvoidingView, Platform, AppState } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
@@ -90,6 +90,7 @@ export function ScanLotScreen() {
   // Vrai tant que l'écran de lot est au premier plan. Sert de garde-fou contre
   // toute (re)capture automatique après qu'on a quitté la page (pas de boucle).
   const isScreenFocusedRef = useRef(false);
+  const appStateRef = useRef(AppState.currentState);
   // Accessibility blind-mode: retry loop + anti-truncation consensus.
   const lastLotRef = useRef('');
   const accessibilityRetryRef = useRef(0);
@@ -709,6 +710,27 @@ export function ScanLotScreen() {
       };
     }, [accessibilityMode, speak, t])
   );
+
+  // Blind users: re-announce the lot-scan intro when the app returns to the
+  // foreground (useFocusEffect doesn't fire on background→active), so the voice
+  // guidance doesn't go silent after switching apps and coming back.
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (next) => {
+      const prev = appStateRef.current;
+      appStateRef.current = next;
+      if (
+        prev.match(/inactive|background/) &&
+        next === 'active' &&
+        accessibilityMode &&
+        isScreenFocusedRef.current &&
+        !isProcessingRef.current &&
+        !isConfirmModalVisible
+      ) {
+        speak(t('accessibility.voice.scanLotReady'), { priority: true });
+      }
+    });
+    return () => sub.remove();
+  }, [accessibilityMode, speak, t, isConfirmModalVisible]);
 
   // Auto-capture de secours (mains libres) : si la pré-détection par preview
   // n'a rien donné au bout de quelques secondes (étiquette peu contrastée,

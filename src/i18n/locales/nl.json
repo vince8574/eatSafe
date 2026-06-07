@@ -634,7 +634,11 @@
       "lotKeepSteady": "Nog geen lotnummer. Houd de telefoon stil op het lotnummer.",
       "lotPartialSeen": "Ik zie een code, maar niet helemaal. Toon de volledige code en draai het product langzaam.",
       "productFound": "Product gevonden: {{brand}}. Scan nu het lotnummer.",
-      "productNotFound": "Product niet gevonden. Ik schakel over naar de lotnummerscan."
+      "productNotFound": "Product niet gevonden. Ik schakel over naar de lotnummerscan.",
+      "barcodeCoach1": "Ik zoek nog naar de barcode. Houd het product op ongeveer acht inch voor de telefoon, met de barcode naar de camera.",
+      "barcodeCoach2": "Beweeg het product langzaam iets dichterbij of verder weg totdat ik de barcode vind.",
+      "barcodeCoach3": "Draai het product om de barcode aan de camera te tonen. Het scant vanzelf.",
+      "barcodeGiveUp": "Ik kan nog steeds geen barcode vinden. Ik schakel over naar het scannen van het lotnummer."
     }
   },
   "notificationPermissions": {

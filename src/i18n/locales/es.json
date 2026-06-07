@@ -634,7 +634,11 @@
       "lotKeepSteady": "Aún no hay número de lote. Mantén el teléfono firme sobre el número de lote.",
       "lotPartialSeen": "Veo un código pero no entero. Muestra el código completo y gira el producto lentamente.",
       "productFound": "Producto encontrado: {{brand}}. Ahora escanea el número de lote.",
-      "productNotFound": "Producto no encontrado. Cambiando al escaneo del número de lote."
+      "productNotFound": "Producto no encontrado. Cambiando al escaneo del número de lote.",
+      "barcodeCoach1": "Sigo buscando el código de barras. Mantén el producto a unas ocho pulgadas frente al teléfono, con el código de barras hacia la cámara.",
+      "barcodeCoach2": "Acerca o aleja lentamente el producto hasta que encuentre el código de barras.",
+      "barcodeCoach3": "Gira el producto para mostrar el código de barras a la cámara. Se escanea solo.",
+      "barcodeGiveUp": "Sigo sin encontrar un código de barras. Voy a escanear el número de lote."
     }
   },
   "notificationPermissions": {

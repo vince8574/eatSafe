@@ -634,7 +634,11 @@
       "lotKeepSteady": "Ende asnjë numër loti. Mbajeni telefonin pa lëvizur mbi numrin e lotit.",
       "lotPartialSeen": "Po shoh një kod, por jo të tërin. Tregojeni kodin e plotë dhe rrotullojeni produktin ngadalë.",
       "productFound": "Produkti u gjet: {{brand}}. Tani skanoni numrin e lotit.",
-      "productNotFound": "Produkti nuk u gjet. Po kaloj në skanimin e numrit të lotit."
+      "productNotFound": "Produkti nuk u gjet. Po kaloj në skanimin e numrit të lotit.",
+      "barcodeCoach1": "Ende po kërkoj barkodin. Mbajeni produktin rreth tetë inç para telefonit, me barkodin nga kamera.",
+      "barcodeCoach2": "Afroni ose largoni ngadalë produktin derisa të gjej barkodin.",
+      "barcodeCoach3": "Rrotulloni produktin për t'i treguar barkodin kamerës. Skanimi bëhet vetë.",
+      "barcodeGiveUp": "Ende nuk po e gjej një barkod. Po kaloj te skanimi i numrit të lotit."
     }
   },
   "notificationPermissions": {

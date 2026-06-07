@@ -634,7 +634,11 @@
       "lotKeepSteady": "Noch keine Chargennummer. Halten Sie das Telefon ruhig auf die Chargennummer gerichtet.",
       "lotPartialSeen": "Ich sehe einen Code, aber nicht vollständig. Zeigen Sie den ganzen Code und drehen Sie das Produkt langsam.",
       "productFound": "Produkt gefunden: {{brand}}. Scannen Sie jetzt die Chargennummer.",
-      "productNotFound": "Produkt nicht gefunden. Wechsle zum Scan der Chargennummer."
+      "productNotFound": "Produkt nicht gefunden. Wechsle zum Scan der Chargennummer.",
+      "barcodeCoach1": "Ich suche noch den Barcode. Halten Sie das Produkt etwa acht Zoll vor das Telefon, den Barcode zur Kamera.",
+      "barcodeCoach2": "Bewegen Sie das Produkt langsam etwas näher oder weiter weg, bis ich den Barcode finde.",
+      "barcodeCoach3": "Drehen Sie das Produkt, um den Barcode zur Kamera zu zeigen. Es scannt von selbst.",
+      "barcodeGiveUp": "Ich finde noch immer keinen Barcode. Ich wechsle zum Scannen der Chargennummer."
     }
   },
   "notificationPermissions": {
