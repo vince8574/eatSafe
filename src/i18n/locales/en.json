@@ -110,7 +110,8 @@
     "actions": {
       "delete": "Delete scan",
       "viewRecall": "View recall",
-      "scanAnother": "Scan another product"
+      "scanAnother": "Scan another product",
+      "ok": "OK"
     }
   },
   "history": {
