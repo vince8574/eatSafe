@@ -46,8 +46,11 @@ export interface CandidateMatchResult {
 /**
  * Checks if brand names are similar enough to be considered the same
  */
-function brandMatches(scannedBrand: string, recallBrand: string | undefined): boolean {
-  if (!recallBrand) return false;
+function brandMatches(scannedBrand: string | undefined | null, recallBrand: string | undefined): boolean {
+  // Brand is OPTIONAL in this app: matching is primarily lot-only against the US
+  // APIs. When no brand was scanned, skip brand matching (don't crash) so the
+  // lot-only exact match (Phase 2) still runs.
+  if (!scannedBrand || !recallBrand) return false;
   const a = scannedBrand.toLowerCase().trim();
   const b = recallBrand.toLowerCase().trim();
   if (a === b) return true;
@@ -62,7 +65,7 @@ function brandMatches(scannedBrand: string, recallBrand: string | undefined): bo
  */
 export async function checkAllCandidates(
   candidates: string[],
-  brand: string,
+  brand: string | undefined,
   country: string
 ): Promise<CandidateMatchResult> {
   console.log('[checkAllCandidates] Checking candidates:', candidates);
