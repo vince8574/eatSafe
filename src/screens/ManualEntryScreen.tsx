@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -105,7 +105,15 @@ export function ManualEntryScreen() {
 
   return (
     <GradientBackground>
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
         <Text style={[styles.title, { color: colors.textPrimary }]}>{t('manualEntry.title')}</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {t('manualEntry.subtitle')}
@@ -156,14 +164,18 @@ export function ManualEntryScreen() {
             {isSubmitting ? t('manualEntry.verifying') : t('manualEntry.save')}
           </Text>
         </TouchableOpacity>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1
+  },
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 24
   },
   title: {
