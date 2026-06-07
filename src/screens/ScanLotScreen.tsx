@@ -35,7 +35,11 @@ const MAX_ACCESSIBILITY_RETRIES = 10;
 // the 2-read consensus — a cap of 2 left them on weak on-device ML Kit and the lot
 // was "never detected". Allow more paid reads across the continuous scan session.
 const MAX_PAID_OCR_PER_SESSION = 6;
-const LOT_CONSENSUS_THRESHOLD = 2; // same reliable lot read >=2x before confirming
+// Accept a single reliable read: the multi-frame burst often yields only ONE
+// usable frame on some devices (the others come back blank), so requiring the
+// same lot twice meant blind scans were "never detected". isReliableLot still
+// gates out dates/weights/garbage, and the recall match stays exact.
+const LOT_CONSENSUS_THRESHOLD = 1;
 const COACHING_SUPPRESS_MS = 7000;
 const LOT_COACH_ROTATION = {
   1: ['lotCoach1a', 'lotCoach1b', 'lotCoach1c'], // retries 1-3: keep moving
@@ -771,7 +775,7 @@ export function ScanLotScreen() {
         resetToken={scannerResetToken}
         flashPosition="top-right"
         multiFrameCount={accessibilityMode ? 4 : 3}
-        multiFrameDelayMs={200}
+        multiFrameDelayMs={accessibilityMode ? 450 : 200}
         onBack={handleGoBack}
         onRestart={handleRestart}
         onManualEntry={handleManualEntry}
