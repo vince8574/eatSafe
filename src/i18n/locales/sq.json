@@ -58,8 +58,20 @@
       "brandCaptureFailed": "Kapja e markës dështoi.",
       "scanFailed": "Skanimi dështoi.",
       "lotExtractFailed": "E pamundur të ekstraktohet numri i lotit automatikisht.",
-      "brandFirst": "Kapo markën para numrit të lotit."
-    }
+      "brandFirst": "Kapo markën para numrit të lotit.",
+      "barcodeNotFound": "Barkodi nuk u njoh. Provoni të skanoni tekstin e markës.",
+      "barcodeScanFailed": "Skanimi i barkodit dështoi. Provoni të skanoni tekstin e markës."
+    },
+    "barcodeInstruction": "Skanoni barkodin e produktit për të identifikuar markën automatikisht.",
+    "confirmBrandMessage": "Marka e zbuluar: {{brand}}",
+    "confirmBrandTitle": "Konfirmoni markën e zbuluar",
+    "confirmLotMessage": "Numri i lotit i zbuluar: {{lot}}",
+    "confirmLotTitle": "Konfirmoni numrin e lotit",
+    "stageClaude": "Analiza e thelluar në progres...",
+    "stageVision": "Po përmirësohet njohja...",
+    "switchToBarcode": "📊 Skano barkodin",
+    "switchToOcr": "📸 Skano tekstin e markës",
+    "validate": "Vërteto"
   },
   "manualEntry": {
     "title": "Hyrje manuale",
@@ -85,13 +97,22 @@
     "status": {
       "safe": "ℹ️ NUK U GJE TËRHEQJE",
       "recalled": "I rikthyer",
-      "unknown": "Status i panjohur"
+      "unknown": "Status i panjohur",
+      "warning": "⚠️ KUJDES"
     },
     "recallInfo": "Informacione mbi rikujtimin",
     "actions": {
       "delete": "Fshi",
-      "viewRecall": "Shiko rikujtimin"
-    }
+      "viewRecall": "Shiko rikujtimin",
+      "scanAnother": "Skano një produkt tjetër",
+      "ok": "OK"
+    },
+    "lastChecked": "Kontrolluar së fundi",
+    "lotNumber": "Numri i lotit",
+    "never": "Asnjëherë",
+    "notFound": "Produkti nuk u gjet ose u fshi.",
+    "privacyInfo": "Fotografitë e marra gjatë skanimit përpunohen lokalisht dhe fshihen menjëherë. Vetëm marka dhe numri i lotit ruhen në këtë pajisje.",
+    "recallStatusLabel": "Statusi i tërheqjes"
   },
   "history": {
     "title": "Historiku",
@@ -149,7 +170,9 @@
     "dailyCheck": {
       "title": "Verifikimi Numeline",
       "body": "Përditësimi ditor i rikujtimeve në progres."
-    }
+    },
+    "newRecallBody": "Produkti {{brand}} - Loti {{lot}} tani i nënshtrohet një tërheqjeje. Mos e konsumoni.",
+    "newRecallTitle": "⚠️ U zbulua një tërheqje e re"
   },
   "settings": {
     "title": "Parametrat",
@@ -157,7 +180,9 @@
     "country": "Shteti",
     "theme": "Tema",
     "notifications": "Njoftimet",
-    "about": "Rreth"
+    "about": "Rreth",
+    "numelineReferral": "Listim në numeline.com",
+    "numelineReferralDescription": "Shfaquni në numeline.com si një kompani që kujdeset për shëndetin e klientëve të saj"
   },
   "languages": {
     "fr": "Français",
@@ -256,7 +281,12 @@
     "passwordTooShort": "Fjalëkalimi duhet të ketë të paktën 6 karaktere",
     "passwordsDoNotMatch": "Fjalëkalimet nuk përputhen",
     "name": "Emri",
-    "namePlaceholder": "Emri juaj"
+    "namePlaceholder": "Emri juaj",
+    "deleteAccount": "Fshi llogarinë",
+    "deleteAccountFailed": "Fshirja e llogarisë dështoi. Ju lutemi riautentikohuni dhe provoni përsëri.",
+    "deleteAccountMessage": "Kjo do të fshijë përgjithmonë llogarinë dhe të dhënat tuaja. Të vazhdohet?",
+    "deleteAccountSuccess": "Llogaria u fshi me sukses.",
+    "deleteAccountTitle": "Fshi llogarinë time"
   },
   "team": {
     "title": "Menaxhimi i ekipit",
@@ -409,7 +439,8 @@
     "restoreErrorMessage": "Nuk mund të rivendosim blerjet e tua. Ju lutemi provoni përsëri.",
     "restoreNoPurchase": "Nuk u gjet asnjë blerje e mëparshme për këtë llogari.",
     "confirmTitle": "Konfirmo abonimin",
-    "confirmMessage": "Dëshiron të abonohesh në"
+    "confirmMessage": "Dëshiron të abonohesh në",
+    "devMode": ""
   },
   "quota": {
     "reached": "Kuota e skanimit u arrit",
@@ -500,7 +531,9 @@
     "skip": "Kalo",
     "tipBarcode": "Qendërzo barkodin brenda kornizës",
     "tipBand": "Kornizo numrin e grupit dhe qëndro i palëvizur",
-    "tipPhoto": "Mbush kornizën me etiketën e produktit"
+    "tipPhoto": "Mbush kornizën me etiketën e produktit",
+    "cameraPermissionDenied": "Qasja në kamerë është e fikur. Aktivizojeni te Parametrat për të skanuar produktet.",
+    "openSettings": "Hap Parametrat"
   },
   "brandAutocomplete": {
     "label": "MARKA",
@@ -569,24 +602,74 @@
     "voiceTest": "Testo zërin",
     "voiceTestMessage": "Udhëzimi me zë është aktiv. Do të dëgjoni njoftimet gjatë skanimit.",
     "voice": {
-      "scanLotReady": "Modaliteti i numrit të lotit. Vendosni numrin e lotit në qendër të shiritit, kapja është automatike. Thoni flash për të ndezur dritën, flash off për ta fikur.",
-      "scanLotTip": "Mbajeni telefonin të qëndrueshëm, kapja aktivizohet sapo zbulohet një numër loti. Thoni flash për të ndezur ose flash off për të fikur.",
-      "lotInFrame": "Numri i lotit u zbulua. Po kapet tani.",
+      "scanBarcodeReady": "Modaliteti i barkodit. Mbajeni telefonin rreth tetë inç nga produkti, me barkodin nga kamera. Skanon automatikisht.",
+      "scanLotReady": "Modaliteti i numrit të lotit. Mbajeni telefonin rreth tetë inç nga produkti. Kapja është automatike, rrotullojeni produktin ngadalë.",
+      "scanLotTip": "Rrotullojeni produktin ngadalë para kamerës. Numri i lotit shpesh ndodhet pranë një cepi, kapakut ose nën paketim.",
+      "lotInFrame": "Më duket se shoh një numër loti. Qëndroni pa lëvizur, po e lexoj.",
       "blur": "Imazhi është i turbullt. Stabilizoni telefonin.",
       "tooFar": "Teksti shumë i vogël. Afrojeni telefonin.",
       "tooClose": "Teksti shumë i madh. Largojeni pak telefonin.",
-      "lowLight": "Pak dritë. Thoni flash për të ndezur dritën, thoni flash off për ta fikur.",
-      "flashOn": "Blici është aktiv. Thoni flash off për ta fikur.",
+      "lowLight": "Pak dritë. Afrojeni produktin drejt një burimi drite.",
+      "flashOn": "Blici u ndez.",
       "flashOff": "Blici është fikur.",
       "photoCommand": "Po kapet.",
-      "voiceCommandsReady": "Komandat me zë janë aktive. Thoni photo për të kapur, flash për dritën, flash off për ta fikur.",
+      "voiceCommandsReady": "Udhëzimi me zë është aktiv.",
       "lotAnalyzing": "Po analizohet numri i lotit.",
-      "lotDetected": "Numri i lotit u zbulua: {{lot}}.",
+      "lotDetected": "Më duket se gjeta numrin e lotit: {{lot}}.",
       "lotNotDetected": "Asnjë numër loti i lexueshëm nuk u zbulua. Mund ta shkruani manualisht.",
       "recallDetected": "Kujdes. Ky produkt është subjekt i një tërheqjeje. Mos e konsumoni.",
       "productSafe": "Nuk u gjet asnjë tërheqje për këtë produkt.",
       "scanError": "Skanimi dështoi. Provoni përsëri.",
-      "captureBlocked": "Kapja dështoi."
+      "captureBlocked": "Kapja dështoi.",
+      "lotCoach1a": "Ende po kërkoj numrin e lotit. Rrotullojeni produktin ngadalë.",
+      "lotCoach1b": "Lëvizeni produktin butësisht para kamerës, ende po lexoj.",
+      "lotCoach1c": "Ende po kërkoj, merrni kohën tuaj. Afrojeni ose largojeni produktin pak.",
+      "lotCoach2a": "Kërkoni shkrimin e vogël pranë kapakut dhe tregojani kamerës.",
+      "lotCoach2b": "Numri i lotit shpesh ndodhet nën paketim ose pranë një cepi. Rrotullojeni produktin që ta tregoni.",
+      "lotCoach2c": "Rrotullojeni produktin ngadalë, një çerek rrotullimi në herë, përballë kamerës.",
+      "lotCoach3a": "Mbajeni produktin pa lëvizur për dy sekonda, përballë kamerës.",
+      "lotCoach3b": "Stabilizojeni produktin në lartësinë e gjoksit, përballë kamerës, pa lëvizur.",
+      "lotCoach3c": "Edhe një provë. Kërkoni rreshtin me shkronja dhe numra, shpesh pranë datës.",
+      "lotGiveUpSoon": "Nuk po arrij ta lexoj numrin e lotit. Nëse dëshironi, prekni dy herë ekranin për ta shkruar vetë.",
+      "lotKeepSteady": "Ende asnjë numër loti. Mbajeni telefonin pa lëvizur mbi numrin e lotit.",
+      "lotPartialSeen": "Po shoh një kod, por jo të tërin. Tregojeni kodin e plotë dhe rrotullojeni produktin ngadalë.",
+      "productFound": "Produkti u gjet: {{brand}}. Tani skanoni numrin e lotit.",
+      "productNotFound": "Produkti nuk u gjet. Po kaloj në skanimin e numrit të lotit."
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "Alarme sigurie të menjëhershme",
+    "benefit2": "Kontrolle automatike çdo orë",
+    "benefit3": "Ndajeni me ekipin tuaj (organizatat)",
+    "enableButton": "Aktivizo njoftimet",
+    "skipButton": "Më vonë",
+    "subtitle": "Merrni njoftime në kohë reale kur një produkt që keni skanuar i nënshtrohet një tërheqjeje ushqimore.",
+    "title": "Qëndroni të informuar për tërheqjet"
+  },
+  "publicProfile": {
+    "address": "Adresa",
+    "addressPlaceholder": "123 Main Street, 75001 Paris, France",
+    "companyName": "Emri i kompanisë",
+    "companyNamePlaceholder": "P.sh.: Food Truck-u im",
+    "email": "Email",
+    "emailPlaceholder": "contact@company.com",
+    "errorMessage": "Profili juaj nuk u ruajt dot. Ju lutemi provoni përsëri.",
+    "errorTitle": "Gabim",
+    "logoUrl": "URL-ja e logos",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "Profili publik",
+    "missingCompany": "Ju lutemi shkruani një emër kompanie para publikimit.",
+    "missingTitle": "Emri i kompanisë kërkohet",
+    "phone": "Telefoni",
+    "phonePlaceholder": "+33 1 23 45 67 89",
+    "publishDescription": "Kompania juaj do të shfaqet në direktorinë publike të partnerëve.",
+    "publishToggle": "Publiko në numeline.com",
+    "save": "Ruaj",
+    "savedMessage": "Profili juaj publik u ruajt.",
+    "savedTitle": "U ruajt",
+    "subtitle": "Shfaquni në numeline.com/subscribers.html për t'ua paraqitur biznesin tuaj përdoruesve tanë.",
+    "title": "Profili publik",
+    "website": "Faqja e internetit",
+    "websitePlaceholder": "https://www.company.com"
   }
 }

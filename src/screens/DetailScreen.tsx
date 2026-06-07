@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, TextInput, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
@@ -45,7 +45,15 @@ export function DetailScreen() {
 
   return (
     <GradientBackground>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+      <KeyboardAvoidingView
+        style={styles.scroll}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+        >
         {/* Alerte de rappel en haut si le produit est contaminé */}
         {isRecalled && recall && (
           <View style={styles.section}>
@@ -64,6 +72,9 @@ export function DetailScreen() {
         <View style={styles.section}>
           <View style={[styles.card, { backgroundColor: colors.surface }]}>
             <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
+            {product.productName ? (
+              <Text style={[styles.productNameSub, { color: colors.textSecondary }]}>{product.productName}</Text>
+            ) : null}
             <Text style={[styles.label, { color: colors.textSecondary }]}>{t('details.lotNumber')}</Text>
             {isEditingLot ? (
               <View style={styles.lotEditContainer}>
@@ -158,7 +169,14 @@ export function DetailScreen() {
             style={[styles.scanAnotherButton, { backgroundColor: colors.accent }]}
             onPress={() => router.replace('/(tabs)/scan')}
           >
-            <Text style={styles.scanAnotherText}>{t('details.actions.scanAnother')}</Text>
+            <Text style={[styles.scanAnotherText, { color: colors.surface }]}>{t('details.actions.scanAnother')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.okButton, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}
+            onPress={() => router.replace('/(tabs)/home')}
+          >
+            <Text style={[styles.okText, { color: colors.textPrimary }]}>{t('details.actions.ok')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -168,10 +186,11 @@ export function DetailScreen() {
               router.back();
             }}
           >
-            <Text style={styles.deleteText}>{t('details.actions.delete')}</Text>
+            <Text style={[styles.deleteText, { color: colors.surface }]}>{t('details.actions.delete')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
       <ResultBottomNav />
     </GradientBackground>
   );
@@ -233,6 +252,11 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 24,
     fontWeight: '800'
+  },
+  productNameSub: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 6
   },
   label: {
     fontSize: 12,
@@ -368,7 +392,17 @@ const styles = StyleSheet.create({
   },
   scanAnotherText: {
     fontSize: 16,
-    color: '#0A1F1F',
+    fontWeight: '700'
+  },
+  okButton: {
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+    borderWidth: 2
+  },
+  okText: {
+    fontSize: 16,
     fontWeight: '700'
   },
   deleteButton: {
@@ -378,7 +412,6 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     fontSize: 16,
-    color: '#0A1F1F',
     fontWeight: '700'
   },
   missingText: {

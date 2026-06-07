@@ -8,11 +8,18 @@ import { GradientBackground } from '../components/GradientBackground';
 import { Ionicons } from '@expo/vector-icons';
 import { getProductByBarcode } from '../services/productLookupService';
 import { useFocusEffect } from '@react-navigation/native';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
+import { useVoiceGuide } from '../hooks/useVoiceGuide';
+import { useKeepAwake } from 'expo-keep-awake';
 
 export function ScanScreen() {
+  // Prevent the screen from sleeping during scanning (detection can be long).
+  useKeepAwake();
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
+  const accessibilityMode = usePreferencesStore((s) => s.accessibilityMode);
+  const { speak } = useVoiceGuide();
   const [brandText, setBrandText] = useState('');
   const [productName, setProductName] = useState('');
   const [productImage, setProductImage] = useState('');
@@ -42,10 +49,13 @@ export function ScanScreen() {
         resetFlow();
         hasNavigatedAway.current = false;
       }
+      if (accessibilityMode) {
+        speak(t('accessibility.voice.scanBarcodeReady'), { priority: true });
+      }
       return () => {
         hasNavigatedAway.current = true;
       };
-    }, [resetFlow])
+    }, [resetFlow, accessibilityMode, speak, t])
   );
 
   const handleConfirm = useCallback(() => {
@@ -97,12 +107,31 @@ export function ScanScreen() {
         setBrandText(productInfo.brand);
         setProductName(productInfo.productName);
         setProductImage(productInfo.imageUrl || '');
-        setConfirmModalVisible(true);
+        if (accessibilityMode) {
+          // Accessibility mode: no "OK" button to aim for → automatically move on
+          // to the lot scan. (Sighted mode: show the modal to verify/edit brand.)
+          speak(t('accessibility.voice.productFound', { brand: productInfo.brand }), { priority: true });
+          const params = new URLSearchParams({
+            brand: productInfo.brand || '',
+            ...(productInfo.productName && { productName: productInfo.productName }),
+            ...(productInfo.imageUrl && { productImage: productInfo.imageUrl })
+          });
+          // Delay so "Product found: … Now scan the lot number." is heard in full
+          // before navigation cuts the voice. The next screen announces the lot intro.
+          setTimeout(() => {
+            router.push(`/scan-lot?${params.toString()}` as any);
+          }, 2800);
+        } else {
+          setConfirmModalVisible(true);
+        }
       } else {
         // Produit non trouvé dans les bases publiques
         // Passer directement au scan du lot pour vérifier les rappels
         console.log('[ScanScreen] Product not found in databases, proceeding to lot scan');
         setErrorMessage(t('scan.productNotPubliclyListed'));
+        if (accessibilityMode) {
+          speak(t('accessibility.voice.productNotFound'), { priority: true });
+        }
 
         // Attendre 2 secondes pour que l'utilisateur lise le message
         setTimeout(() => {
@@ -117,7 +146,7 @@ export function ScanScreen() {
         router.push('/scan-lot' as any);
       }, 1500);
     }
-  }, [brandText, t, router]);
+  }, [brandText, t, router, accessibilityMode, speak]);
 
   const handleCapture = useCallback(async (uri: string | string[]) => {
     // Pas de capture de photo pour l'écran de scan de code-barres

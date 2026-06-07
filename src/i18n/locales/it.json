@@ -58,8 +58,20 @@
       "brandCaptureFailed": "Acquisizione del marchio non riuscita.",
       "scanFailed": "Scansione non riuscita.",
       "lotExtractFailed": "Impossibile estrarre il numero di lotto automaticamente.",
-      "brandFirst": "Acquisisci prima il marchio prima del numero di lotto."
-    }
+      "brandFirst": "Acquisisci prima il marchio prima del numero di lotto.",
+      "barcodeNotFound": "Codice a barre non riconosciuto. Prova a scansionare il testo del marchio.",
+      "barcodeScanFailed": "Scansione del codice a barre non riuscita. Prova a scansionare il testo del marchio."
+    },
+    "barcodeInstruction": "Scansiona il codice a barre del prodotto per identificare automaticamente il marchio.",
+    "confirmBrandMessage": "Marchio rilevato: {{brand}}",
+    "confirmBrandTitle": "Conferma il marchio rilevato",
+    "confirmLotMessage": "Numero di lotto rilevato: {{lot}}",
+    "confirmLotTitle": "Conferma il numero di lotto",
+    "stageClaude": "Analisi approfondita in corso...",
+    "stageVision": "Miglioramento del riconoscimento...",
+    "switchToBarcode": "📊 Scansiona codice a barre",
+    "switchToOcr": "📸 Scansiona testo del marchio",
+    "validate": "Conferma"
   },
   "manualEntry": {
     "title": "Inserimento manuale",
@@ -85,13 +97,22 @@
     "status": {
       "safe": "ℹ️ NESSUN RICHIAMO TROVATO",
       "recalled": "Richiamato",
-      "unknown": "Stato sconosciuto"
+      "unknown": "Stato sconosciuto",
+      "warning": "⚠️ ATTENZIONE"
     },
     "recallInfo": "Informazioni sul richiamo",
     "actions": {
       "delete": "Elimina",
-      "viewRecall": "Visualizza richiamo"
-    }
+      "viewRecall": "Visualizza richiamo",
+      "scanAnother": "Scansiona un altro prodotto",
+      "ok": "OK"
+    },
+    "lastChecked": "Ultima verifica",
+    "lotNumber": "Numero di lotto",
+    "never": "Mai",
+    "notFound": "Prodotto non trovato o eliminato.",
+    "privacyInfo": "Le foto scattate durante la scansione vengono elaborate localmente ed eliminate immediatamente. Su questo dispositivo vengono conservati solo il marchio e il numero di lotto.",
+    "recallStatusLabel": "Stato del richiamo"
   },
   "history": {
     "title": "Cronologia",
@@ -149,7 +170,9 @@
     "dailyCheck": {
       "title": "Verifica Numeline",
       "body": "Aggiornamento giornaliero dei richiami in corso."
-    }
+    },
+    "newRecallBody": "Il prodotto {{brand}} - Lotto {{lot}} è ora oggetto di un richiamo. Non consumare.",
+    "newRecallTitle": "⚠️ Nuovo richiamo rilevato"
   },
   "settings": {
     "title": "Impostazioni",
@@ -157,7 +180,9 @@
     "country": "Paese",
     "theme": "Tema",
     "notifications": "Notifiche",
-    "about": "Informazioni"
+    "about": "Informazioni",
+    "numelineReferral": "Inserimento su numeline.com",
+    "numelineReferralDescription": "Compari su numeline.com come azienda che ha a cuore la salute dei propri clienti"
   },
   "languages": {
     "fr": "Français",
@@ -414,7 +439,8 @@
     "restoreErrorMessage": "Impossibile ripristinare i tuoi acquisti. Riprova.",
     "restoreNoPurchase": "Nessun acquisto precedente trovato per questo account.",
     "confirmTitle": "Conferma abbonamento",
-    "confirmMessage": "Vuoi abbonarti a"
+    "confirmMessage": "Vuoi abbonarti a",
+    "devMode": ""
   },
   "quota": {
     "reached": "Quota di scansione raggiunta",
@@ -505,7 +531,9 @@
     "skip": "Salta",
     "tipBarcode": "Centra il codice a barre nel riquadro",
     "tipBand": "Inquadra il numero di lotto e tieni fermo",
-    "tipPhoto": "Riempi il riquadro con l'etichetta del prodotto"
+    "tipPhoto": "Riempi il riquadro con l'etichetta del prodotto",
+    "cameraPermissionDenied": "L'accesso alla fotocamera è disattivato. Attivalo nelle Impostazioni per scansionare i prodotti.",
+    "openSettings": "Apri Impostazioni"
   },
   "brandAutocomplete": {
     "label": "MARCA",
@@ -574,24 +602,74 @@
     "voiceTest": "Prova voce",
     "voiceTestMessage": "La guida vocale è attivata. Sentirai gli annunci durante la scansione.",
     "voice": {
-      "scanLotReady": "Modalità numero di lotto. Centra il numero di lotto nella banda, la cattura è automatica. Dì flash per accendere la luce, flash off per spegnerla.",
-      "scanLotTip": "Tieni il telefono fermo, la cattura si attiva non appena viene rilevato un numero di lotto. Dì flash per accendere o flash off per spegnere.",
-      "lotInFrame": "Numero di lotto rilevato. Cattura in corso.",
+      "scanBarcodeReady": "Modalità codice a barre. Tieni il telefono a circa otto pollici dal prodotto, con il codice a barre rivolto verso la fotocamera. La scansione è automatica.",
+      "scanLotReady": "Modalità numero di lotto. Tieni il telefono a circa otto pollici dal prodotto. La cattura è automatica, gira lentamente il prodotto.",
+      "scanLotTip": "Gira lentamente il prodotto davanti alla fotocamera. Il numero di lotto si trova spesso vicino a un bordo, al coperchio o sotto la confezione.",
+      "lotInFrame": "Credo di vedere un numero di lotto. Tieni fermo, lo sto leggendo.",
       "blur": "Immagine sfocata. Stabilizza il telefono.",
       "tooFar": "Testo troppo piccolo. Avvicina il telefono.",
       "tooClose": "Testo troppo grande. Allontana leggermente il telefono.",
-      "lowLight": "Poca luce. Dì flash per accendere la luce, dì flash off per spegnerla.",
-      "flashOn": "Flash acceso. Dì flash off per spegnerlo.",
+      "lowLight": "Poca luce. Avvicina il prodotto a una fonte di luce.",
+      "flashOn": "Flash acceso.",
       "flashOff": "Flash spento.",
       "photoCommand": "Cattura in corso.",
-      "voiceCommandsReady": "Comandi vocali attivi. Dì photo per catturare, flash per la luce, flash off per spegnerla.",
+      "voiceCommandsReady": "Guida vocale attiva.",
       "lotAnalyzing": "Analisi del numero di lotto.",
-      "lotDetected": "Numero di lotto rilevato: {{lot}}.",
+      "lotDetected": "Credo di aver trovato il numero di lotto: {{lot}}.",
       "lotNotDetected": "Nessun numero di lotto leggibile rilevato. Puoi inserirlo manualmente.",
       "recallDetected": "Attenzione. Questo prodotto è soggetto a un richiamo. Non consumare.",
       "productSafe": "Nessun richiamo trovato per questo prodotto.",
       "scanError": "Scansione fallita. Riprova.",
-      "captureBlocked": "Cattura fallita."
+      "captureBlocked": "Cattura fallita.",
+      "lotCoach1a": "Sto ancora cercando il numero di lotto. Gira lentamente il prodotto.",
+      "lotCoach1b": "Muovi delicatamente il prodotto davanti alla fotocamera, sto ancora leggendo.",
+      "lotCoach1c": "Sto ancora cercando, prenditi il tuo tempo. Avvicina o allontana un po' il prodotto.",
+      "lotCoach2a": "Cerca la scritta piccola vicino al coperchio o al tappo, e mostrala alla fotocamera.",
+      "lotCoach2b": "Il numero di lotto si trova spesso sotto la confezione o vicino a un bordo. Gira il prodotto per mostrarlo.",
+      "lotCoach2c": "Ruota lentamente il prodotto, un quarto di giro alla volta, rivolto verso la fotocamera.",
+      "lotCoach3a": "Tieni fermo il prodotto per due secondi, rivolto verso la fotocamera.",
+      "lotCoach3b": "Tieni il prodotto fermo all'altezza del petto, rivolto verso la fotocamera, senza muoverlo.",
+      "lotCoach3c": "Un altro tentativo. Cerca la riga di lettere e numeri, spesso vicino alla data.",
+      "lotGiveUpSoon": "Non riesco a leggere il numero di lotto. Se vuoi, tocca due volte lo schermo per inserirlo tu stesso.",
+      "lotKeepSteady": "Nessun numero di lotto ancora. Tieni il telefono fermo sul numero di lotto.",
+      "lotPartialSeen": "Vedo un codice ma non tutto. Mostra l'intero codice e gira lentamente il prodotto.",
+      "productFound": "Prodotto trovato: {{brand}}. Ora scansiona il numero di lotto.",
+      "productNotFound": "Prodotto non trovato. Passo alla scansione del numero di lotto."
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "Avvisi di sicurezza immediati",
+    "benefit2": "Controlli automatici ogni ora",
+    "benefit3": "Condividi con il tuo team (organizzazioni)",
+    "enableButton": "Attiva le notifiche",
+    "skipButton": "Più tardi",
+    "subtitle": "Ricevi notifiche in tempo reale quando un prodotto che hai scansionato è oggetto di un richiamo alimentare.",
+    "title": "Resta informato sui richiami"
+  },
+  "publicProfile": {
+    "address": "Indirizzo",
+    "addressPlaceholder": "Via Roma 123, 00100 Roma, Italia",
+    "companyName": "Nome dell'azienda",
+    "companyNamePlaceholder": "Es: Il Mio Food Truck",
+    "email": "Email",
+    "emailPlaceholder": "contatto@azienda.com",
+    "errorMessage": "Impossibile salvare il tuo profilo. Riprova.",
+    "errorTitle": "Errore",
+    "logoUrl": "URL del logo",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "Profilo pubblico",
+    "missingCompany": "Inserisci il nome dell'azienda prima di pubblicare.",
+    "missingTitle": "Nome dell'azienda richiesto",
+    "phone": "Telefono",
+    "phonePlaceholder": "+39 06 1234 5678",
+    "publishDescription": "La tua azienda apparirà nella directory pubblica dei partner.",
+    "publishToggle": "Pubblica su numeline.com",
+    "save": "Salva",
+    "savedMessage": "Il tuo profilo pubblico è stato salvato.",
+    "savedTitle": "Salvato",
+    "subtitle": "Compari su numeline.com/subscribers.html per presentare la tua attività ai nostri utenti.",
+    "title": "Profilo pubblico",
+    "website": "Sito web",
+    "websitePlaceholder": "https://www.azienda.com"
   }
 }

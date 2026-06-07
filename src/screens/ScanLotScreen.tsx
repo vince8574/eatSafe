@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Scanner, type ScannerHandle } from '../components/Scanner';
-import { performOcr, performOcrMultiFrame, bestDisplayLot, type OcrStage } from '../services/ocrService';
+import { performOcr, performOcrMultiFrame, bestDisplayLot, isReliableLot, type OcrStage } from '../services/ocrService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { useScannedProducts } from '../hooks/useScannedProducts';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -22,33 +22,49 @@ import { decrementScanCounter } from '../services/subscriptionService';
 import * as Notifications from 'expo-notifications';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
 import { useVoiceCommands } from '../hooks/useVoiceCommands';
+import { useKeepAwake } from 'expo-keep-awake';
 
 // En mode malvoyant on laisse beaucoup plus de temps avant la capture auto :
 // l'utilisateur a besoin de stabiliser le téléphone face à l'étiquette.
 const AUTO_CAPTURE_DELAY_VOICE_MS = 3000;
 const AUTO_CAPTURE_DELAY_SIGHTED_MS = 400;
 
+// Accessibility-mode constants for blind lot scanning.
+const MAX_ACCESSIBILITY_RETRIES = 10;
+const MAX_PAID_OCR_PER_SESSION = 2;
+const LOT_CONSENSUS_THRESHOLD = 2; // same reliable lot read >=2x before confirming
+const COACHING_SUPPRESS_MS = 7000;
+const LOT_COACH_ROTATION = {
+  1: ['lotCoach1a', 'lotCoach1b', 'lotCoach1c'], // retries 1-3: keep moving
+  2: ['lotCoach2a', 'lotCoach2b', 'lotCoach2c'], // retries 4-6: where to look
+  3: ['lotCoach3a', 'lotCoach3b', 'lotCoach3c'], // retries 7-9: insist + hold steady
+} as const;
+function pickLotCoachKey(retry: number): string {
+  if (retry >= MAX_ACCESSIBILITY_RETRIES) return 'accessibility.voice.lotGiveUpSoon';
+  const phase = retry <= 3 ? 1 : retry <= 6 ? 2 : 3;
+  const variant = (retry - 1) % 3;
+  return `accessibility.voice.${LOT_COACH_ROTATION[phase][variant]}`;
+}
+
+// Presence detection: reuses isReliableLot so the preview only triggers a capture
+// on a real lot-shaped token (not a date / unit / price / word).
 function detectLotLike(text: string): boolean {
   const cleaned = text.replace(/\s+/g, ' ').toUpperCase();
   if (/(?:^|[^A-Z])LOT[:\s\-.]*[A-Z0-9]{3,22}/.test(cleaned)) return true;
   if (/(?:^|[^A-Z])L\d{3,15}[A-Z0-9]{0,10}(?:[^A-Z0-9]|$)/.test(cleaned)) return true;
-  const digitTokens = cleaned.match(/(?:^|[^\d])(\d{5,12})(?:[^\d]|$)/g);
-  if (
-    digitTokens?.some((m) => {
-      const d = m.replace(/\D/g, '');
-      return d.length >= 5 && d.length <= 12;
-    })
-  ) {
-    return true;
-  }
-  return false;
+  const tokens = cleaned.match(/[A-Z0-9\/]{4,24}/g) || [];
+  return tokens.some((tok) => isReliableLot(tok));
 }
 
 function normalizeLotValue(lot: string) {
-  return lot.replace(/\s+/g, '').replace(/[-_\.]/g, '').toUpperCase();
+  // Also strip "/" for recall COMPARISON (4100/01473 -> 410001473). Display keeps it.
+  return lot.replace(/\s+/g, '').replace(/[-_.\/]/g, '').toUpperCase();
 }
 
 export function ScanLotScreen() {
+  // Prevent the screen from sleeping during lot detection (can be long in
+  // accessibility mode: continuous scan until consensus).
+  useKeepAwake();
   const { colors } = useTheme();
   const { t, locale } = useI18n();
   const router = useRouter();
@@ -71,6 +87,16 @@ export function ScanLotScreen() {
   const fallbackCaptureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const flashAnim = useRef(new Animated.Value(0)).current;
   const isProcessingRef = useRef(false);
+  // Vrai tant que l'écran de lot est au premier plan. Sert de garde-fou contre
+  // toute (re)capture automatique après qu'on a quitté la page (pas de boucle).
+  const isScreenFocusedRef = useRef(false);
+  // Accessibility blind-mode: retry loop + anti-truncation consensus.
+  const lastLotRef = useRef('');
+  const accessibilityRetryRef = useRef(0);
+  const lastCoachingAtRef = useRef(0);
+  const paidOcrCountRef = useRef(0);
+  const lotSeenCountRef = useRef<Map<string, { count: number; display: string }>>(new Map());
+  const lastIntraAgreementRef = useRef(0);
 
   const [ocrText, setOcrText] = useState('');
   const [ocrSource, setOcrSource] = useState<string>('');
@@ -150,11 +176,17 @@ export function ScanLotScreen() {
       setErrorMessage('');
       setOcrStage('mlkit');
       if (accessibilityMode) {
-        speak(t('accessibility.voice.lotAnalyzing'), { priority: true });
+        // Non-priority + dedupe: fires on every capture, must not cut the guidance.
+        speak(t('accessibility.voice.lotAnalyzing'), { dedupeMs: 9000 });
       }
-      const { lot, result, candidates } = Array.isArray(lotPhoto)
-        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage)
-        : await performOcr(lotPhoto, brand, setOcrStage);
+      // Cap paid OCR (Vision/Claude) per scan session in accessibility continuous mode.
+      const allowPaidFallback = paidOcrCountRef.current < MAX_PAID_OCR_PER_SESSION;
+      const { lot, result, candidates, intraFrameAgreement } = Array.isArray(lotPhoto)
+        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback })
+        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback });
+      if (allowPaidFallback && (result.source === 'vision-fallback' || result.source === 'claude-fallback')) {
+        paidOcrCountRef.current += 1;
+      }
       // Toujours afficher UN SEUL numéro de lot : le lot extrait, sinon le
       // meilleur candidat plausible. On n'affiche jamais une liste de tokens
       // séparés par des '/' (ce que renvoyait l'ancien repli sur les candidats).
@@ -169,6 +201,24 @@ export function ScanLotScreen() {
       setOcrSource(result.source || 'unknown');
       setLotNumber(displayLot);
       setLotCandidates(candidates || []);
+
+      // Anti-truncation consensus (accessibility only): record this read's vote,
+      // then decide if the lot is ACCEPTED = reliable AND stable (>=2 agreeing reads
+      // or >=2 frames agree). A truncated fragment varies on rotation → never stable.
+      lastLotRef.current = displayLot;
+      lastIntraAgreementRef.current = intraFrameAgreement ?? 0;
+      if (displayLot && isReliableLot(displayLot)) {
+        const voteKey = normalizeLotValue(displayLot);
+        const prev = lotSeenCountRef.current.get(voteKey);
+        lotSeenCountRef.current.set(voteKey, { count: (prev?.count ?? 0) + 1, display: displayLot });
+      }
+      const seenCount = displayLot
+        ? (lotSeenCountRef.current.get(normalizeLotValue(displayLot))?.count ?? 0)
+        : 0;
+      const agreement = Math.max(seenCount, intraFrameAgreement ?? 0);
+      const accepted = accessibilityMode
+        ? !!displayLot && isReliableLot(displayLot) && agreement >= LOT_CONSENSUS_THRESHOLD
+        : !!displayLot;
 
       // Ne pas exiger qu'un lot soit dÃ©tectÃ© - on affiche tout le texte OCR
       // if (!lot) {
@@ -185,18 +235,16 @@ export function ScanLotScreen() {
         }
       }
 
-      if (accessibilityMode) {
-        if (displayLot) {
-          // Non-prioritaire : on laisse l'annonce "analyse" se terminer au lieu
-          // de la couper (sinon la voix paraît tronquée pendant le scan).
-          speak(t('accessibility.voice.lotDetected', { lot: displayLot }));
-        } else {
-          speak(t('accessibility.voice.lotNotDetected'), { priority: true });
-        }
+      // Annonce du lot UNIQUEMENT s'il est confirmé (fiable + stable). Sinon, le
+      // onSuccess s'occupe du guidage rotatif / de l'abandon (pas d'annonce prématurée).
+      if (accessibilityMode && accepted) {
+        speak(t('accessibility.voice.lotDetected', { lot: displayLot }));
       }
 
-      // VÃ©rifier les rappels en arriÃ¨re-plan
-      if (candidates && candidates.length > 0) {
+      // Vérifier les rappels en arrière-plan — seulement sur une lecture confirmée
+      // (en mode malvoyant) ou toujours en mode voyant. Évite d'annoncer un statut
+      // de rappel sur un lot encore incertain (tronqué).
+      if ((!accessibilityMode || accepted) && candidates && candidates.length > 0) {
         setIsCheckingRecall(true);
         setHasRecall(null);
 
@@ -241,7 +289,57 @@ export function ScanLotScreen() {
     },
     onSuccess: () => {
       setOcrStage(null);
+      const lot = lastLotRef.current;
+      const key = lot ? normalizeLotValue(lot) : '';
+      const seen = key ? (lotSeenCountRef.current.get(key)?.count ?? 0) : 0;
+      const intra = lastIntraAgreementRef.current;
+      const agreement = Math.max(seen, intra);
+      const hadReliableRead = !!lot && isReliableLot(lot);
+      const detected = accessibilityMode
+        ? hadReliableRead && agreement >= LOT_CONSENSUS_THRESHOLD
+        : !!lot;
+
+      // Accessibility: not yet confirmed → keep scanning with rotating guidance.
+      if (accessibilityMode && !detected && accessibilityRetryRef.current < MAX_ACCESSIBILITY_RETRIES) {
+        accessibilityRetryRef.current += 1;
+        const retry = accessibilityRetryRef.current;
+        const sinceHint = Date.now() - lastCoachingAtRef.current;
+        if (retry >= MAX_ACCESSIBILITY_RETRIES) {
+          speak(t('accessibility.voice.lotGiveUpSoon'), { priority: true });
+        } else if (sinceHint > COACHING_SUPPRESS_MS) {
+          lastCoachingAtRef.current = Date.now();
+          if (hadReliableRead && agreement === 1) {
+            // Reliable code read ONCE but not stable → likely truncated. Actionable cue.
+            speak(t('accessibility.voice.lotPartialSeen'), { priority: false, dedupeMs: 7000 });
+          } else {
+            speak(t(pickLotCoachKey(retry)), { priority: false, dedupeMs: 7000 });
+          }
+        }
+        // Re-arm WITHOUT opening modal. Do NOT clear lotSeenCountRef (consensus accumulates).
+        setOcrText('');
+        setLotNumber('');
+        lastLotRef.current = '';
+        setLotCandidates([]);
+        setConfirmModalVisible(false);
+        lotInFrameAnnouncedRef.current = false;
+        setScannerResetToken((tok) => tok + 1);
+        return;
+      }
+
+      // Give-up without consensus → show best (most-seen) reliable guess, not empty.
+      if (accessibilityMode && !detected && lotSeenCountRef.current.size > 0) {
+        let best = { count: 0, display: '' };
+        for (const v of lotSeenCountRef.current.values()) if (v.count > best.count) best = v;
+        if (best.display) { setLotNumber(best.display); lastLotRef.current = best.display; }
+      }
+
+      accessibilityRetryRef.current = 0;
       setConfirmModalVisible(true);
+      // lotDetected was already announced in mutationFn when accepted; here only
+      // the give-up "not detected" needs announcing.
+      if (accessibilityMode && !detected) {
+        speak(t('accessibility.voice.lotNotDetected'), { priority: true });
+      }
     }
   });
 
@@ -260,6 +358,13 @@ export function ScanLotScreen() {
     lotInFrameAnnouncedRef.current = false;
     autoFlashAppliedRef.current = false;
     userOverrodeFlashRef.current = false;
+    // Reset accessibility consensus/retry state for a fresh scan.
+    accessibilityRetryRef.current = 0;
+    paidOcrCountRef.current = 0;
+    lotSeenCountRef.current.clear();
+    lastIntraAgreementRef.current = 0;
+    lastLotRef.current = '';
+    lastCoachingAtRef.current = 0;
     if (autoCaptureTimerRef.current) {
       clearTimeout(autoCaptureTimerRef.current);
       autoCaptureTimerRef.current = null;
@@ -543,6 +648,12 @@ export function ScanLotScreen() {
     lotInFrameAnnouncedRef.current = false;
     autoFlashAppliedRef.current = false;
     userOverrodeFlashRef.current = false;
+    accessibilityRetryRef.current = 0;
+    paidOcrCountRef.current = 0;
+    lotSeenCountRef.current.clear();
+    lastIntraAgreementRef.current = 0;
+    lastLotRef.current = '';
+    lastCoachingAtRef.current = 0;
     if (autoCaptureTimerRef.current) {
       clearTimeout(autoCaptureTimerRef.current);
       autoCaptureTimerRef.current = null;
@@ -571,11 +682,31 @@ export function ScanLotScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      isScreenFocusedRef.current = true;
       setScannerResetToken((token) => token + 1);
+      // Fresh scan session → reset accessibility consensus/retry state.
+      accessibilityRetryRef.current = 0;
+      paidOcrCountRef.current = 0;
+      lotSeenCountRef.current.clear();
+      lastIntraAgreementRef.current = 0;
+      lastLotRef.current = '';
+      lastCoachingAtRef.current = 0;
       if (accessibilityMode) {
         speak(t('accessibility.voice.scanLotReady'), { priority: true });
       }
-      return () => {};
+      // En quittant l'écran : on coupe le focus ET on annule tout timer de
+      // capture en attente → AUCUNE capture/boucle après être sorti de la page.
+      return () => {
+        isScreenFocusedRef.current = false;
+        if (fallbackCaptureTimerRef.current) {
+          clearTimeout(fallbackCaptureTimerRef.current);
+          fallbackCaptureTimerRef.current = null;
+        }
+        if (autoCaptureTimerRef.current) {
+          clearTimeout(autoCaptureTimerRef.current);
+          autoCaptureTimerRef.current = null;
+        }
+      };
     }, [accessibilityMode, speak, t])
   );
 
@@ -614,7 +745,7 @@ export function ScanLotScreen() {
         mode="band"
         resetToken={scannerResetToken}
         flashPosition="top-right"
-        multiFrameCount={3}
+        multiFrameCount={accessibilityMode ? 4 : 3}
         multiFrameDelayMs={200}
         onBack={handleGoBack}
         onRestart={handleRestart}

@@ -5,7 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
+  ScrollView,
   ActivityIndicator,
   Alert
 } from 'react-native';
@@ -166,11 +166,13 @@ export function BrandAutocomplete({
 
       {showSuggestions && suggestions.length > 0 && (
         <View style={[styles.suggestionsContainer, { backgroundColor: colors.surface }]}>
-          <FlatList
-            data={suggestions}
-            keyExtractor={(item, index) => `${item.name}-${index}`}
-            renderItem={({ item }) => (
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled
+          >
+            {suggestions.map((item, index) => (
               <TouchableOpacity
+                key={`${item.name}-${index}`}
                 style={[
                   styles.suggestionItem,
                   { borderBottomColor: colors.border }
@@ -188,18 +190,16 @@ export function BrandAutocomplete({
                   </View>
                 )}
               </TouchableOpacity>
-            )}
-            ListFooterComponent={
-              <TouchableOpacity
-                style={[styles.addButton, { borderTopColor: colors.border }]}
-                onPress={handleAddNewBrand}
-              >
-                <Text style={[styles.addButtonText, { color: colors.accent }]}>
-                  {t('brandAutocomplete.addNewBrand', { brand: value })}
-                </Text>
-              </TouchableOpacity>
-            }
-          />
+            ))}
+            <TouchableOpacity
+              style={[styles.addButton, { borderTopColor: colors.border }]}
+              onPress={handleAddNewBrand}
+            >
+              <Text style={[styles.addButtonText, { color: colors.accent }]}>
+                {t('brandAutocomplete.addNewBrand', { brand: value })}
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       )}
 

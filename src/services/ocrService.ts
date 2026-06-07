@@ -378,6 +378,41 @@ function withinOneEdit(a: string, b: string): boolean {
 
 const MONTHS_EN = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
+// Normalized lot key for comparison (strip spaces + separators incl. "/").
+const normLot = (s: string) => (s || '').replace(/\s+/g, '').replace(/[-_.\/]/g, '').toUpperCase();
+
+// Do 8 digits form a plausible date (DDMMYYYY or YYYYMMDD)?
+function isEightDigitDate(d: string): boolean {
+  if (!/^\d{8}$/.test(d)) return false;
+  const dd = +d.slice(0, 2), mm = +d.slice(2, 4), yyyy = +d.slice(4, 8);
+  if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yyyy >= 2000 && yyyy <= 2099) return true;
+  const y2 = +d.slice(0, 4), m2 = +d.slice(4, 6), d2 = +d.slice(6, 8);
+  return y2 >= 2000 && y2 <= 2099 && m2 >= 1 && m2 <= 12 && d2 >= 1 && d2 <= 31;
+}
+
+// Catches dates that looksLikeNonLot misses: collapsed 8-digit dates (15052024)
+// and OCR-misread dates (e.g. "1S052024" → "18052024"/"15052024"). EN markers.
+function isDateLike(candidate: string): boolean {
+  const c = candidate.toUpperCase();
+  if (/(DDM|DLC|DLUO|\bEXP\b|BBE|BEST\s*BEFORE|USE\s*BY|SELL\s*BY|EXPIRES?)/.test(c)) return true;
+  if (/^\d{1,2}[:/]\d{2}/.test(c)) return true;
+  if (/^\d{1,2}[\/.\-]\d{1,2}$/.test(c)) return true;
+  if (/^\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{2,4}$/.test(c)) return true;
+  if (/^\d{4}[\/.\-]\d{1,2}[\/.\-]\d{1,2}$/.test(c)) return true;
+  if (isEightDigitDate(c.replace(/\D/g, ''))) return true;
+  const tok = c.replace(/[^A-Z0-9]/g, '');
+  if (tok.length === 8 && /[A-Z]/.test(tok)) {
+    const d8 = tok
+      .replace(/[OD]/g, '0').replace(/[IL]/g, '1').replace(/Z/g, '2')
+      .replace(/[SB]/g, '8').replace(/G/g, '6').replace(/T/g, '7');
+    const d8s5 = tok
+      .replace(/S/g, '5').replace(/[OD]/g, '0').replace(/[IL]/g, '1')
+      .replace(/Z/g, '2').replace(/B/g, '8').replace(/G/g, '6').replace(/T/g, '7');
+    if (isEightDigitDate(d8) || isEightDigitDate(d8s5)) return true;
+  }
+  return false;
+}
+
 export function looksLikeNonLot(raw: string): boolean {
   const t = (raw || '').trim().toUpperCase();
   if (!t) return true;
@@ -441,6 +476,8 @@ function scoreLotCandidate(candidate: string): number {
 
   // Bonus "batch code" : 1-4 lettres puis des chiffres (WN012117E, AB1234, L693…).
   if (/^[A-Z]{1,4}\d{3,}/.test(c)) score += 25;
+  // Bonus code numérique à séparateur slash (ex. 4100/01473) — format de lot fréquent.
+  if (/^\d{3,}\/\d{3,}$/.test(c)) score += 35;
 
   return score;
 }
@@ -457,6 +494,36 @@ export function bestDisplayLot(candidates: string[]): string {
   return plausible
     .map((c) => ({ value: c, score: scoreLotCandidate(c) }))
     .sort((a, b) => b.score - a.score)[0].value;
+}
+
+/**
+ * Is this a "confident" lot — a real code, not arbitrary text (weight, price,
+ * date, word/paragraph)? Used in ACCESSIBILITY mode so we never confirm a wrong
+ * value to a blind user. Reuses looksLikeNonLot (weights/prices/year-dates) +
+ * isDateLike (collapsed/OCR-misread dates).
+ */
+export function isConfidentLot(candidate: string): boolean {
+  const raw = (candidate || '').toUpperCase().trim();
+  if (!raw || /\s/.test(raw)) return false; // text/paragraph (multiple words)
+  if (isDateLike(raw) || looksLikeNonLot(raw)) return false;
+  const compact = raw.replace(/[\/\-_.]/g, '');
+  const hasLetters = /[A-Z]/.test(compact);
+  const hasDigits = /\d/.test(compact);
+  const digitCount = (compact.match(/\d/g) || []).length;
+  if (!hasDigits) return false;
+  if (/^\d{13,14}$/.test(compact)) return false; // EAN/GTIN
+  // Slash-separated numeric code (e.g. 4100/01473).
+  if (/^\d{3,}\/\d{3,}$/.test(raw) && compact.length >= 6 && compact.length <= 18) return true;
+  // Letter+digit mix: require enough digits, else it's a word with a digit (OMEGA3).
+  if (hasLetters && hasDigits && compact.length >= 5 && compact.length <= 20) {
+    return digitCount >= 3 || digitCount / compact.length >= 0.4;
+  }
+  // Purely numeric code, 6-13 digits, not a date.
+  if (!hasLetters && hasDigits && compact.length >= 6 && compact.length <= 13) return true;
+  return false;
+}
+export function isReliableLot(candidate: string): boolean {
+  return isConfidentLot(candidate);
 }
 
 export async function extractLotNumber(rawText: string, brand?: string): Promise<string> {
@@ -478,7 +545,7 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
   console.log('[extractLotNumber] Cleaned text:', cleaned);
 
   // Liste de mots-clés à exclure (codes-barres, dates, etc.)
-  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'À CONSOMMER'];
+  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'SELL BY', 'À CONSOMMER'];
 
   // Fonction pour vérifier si un texte contient des mots-clés à exclure
   const containsExcludedKeyword = (text: string): boolean => {
@@ -510,6 +577,22 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
 
   // Patterns pour différents formats de numéros de lot (ordre de priorité)
   const patterns = [
+    // 0. Slash-separated numeric code (e.g. 4100/01473): a common lot format,
+    // distinct from dates (which use dashes / two separators). Captured whole
+    // so the other patterns don't split it at the slash.
+    {
+      name: 'Slash numeric code',
+      priority: 0,
+      extract: (text: string): string[] => {
+        const results: string[] = [];
+        const regex = /\b\d{3,}\/\d{3,}\b/g;
+        let m;
+        while ((m = regex.exec(text)) !== null) {
+          if (!isDateLike(m[0])) results.push(m[0]);
+        }
+        return results;
+      }
+    },
     // 1. FDA/USDA formats: "LOT:", "LOT #", "LOT CODE:", "LOT NUMBER:", "BATCH:", "BATCH NO:", "LOT NO:"
     // Captures tight code right after keyword — stops at space
     {
@@ -710,7 +793,7 @@ export async function extractAllLotCandidates(rawText: string, brand?: string): 
     return /^0\d{9}$/.test(cleanedNum);
   };
 
-  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', '? CONSOMMER'];
+  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'SELL BY', '? CONSOMMER'];
   const containsExcludedKeyword = (text: string): boolean => {
     const upperText = text.toUpperCase();
     return excludeKeywords.some(keyword => upperText.includes(keyword));
@@ -923,17 +1006,28 @@ export interface LotExtractionResult {
   lot: string;
   result: OCRResult;
   candidates?: string[]; // Tous les candidats de numéros de lot détectés
+  // Anti-truncation: # of multi-frame frames that read the SAME reliable lot.
+  // A truncated fragment varies frame-to-frame (curved can); a full lot stabilises.
+  intraFrameAgreement?: number;
 }
 
 // Étapes du pipeline OCR, remontées au fur et à mesure pour le feedback UI.
 export type OcrStage = 'mlkit' | 'vision' | 'claude';
 
+// In accessibility mode the continuous scan caps paid OCR calls; when false, only
+// the free on-device ML Kit runs.
+export interface PerformOcrOptions {
+  allowPaidFallback?: boolean;
+}
+
 export async function performOcr(
   uri: string,
   brand?: string,
-  onStage?: (stage: OcrStage) => void
+  onStage?: (stage: OcrStage) => void,
+  options?: PerformOcrOptions
 ): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
+  const allowPaid = options?.allowPaidFallback !== false;
 
   try {
     // ML Kit en premier (local, instantané), Google Vision en fallback si lot non détecté
@@ -953,7 +1047,7 @@ export async function performOcr(
 
     // Si ML Kit n'a trouvé aucun lot, basculer sur les fallbacks distants.
     const mlkitLot = await extractLotNumber(result.text, brand);
-    if (!mlkitLot) {
+    if (!mlkitLot && allowPaid) {
       // Image IA UNIQUE : 2000px JPEG 0.85 (visionPreprocessConfig), calculée
       // une seule fois ici puis réutilisée pour Vision PUIS Claude. Évite de
       // re-préprocesser et garantit que Claude (tier le plus lent) ne lit plus
@@ -1050,7 +1144,9 @@ export async function performOcr(
     return {
       lot,
       result,
-      candidates
+      candidates,
+      // Single-frame: no cross-frame comparison → 1 vote if a reliable lot is present.
+      intraFrameAgreement: lot && isConfidentLot(lot) ? 1 : 0
     };
   } catch (error) {
     console.error('[Lot OCR] Error:', error);
@@ -1102,9 +1198,11 @@ function scoreOcrResult(result: OCRResult): number {
 export async function performOcrMultiFrame(
   uris: string[],
   brand?: string,
-  onStage?: (stage: OcrStage) => void
+  onStage?: (stage: OcrStage) => void,
+  options?: PerformOcrOptions
 ): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
+  const allowPaid = options?.allowPaidFallback !== false;
 
   if (!uris || uris.length === 0) {
     throw new Error('No frames provided to performOcrMultiFrame');
@@ -1149,7 +1247,7 @@ export async function performOcrMultiFrame(
   // 3) Vision puis Claude seulement si la meilleure frame ne donne pas de lot.
   let result: OCRResult = best.result;
   const bestLot = await extractLotNumber(best.result.text, brand);
-  if (!bestLot) {
+  if (!bestLot && allowPaid) {
     let aiImageUri: string | null = null;
     if (isVisionAvailable() || isClaudeAvailable()) {
       try {
@@ -1210,5 +1308,16 @@ export async function performOcrMultiFrame(
   const lot = await extractLotNumber(filteredText, brand);
   const candidates = await extractAllLotCandidates(filteredText, brand);
 
-  return { lot, result, candidates };
+  // Anti-truncation (free): ML Kit already ran on each frame. Count how many frames
+  // read the SAME reliable lot as the final one. A truncated fragment (curved can)
+  // varies frame-to-frame → low agreement; a full lot stabilises.
+  const perFrameLots = await Promise.all(
+    frameResults.map((f) => extractLotNumber(f.result.text, brand).catch(() => ''))
+  );
+  const lotKey = normLot(lot);
+  const intraFrameAgreement = lotKey
+    ? perFrameLots.filter((l) => l && isConfidentLot(l) && normLot(l) === lotKey).length
+    : 0;
+
+  return { lot, result, candidates, intraFrameAgreement };
 }

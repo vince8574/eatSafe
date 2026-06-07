@@ -58,8 +58,20 @@
       "brandCaptureFailed": "ブランドの撮影に失敗しました。",
       "scanFailed": "スキャンに失敗しました。",
       "lotExtractFailed": "ロット番号を自動抽出できませんでした。",
-      "brandFirst": "ロット番号の前にブランドを撮影してください。"
-    }
+      "brandFirst": "ロット番号の前にブランドを撮影してください。",
+      "barcodeNotFound": "バーコードを認識できませんでした。ブランド名のスキャンをお試しください。",
+      "barcodeScanFailed": "バーコードのスキャンに失敗しました。ブランド名のスキャンをお試しください。"
+    },
+    "barcodeInstruction": "商品のバーコードをスキャンして、自動的にブランドを識別します。",
+    "confirmBrandMessage": "検出されたブランド：{{brand}}",
+    "confirmBrandTitle": "検出されたブランドを確認",
+    "confirmLotMessage": "検出されたロット番号：{{lot}}",
+    "confirmLotTitle": "ロット番号を確認",
+    "stageClaude": "詳細解析中...",
+    "stageVision": "認識精度を向上中...",
+    "switchToBarcode": "📊 バーコードをスキャン",
+    "switchToOcr": "📸 ブランド名をスキャン",
+    "validate": "確定"
   },
   "manualEntry": {
     "title": "手動入力",
@@ -85,13 +97,22 @@
     "status": {
       "safe": "ℹ️ リコール情報なし",
       "recalled": "リコール",
-      "unknown": "不明な状態"
+      "unknown": "不明な状態",
+      "warning": "⚠️ 警告"
     },
     "recallInfo": "リコール情報",
     "actions": {
       "delete": "削除",
-      "viewRecall": "リコールを見る"
-    }
+      "viewRecall": "リコールを見る",
+      "scanAnother": "別の商品をスキャン",
+      "ok": "OK"
+    },
+    "lastChecked": "最終確認",
+    "lotNumber": "ロット番号",
+    "never": "なし",
+    "notFound": "商品が見つからないか、削除されています。",
+    "privacyInfo": "スキャン中に撮影された写真は端末内で処理され、すぐに削除されます。この端末にはブランドとロット番号のみが保持されます。",
+    "recallStatusLabel": "リコール状況"
   },
   "history": {
     "title": "履歴",
@@ -149,7 +170,9 @@
     "dailyCheck": {
       "title": "Numeline チェック",
       "body": "リコール情報を毎日更新中。"
-    }
+    },
+    "newRecallBody": "商品 {{brand}} - ロット {{lot}} がリコール対象になりました。摂取しないでください。",
+    "newRecallTitle": "⚠️ 新しいリコールを検出"
   },
   "settings": {
     "title": "設定",
@@ -157,7 +180,9 @@
     "country": "国",
     "theme": "テーマ",
     "notifications": "通知",
-    "about": "情報"
+    "about": "情報",
+    "numelineReferral": "numeline.com への掲載",
+    "numelineReferralDescription": "お客様の健康に配慮する企業として numeline.com に掲載されます"
   },
   "languages": {
     "fr": "Français",
@@ -256,7 +281,12 @@
     "passwordTooShort": "パスワードは最低6文字である必要があります",
     "passwordsDoNotMatch": "パスワードが一致しません",
     "name": "名前",
-    "namePlaceholder": "お名前"
+    "namePlaceholder": "お名前",
+    "deleteAccount": "アカウントを削除",
+    "deleteAccountFailed": "アカウントの削除に失敗しました。再認証してからもう一度お試しください。",
+    "deleteAccountMessage": "アカウントとデータが完全に削除されます。続行しますか？",
+    "deleteAccountSuccess": "アカウントが正常に削除されました。",
+    "deleteAccountTitle": "アカウントを削除する"
   },
   "team": {
     "title": "チーム管理",
@@ -409,7 +439,8 @@
     "restoreErrorMessage": "購入を復元できませんでした。もう一度お試しください。",
     "restoreNoPurchase": "このアカウントで以前の購入は見つかりませんでした。",
     "confirmTitle": "サブスクリプションの確認",
-    "confirmMessage": "このプランに登録しますか"
+    "confirmMessage": "このプランに登録しますか",
+    "devMode": ""
   },
   "quota": {
     "reached": "スキャン割り当てに達しました",
@@ -500,7 +531,9 @@
     "skip": "スキップ",
     "tipBarcode": "バーコードをフレームの中央に合わせてください",
     "tipBand": "ロット番号を枠に収め、動かさないでください",
-    "tipPhoto": "製品ラベルでフレームを満たしてください"
+    "tipPhoto": "製品ラベルでフレームを満たしてください",
+    "cameraPermissionDenied": "カメラへのアクセスがオフになっています。商品をスキャンするには設定で有効にしてください。",
+    "openSettings": "設定を開く"
   },
   "brandAutocomplete": {
     "label": "ブランド",
@@ -569,24 +602,74 @@
     "voiceTest": "音声をテスト",
     "voiceTestMessage": "音声ガイドが有効です。スキャン中にアナウンスが聞こえます。",
     "voice": {
-      "scanLotReady": "ロット番号モード。ロット番号を枠内に合わせると、自動的に撮影されます。flash と言うとライトが点灯し、flash off で消灯します。",
-      "scanLotTip": "電話を安定させて持ってください。ロット番号が検出されると撮影が開始されます。flash でオン、flash off でオフです。",
-      "lotInFrame": "ロット番号を検出しました。撮影中です。",
+      "scanBarcodeReady": "バーコードモードです。スマートフォンを商品から約八インチ離し、バーコードをカメラに向けてください。自動的にスキャンされます。",
+      "scanLotReady": "ロット番号モードです。スマートフォンを商品から約八インチ離してください。撮影は自動です。商品をゆっくり回してください。",
+      "scanLotTip": "商品をカメラの前でゆっくり回してください。ロット番号は端、ふた、または包装の下にあることが多いです。",
+      "lotInFrame": "ロット番号が見えているようです。動かさずにそのままお持ちください。読み取っています。",
       "blur": "画像がぼやけています。電話を安定させてください。",
       "tooFar": "文字が小さすぎます。電話を近づけてください。",
       "tooClose": "文字が大きすぎます。電話を少し離してください。",
-      "lowLight": "光が不足しています。flash と言ってライトを点灯、flash off で消灯します。",
-      "flashOn": "フラッシュがオンです。flash off で消灯します。",
+      "lowLight": "光が不足しています。商品を光源に近づけてください。",
+      "flashOn": "フラッシュがオンです。",
       "flashOff": "フラッシュがオフです。",
       "photoCommand": "撮影中です。",
-      "voiceCommandsReady": "音声コマンドが有効です。photo で撮影、flash でライト、flash off で消灯します。",
+      "voiceCommandsReady": "音声ガイドが有効です。",
       "lotAnalyzing": "ロット番号を解析中です。",
-      "lotDetected": "ロット番号を検出: {{lot}}。",
+      "lotDetected": "ロット番号が見つかったようです：{{lot}}。",
       "lotNotDetected": "読み取り可能なロット番号が検出されませんでした。手動で入力できます。",
       "recallDetected": "警告。この製品はリコール対象です。摂取しないでください。",
       "productSafe": "この製品にリコールは見つかりませんでした。",
       "scanError": "スキャンに失敗しました。もう一度お試しください。",
-      "captureBlocked": "撮影に失敗しました。"
+      "captureBlocked": "撮影に失敗しました。",
+      "lotCoach1a": "まだロット番号を探しています。商品をゆっくり回してください。",
+      "lotCoach1b": "商品をカメラの前でゆっくり動かしてください。まだ読み取っています。",
+      "lotCoach1c": "まだ探しています。ゆっくりで大丈夫です。商品を少し近づけるか、離してみてください。",
+      "lotCoach2a": "ふたやキャップの近くの小さな文字を探して、カメラに見せてください。",
+      "lotCoach2b": "ロット番号は包装の下や端の近くにあることが多いです。商品を回して見せてください。",
+      "lotCoach2c": "商品をカメラに向けて、四分の一ずつゆっくり回してください。",
+      "lotCoach3a": "商品をカメラに向けたまま、二秒間動かさずにお持ちください。",
+      "lotCoach3b": "商品を胸の高さで、カメラに向けたまま、動かさずに安定させてください。",
+      "lotCoach3c": "もう一度試しましょう。日付の近くにあることが多い、文字と数字の並びを探してください。",
+      "lotGiveUpSoon": "ロット番号を読み取れません。よろしければ、画面をダブルタップしてご自身で入力できます。",
+      "lotKeepSteady": "まだロット番号がありません。ロット番号にスマートフォンを安定させて向けてください。",
+      "lotPartialSeen": "コードの一部は見えますが、全体ではありません。コード全体を見せて、商品をゆっくり回してください。",
+      "productFound": "商品が見つかりました：{{brand}}。次にロット番号をスキャンしてください。",
+      "productNotFound": "商品が見つかりませんでした。ロット番号のスキャンに切り替えます。"
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "即時の安全警告",
+    "benefit2": "1時間ごとの自動チェック",
+    "benefit3": "チームと共有（組織）",
+    "enableButton": "通知を有効にする",
+    "skipButton": "後で",
+    "subtitle": "スキャンした商品が食品リコールの対象になったとき、リアルタイムで通知を受け取れます。",
+    "title": "リコール情報を常に把握"
+  },
+  "publicProfile": {
+    "address": "住所",
+    "addressPlaceholder": "123 Main Street, 75001 Paris, France",
+    "companyName": "会社名",
+    "companyNamePlaceholder": "例：My Food Truck",
+    "email": "メール",
+    "emailPlaceholder": "contact@company.com",
+    "errorMessage": "プロフィールを保存できませんでした。もう一度お試しください。",
+    "errorTitle": "エラー",
+    "logoUrl": "ロゴURL",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "公開プロフィール",
+    "missingCompany": "公開する前に会社名を入力してください。",
+    "missingTitle": "会社名が必要です",
+    "phone": "電話",
+    "phonePlaceholder": "+33 1 23 45 67 89",
+    "publishDescription": "あなたの会社が公開パートナーディレクトリに表示されます。",
+    "publishToggle": "numeline.com に公開",
+    "save": "保存",
+    "savedMessage": "公開プロフィールが保存されました。",
+    "savedTitle": "保存しました",
+    "subtitle": "numeline.com/subscribers.html に掲載して、あなたのビジネスを当社のユーザーにアピールしましょう。",
+    "title": "公開プロフィール",
+    "website": "ウェブサイト",
+    "websitePlaceholder": "https://www.company.com"
   }
 }

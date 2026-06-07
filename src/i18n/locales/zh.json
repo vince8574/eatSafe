@@ -58,8 +58,20 @@
       "brandCaptureFailed": "品牌拍摄失败。",
       "scanFailed": "扫描失败。",
       "lotExtractFailed": "无法自动提取批次号。",
-      "brandFirst": "请先拍摄品牌,再拍摄批次号。"
-    }
+      "brandFirst": "请先拍摄品牌,再拍摄批次号。",
+      "barcodeNotFound": "无法识别条形码。请尝试扫描品牌文字。",
+      "barcodeScanFailed": "条形码扫描失败。请尝试扫描品牌文字。"
+    },
+    "barcodeInstruction": "扫描产品条形码以自动识别品牌。",
+    "confirmBrandMessage": "检测到品牌:{{brand}}",
+    "confirmBrandTitle": "确认检测到的品牌",
+    "confirmLotMessage": "检测到批号:{{lot}}",
+    "confirmLotTitle": "确认批号",
+    "stageClaude": "正在深度分析...",
+    "stageVision": "正在增强识别...",
+    "switchToBarcode": "📊 扫描条形码",
+    "switchToOcr": "📸 扫描品牌文字",
+    "validate": "确认"
   },
   "manualEntry": {
     "title": "手动输入",
@@ -85,13 +97,22 @@
     "status": {
       "safe": "ℹ️ 未发现召回",
       "recalled": "已召回",
-      "unknown": "状态未知"
+      "unknown": "状态未知",
+      "warning": "⚠️ 警告"
     },
     "recallInfo": "召回信息",
     "actions": {
       "delete": "删除",
-      "viewRecall": "查看召回"
-    }
+      "viewRecall": "查看召回",
+      "scanAnother": "扫描另一个产品",
+      "ok": "确定"
+    },
+    "lastChecked": "上次检查",
+    "lotNumber": "批号",
+    "never": "从未",
+    "notFound": "未找到产品或产品已删除。",
+    "privacyInfo": "扫描期间拍摄的照片仅在本地处理并立即删除。本设备仅保留品牌和批号。",
+    "recallStatusLabel": "召回状态"
   },
   "history": {
     "title": "历史",
@@ -149,7 +170,9 @@
     "dailyCheck": {
       "title": "Numeline 检查",
       "body": "正在更新每日召回信息。"
-    }
+    },
+    "newRecallBody": "产品 {{brand}} - 批号 {{lot}} 现已被召回。请勿食用。",
+    "newRecallTitle": "⚠️ 检测到新召回"
   },
   "settings": {
     "title": "设置",
@@ -157,7 +180,9 @@
     "country": "国家",
     "theme": "主题",
     "notifications": "通知",
-    "about": "关于"
+    "about": "关于",
+    "numelineReferral": "numeline.com 收录",
+    "numelineReferralDescription": "在 numeline.com 上展示为一家关注顾客健康的公司"
   },
   "languages": {
     "fr": "Français",
@@ -256,7 +281,12 @@
     "passwordTooShort": "密码至少必须为6个字符",
     "passwordsDoNotMatch": "密码不匹配",
     "name": "姓名",
-    "namePlaceholder": "您的姓名"
+    "namePlaceholder": "您的姓名",
+    "deleteAccount": "删除帐户",
+    "deleteAccountFailed": "删除帐户失败。请重新验证身份后再试。",
+    "deleteAccountMessage": "此操作将永久删除您的帐户和数据。是否继续?",
+    "deleteAccountSuccess": "帐户已成功删除。",
+    "deleteAccountTitle": "删除我的帐户"
   },
   "team": {
     "title": "团队管理",
@@ -409,7 +439,8 @@
     "restoreErrorMessage": "无法恢复您的购买。请重试。",
     "restoreNoPurchase": "未找到此账户的任何以往购买记录。",
     "confirmTitle": "确认订阅",
-    "confirmMessage": "您想订阅"
+    "confirmMessage": "您想订阅",
+    "devMode": ""
   },
   "quota": {
     "reached": "已达到扫描配额",
@@ -500,7 +531,9 @@
     "skip": "跳过",
     "tipBarcode": "将条形码置于取景框中央",
     "tipBand": "对准批号并保持稳定",
-    "tipPhoto": "将产品标签填满取景框"
+    "tipPhoto": "将产品标签填满取景框",
+    "cameraPermissionDenied": "相机访问权限已关闭。请在设置中启用以扫描产品。",
+    "openSettings": "打开设置"
   },
   "brandAutocomplete": {
     "label": "品牌",
@@ -569,24 +602,74 @@
     "voiceTest": "测试语音",
     "voiceTestMessage": "语音引导已启用。您将在扫描期间听到播报。",
     "voice": {
-      "scanLotReady": "批号模式。将批号居中放在条带内,自动拍摄。说 flash 打开闪光灯,flash off 关闭闪光灯。",
-      "scanLotTip": "稳定握持手机,检测到批号即自动拍摄。说 flash 打开或 flash off 关闭。",
-      "lotInFrame": "已检测到批号。正在拍摄。",
+      "scanBarcodeReady": "条形码模式。请将手机距产品约八英寸,条形码朝向摄像头。系统会自动扫描。",
+      "scanLotReady": "批号模式。请将手机距产品约八英寸。系统会自动拍摄,请慢慢转动产品。",
+      "scanLotTip": "请将产品在摄像头前缓慢转动。批号通常位于边缘、盖子附近或包装下方。",
+      "lotInFrame": "我好像看到了批号。请保持稳定,我正在读取。",
       "blur": "图像模糊。请稳定手机。",
       "tooFar": "文字太小。请将手机靠近。",
       "tooClose": "文字太大。请将手机稍微远离。",
-      "lowLight": "光线不足。说 flash 打开闪光灯,说 flash off 关闭闪光灯。",
-      "flashOn": "闪光灯已开启。说 flash off 关闭。",
+      "lowLight": "光线不足。请将产品移向光源。",
+      "flashOn": "闪光灯已开启。",
       "flashOff": "闪光灯已关闭。",
       "photoCommand": "正在拍摄。",
-      "voiceCommandsReady": "语音命令已激活。说 photo 拍摄,flash 开灯,flash off 关闭。",
+      "voiceCommandsReady": "语音引导已开启。",
       "lotAnalyzing": "正在分析批号。",
-      "lotDetected": "已检测到批号:{{lot}}。",
+      "lotDetected": "我好像找到了批号:{{lot}}。",
       "lotNotDetected": "未检测到可读批号。您可以手动输入。",
       "recallDetected": "警告。此产品已被召回。请勿食用。",
       "productSafe": "未发现此产品的召回信息。",
       "scanError": "扫描失败。请重试。",
-      "captureBlocked": "拍摄失败。"
+      "captureBlocked": "拍摄失败。",
+      "lotCoach1a": "还在寻找批号。请慢慢转动产品。",
+      "lotCoach1b": "请在摄像头前轻轻移动产品,我还在读取。",
+      "lotCoach1c": "还在寻找,别着急。请把产品稍微靠近或远离一点。",
+      "lotCoach2a": "请找到盖子或瓶盖附近的小字,并对准摄像头。",
+      "lotCoach2b": "批号通常在包装下方或边缘附近。请转动产品把它露出来。",
+      "lotCoach2c": "请慢慢转动产品,每次转动四分之一圈,正对着摄像头。",
+      "lotCoach3a": "请把产品对准摄像头,保持静止两秒。",
+      "lotCoach3b": "请把产品稳定在胸口高度,正对摄像头,不要移动。",
+      "lotCoach3c": "再试一次。请找到那一行字母和数字,通常在日期附近。",
+      "lotGiveUpSoon": "我读不出批号。如果需要,可以双击屏幕自己输入。",
+      "lotKeepSteady": "还没找到批号。请把手机稳定地对准批号。",
+      "lotPartialSeen": "我看到了一个代码,但不完整。请展示完整的代码,并慢慢转动产品。",
+      "productFound": "找到产品:{{brand}}。现在请扫描批号。",
+      "productNotFound": "未找到产品。正在切换到批号扫描。"
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "即时安全提醒",
+    "benefit2": "每小时自动检查",
+    "benefit3": "与您的团队共享(组织)",
+    "enableButton": "启用通知",
+    "skipButton": "稍后",
+    "subtitle": "当您扫描过的产品被列入食品召回时,实时接收通知。",
+    "title": "及时了解召回信息"
+  },
+  "publicProfile": {
+    "address": "地址",
+    "addressPlaceholder": "123 Main Street, 75001 Paris, France",
+    "companyName": "公司名称",
+    "companyNamePlaceholder": "例如:我的餐车",
+    "email": "电子邮件",
+    "emailPlaceholder": "contact@company.com",
+    "errorMessage": "无法保存您的资料。请重试。",
+    "errorTitle": "错误",
+    "logoUrl": "Logo 网址",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "公开资料",
+    "missingCompany": "请在发布前输入公司名称。",
+    "missingTitle": "需要公司名称",
+    "phone": "电话",
+    "phonePlaceholder": "+33 1 23 45 67 89",
+    "publishDescription": "您的公司将出现在公开合作伙伴目录中。",
+    "publishToggle": "在 numeline.com 上发布",
+    "save": "保存",
+    "savedMessage": "您的公开资料已保存。",
+    "savedTitle": "已保存",
+    "subtitle": "出现在 numeline.com/subscribers.html 上,向我们的用户展示您的业务。",
+    "title": "公开资料",
+    "website": "网站",
+    "websitePlaceholder": "https://www.company.com"
   }
 }
