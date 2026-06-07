@@ -1020,6 +1020,10 @@ export type OcrStage = 'mlkit' | 'vision' | 'claude';
 // the free on-device ML Kit runs.
 export interface PerformOcrOptions {
   allowPaidFallback?: boolean;
+  // Accessibility: OCR the WHOLE frame instead of a centered horizontal band.
+  // Blind users can't orient the product, and lot codes are often printed
+  // vertically / off-center — the band would slice them into partial reads.
+  fullFrame?: boolean;
 }
 
 export async function performOcr(
@@ -1038,7 +1042,7 @@ export async function performOcr(
     console.log('[Lot OCR] Trying ML Kit first (local, fast)...');
     onStage?.('mlkit');
 
-    const processedForMlkit = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+    const processedForMlkit = await preprocessImage(uri, options?.fullFrame ? {} : { cropForLot: true, narrowBand: true });
     result = await runMlkit(processedForMlkit);
 
     try {
@@ -1057,11 +1061,9 @@ export async function performOcr(
       let aiImageUri: string | null = null;
       if (isVisionAvailable() || isClaudeAvailable()) {
         try {
-          aiImageUri = await preprocessImage(uri, {
-            cropForLot: true,
-            narrowBand: true,
-            useVisionConfig: true
-          });
+          aiImageUri = await preprocessImage(uri, options?.fullFrame
+            ? { useVisionConfig: true }
+            : { cropForLot: true, narrowBand: true, useVisionConfig: true });
         } catch (error) {
           console.warn('[Lot OCR] Failed to build AI image (2000px JPEG)', error);
         }
@@ -1220,7 +1222,7 @@ export async function performOcrMultiFrame(
   const frameResults = await Promise.all(
     uris.map(async (uri, index) => {
       try {
-        const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+        const processed = await preprocessImage(uri, options?.fullFrame ? {} : { cropForLot: true, narrowBand: true });
         let mlkitResult: OCRResult;
         try {
           mlkitResult = await runMlkit(processed);
@@ -1253,7 +1255,7 @@ export async function performOcrMultiFrame(
     let aiImageUri: string | null = null;
     if (isVisionAvailable() || isClaudeAvailable()) {
       try {
-        aiImageUri = await preprocessImage(best.uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
+        aiImageUri = await preprocessImage(best.uri, options?.fullFrame ? { useVisionConfig: true } : { cropForLot: true, narrowBand: true, useVisionConfig: true });
       } catch (error) {
         console.warn('[Multi-frame OCR] Failed to build AI image', error);
       }
