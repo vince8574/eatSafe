@@ -190,8 +190,8 @@ export function ScanLotScreen() {
       // Cap paid OCR (Vision/Claude) per scan session in accessibility continuous mode.
       const allowPaidFallback = paidOcrCountRef.current < MAX_PAID_OCR_PER_SESSION;
       const { lot, result, candidates, intraFrameAgreement } = Array.isArray(lotPhoto)
-        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback })
-        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback });
+        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback, fullFrame: accessibilityMode })
+        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback, fullFrame: accessibilityMode });
       if (allowPaidFallback && (result.source === 'vision-fallback' || result.source === 'claude-fallback')) {
         paidOcrCountRef.current += 1;
       }
