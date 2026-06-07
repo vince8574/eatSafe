@@ -51,3 +51,21 @@ ios/Numeline/GoogleService-Info.plist
 
 # macOS
 .DS_Store
+
+# Email outreach tooling & data — kept local, NOT committed (contain PII)
+/emails_*.xlsx
+/public/email-template-restaurant.html
+/scripts/sendRestaurantEmails.js
+/scripts/verifyRestaurantEmails.js
+/scripts/verifyEmailsBouncer.js
+/scripts/harvestGmailBounces.js
+/scripts/compareVerifiers.js
+/scripts/grantTestSubscription.js
+/scripts/lib/normalizeEmail.js
+/scripts/output/email-verification.json
+/scripts/output/resend-status.json
+/scripts/output/sent-restaurants.json
+/scripts/output/suppressed-restaurants.json
+/scripts/output/unsubscribed-restaurants.json
+/scripts/output/verify-compare.json
+~$*
