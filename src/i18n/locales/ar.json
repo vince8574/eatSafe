@@ -69,7 +69,9 @@
       "brandFirst": "التقط العلامة التجارية أولاً.",
       "barcodeNotFound": "لم يتم التعرف على الباركود. جرب مسح نص العلامة.",
       "barcodeScanFailed": "فشل مسح الباركود. جرب مسح نص العلامة."
-    }
+    },
+    "stageClaude": "جارٍ التحليل المعمّق...",
+    "stageVision": "جارٍ تحسين التعرف..."
   },
   "manualEntry": {
     "title": "إدخال يدوي",
@@ -108,7 +110,8 @@
     "actions": {
       "delete": "حذف المسح",
       "viewRecall": "عرض تفاصيل السحب",
-      "scanAnother": "مسح منتج آخر"
+      "scanAnother": "مسح منتج آخر",
+      "ok": "موافق"
     }
   },
   "history": {
@@ -177,7 +180,9 @@
     "country": "البلد",
     "theme": "السمة",
     "notifications": "الإشعارات",
-    "about": "حول"
+    "about": "حول",
+    "numelineReferral": "الإدراج على numeline.com",
+    "numelineReferralDescription": "اظهر على numeline.com كشركة تهتم بصحة عملائها"
   },
   "languages": {
     "fr": "Français",
@@ -276,7 +281,12 @@
     "passwordTooShort": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
     "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
     "name": "الاسم",
-    "namePlaceholder": "اسمك"
+    "namePlaceholder": "اسمك",
+    "deleteAccount": "حذف الحساب",
+    "deleteAccountFailed": "فشل حذف الحساب. يرجى إعادة المصادقة والمحاولة مرة أخرى.",
+    "deleteAccountMessage": "سيؤدي هذا إلى حذف حسابك وبياناتك نهائياً. هل تريد المتابعة؟",
+    "deleteAccountSuccess": "تم حذف الحساب بنجاح.",
+    "deleteAccountTitle": "حذف حسابي"
   },
   "team": {
     "title": "إدارة الفريق",
@@ -429,7 +439,8 @@
     "restoreErrorMessage": "تعذر استعادة مشترياتك. يرجى المحاولة مرة أخرى.",
     "restoreNoPurchase": "لم يتم العثور على أي عملية شراء سابقة لهذا الحساب.",
     "confirmTitle": "تأكيد الاشتراك",
-    "confirmMessage": "هل تريد الاشتراك في"
+    "confirmMessage": "هل تريد الاشتراك في",
+    "devMode": ""
   },
   "quota": {
     "reached": "تم الوصول للحد الأقصى من عمليات المسح",
@@ -541,7 +552,9 @@
     "skip": "تخطي",
     "tipBarcode": "ضع الرمز الشريطي في وسط الإطار",
     "tipBand": "أطّر رقم الدفعة وابقَ ثابتًا",
-    "tipPhoto": "املأ الإطار بملصق المنتج"
+    "tipPhoto": "املأ الإطار بملصق المنتج",
+    "cameraPermissionDenied": "الوصول إلى الكاميرا معطّل. فعّله في الإعدادات لمسح المنتجات.",
+    "openSettings": "فتح الإعدادات"
   },
   "brandAutocomplete": {
     "label": "العلامة التجارية",
@@ -616,7 +629,47 @@
       "recallDetected": "تحذير. هذا المنتج خاضع للسحب من السوق. لا تستهلكه.",
       "productSafe": "لم يتم العثور على سحب لهذا المنتج.",
       "scanError": "فشل المسح. يرجى المحاولة مرة أخرى.",
-      "captureBlocked": "فشل الالتقاط."
+      "captureBlocked": "فشل الالتقاط.",
+      "lotCoach1a": "ما زلت أبحث عن رقم الدفعة. أدِر المنتج ببطء.",
+      "lotCoach1b": "حرّك المنتج بلطف أمام الكاميرا، ما زلت أقرأ.",
+      "lotCoach1c": "ما زلت أبحث، خذ وقتك. قرّب المنتج قليلاً أو أبعده.",
+      "lotCoach2a": "ابحث عن الكتابة الصغيرة قرب الغطاء أو السدادة، وأظهرها للكاميرا.",
+      "lotCoach2b": "غالباً ما يكون رقم الدفعة أسفل العبوة أو قرب إحدى الحواف. أدِر المنتج لإظهاره.",
+      "lotCoach2c": "أدِر المنتج ببطء، ربع دورة في كل مرة، مواجهاً الكاميرا.",
+      "lotCoach3a": "أمسك المنتج ثابتاً لمدة ثانيتين، مواجهاً الكاميرا.",
+      "lotCoach3b": "ثبّت المنتج عند مستوى الصدر، مواجهاً الكاميرا، دون حركة.",
+      "lotCoach3c": "محاولة أخرى. ابحث عن سطر الحروف والأرقام، غالباً قرب التاريخ.",
+      "lotGiveUpSoon": "لا أستطيع قراءة رقم الدفعة. إذا أردت، انقر نقراً مزدوجاً على الشاشة لإدخاله بنفسك.",
+      "lotKeepSteady": "لا يوجد رقم دفعة بعد. أبقِ الهاتف ثابتاً على رقم الدفعة.",
+      "lotPartialSeen": "أرى رمزاً لكن ليس كاملاً. أظهر الرمز بالكامل وأدِر المنتج ببطء.",
+      "productFound": "تم العثور على المنتج: {{brand}}. امسح الآن رقم الدفعة.",
+      "productNotFound": "لم يتم العثور على المنتج. جارٍ التحويل إلى مسح رقم الدفعة."
     }
+  },
+  "publicProfile": {
+    "address": "العنوان",
+    "addressPlaceholder": "123 Main Street, 75001 Paris, France",
+    "companyName": "اسم الشركة",
+    "companyNamePlaceholder": "مثال: شاحنة طعامي",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "contact@company.com",
+    "errorMessage": "تعذر حفظ ملفك الشخصي. يرجى المحاولة مرة أخرى.",
+    "errorTitle": "خطأ",
+    "logoUrl": "رابط الشعار",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "الملف الشخصي العام",
+    "missingCompany": "يرجى إدخال اسم الشركة قبل النشر.",
+    "missingTitle": "اسم الشركة مطلوب",
+    "phone": "الهاتف",
+    "phonePlaceholder": "+33 1 23 45 67 89",
+    "publishDescription": "ستظهر شركتك في دليل الشركاء العام.",
+    "publishToggle": "النشر على numeline.com",
+    "save": "حفظ",
+    "savedMessage": "تم حفظ ملفك الشخصي العام.",
+    "savedTitle": "تم الحفظ",
+    "subtitle": "اظهر على numeline.com/subscribers.html لعرض نشاطك التجاري أمام مستخدمينا.",
+    "title": "الملف الشخصي العام",
+    "website": "الموقع الإلكتروني",
+    "websitePlaceholder": "https://www.company.com"
   }
 }

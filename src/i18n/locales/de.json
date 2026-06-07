@@ -58,8 +58,20 @@
       "brandCaptureFailed": "Markenaufnahme fehlgeschlagen.",
       "scanFailed": "Scan fehlgeschlagen.",
       "lotExtractFailed": "Chargennummer konnte nicht automatisch extrahiert werden.",
-      "brandFirst": "Erfassen Sie zuerst die Marke vor der Chargennummer."
-    }
+      "brandFirst": "Erfassen Sie zuerst die Marke vor der Chargennummer.",
+      "barcodeNotFound": "Barcode nicht erkannt. Versuchen Sie, den Markentext zu scannen.",
+      "barcodeScanFailed": "Barcode-Scan fehlgeschlagen. Versuchen Sie, den Markentext zu scannen."
+    },
+    "barcodeInstruction": "Scannen Sie den Produkt-Barcode, um die Marke automatisch zu erkennen.",
+    "confirmBrandMessage": "Erkannte Marke: {{brand}}",
+    "confirmBrandTitle": "Erkannte Marke bestätigen",
+    "confirmLotMessage": "Erkannte Chargennummer: {{lot}}",
+    "confirmLotTitle": "Chargennummer bestätigen",
+    "stageClaude": "Tiefenanalyse läuft...",
+    "stageVision": "Erkennung wird verbessert...",
+    "switchToBarcode": "📊 Barcode scannen",
+    "switchToOcr": "📸 Markentext scannen",
+    "validate": "Bestätigen"
   },
   "manualEntry": {
     "title": "Manuelle Eingabe",
@@ -85,14 +97,22 @@
     "status": {
       "safe": "ℹ️ KEIN RÜCKRUF GEFUNDEN",
       "recalled": "Zurückgerufen",
-      "unknown": "Status unbekannt"
+      "unknown": "Status unbekannt",
+      "warning": "⚠️ WARNUNG"
     },
     "recallInfo": "Rückrufinformationen",
     "actions": {
       "delete": "Löschen",
       "viewRecall": "Rückruf ansehen",
-      "scanAnother": "Weiteres Produkt scannen"
-    }
+      "scanAnother": "Weiteres Produkt scannen",
+      "ok": "OK"
+    },
+    "lastChecked": "Zuletzt geprüft",
+    "lotNumber": "Chargennummer",
+    "never": "Nie",
+    "notFound": "Produkt nicht gefunden oder gelöscht.",
+    "privacyInfo": "Während des Scans aufgenommene Fotos werden lokal verarbeitet und sofort gelöscht. Nur die Marke und die Chargennummer werden auf diesem Gerät gespeichert.",
+    "recallStatusLabel": "Rückrufstatus"
   },
   "history": {
     "title": "Verlauf",
@@ -150,7 +170,9 @@
     "dailyCheck": {
       "title": "Numeline Überprüfung",
       "body": "Tägliche Rückrufaktualisierung läuft."
-    }
+    },
+    "newRecallBody": "Produkt {{brand}} - Charge {{lot}} unterliegt jetzt einem Rückruf. Nicht konsumieren.",
+    "newRecallTitle": "⚠️ Neuer Rückruf erkannt"
   },
   "settings": {
     "title": "Einstellungen",
@@ -158,7 +180,9 @@
     "country": "Land",
     "theme": "Design",
     "notifications": "Benachrichtigungen",
-    "about": "Über"
+    "about": "Über",
+    "numelineReferral": "Eintrag auf numeline.com",
+    "numelineReferralDescription": "Erscheinen Sie auf numeline.com als Unternehmen, dem die Gesundheit seiner Kunden am Herzen liegt"
   },
   "languages": {
     "fr": "Français",
@@ -415,7 +439,8 @@
     "restoreErrorMessage": "Ihre Käufe konnten nicht wiederhergestellt werden. Bitte versuchen Sie es erneut.",
     "restoreNoPurchase": "Kein vorheriger Kauf für dieses Konto gefunden.",
     "confirmTitle": "Abonnement bestätigen",
-    "confirmMessage": "Möchten Sie abonnieren"
+    "confirmMessage": "Möchten Sie abonnieren",
+    "devMode": ""
   },
   "quota": {
     "reached": "Scan-Kontingent erreicht",
@@ -506,7 +531,9 @@
     "skip": "Überspringen",
     "tipBarcode": "Zentrieren Sie den Barcode im Rahmen",
     "tipBand": "Rahmen Sie die Chargennummer ein und halten Sie still",
-    "tipPhoto": "Füllen Sie den Rahmen mit dem Produktetikett"
+    "tipPhoto": "Füllen Sie den Rahmen mit dem Produktetikett",
+    "cameraPermissionDenied": "Der Kamerazugriff ist deaktiviert. Aktivieren Sie ihn in den Einstellungen, um Produkte zu scannen.",
+    "openSettings": "Einstellungen öffnen"
   },
   "brandAutocomplete": {
     "label": "MARKE",
@@ -593,7 +620,56 @@
       "recallDetected": "Achtung. Dieses Produkt unterliegt einem Rückruf. Nicht konsumieren.",
       "productSafe": "Kein Rückruf für dieses Produkt gefunden.",
       "scanError": "Scan fehlgeschlagen. Bitte erneut versuchen.",
-      "captureBlocked": "Aufnahme fehlgeschlagen."
+      "captureBlocked": "Aufnahme fehlgeschlagen.",
+      "lotCoach1a": "Ich suche noch die Chargennummer. Drehen Sie das Produkt langsam.",
+      "lotCoach1b": "Bewegen Sie das Produkt sanft vor der Kamera, ich lese noch.",
+      "lotCoach1c": "Ich suche noch, lassen Sie sich Zeit. Halten Sie das Produkt etwas näher oder weiter weg.",
+      "lotCoach2a": "Suchen Sie nach der kleinen Aufschrift am Deckel oder Verschluss und zeigen Sie sie der Kamera.",
+      "lotCoach2b": "Die Chargennummer ist oft unter der Verpackung oder an einer Kante. Drehen Sie das Produkt, um sie zu zeigen.",
+      "lotCoach2c": "Drehen Sie das Produkt langsam, jeweils eine Vierteldrehung, zur Kamera hin.",
+      "lotCoach3a": "Halten Sie das Produkt zwei Sekunden lang still, zur Kamera gerichtet.",
+      "lotCoach3b": "Halten Sie das Produkt ruhig auf Brusthöhe, zur Kamera gerichtet, ohne es zu bewegen.",
+      "lotCoach3c": "Noch ein Versuch. Suchen Sie nach der Zeile mit Buchstaben und Zahlen, oft in der Nähe des Datums.",
+      "lotGiveUpSoon": "Ich kann die Chargennummer nicht lesen. Wenn Sie möchten, tippen Sie zweimal auf den Bildschirm, um sie selbst einzugeben.",
+      "lotKeepSteady": "Noch keine Chargennummer. Halten Sie das Telefon ruhig auf die Chargennummer gerichtet.",
+      "lotPartialSeen": "Ich sehe einen Code, aber nicht vollständig. Zeigen Sie den ganzen Code und drehen Sie das Produkt langsam.",
+      "productFound": "Produkt gefunden: {{brand}}. Scannen Sie jetzt die Chargennummer.",
+      "productNotFound": "Produkt nicht gefunden. Wechsle zum Scan der Chargennummer."
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "Sofortige Sicherheitswarnungen",
+    "benefit2": "Automatische Prüfungen jede Stunde",
+    "benefit3": "Mit Ihrem Team teilen (Organisationen)",
+    "enableButton": "Benachrichtigungen aktivieren",
+    "skipButton": "Später",
+    "subtitle": "Erhalten Sie Echtzeit-Benachrichtigungen, wenn ein von Ihnen gescanntes Produkt von einem Lebensmittelrückruf betroffen ist.",
+    "title": "Bleiben Sie über Rückrufe informiert"
+  },
+  "publicProfile": {
+    "address": "Adresse",
+    "addressPlaceholder": "Hauptstraße 123, 10115 Berlin, Deutschland",
+    "companyName": "Firmenname",
+    "companyNamePlaceholder": "Bsp.: Mein Food Truck",
+    "email": "E-Mail",
+    "emailPlaceholder": "kontakt@firma.com",
+    "errorMessage": "Ihr Profil konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "errorTitle": "Fehler",
+    "logoUrl": "Logo-URL",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "Öffentliches Profil",
+    "missingCompany": "Bitte geben Sie einen Firmennamen ein, bevor Sie veröffentlichen.",
+    "missingTitle": "Firmenname erforderlich",
+    "phone": "Telefon",
+    "phonePlaceholder": "+49 30 12345678",
+    "publishDescription": "Ihr Unternehmen erscheint im öffentlichen Partnerverzeichnis.",
+    "publishToggle": "Auf numeline.com veröffentlichen",
+    "save": "Speichern",
+    "savedMessage": "Ihr öffentliches Profil wurde gespeichert.",
+    "savedTitle": "Gespeichert",
+    "subtitle": "Erscheinen Sie auf numeline.com/subscribers.html, um Ihr Unternehmen unseren Nutzern zu präsentieren.",
+    "title": "Öffentliches Profil",
+    "website": "Webseite",
+    "websitePlaceholder": "https://www.firma.com"
   }
 }

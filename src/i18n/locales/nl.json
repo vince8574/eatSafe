@@ -58,8 +58,20 @@
       "brandCaptureFailed": "Merkopname mislukt.",
       "scanFailed": "Scan mislukt.",
       "lotExtractFailed": "Kan lotnummer niet automatisch extraheren.",
-      "brandFirst": "Leg eerst het merk vast voordat u het lotnummer opneemt."
-    }
+      "brandFirst": "Leg eerst het merk vast voordat u het lotnummer opneemt.",
+      "barcodeNotFound": "Barcode niet herkend. Probeer de merktekst te scannen.",
+      "barcodeScanFailed": "Barcodescan mislukt. Probeer de merktekst te scannen."
+    },
+    "barcodeInstruction": "Scan de barcode van het product om het merk automatisch te herkennen.",
+    "confirmBrandMessage": "Gedetecteerd merk: {{brand}}",
+    "confirmBrandTitle": "Gedetecteerd merk bevestigen",
+    "confirmLotMessage": "Gedetecteerd lotnummer: {{lot}}",
+    "confirmLotTitle": "Lotnummer bevestigen",
+    "stageClaude": "Diepgaande analyse bezig...",
+    "stageVision": "Herkenning verbeteren...",
+    "switchToBarcode": "📊 Barcode scannen",
+    "switchToOcr": "📸 Merktekst scannen",
+    "validate": "Bevestigen"
   },
   "manualEntry": {
     "title": "Handmatige invoer",
@@ -85,14 +97,22 @@
     "status": {
       "safe": "ℹ️ GEEN RECALL GEVONDEN",
       "recalled": "Teruggeroepen",
-      "unknown": "Status onbekend"
+      "unknown": "Status onbekend",
+      "warning": "⚠️ WAARSCHUWING"
     },
     "recallInfo": "Terugroepin formatie",
     "actions": {
       "delete": "Verwijderen",
       "viewRecall": "Terugroepactie bekijken",
-      "scanAnother": "Nog een product scannen"
-    }
+      "scanAnother": "Nog een product scannen",
+      "ok": "OK"
+    },
+    "lastChecked": "Laatst gecontroleerd",
+    "lotNumber": "Lotnummer",
+    "never": "Nooit",
+    "notFound": "Product niet gevonden of verwijderd.",
+    "privacyInfo": "Foto's die tijdens het scannen worden gemaakt, worden lokaal verwerkt en onmiddellijk verwijderd. Alleen het merk en het lotnummer worden op dit apparaat bewaard.",
+    "recallStatusLabel": "Terugroepstatus"
   },
   "history": {
     "title": "Geschiedenis",
@@ -150,7 +170,9 @@
     "dailyCheck": {
       "title": "Numeline Verificatie",
       "body": "Dagelijkse update van terugroepacties is bezig."
-    }
+    },
+    "newRecallBody": "Product {{brand}} - Lot {{lot}} is nu onderhevig aan een terugroepactie. Niet consumeren.",
+    "newRecallTitle": "⚠️ Nieuwe terugroepactie gedetecteerd"
   },
   "settings": {
     "title": "Instellingen",
@@ -158,7 +180,9 @@
     "country": "Land",
     "theme": "Thema",
     "notifications": "Meldingen",
-    "about": "Over"
+    "about": "Over",
+    "numelineReferral": "Vermelding op numeline.com",
+    "numelineReferralDescription": "Verschijn op numeline.com als een bedrijf dat zich bekommert om de gezondheid van zijn klanten"
   },
   "languages": {
     "fr": "Français",
@@ -282,7 +306,9 @@
     "skip": "Overslaan",
     "tipBarcode": "Centreer de barcode in het kader",
     "tipBand": "Kader het partijnummer in en houd stil",
-    "tipPhoto": "Vul het kader met het productetiket"
+    "tipPhoto": "Vul het kader met het productetiket",
+    "cameraPermissionDenied": "Cameratoegang is uitgeschakeld. Schakel het in bij Instellingen om producten te scannen.",
+    "openSettings": "Instellingen openen"
   },
   "brandAutocomplete": {
     "label": "MERK",
@@ -448,7 +474,8 @@
     "restoreErrorMessage": "Kan uw aankopen niet herstellen. Probeer het opnieuw.",
     "restoreNoPurchase": "Geen eerdere aankoop gevonden voor dit account.",
     "confirmTitle": "Abonnement bevestigen",
-    "confirmMessage": "Wilt u zich abonneren op"
+    "confirmMessage": "Wilt u zich abonneren op",
+    "devMode": ""
   },
   "quota": {
     "reached": "Scanquotum bereikt",
@@ -593,7 +620,56 @@
       "recallDetected": "Waarschuwing. Dit product is onderworpen aan een terugroeping. Niet consumeren.",
       "productSafe": "Geen terugroeping gevonden voor dit product.",
       "scanError": "Scan mislukt. Probeer opnieuw.",
-      "captureBlocked": "Opname mislukt."
+      "captureBlocked": "Opname mislukt.",
+      "lotCoach1a": "Ik zoek nog naar het lotnummer. Draai het product langzaam.",
+      "lotCoach1b": "Beweeg het product rustig voor de camera, ik ben nog aan het lezen.",
+      "lotCoach1c": "Ik zoek nog, neem de tijd. Beweeg het product iets dichterbij of verder weg.",
+      "lotCoach2a": "Zoek naar de kleine letters bij het deksel of de dop en laat ze aan de camera zien.",
+      "lotCoach2b": "Het lotnummer staat vaak onder de verpakking of bij een rand. Draai het product om het te tonen.",
+      "lotCoach2c": "Draai het product langzaam, een kwartslag per keer, naar de camera gericht.",
+      "lotCoach3a": "Houd het product twee seconden stil, naar de camera gericht.",
+      "lotCoach3b": "Houd het product stabiel op borsthoogte, naar de camera gericht, zonder te bewegen.",
+      "lotCoach3c": "Nog één poging. Zoek naar de regel met letters en cijfers, vaak bij de datum.",
+      "lotGiveUpSoon": "Ik kan het lotnummer niet lezen. Als u wilt, dubbeltik dan op het scherm om het zelf in te typen.",
+      "lotKeepSteady": "Nog geen lotnummer. Houd de telefoon stil op het lotnummer.",
+      "lotPartialSeen": "Ik zie een code, maar niet helemaal. Toon de volledige code en draai het product langzaam.",
+      "productFound": "Product gevonden: {{brand}}. Scan nu het lotnummer.",
+      "productNotFound": "Product niet gevonden. Ik schakel over naar de lotnummerscan."
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "Onmiddellijke veiligheidswaarschuwingen",
+    "benefit2": "Automatische controles elk uur",
+    "benefit3": "Deel met uw team (organisaties)",
+    "enableButton": "Meldingen inschakelen",
+    "skipButton": "Later",
+    "subtitle": "Ontvang realtime meldingen wanneer een product dat u hebt gescand onderhevig is aan een terugroepactie.",
+    "title": "Blijf op de hoogte van terugroepacties"
+  },
+  "publicProfile": {
+    "address": "Adres",
+    "addressPlaceholder": "Hoofdstraat 123, 1011 AB Amsterdam, Nederland",
+    "companyName": "Bedrijfsnaam",
+    "companyNamePlaceholder": "Bijv.: Mijn Foodtruck",
+    "email": "E-mail",
+    "emailPlaceholder": "contact@bedrijf.com",
+    "errorMessage": "Kan uw profiel niet opslaan. Probeer het opnieuw.",
+    "errorTitle": "Fout",
+    "logoUrl": "Logo-URL",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "Openbaar profiel",
+    "missingCompany": "Voer een bedrijfsnaam in voordat u publiceert.",
+    "missingTitle": "Bedrijfsnaam vereist",
+    "phone": "Telefoon",
+    "phonePlaceholder": "+31 20 123 45 67",
+    "publishDescription": "Uw bedrijf verschijnt in de openbare partnergids.",
+    "publishToggle": "Publiceren op numeline.com",
+    "save": "Opslaan",
+    "savedMessage": "Uw openbare profiel is opgeslagen.",
+    "savedTitle": "Opgeslagen",
+    "subtitle": "Verschijn op numeline.com/subscribers.html om uw bedrijf onder de aandacht te brengen bij onze gebruikers.",
+    "title": "Openbaar profiel",
+    "website": "Website",
+    "websitePlaceholder": "https://www.bedrijf.com"
   }
 }

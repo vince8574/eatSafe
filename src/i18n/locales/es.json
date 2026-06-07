@@ -58,8 +58,20 @@
       "brandCaptureFailed": "Fallo en la captura de marca.",
       "scanFailed": "Escaneo fallido.",
       "lotExtractFailed": "No se puede extraer el número de lote automáticamente.",
-      "brandFirst": "Capture la marca antes del número de lote."
-    }
+      "brandFirst": "Capture la marca antes del número de lote.",
+      "barcodeNotFound": "Código de barras no reconocido. Prueba a escanear el texto de la marca.",
+      "barcodeScanFailed": "Falló el escaneo del código de barras. Prueba a escanear el texto de la marca."
+    },
+    "barcodeInstruction": "Escanea el código de barras del producto para identificar la marca automáticamente.",
+    "confirmBrandMessage": "Marca detectada: {{brand}}",
+    "confirmBrandTitle": "Confirmar marca detectada",
+    "confirmLotMessage": "Número de lote detectado: {{lot}}",
+    "confirmLotTitle": "Confirmar número de lote",
+    "stageClaude": "Análisis avanzado en curso...",
+    "stageVision": "Mejorando el reconocimiento...",
+    "switchToBarcode": "📊 Escanear código de barras",
+    "switchToOcr": "📸 Escanear texto de la marca",
+    "validate": "Validar"
   },
   "manualEntry": {
     "title": "Entrada manual",
@@ -85,14 +97,22 @@
     "status": {
       "safe": "ℹ️ SIN RECALL ENCONTRADO",
       "recalled": "Retirado",
-      "unknown": "Estado desconocido"
+      "unknown": "Estado desconocido",
+      "warning": "⚠️ ADVERTENCIA"
     },
     "recallInfo": "Información del retiro",
     "actions": {
       "delete": "Eliminar",
       "viewRecall": "Ver retiro",
-      "scanAnother": "Escanear otro producto"
-    }
+      "scanAnother": "Escanear otro producto",
+      "ok": "Aceptar"
+    },
+    "lastChecked": "Última verificación",
+    "lotNumber": "Número de lote",
+    "never": "Nunca",
+    "notFound": "Producto no encontrado o eliminado.",
+    "privacyInfo": "Las fotos tomadas durante el escaneo se procesan localmente y se eliminan de inmediato. Solo la marca y el número de lote se guardan en este dispositivo.",
+    "recallStatusLabel": "Estado del retiro"
   },
   "history": {
     "title": "Historial",
@@ -150,7 +170,9 @@
     "dailyCheck": {
       "title": "Verificación Numeline",
       "body": "Actualización diaria de retiros en curso."
-    }
+    },
+    "newRecallBody": "El producto {{brand}} - Lote {{lot}} ahora está sujeto a un retiro. No lo consumas.",
+    "newRecallTitle": "⚠️ Nuevo retiro detectado"
   },
   "settings": {
     "title": "Configuración",
@@ -158,7 +180,9 @@
     "country": "País",
     "theme": "Tema",
     "notifications": "Notificaciones",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "numelineReferral": "Aparecer en numeline.com",
+    "numelineReferralDescription": "Aparece en numeline.com como una empresa que se preocupa por la salud de sus clientes"
   },
   "languages": {
     "fr": "Français",
@@ -415,7 +439,8 @@
     "restoreErrorMessage": "No se pudieron restaurar tus compras. Por favor, inténtalo de nuevo.",
     "restoreNoPurchase": "No se encontró ninguna compra anterior para esta cuenta.",
     "confirmTitle": "Confirmar suscripción",
-    "confirmMessage": "¿Deseas suscribirte a"
+    "confirmMessage": "¿Deseas suscribirte a",
+    "devMode": ""
   },
   "quota": {
     "reached": "Cuota de escaneo alcanzada",
@@ -506,7 +531,9 @@
     "skip": "Omitir",
     "tipBarcode": "Centre el código de barras dentro del marco",
     "tipBand": "Encuadre el número de lote y manténgase firme",
-    "tipPhoto": "Llene el marco con la etiqueta del producto"
+    "tipPhoto": "Llene el marco con la etiqueta del producto",
+    "cameraPermissionDenied": "El acceso a la cámara está desactivado. Actívalo en Ajustes para escanear productos.",
+    "openSettings": "Abrir Ajustes"
   },
   "brandAutocomplete": {
     "label": "MARCA",
@@ -593,7 +620,56 @@
       "recallDetected": "Advertencia. Este producto está sujeto a una retirada. No consumir.",
       "productSafe": "No se encontró retirada para este producto.",
       "scanError": "Falló el escaneo. Inténtalo de nuevo.",
-      "captureBlocked": "Falló la captura."
+      "captureBlocked": "Falló la captura.",
+      "lotCoach1a": "Sigo buscando el número de lote. Gira el producto lentamente.",
+      "lotCoach1b": "Mueve el producto suavemente frente a la cámara, sigo leyendo.",
+      "lotCoach1c": "Sigo buscando, tómate tu tiempo. Acerca o aleja un poco el producto.",
+      "lotCoach2a": "Busca la letra pequeña cerca de la tapa o el tapón y muéstrala a la cámara.",
+      "lotCoach2b": "El número de lote suele estar debajo del envase o cerca de un borde. Gira el producto para mostrarlo.",
+      "lotCoach2c": "Gira el producto lentamente, un cuarto de vuelta cada vez, frente a la cámara.",
+      "lotCoach3a": "Mantén el producto quieto durante dos segundos, frente a la cámara.",
+      "lotCoach3b": "Sujeta el producto firme a la altura del pecho, frente a la cámara, sin moverlo.",
+      "lotCoach3c": "Un intento más. Busca la línea de letras y números, suele estar cerca de la fecha.",
+      "lotGiveUpSoon": "No consigo leer el número de lote. Si quieres, toca dos veces la pantalla para escribirlo tú mismo.",
+      "lotKeepSteady": "Aún no hay número de lote. Mantén el teléfono firme sobre el número de lote.",
+      "lotPartialSeen": "Veo un código pero no entero. Muestra el código completo y gira el producto lentamente.",
+      "productFound": "Producto encontrado: {{brand}}. Ahora escanea el número de lote.",
+      "productNotFound": "Producto no encontrado. Cambiando al escaneo del número de lote."
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "Alertas de seguridad inmediatas",
+    "benefit2": "Verificaciones automáticas cada hora",
+    "benefit3": "Comparte con tu equipo (organizaciones)",
+    "enableButton": "Activar notificaciones",
+    "skipButton": "Más tarde",
+    "subtitle": "Recibe notificaciones en tiempo real cuando un producto que escaneaste esté sujeto a un retiro de alimentos.",
+    "title": "Mantente informado sobre los retiros"
+  },
+  "publicProfile": {
+    "address": "Dirección",
+    "addressPlaceholder": "123 Main Street, 75001 Paris, France",
+    "companyName": "Nombre de la empresa",
+    "companyNamePlaceholder": "Ej: My Food Truck",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "contact@company.com",
+    "errorMessage": "No se pudo guardar tu perfil. Por favor, inténtalo de nuevo.",
+    "errorTitle": "Error",
+    "logoUrl": "URL del logotipo",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "Perfil público",
+    "missingCompany": "Por favor, ingresa el nombre de la empresa antes de publicar.",
+    "missingTitle": "Nombre de empresa requerido",
+    "phone": "Teléfono",
+    "phonePlaceholder": "+33 1 23 45 67 89",
+    "publishDescription": "Tu empresa aparecerá en el directorio público de socios.",
+    "publishToggle": "Publicar en numeline.com",
+    "save": "Guardar",
+    "savedMessage": "Tu perfil público se ha guardado.",
+    "savedTitle": "Guardado",
+    "subtitle": "Aparece en numeline.com/subscribers.html para dar a conocer tu negocio a nuestros usuarios.",
+    "title": "Perfil público",
+    "website": "Sitio web",
+    "websitePlaceholder": "https://www.company.com"
   }
 }

@@ -110,7 +110,8 @@
     "actions": {
       "delete": "Supprimer le scan",
       "viewRecall": "Voir le rappel",
-      "scanAnother": "Scanner un autre produit"
+      "scanAnother": "Scanner un autre produit",
+      "ok": "OK"
     }
   },
   "history": {
@@ -636,24 +637,39 @@
     "voiceTest": "Tester la voix",
     "voiceTestMessage": "Le guidage vocal est activé. Vous entendrez les annonces pendant le scan.",
     "voice": {
-      "scanLotReady": "Mode numéro de lot. Centrez le numéro de lot dans la bande, la capture est automatique. Dites flash pour allumer la lumière, flash off pour l'éteindre.",
-      "scanLotTip": "Tenez le téléphone stable, la capture se déclenche dès qu'un numéro de lot est détecté. Dites flash pour allumer ou flash off pour éteindre.",
-      "lotInFrame": "Numéro de lot détecté. Capture en cours.",
+      "scanBarcodeReady": "Mode code-barres. Tenez votre téléphone à environ huit pouces du produit, le code-barres face à la caméra. La lecture est automatique.",
+      "productFound": "Produit trouvé : {{brand}}. Scannez maintenant le numéro de lot.",
+      "productNotFound": "Produit introuvable. Passage au scan du numéro de lot.",
+      "lotKeepSteady": "Pas encore de numéro de lot. Gardez le téléphone stable sur le numéro de lot.",
+      "scanLotReady": "Mode numéro de lot. Tenez votre téléphone à environ huit pouces du produit. La capture est automatique, tournez lentement le produit.",
+      "scanLotTip": "Tournez lentement le produit devant l'appareil. Le numéro de lot est souvent près du bord, du couvercle, ou sous l'emballage.",
+      "lotInFrame": "Je crois voir un numéro de lot. Ne bougez plus, je le lis.",
       "blur": "Image floue. Stabilisez le téléphone.",
       "tooFar": "Texte trop petit. Rapprochez le téléphone.",
       "tooClose": "Texte trop grand. Éloignez légèrement le téléphone.",
-      "lowLight": "Faible luminosité. Dites flash pour allumer la lumière, dites flash off pour l'éteindre.",
-      "flashOn": "Flash allumé. Dites flash off pour l'éteindre.",
-      "flashOff": "Flash éteint.",
+      "lowLight": "Faible luminosité. Rapprochez le produit d'une source de lumière.",
+      "flashOn": "Lampe allumée.",
+      "flashOff": "Lampe éteinte.",
       "photoCommand": "Capture en cours.",
-      "voiceCommandsReady": "Commandes vocales actives. Dites photo pour capturer, flash pour la lumière, flash off pour l'éteindre.",
+      "voiceCommandsReady": "Guidage vocal actif.",
       "lotAnalyzing": "Analyse du numéro de lot.",
-      "lotDetected": "Numéro de lot détecté : {{lot}}.",
+      "lotDetected": "Je pense avoir trouvé le numéro de lot : {{lot}}.",
       "lotNotDetected": "Aucun numéro de lot lisible détecté. Vous pouvez le saisir manuellement.",
       "recallDetected": "Attention. Ce produit fait l'objet d'un rappel. Ne pas consommer.",
       "productSafe": "Aucun rappel trouvé pour ce produit.",
       "scanError": "Échec du scan. Veuillez réessayer.",
-      "captureBlocked": "Échec de la capture."
+      "captureBlocked": "Échec de la capture.",
+      "lotCoach1a": "Je cherche encore le numéro de lot. Tournez le produit lentement.",
+      "lotCoach1b": "Déplacez doucement le produit devant la caméra, je suis en train de lire.",
+      "lotCoach1c": "Je cherche encore, prenez votre temps. Rapprochez ou éloignez un peu le produit.",
+      "lotCoach2a": "Cherchez les petits caractères près du couvercle ou du bouchon, et présentez-les à la caméra.",
+      "lotCoach2b": "Le numéro de lot se trouve souvent sous l'emballage ou près d'un bord. Tournez le produit pour le montrer.",
+      "lotCoach2c": "Faites pivoter le produit lentement, un quart de tour à la fois, face à la caméra.",
+      "lotCoach3a": "Tenez le produit immobile pendant deux secondes, face à la caméra.",
+      "lotCoach3b": "Stabilisez le produit à hauteur de poitrine, face à la caméra, sans bouger.",
+      "lotCoach3c": "Encore un essai. Cherchez la ligne de lettres et de chiffres, souvent près de la date.",
+      "lotGiveUpSoon": "Je n'arrive pas à lire le numéro de lot. Si vous le souhaitez, touchez deux fois l'écran pour le saisir vous-même.",
+      "lotPartialSeen": "Je vois un code mais pas en entier. Montrez le code complet et tournez le produit lentement."
     }
   }
 }

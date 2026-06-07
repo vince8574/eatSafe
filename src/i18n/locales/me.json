@@ -58,8 +58,20 @@
       "brandCaptureFailed": "Снимање марке није успјело.",
       "scanFailed": "Скенирање није успјело.",
       "lotExtractFailed": "Није могуће аутоматски извући број лота.",
-      "brandFirst": "Снимите марку прије броја лота."
-    }
+      "brandFirst": "Снимите марку прије броја лота.",
+      "barcodeNotFound": "Barkod nije prepoznat. Pokušajte skenirati tekst brenda.",
+      "barcodeScanFailed": "Skeniranje barkoda nije uspjelo. Pokušajte skenirati tekst brenda."
+    },
+    "barcodeInstruction": "Skenirajte barkod proizvoda da automatski identifikujete brend.",
+    "confirmBrandMessage": "Otkriveni brend: {{brand}}",
+    "confirmBrandTitle": "Potvrdi otkriveni brend",
+    "confirmLotMessage": "Otkriveni broj serije: {{lot}}",
+    "confirmLotTitle": "Potvrdi broj serije",
+    "stageClaude": "Dubinska analiza u toku...",
+    "stageVision": "Poboljšavanje prepoznavanja...",
+    "switchToBarcode": "📊 Skeniraj barkod",
+    "switchToOcr": "📸 Skeniraj tekst brenda",
+    "validate": "Potvrdi"
   },
   "manualEntry": {
     "title": "Ручни унос",
@@ -85,14 +97,22 @@
     "status": {
       "safe": "ℹ️ OPOZIV NIJE PRONAĐEN",
       "recalled": "Повучен",
-      "unknown": "Непознат статус"
+      "unknown": "Непознат статус",
+      "warning": "⚠️ UPOZORENJE"
     },
     "recallInfo": "Информације о повлачењу",
     "actions": {
       "delete": "Обриши",
       "viewRecall": "Погледај повлачење",
-      "scanAnother": "Skeniraj drugi proizvod"
-    }
+      "scanAnother": "Skeniraj drugi proizvod",
+      "ok": "U redu"
+    },
+    "lastChecked": "Posljednja provjera",
+    "lotNumber": "Broj serije",
+    "never": "Nikad",
+    "notFound": "Proizvod nije pronađen ili je obrisan.",
+    "privacyInfo": "Fotografije snimljene tokom skeniranja obrađuju se lokalno i odmah se brišu. Na ovom uređaju čuvaju se samo brend i broj serije.",
+    "recallStatusLabel": "Status opoziva"
   },
   "history": {
     "title": "Историја",
@@ -150,7 +170,9 @@
     "dailyCheck": {
       "title": "Numeline провјера",
       "body": "Дневно ажурирање повлачења у току."
-    }
+    },
+    "newRecallBody": "Proizvod {{brand}} - Serija {{lot}} je sada predmet opoziva. Ne konzumirajte.",
+    "newRecallTitle": "⚠️ Otkriven novi opoziv"
   },
   "settings": {
     "title": "Подешавања",
@@ -158,7 +180,9 @@
     "country": "Земља",
     "theme": "Тема",
     "notifications": "Обавјештења",
-    "about": "О апликацији"
+    "about": "О апликацији",
+    "numelineReferral": "Navođenje na numeline.com",
+    "numelineReferralDescription": "Pojavite se na numeline.com kao kompanija koja brine o zdravlju svojih klijenata"
   },
   "languages": {
     "fr": "Français",
@@ -257,7 +281,12 @@
     "passwordTooShort": "Lozinka mora imati minimum 6 karaktera",
     "passwordsDoNotMatch": "Lozinke se ne poklapaju",
     "name": "Ime",
-    "namePlaceholder": "Vaše ime"
+    "namePlaceholder": "Vaše ime",
+    "deleteAccount": "Obriši nalog",
+    "deleteAccountFailed": "Brisanje naloga nije uspjelo. Molimo ponovo se prijavite i pokušajte ponovo.",
+    "deleteAccountMessage": "Ovo će trajno obrisati vaš nalog i podatke. Nastaviti?",
+    "deleteAccountSuccess": "Nalog je uspješno obrisan.",
+    "deleteAccountTitle": "Obriši moj nalog"
   },
   "team": {
     "title": "Upravljanje timom",
@@ -410,7 +439,8 @@
     "restoreErrorMessage": "Nije moguće vratiti vaše kupovine. Molimo pokušajte ponovo.",
     "restoreNoPurchase": "Prethodna kupovina za ovaj nalog nije pronađena.",
     "confirmTitle": "Potvrdi pretplatu",
-    "confirmMessage": "Želite li se pretplatiti na"
+    "confirmMessage": "Želite li se pretplatiti na",
+    "devMode": ""
   },
   "quota": {
     "reached": "Kvota skeniranja dostignuta",
@@ -501,7 +531,9 @@
     "skip": "Preskoči",
     "tipBarcode": "Centriraj barkod unutar okvira",
     "tipBand": "Uokviri broj serije i drži mirno",
-    "tipPhoto": "Popuni okvir etiketom proizvoda"
+    "tipPhoto": "Popuni okvir etiketom proizvoda",
+    "cameraPermissionDenied": "Pristup kameri je isključen. Omogućite ga u Podešavanjima da skenirate proizvode.",
+    "openSettings": "Otvori Podešavanja"
   },
   "brandAutocomplete": {
     "label": "BREND",
@@ -588,7 +620,56 @@
       "recallDetected": "Upozorenje. Ovaj proizvod je predmet povlačenja. Ne konzumirajte.",
       "productSafe": "Nije pronađeno povlačenje za ovaj proizvod.",
       "scanError": "Skeniranje nije uspjelo. Pokušajte ponovo.",
-      "captureBlocked": "Snimanje nije uspjelo."
+      "captureBlocked": "Snimanje nije uspjelo.",
+      "lotCoach1a": "I dalje tražim broj serije. Polako okrećite proizvod.",
+      "lotCoach1b": "Nježno pomjerajte proizvod ispred kamere, i dalje čitam.",
+      "lotCoach1c": "I dalje tražim, ne žurite. Primaknite proizvod malo bliže ili dalje.",
+      "lotCoach2a": "Potražite sitan tekst blizu poklopca ili čepa i pokažite ga kameri.",
+      "lotCoach2b": "Broj serije je često ispod ambalaže ili blizu ivice. Okrenite proizvod da ga pokažete.",
+      "lotCoach2c": "Polako okrećite proizvod, po četvrtinu okreta, okrenut prema kameri.",
+      "lotCoach3a": "Držite proizvod mirno dvije sekunde, okrenut prema kameri.",
+      "lotCoach3b": "Stabilizujte proizvod u visini grudi, okrenut prema kameri, bez pomjeranja.",
+      "lotCoach3c": "Još jedan pokušaj. Potražite niz slova i brojeva, često blizu datuma.",
+      "lotGiveUpSoon": "Ne mogu pročitati broj serije. Ako želite, dvaput dodirnite ekran da ga sami unesete.",
+      "lotKeepSteady": "Još nema broja serije. Držite telefon mirno na broju serije.",
+      "lotPartialSeen": "Vidim kod, ali ne cijeli. Pokažite cijeli kod i polako okrećite proizvod.",
+      "productFound": "Proizvod pronađen: {{brand}}. Sada skenirajte broj serije.",
+      "productNotFound": "Proizvod nije pronađen. Prelazim na skeniranje broja serije."
     }
+  },
+  "notificationPermissions": {
+    "benefit1": "Trenutna sigurnosna upozorenja",
+    "benefit2": "Automatske provjere svakog sata",
+    "benefit3": "Dijeljenje sa vašim timom (organizacije)",
+    "enableButton": "Omogući obavještenja",
+    "skipButton": "Kasnije",
+    "subtitle": "Primajte obavještenja u realnom vremenu kada je proizvod koji ste skenirali predmet opoziva hrane.",
+    "title": "Budite informisani o opozivima"
+  },
+  "publicProfile": {
+    "address": "Adresa",
+    "addressPlaceholder": "123 Main Street, 75001 Paris, France",
+    "companyName": "Naziv kompanije",
+    "companyNamePlaceholder": "Npr: Moj Food Truck",
+    "email": "E-pošta",
+    "emailPlaceholder": "contact@company.com",
+    "errorMessage": "Nije moguće sačuvati vaš profil. Molimo pokušajte ponovo.",
+    "errorTitle": "Greška",
+    "logoUrl": "URL logotipa",
+    "logoUrlPlaceholder": "https://example.com/logo.png",
+    "menuLabel": "Javni profil",
+    "missingCompany": "Molimo unesite naziv kompanije prije objavljivanja.",
+    "missingTitle": "Naziv kompanije je obavezan",
+    "phone": "Telefon",
+    "phonePlaceholder": "+382 20 123 456",
+    "publishDescription": "Vaša kompanija će se pojaviti u javnom imeniku partnera.",
+    "publishToggle": "Objavi na numeline.com",
+    "save": "Sačuvaj",
+    "savedMessage": "Vaš javni profil je sačuvan.",
+    "savedTitle": "Sačuvano",
+    "subtitle": "Pojavite se na numeline.com/subscribers.html da predstavite svoje poslovanje našim korisnicima.",
+    "title": "Javni profil",
+    "website": "Veb-sajt",
+    "websitePlaceholder": "https://www.company.com"
   }
 }
