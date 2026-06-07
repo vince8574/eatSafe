@@ -254,14 +254,16 @@ export function ScanLotScreen() {
       // Vérifier les rappels en arrière-plan — seulement sur une lecture confirmée
       // (en mode malvoyant) ou toujours en mode voyant. Évite d'annoncer un statut
       // de rappel sur un lot encore incertain (tronqué).
-      if ((!accessibilityMode || accepted) && candidates && candidates.length > 0) {
+      if ((!accessibilityMode || accepted) && displayLot) {
         setIsCheckingRecall(true);
         setHasRecall(null);
 
         const { checkAllCandidates } = await import('../services/candidateMatcherService');
 
         try {
-          const matchResult = await checkAllCandidates(candidates, brand, country);
+          // Match recalls against ONLY the confirmed lot — never the noisy
+          // candidate list (partial/misread tokens, dates) that caused false alerts.
+          const matchResult = await checkAllCandidates([displayLot], brand, country);
           setHasRecall(matchResult.hasRecall);
           setVerifiedAt(Date.now());
           if (matchResult.matchedCandidate) {
@@ -503,7 +505,10 @@ export function ScanLotScreen() {
   const handleConfirm = useCallback(async () => {
     const finalLot = isEditingLot ? editedLot.trim().toUpperCase() : lotNumber;
     const normalizedOcrText = normalizeLotValue(ocrText || '');
-    const candidatesForMatch = [finalLot, ...lotCandidates]
+    // Purge the garbage: once a lot is confirmed, match recalls against ONLY that
+    // lot — not the noisy OCR candidate list — so a partial/misread token can
+    // never coincidentally match a recall and raise a false "DO NOT CONSUME".
+    const candidatesForMatch = [finalLot]
       .filter(Boolean)
       .map((candidate) => normalizeLotValue(candidate));
 

@@ -16,7 +16,7 @@ import type { ScannedProduct } from '../types';
 
 export function AppInitializer() {
   useDatabaseWarmup();
-  const { products, updateRecall } = useScannedProducts();
+  const { updateRecall } = useScannedProducts();
   const [alertProducts, setAlertProducts] = useState<ScannedProduct[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
@@ -71,30 +71,32 @@ export function AppInitializer() {
     // Vérifier s'il y a de nouveaux rappels au démarrage
     const checkNewRecalls = async () => {
       const newRecalls = await getAndClearNewRecalls();
-      if (newRecalls.length > 0) {
-        console.log(`[AppInitializer] Found ${newRecalls.length} new recalls to display`);
+      if (newRecalls.length === 0) return;
+      console.log(`[AppInitializer] Found ${newRecalls.length} new recalls to display`);
 
-        // Mettre à jour les produits avec les nouveaux rappels
-        const recalledProducts: ScannedProduct[] = [];
-        for (const result of newRecalls) {
-          if (result.newRecalls.length > 0) {
-            // Ajouter à la liste des produits à afficher
-            const product = products.find((p) => p.id === result.productId);
+      // Read FRESH products: `products` from the hook is captured once (useEffect
+      // deps []), so it was stale/empty here — the background check fired a
+      // notification but the product was never marked recalled in the list
+      // (the inconsistency). Resolve from fresh data and PERSIST the status to
+      // Firestore so the recalled-products list matches the notification. The
+      // real-time subscription then refreshes the UI.
+      const fresh = await getAllProducts();
+      const recalledProducts: ScannedProduct[] = [];
+      for (const result of newRecalls) {
+        if (result.newRecalls.length === 0) continue;
+        const product = fresh.find((p) => p.id === result.productId);
+        if (!product) continue;
+        await updateFirestoreProduct(product.id, {
+          recallStatus: 'recalled',
+          recallReference: result.newRecalls[0].id,
+          lastCheckedAt: Date.now()
+        });
+        recalledProducts.push({ ...product, recallStatus: 'recalled', recallReference: result.newRecalls[0].id });
+      }
 
-            // Mettre à jour le produit
-            if (product) {
-              updateRecall(product, result.newRecalls);
-            }
-            if (product) {
-              recalledProducts.push(product);
-            }
-          }
-        }
-
-        if (recalledProducts.length > 0) {
-          setAlertProducts(recalledProducts);
-          setShowAlert(true);
-        }
+      if (recalledProducts.length > 0) {
+        setAlertProducts(recalledProducts);
+        setShowAlert(true);
       }
     };
 
