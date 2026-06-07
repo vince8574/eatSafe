@@ -11,6 +11,11 @@ on:
         options:
           - aab
           - apk
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
 
 jobs:
   build:
@@ -60,7 +65,7 @@ jobs:
         run: chmod +x android/gradlew
 
       - name: Build AAB (Google Play)
-        if: github.event.inputs.build_type == 'aab'
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_type == 'aab' }}
         working-directory: android
         run: |
           ./gradlew bundleRelease \
@@ -80,7 +85,7 @@ jobs:
             -PRELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}
 
       - name: Upload AAB
-        if: github.event.inputs.build_type == 'aab'
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_type == 'aab' }}
         uses: actions/upload-artifact@v4
         with:
           name: app-release.aab
