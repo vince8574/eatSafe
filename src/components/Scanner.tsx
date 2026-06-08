@@ -99,6 +99,10 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  // Barcode mode only: brief activation delay on (re)focus so iOS releases the
+  // previous camera session first — otherwise the camera comes up BLACK on a 2nd
+  // scan. The lot screen is unaffected (it activates immediately on focus).
+  const [activeDelayPassed, setActiveDelayPassed] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
   const [flashOn, setFlashOn] = useState(false);
 
@@ -119,6 +123,23 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       requestPermission();
     }
   }, [permission, requestPermission]);
+
+  // Barcode screen: wait ~600ms after (re)focus before activating the camera, so
+  // the previous screen's iOS camera session is fully released first (fixes the
+  // black camera on a 2nd scan). Non-barcode (lot) screens activate immediately.
+  useEffect(() => {
+    if (!isFocused) {
+      setActiveDelayPassed(false);
+      return;
+    }
+    if (!enableBarcodeScanning) {
+      setActiveDelayPassed(true);
+      return;
+    }
+    setActiveDelayPassed(false);
+    const id = setTimeout(() => setActiveDelayPassed(true), 600);
+    return () => clearTimeout(id);
+  }, [isFocused, enableBarcodeScanning]);
 
   const handleBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
@@ -363,7 +384,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
           // fraîche au focus (key ci-dessus) ; l'écran lot ne remonte pas.
-          active={isFocused}
+          active={enableBarcodeScanning ? (isFocused && activeDelayPassed) : isFocused}
           flash={flashOn && isFocused ? 'on' : 'off'}
           enableTorch={flashOn && isFocused}
           onCameraReady={() => setCameraReady(true)}
