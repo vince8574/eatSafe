@@ -5,7 +5,14 @@ type RecallResponse = {
 };
 
 const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=1000&sort=report_date:desc';
-const USDA_ENDPOINT = 'https://www.fsis.usda.gov/fsis/api/recall';
+// Official FSIS recall endpoint is /v/1 (the bare /recall path 403s). FSIS sits
+// behind Akamai and rejects requests without a browser-like User-Agent.
+const USDA_ENDPOINT = 'https://www.fsis.usda.gov/fsis/api/recall/v/1';
+const USDA_HEADERS = {
+  Accept: 'application/json',
+  'User-Agent':
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1'
+};
 
 // Cache for recalls data (5 minutes TTL)
 let recallsCache: RecallRecord[] | null = null;
@@ -127,31 +134,82 @@ export async function fetchFdaRecalls(): Promise<RecallRecord[]> {
 }
 
 /**
- * Récupère les rappels USDA (viandes et volailles)
+ * Les descriptions produits FSIS arrivent en HTML avec des entités. On retire les
+ * balises et on décode les entités courantes pour que l'extraction de lot voie
+ * un texte propre.
+ */
+function stripHtml(input: string | string[] | undefined | null): string {
+  if (!input) return '';
+  const raw = Array.isArray(input) ? input.join(' ') : String(input);
+  return raw
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/[“”‘’]/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Récupère les rappels USDA (viandes et volailles) depuis l'API FSIS.
+ * L'API renvoie des champs préfixés `field_*` (et non `item.establishment` etc.).
+ * USDA n'a pas de champ "lot" dédié : les codes identifiants se trouvent dans
+ * `field_product_items`, d'où on extrait les tokens de type Lot/Batch/Code.
  */
 export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
   try {
-    const response = await fetch(USDA_ENDPOINT);
+    const response = await fetch(USDA_ENDPOINT, { headers: USDA_HEADERS });
 
     if (!response.ok) {
-      console.warn(`[USDA] API returned status ${response.status}`);
+      console.warn(`[USDA] API returned status ${response.status} (FSIS bloque peut-être la requête)`);
       return [];
     }
 
-    const data = await response.json();
+    // Garde-fou : si Akamai renvoie une page HTML "Access Denied" en 200,
+    // response.json() planterait. On lit le texte et on vérifie que c'est du JSON.
+    const text = await response.text();
+    const trimmed = text.trim();
+    if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) {
+      console.warn('[USDA] Réponse non-JSON (probablement bloquée / HTML):', trimmed.slice(0, 80));
+      return [];
+    }
 
-    return (data ?? []).map((item: any) => ({
-      id: item.recallNumber || item.id || `usda-${Date.now()}`,
-      title: item.productName || item.description || 'Meat/Poultry Recall',
-      description: item.recallReason || item.reason || '',
-      lotNumbers: extractFdaLotNumbers(item.lotNumbers),
-      brand: item.establishment || item.company || '',
-      productCategory: 'Meat/Poultry',
-      country: 'US' as const,
-      publishedAt: item.recallDate || item.date,
-      link: item.url,
-      imageUrl: undefined
-    }));
+    const data = JSON.parse(trimmed);
+    const arr: any[] = Array.isArray(data) ? data : (data.results ?? data.data ?? []);
+
+    const mapped: RecallRecord[] = arr.map((item: any, index: number) => {
+      const establishment = Array.isArray(item.field_establishment)
+        ? item.field_establishment.filter(Boolean).join(', ')
+        : (item.field_establishment || '');
+      const reason = Array.isArray(item.field_recall_reason)
+        ? item.field_recall_reason.filter(Boolean).join(', ')
+        : (item.field_recall_reason || '');
+      const productText = stripHtml(item.field_product_items);
+      // USDA descriptions are prose, so the lot regex also grabs phrases
+      // ("on the package"). Keep only real codes: contain a digit, no spaces.
+      const lotNumbers = extractFdaLotNumbers(productText).filter(
+        (l) => /\d/.test(l) && !/\s/.test(l)
+      );
+
+      return {
+        id: item.field_recall_number_export || item.field_recall_number || item.field_recall_url || `usda-${index}`,
+        title: item.field_title || 'Meat/Poultry Recall',
+        description: reason || stripHtml(item.field_summary).slice(0, 280),
+        lotNumbers,
+        brand: establishment,
+        productCategory: 'Meat/Poultry',
+        country: 'US' as const,
+        publishedAt: item.field_recall_date || item.field_last_modified_date || '',
+        link: item.field_recall_url,
+        imageUrl: undefined
+      };
+    });
+
+    const withLots = mapped.filter((r) => r.lotNumbers.length > 0).length;
+    console.log(`[USDA] Parsed ${mapped.length} recalls (${withLots} avec codes de lot exploitables)`);
+    return mapped;
   } catch (error) {
     console.error('[USDA] Error fetching recalls:', error);
     return [];
