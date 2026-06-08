@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
+import * as FileSystem from 'expo-file-system/legacy';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
@@ -56,6 +57,9 @@ type ScannerProps = {
 
 const DEFAULT_PREVIEW_OCR_INTERVAL_MS = 1800;
 const LOW_LIGHT_EMPTY_THRESHOLD = 3;
+// A black/empty capture (iOS photo-output glitch) compresses to a few KB, so a
+// full-res JPEG under this size is treated as black and re-captured.
+const BLACK_FRAME_MIN_BYTES = 20000;
 
 export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   {
@@ -207,15 +211,37 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       const uris: string[] = [];
       for (let i = 0; i < frameCount; i++) {
         if (!cameraRef.current) break;
-        try {
-          const photo = await cameraRef.current.takePictureAsync({
-            quality: 1.0,
-            skipProcessing: false,
-            shutterSound: false
-          });
-          if (photo?.uri) uris.push(photo.uri);
-        } catch (frameError) {
-          console.warn(`Capture frame ${i + 1}/${frameCount} failed`, frameError);
+        // Capture a NON-BLACK frame: on iOS the photo output can return a fully
+        // black image even with a live preview. A black frame compresses to a few
+        // KB, so we check the file size and re-capture instead of feeding an empty
+        // image to the OCR (which then just says "analyse" and keeps searching).
+        for (let attempt = 0; attempt < 3; attempt++) {
+          if (!cameraRef.current) break;
+          try {
+            const photo = await cameraRef.current.takePictureAsync({
+              quality: 1.0,
+              skipProcessing: false,
+              shutterSound: false
+            });
+            if (!photo?.uri) continue;
+            let sizeOk = true;
+            try {
+              const info = await FileSystem.getInfoAsync(photo.uri);
+              sizeOk = !info.exists || ((info as any).size ?? 0) >= BLACK_FRAME_MIN_BYTES;
+            } catch {
+              sizeOk = true; // can't stat → keep the frame
+            }
+            if (sizeOk) {
+              uris.push(photo.uri);
+              break;
+            }
+            console.warn(`Capture frame ${i + 1}/${frameCount} looked black (retry ${attempt + 1}/3)`);
+            try { await FileSystem.deleteAsync(photo.uri, { idempotent: true }); } catch { /* noop */ }
+            await new Promise((resolve) => setTimeout(resolve, 250));
+          } catch (frameError) {
+            console.warn(`Capture frame ${i + 1}/${frameCount} failed`, frameError);
+            break;
+          }
         }
         if (i < frameCount - 1 && multiFrameDelayMs > 0) {
           await new Promise((resolve) => setTimeout(resolve, multiFrameDelayMs));
