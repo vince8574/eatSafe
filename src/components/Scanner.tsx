@@ -138,21 +138,20 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   // 2nd scan → the next OCR sees an empty/black frame ("analyse" then keeps asking
   // to search). Per-focus, so the first scan just starts ~600ms later (imperceptible).
   useEffect(() => {
+    // Barcode screen: NEVER gate or remount via activeDelayPassed — keep the
+    // camera always mounted (like the FR app); `active={isFocused}` releases/
+    // reacquires it and the key-remount gives fresh re-detection. No delay, no
+    // warmup, no black placeholder → instant barcode scan (this gate was the
+    // regression that stopped barcode scanning entirely).
+    if (enableBarcodeScanning) return;
+    // Lot screen ONLY (unchanged): force a FULL camera remount — unmount the
+    // CameraView, let iOS release the previous (barcode) session, then mount fresh
+    // after a short gap, so the lot camera never comes up black on the 2nd scan.
     if (!isFocused) {
       setActiveDelayPassed(false);
       setCameraReady(false);
       return;
     }
-    // Barcode screen: mount the camera IMMEDIATELY so detection stays instant
-    // (it never calls takePictureAsync → no black-first-shot problem). The
-    // key-remount (key=`bc-${resetToken}`) already gives a fresh session on focus.
-    if (enableBarcodeScanning) {
-      setActiveDelayPassed(true);
-      return;
-    }
-    // Lot screen only: force a FULL camera remount — unmount the CameraView, let
-    // iOS release the previous (barcode) session, then mount fresh after the gap,
-    // so the lot camera never comes up black on the 2nd scan.
     setActiveDelayPassed(false);
     setCameraReady(false);
     const id = setTimeout(() => setActiveDelayPassed(true), 600);
@@ -433,11 +432,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   return (
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
-        {/* FULL REMOUNT: the CameraView is unmounted (black placeholder shown) on
-            blur and during the ~600ms post-focus gap, then mounted fresh. iOS thus
-            fully releases the previous screen's camera session, so the camera never
-            comes up black on a 2nd scan. */}
-        {activeDelayPassed ? (
+        {/* Lot screen: full remount (black placeholder during the ~600ms post-focus
+            gap) so iOS releases the previous camera session → never black on the 2nd
+            scan. Barcode screen: camera ALWAYS mounted (active={isFocused}) for
+            instant, FR-like detection — no gate, no placeholder. */}
+        {(enableBarcodeScanning || activeDelayPassed) ? (
         <CameraView
           // En mode CODE-BARRES seulement : on remonte la caméra à chaque
           // (re)focus (resetToken est incrémenté au focus) pour repartir sur une
