@@ -46,6 +46,9 @@ export function ScanScreen() {
     setIsEditingBrand(false);
     setEditedBrand('');
     setScannerResetToken((t) => t + 1);
+    // Re-arm barcode handling for the next scan (e.g. the Reload button, which
+    // resets the flow without re-focusing the screen).
+    barcodeHandledRef.current = false;
   }, []);
 
   // Track if we navigated away so we only reset when coming BACK
@@ -167,7 +170,12 @@ export function ScanScreen() {
   }, []);
 
   const handleBarcodeScanned = useCallback(async (barcode: string) => {
-    if (brandText) {
+    // Synchronous re-entry guard: the camera fires onBarcodeScanned several times
+    // within a few ms (multiple codes in view, or before brandText commits — and
+    // the product-not-found path never sets brandText). Without this, each call
+    // pushed a new /scan-lot → stacked pages → the iOS camera couldn't activate on
+    // the lot screen (green screen). barcodeHandledRef is set synchronously below.
+    if (brandText || barcodeHandledRef.current) {
       return;
     }
 
