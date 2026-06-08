@@ -132,9 +132,13 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   useEffect(() => {
     if (!isFocused) {
       setActiveDelayPassed(false);
+      setCameraReady(false);
       return;
     }
+    // Force a FULL camera remount: unmount the CameraView, let iOS release the
+    // previous screen's session, then mount a fresh one after the gap.
     setActiveDelayPassed(false);
+    setCameraReady(false);
     const id = setTimeout(() => setActiveDelayPassed(true), 600);
     return () => clearTimeout(id);
   }, [isFocused]);
@@ -365,9 +369,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   return (
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
-        {/* Caméra toujours montée (pas de montage/démontage lié au focus : ça
-            provoquait une boucle de navigation + crash sur l'écran code-barres).
-            On coupe seulement la boucle OCR de preview et la torche hors focus. */}
+        {/* FULL REMOUNT: the CameraView is unmounted (black placeholder shown) on
+            blur and during the ~600ms post-focus gap, then mounted fresh. iOS thus
+            fully releases the previous screen's camera session, so the camera never
+            comes up black on a 2nd scan. */}
+        {activeDelayPassed ? (
         <CameraView
           // En mode CODE-BARRES seulement : on remonte la caméra à chaque
           // (re)focus (resetToken est incrémenté au focus) pour repartir sur une
@@ -382,7 +388,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
           // fraîche au focus (key ci-dessus) ; l'écran lot ne remonte pas.
-          active={isFocused && activeDelayPassed}
+          active={isFocused}
           flash={flashOn && isFocused ? 'on' : 'off'}
           enableTorch={flashOn && isFocused}
           onCameraReady={() => setCameraReady(true)}
@@ -409,6 +415,9 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           }
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
+        ) : (
+          <View style={[styles.camera, { backgroundColor: '#000' }]} />
+        )}
 
         {/* Back button */}
         {onBack && (
