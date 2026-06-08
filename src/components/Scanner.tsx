@@ -143,6 +143,30 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     return () => clearTimeout(id);
   }, [isFocused]);
 
+  // iOS: the photo output's FIRST shot after a camera (re)mount can come back
+  // BLACK even though the live preview looks fine — so the OCR receives an empty
+  // image ("analyse" then keeps asking to search). Prime it with one throwaway
+  // capture shortly after the camera reports ready, on each (re)mount.
+  useEffect(() => {
+    if (!cameraReady) return;
+    let cancelled = false;
+    const id = setTimeout(async () => {
+      if (cancelled || !cameraRef.current || previewOcrInFlightRef.current) return;
+      previewOcrInFlightRef.current = true;
+      try {
+        await cameraRef.current.takePictureAsync({ quality: 0.1, skipProcessing: true, shutterSound: false, exif: false } as any);
+      } catch {
+        /* noop */
+      } finally {
+        previewOcrInFlightRef.current = false;
+      }
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(id);
+    };
+  }, [cameraReady]);
+
   const handleBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
       // !isFocused : on ne traite plus les codes-barres quand l'écran n'est pas
