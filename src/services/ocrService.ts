@@ -16,8 +16,8 @@ const preprocessConfig = {
 
 const visionPreprocessConfig = {
   // Format imposé pour l'IA (Vision ET Claude) : une SEULE image JPEG 2000px,
-  // calculée une fois puis réutilisée. JPEG 0.85 ≈ payload 5-10× plus léger
-  // qu'un PNG 3000px → lecture base64 + upload nettement plus rapides.
+  // calculée une fois puis réutilisée. 2000px conservé pour la lisibilité des
+  // codes gravés / point-matrice (réduire dégrade l'OCR).
   resize: { width: 2000 },
   format: SaveFormat.JPEG,
   compress: 0.85

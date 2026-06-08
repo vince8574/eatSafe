@@ -781,8 +781,8 @@ export function ScanLotScreen() {
         mode="band"
         resetToken={scannerResetToken}
         flashPosition="top-right"
-        multiFrameCount={accessibilityMode ? 4 : 3}
-        multiFrameDelayMs={accessibilityMode ? 450 : 200}
+        multiFrameCount={3}
+        multiFrameDelayMs={accessibilityMode ? 250 : 200}
         onBack={handleGoBack}
         onRestart={handleRestart}
         onManualEntry={handleManualEntry}
