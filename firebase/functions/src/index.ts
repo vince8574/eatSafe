@@ -6,7 +6,6 @@ import { Resend } from 'resend';
 admin.initializeApp();
 
 export { ocrClaude } from './ocrClaude';
-export { ocrVision } from './ocrVision';
 
 const firestore = admin.firestore();
 
