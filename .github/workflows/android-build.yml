@@ -64,6 +64,18 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
+      # Auto-increment the Play versionCode (Unix timestamp, strictly increasing &
+      # unique — like the iOS buildNumber) and sync versionName from app.json, so
+      # uploads never hit "version code already used". Android ignores app.json
+      # (no prebuild here), so we patch android/app/build.gradle directly.
+      - name: Set Android version (auto versionCode + sync versionName)
+        run: |
+          VERSION_CODE=$(date -u +%s)
+          VERSION_NAME=$(node -e "console.log(require('./app.json').expo.version)")
+          echo "Android versionCode=$VERSION_CODE versionName=$VERSION_NAME"
+          sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" android/app/build.gradle
+          sed -i "s/versionName \"[^\"]*\"/versionName \"$VERSION_NAME\"/" android/app/build.gradle
+
       - name: Build AAB (Google Play)
         if: ${{ github.event_name == 'push' || github.event.inputs.build_type == 'aab' }}
         working-directory: android
