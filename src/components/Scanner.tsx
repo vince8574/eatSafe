@@ -143,20 +143,30 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       setCameraReady(false);
       return;
     }
-    // Force a FULL camera remount: unmount the CameraView, let iOS release the
-    // previous screen's session, then mount a fresh one after the gap.
+    // Barcode screen: mount the camera IMMEDIATELY so detection stays instant
+    // (it never calls takePictureAsync → no black-first-shot problem). The
+    // key-remount (key=`bc-${resetToken}`) already gives a fresh session on focus.
+    if (enableBarcodeScanning) {
+      setActiveDelayPassed(true);
+      return;
+    }
+    // Lot screen only: force a FULL camera remount — unmount the CameraView, let
+    // iOS release the previous (barcode) session, then mount fresh after the gap,
+    // so the lot camera never comes up black on the 2nd scan.
     setActiveDelayPassed(false);
     setCameraReady(false);
     const id = setTimeout(() => setActiveDelayPassed(true), 600);
     return () => clearTimeout(id);
-  }, [isFocused]);
+  }, [isFocused, enableBarcodeScanning]);
 
   // iOS: the photo output's FIRST shot after a camera (re)mount can come back
   // BLACK even though the live preview looks fine — so the OCR receives an empty
   // image ("analyse" then keeps asking to search). Prime it with one throwaway
   // capture shortly after the camera reports ready, on each (re)mount.
+  // Skipped on the barcode screen: it never calls takePictureAsync, and a
+  // throwaway shot there interrupts the continuous barcode scan → slow detection.
   useEffect(() => {
-    if (!cameraReady) return;
+    if (!cameraReady || enableBarcodeScanning) return;
     let cancelled = false;
     const id = setTimeout(async () => {
       if (cancelled || !cameraRef.current || previewOcrInFlightRef.current) return;
@@ -173,7 +183,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       cancelled = true;
       clearTimeout(id);
     };
-  }, [cameraReady]);
+  }, [cameraReady, enableBarcodeScanning]);
 
   const handleBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
