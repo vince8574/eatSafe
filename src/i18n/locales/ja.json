@@ -140,8 +140,8 @@
     "reasonLabel": "リコール理由:",
     "emergencyTitle": "摂取した場合",
     "emergencyText": "この製品を摂取し症状が出た場合は、直ちに緊急サービスに連絡してください。",
-    "callSamu": "112に電話(緊急)",
-    "callEmergency": "112に電話(緊急)",
+    "callSamu": "911に電話(緊急)",
+    "callEmergency": "911に電話(緊急)",
     "viewOfficialNotice": "公式リコール通知を見る",
     "returnForRefund": "返金のため製品を店舗に返却してください",
     "reportedBy": "FDA / USDA ????????????"

@@ -14,7 +14,8 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
   const { t } = useI18n();
 
   const openEmergencyCall = () => {
-    Linking.openURL('tel:15');
+    // US app: 911 is the single emergency number, localized in every language.
+    Linking.openURL('tel:911');
   };
 
   return (
@@ -65,15 +66,6 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
             <Ionicons name="call" size={18} color={colors.danger} />
             <Text style={[styles.emergencyButtonText, { color: colors.danger }]}>
               {t('recallAlert.callSamu')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.emergencyButton, { backgroundColor: '#FFF', marginTop: 8 }]}
-            onPress={() => Linking.openURL('tel:112')}
-          >
-            <Ionicons name="call" size={18} color={colors.danger} />
-            <Text style={[styles.emergencyButtonText, { color: colors.danger }]}>
-              {t('recallAlert.callEmergency')}
             </Text>
           </TouchableOpacity>
         </View>
