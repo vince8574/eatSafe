@@ -140,8 +140,8 @@
     "reasonLabel": "Raison du rappel :",
     "emergencyTitle": "En cas de consommation",
     "emergencyText": "Si vous avez consommé ce produit et ressentez des symptômes, contactez immédiatement les urgences.",
-    "callSamu": "Appeler le 15 (SAMU)",
-    "callEmergency": "Appeler le 112 (Urgences)",
+    "callSamu": "Appeler le 911 (Urgences)",
+    "callEmergency": "Appeler le 911 (Urgences)",
     "viewOfficialNotice": "Consulter la fiche officielle du rappel",
     "returnForRefund": "Rapportez le produit au magasin pour obtenir un remboursement",
     "reportedBy": "Rappel signalé par la FDA / l'USDA"

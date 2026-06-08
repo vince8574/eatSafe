@@ -140,8 +140,8 @@
     "reasonLabel": "Razón del retiro:",
     "emergencyTitle": "Si se consumió",
     "emergencyText": "Si ha consumido este producto y experimenta síntomas, contacte inmediatamente a los servicios de emergencia.",
-    "callSamu": "Llamar al 112 (Emergencia)",
-    "callEmergency": "Llamar al 112 (Emergencia)",
+    "callSamu": "Llamar al 911 (Emergencia)",
+    "callEmergency": "Llamar al 911 (Emergencia)",
     "viewOfficialNotice": "Ver aviso oficial del retiro",
     "returnForRefund": "Devuelva el producto a la tienda para obtener un reembolso",
     "reportedBy": "Retiro informado por la FDA / USDA"
