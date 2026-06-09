@@ -1053,7 +1053,11 @@ export async function performOcr(
 
     // Si ML Kit n'a trouvé aucun lot, basculer sur les fallbacks distants.
     const mlkitLot = await extractLotNumber(result.text, brand);
-    if (!mlkitLot && allowPaid) {
+    // Mode malvoyant (fullFrame) : router directement vers Vision sur chaque
+    // capture (ML Kit local lit mal les codes gravés → fragments qui bloquent le
+    // consensus). Voir performOcrMultiFrame pour le détail.
+    const preferVision = options?.fullFrame === true;
+    if ((!mlkitLot || preferVision) && allowPaid) {
       // Image IA UNIQUE : 2000px JPEG 0.85 (visionPreprocessConfig), calculée
       // une seule fois ici puis réutilisée pour Vision PUIS Claude. Évite de
       // re-préprocesser et garantit que Claude (tier le plus lent) ne lit plus
@@ -1071,12 +1075,17 @@ export async function performOcr(
 
       try {
         if (isVisionAvailable() && aiImageUri) {
-          console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
+          console.log(preferVision
+            ? '[Lot OCR] Accessibility: routing to Google Vision for a reliable read...'
+            : '[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
           onStage?.('vision');
           try {
             const visionResult = await runVisionFallback(aiImageUri);
-            console.log('[Lot OCR] Using Google Vision fallback result');
-            result = visionResult;
+            // Garder ML Kit si Vision renvoie un texte vide (frame floue).
+            if (visionResult.text && visionResult.text.trim().length > 0) {
+              result = visionResult;
+              console.log('[Lot OCR] Using Google Vision fallback result');
+            }
           } catch (error) {
             console.warn('[Lot OCR] Vision fallback failed, keeping ML Kit result', error);
           }
@@ -1212,7 +1221,7 @@ export async function performOcrMultiFrame(
     throw new Error('No frames provided to performOcrMultiFrame');
   }
   if (uris.length === 1) {
-    return performOcr(uris[0], brand, onStage);
+    return performOcr(uris[0], brand, onStage, options);
   }
 
   console.log(`[Multi-frame OCR] Processing ${uris.length} frames with ML Kit...`);
@@ -1251,7 +1260,15 @@ export async function performOcrMultiFrame(
   // 3) Vision puis Claude seulement si la meilleure frame ne donne pas de lot.
   let result: OCRResult = best.result;
   const bestLot = await extractLotNumber(best.result.text, brand);
-  if (!bestLot && allowPaid) {
+  // Mode malvoyant (fullFrame) : ML Kit sur l'appareil lit mal les codes gravés /
+  // réfléchissants → ses lectures « réussies » sont souvent des fragments erronés
+  // qui empêchent le consensus de converger (d'où les 4-5 essais en restant
+  // immobile). On route donc directement vers Vision (fiable + rapide en
+  // us-central1) sur la meilleure frame à CHAQUE capture, sans attendre que ML Kit
+  // échoue → lecture fiable dès le 1er essai, consensus en ~2 captures. Le plafond
+  // MAX_PAID_OCR_PER_SESSION protège le coût.
+  const preferVision = options?.fullFrame === true;
+  if ((!bestLot || preferVision) && allowPaid) {
     let aiImageUri: string | null = null;
     if (isVisionAvailable() || isClaudeAvailable()) {
       try {
@@ -1264,7 +1281,12 @@ export async function performOcrMultiFrame(
       if (isVisionAvailable() && aiImageUri) {
         onStage?.('vision');
         try {
-          result = await runVisionFallback(aiImageUri);
+          const visionResult = await runVisionFallback(aiImageUri);
+          // Ne remplacer la meilleure frame ML Kit que si Vision a produit du
+          // texte (frame floue → Vision peut renvoyer vide ; on garde ML Kit).
+          if (visionResult.text && visionResult.text.trim().length > 0) {
+            result = visionResult;
+          }
           console.log('[Multi-frame OCR] Vision fallback used');
         } catch (error) {
           console.warn('[Multi-frame OCR] Vision fallback failed, keeping ML Kit result', error);
