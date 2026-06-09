@@ -31,15 +31,8 @@ const AUTO_CAPTURE_DELAY_SIGHTED_MS = 400;
 
 // Accessibility-mode constants for blind lot scanning.
 const MAX_ACCESSIBILITY_RETRIES = 10;
-// Blind users can't aim, so they need many accurate (Vision/Claude) reads to reach
-// the 2-read consensus — a cap of 2 left them on weak on-device ML Kit and the lot
-// was "never detected". Allow more paid reads across the continuous scan session.
+// Cap paid OCR (Vision/Claude) calls across a continuous blind-scan session.
 const MAX_PAID_OCR_PER_SESSION = 6;
-// Require TWO consistent reliable reads before confirming a lot. A single read
-// can be a wrong/partial OCR (reflective/etched codes vary frame-to-frame), and a
-// wrong lot stored then gets re-checked by the hourly background task → it caused
-// FALSE "DO NOT CONSUME" recall alerts. Safety first: never confirm on one read.
-const LOT_CONSENSUS_THRESHOLD = 2;
 const COACHING_SUPPRESS_MS = 7000;
 const LOT_COACH_ROTATION = {
   1: ['lotCoach1a', 'lotCoach1b', 'lotCoach1c'], // retries 1-3: keep moving
@@ -224,8 +217,13 @@ export function ScanLotScreen() {
         ? (lotSeenCountRef.current.get(normalizeLotValue(displayLot))?.count ?? 0)
         : 0;
       const agreement = Math.max(seenCount, intraFrameAgreement ?? 0);
+      // Mode malvoyant = MÊME logique que le mode normal : on confirme dès la
+      // PREMIÈRE lecture fiable (plus d'exigence de consensus 2 lectures, qui ne
+      // convergeait jamais sur les codes lus différemment à chaque capture → le
+      // lot n'était jamais détecté). On garde juste isReliableLot pour ne pas
+      // annoncer une date/un parasite. La voix lit le lot + le statut de rappel.
       const accepted = accessibilityMode
-        ? !!displayLot && isReliableLot(displayLot) && agreement >= LOT_CONSENSUS_THRESHOLD
+        ? !!displayLot && isReliableLot(displayLot)
         : !!displayLot;
 
       // Ne pas exiger qu'un lot soit dÃ©tectÃ© - on affiche tout le texte OCR
@@ -305,8 +303,11 @@ export function ScanLotScreen() {
       const intra = lastIntraAgreementRef.current;
       const agreement = Math.max(seen, intra);
       const hadReliableRead = !!lot && isReliableLot(lot);
+      // Voir mutationFn : on confirme dès la 1re lecture fiable (parité avec le
+      // mode normal). Le retry ci-dessous ne sert plus qu'au cas SANS lecture
+      // fiable (OCR n'a rien sorti d'exploitable).
       const detected = accessibilityMode
-        ? hadReliableRead && agreement >= LOT_CONSENSUS_THRESHOLD
+        ? hadReliableRead
         : !!lot;
 
       // Accessibility: not yet confirmed → keep scanning with rotating guidance.
