@@ -57,9 +57,6 @@ type ScannerProps = {
 
 const DEFAULT_PREVIEW_OCR_INTERVAL_MS = 1800;
 const LOW_LIGHT_EMPTY_THRESHOLD = 3;
-// A black/empty capture (iOS photo-output glitch) compresses to a few KB, so a
-// full-res JPEG under this size is treated as black and re-captured.
-const BLACK_FRAME_MIN_BYTES = 20000;
 
 export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   {
@@ -103,10 +100,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
-  // Brief activation delay on (re)focus (both barcode AND lot screens) so iOS
-  // releases the previous screen's camera session before this one activates —
-  // otherwise the camera comes up BLACK on the 2nd scan.
-  const [activeDelayPassed, setActiveDelayPassed] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
   const [flashOn, setFlashOn] = useState(false);
 
@@ -128,57 +121,15 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     }
   }, [permission, requestPermission]);
 
-  // BOTH camera screens (barcode AND lot): wait ~600ms after (re)focus before
-  // activating the camera, so iOS fully releases the PREVIOUS screen's camera
-  // session first. Without this, the freshly-focused camera comes up BLACK on the
-  // 2nd scan → the next OCR sees an empty/black frame ("analyse" then keeps asking
-  // to search). Per-focus, so the first scan just starts ~600ms later (imperceptible).
-  useEffect(() => {
-    // Barcode screen: NEVER gate or remount via activeDelayPassed — keep the
-    // camera always mounted (like the FR app); `active={isFocused}` releases/
-    // reacquires it and the key-remount gives fresh re-detection. No delay, no
-    // warmup, no black placeholder → instant barcode scan (this gate was the
-    // regression that stopped barcode scanning entirely).
-    if (enableBarcodeScanning) return;
-    // Lot screen ONLY (unchanged): force a FULL camera remount — unmount the
-    // CameraView, let iOS release the previous (barcode) session, then mount fresh
-    // after a short gap, so the lot camera never comes up black on the 2nd scan.
-    if (!isFocused) {
-      setActiveDelayPassed(false);
-      setCameraReady(false);
-      return;
-    }
-    setActiveDelayPassed(false);
-    setCameraReady(false);
-    const id = setTimeout(() => setActiveDelayPassed(true), 600);
-    return () => clearTimeout(id);
-  }, [isFocused, enableBarcodeScanning]);
-
-  // iOS: the photo output's FIRST shot after a camera (re)mount can come back
-  // BLACK even though the live preview looks fine — so the OCR receives an empty
-  // image ("analyse" then keeps asking to search). Prime it with one throwaway
-  // capture shortly after the camera reports ready, on each (re)mount.
-  // Skipped on the barcode screen: it never calls takePictureAsync, and a
-  // throwaway shot there interrupts the continuous barcode scan → slow detection.
-  useEffect(() => {
-    if (!cameraReady || enableBarcodeScanning) return;
-    let cancelled = false;
-    const id = setTimeout(async () => {
-      if (cancelled || !cameraRef.current || previewOcrInFlightRef.current) return;
-      previewOcrInFlightRef.current = true;
-      try {
-        await cameraRef.current.takePictureAsync({ quality: 0.1, skipProcessing: true, shutterSound: false, exif: false } as any);
-      } catch {
-        /* noop */
-      } finally {
-        previewOcrInFlightRef.current = false;
-      }
-    }, 250);
-    return () => {
-      cancelled = true;
-      clearTimeout(id);
-    };
-  }, [cameraReady, enableBarcodeScanning]);
+  // Camera mounting = exactly the FR app's approach (it works reliably on iOS):
+  // the CameraView is ALWAYS mounted with `active={isFocused}`, so the backgrounded
+  // screen releases the single iOS camera session and the focused one reacquires it.
+  // NO activation delay, NO black placeholder, NO throwaway "prime" capture — those
+  // US-only workarounds were what stopped the lot capture from feeding the OCR on
+  // iPhone. Barcode mode additionally remounts via `key={bc-${resetToken}}` (below)
+  // for fresh re-detection on return; lot mode keeps the same session (no freeze on
+  // "Recommencer"). `cameraReady` is never reset on blur → it stays true across focus
+  // (the lot camera is not remounted), so capture works immediately on return.
 
   const handleBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
@@ -216,41 +167,22 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     previewOcrInFlightRef.current = true;
     try {
       // Rafale de N photos (multiFrameCount) : l'OCR choisira la meilleure.
+      // Capture directe comme l'app FR : on pousse la frame dès qu'on a un uri,
+      // sans contrôle de taille / re-capture "anti-noir" (ce contrôle rejetait
+      // des captures légitimes < 20 Ko → uris vide → l'OCR ne se lançait jamais).
       const frameCount = Math.max(1, multiFrameCount);
       const uris: string[] = [];
       for (let i = 0; i < frameCount; i++) {
         if (!cameraRef.current) break;
-        // Capture a NON-BLACK frame: on iOS the photo output can return a fully
-        // black image even with a live preview. A black frame compresses to a few
-        // KB, so we check the file size and re-capture instead of feeding an empty
-        // image to the OCR (which then just says "analyse" and keeps searching).
-        for (let attempt = 0; attempt < 3; attempt++) {
-          if (!cameraRef.current) break;
-          try {
-            const photo = await cameraRef.current.takePictureAsync({
-              quality: 1.0,
-              skipProcessing: false,
-              shutterSound: false
-            });
-            if (!photo?.uri) continue;
-            let sizeOk = true;
-            try {
-              const info = await FileSystem.getInfoAsync(photo.uri);
-              sizeOk = !info.exists || ((info as any).size ?? 0) >= BLACK_FRAME_MIN_BYTES;
-            } catch {
-              sizeOk = true; // can't stat → keep the frame
-            }
-            if (sizeOk) {
-              uris.push(photo.uri);
-              break;
-            }
-            console.warn(`Capture frame ${i + 1}/${frameCount} looked black (retry ${attempt + 1}/3)`);
-            try { await FileSystem.deleteAsync(photo.uri, { idempotent: true }); } catch { /* noop */ }
-            await new Promise((resolve) => setTimeout(resolve, 250));
-          } catch (frameError) {
-            console.warn(`Capture frame ${i + 1}/${frameCount} failed`, frameError);
-            break;
-          }
+        try {
+          const photo = await cameraRef.current.takePictureAsync({
+            quality: 1.0,
+            skipProcessing: false,
+            shutterSound: false
+          });
+          if (photo?.uri) uris.push(photo.uri);
+        } catch (frameError) {
+          console.warn(`Capture frame ${i + 1}/${frameCount} failed`, frameError);
         }
         if (i < frameCount - 1 && multiFrameDelayMs > 0) {
           await new Promise((resolve) => setTimeout(resolve, multiFrameDelayMs));
@@ -285,6 +217,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     if (!cameraRef.current) return;
 
     previewOcrInFlightRef.current = true;
+    let snapshotUri: string | null = null;
     try {
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.4,
@@ -293,6 +226,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         exif: false
       });
       if (!photo?.uri) return;
+      snapshotUri = photo.uri;
 
       const result = await TextRecognition.recognize(photo.uri);
       const text = (result?.text ?? '').trim();
@@ -337,6 +271,15 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       // ML Kit failures on partial frames are expected — don't spam logs.
     } finally {
       previewOcrInFlightRef.current = false;
+      // Supprimer la snapshot d'aperçu (comme l'app FR) : une photo toutes les
+      // ~1,8 s sinon s'accumule pendant le scan continu → pression stockage.
+      if (snapshotUri) {
+        try {
+          await FileSystem.deleteAsync(snapshotUri, { idempotent: true });
+        } catch {
+          /* noop */
+        }
+      }
     }
   }, [emitCoachingHint, lowLightDetectionEnabled, onCoachingHint, onLowLight, onPreviewOcrText]);
 
@@ -428,11 +371,8 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   return (
     <View style={styles.container}>
       <View style={styles.cameraWrapper}>
-        {/* Lot screen: full remount (black placeholder during the ~600ms post-focus
-            gap) so iOS releases the previous camera session → never black on the 2nd
-            scan. Barcode screen: camera ALWAYS mounted (active={isFocused}) for
-            instant, FR-like detection — no gate, no placeholder. */}
-        {(enableBarcodeScanning || activeDelayPassed) ? (
+        {/* Caméra TOUJOURS montée (approche FR), `active={isFocused}` gère la
+            libération/réacquisition de la session iOS. Pas de placeholder noir. */}
         <CameraView
           // En mode CODE-BARRES seulement : on remonte la caméra à chaque
           // (re)focus (resetToken est incrémenté au focus) pour repartir sur une
@@ -474,9 +414,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           }
           onBarcodeScanned={enableBarcodeScanning ? handleBarcodeScanned : undefined}
         />
-        ) : (
-          <View style={[styles.camera, { backgroundColor: '#000' }]} />
-        )}
 
         {/* Back button */}
         {onBack && (
