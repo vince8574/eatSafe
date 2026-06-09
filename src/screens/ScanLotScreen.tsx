@@ -39,8 +39,6 @@ const MAX_PAID_OCR_PER_SESSION = 6;
 // can be a wrong/partial OCR (reflective/etched codes vary frame-to-frame), and a
 // wrong lot stored then gets re-checked by the hourly background task → it caused
 // FALSE "DO NOT CONSUME" recall alerts. Safety first: never confirm on one read.
-// Full-frame OCR (fullFrame option) makes the correct lot read consistently so
-// this consensus converges on the real lot instead of stalling.
 const LOT_CONSENSUS_THRESHOLD = 2;
 const COACHING_SUPPRESS_MS = 7000;
 const LOT_COACH_ROTATION = {
@@ -192,8 +190,8 @@ export function ScanLotScreen() {
       // Cap paid OCR (Vision/Claude) per scan session in accessibility continuous mode.
       const allowPaidFallback = paidOcrCountRef.current < MAX_PAID_OCR_PER_SESSION;
       const { lot, result, candidates, intraFrameAgreement } = Array.isArray(lotPhoto)
-        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback, fullFrame: accessibilityMode })
-        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback, fullFrame: accessibilityMode });
+        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback })
+        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback });
       if (allowPaidFallback && (result.source === 'vision-fallback' || result.source === 'claude-fallback')) {
         paidOcrCountRef.current += 1;
       }
@@ -781,7 +779,7 @@ export function ScanLotScreen() {
         mode="band"
         resetToken={scannerResetToken}
         flashPosition="top-right"
-        multiFrameCount={3}
+        multiFrameCount={accessibilityMode ? 4 : 3}
         multiFrameDelayMs={accessibilityMode ? 250 : 200}
         onBack={handleGoBack}
         onRestart={handleRestart}
