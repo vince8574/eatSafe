@@ -102,11 +102,12 @@ async function enhanceForOcr(imageBase64: string): Promise<string | null> {
   try {
     const input = Buffer.from(imageBase64, 'base64');
     const image = await Jimp.read(input);
-    // greyscale → mild blur BRIDGES the gaps between dot-matrix / inkjet dots so
-    // each character becomes a solid stroke (OCR drops sparse-dot chars, e.g. the
-    // faint "MG"/"49A" in "MG26148R49A") → normalize stretches the histogram →
-    // strong contrast darkens the now-solid faint ink toward black for the OCR.
-    image.greyscale().blur(2).normalize().contrast(0.6);
+    console.log('[ocrVision] input image:', `${image.getWidth()}x${image.getHeight()}`);
+    // Gentle enhancement only: greyscale + histogram normalize + mild contrast.
+    // (Aggressive blur+contrast destroyed faint dot-matrix into noise — logs showed
+    // a real code degrade to "Y6+88". The raw pass is always merged in, so this
+    // only ever ADDS candidates, never replaces the raw read.)
+    image.greyscale().normalize().contrast(0.25);
     const out = await image.getBufferAsync(Jimp.MIME_PNG);
     return out.toString('base64');
   } catch (error) {
