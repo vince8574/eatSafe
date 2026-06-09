@@ -1020,10 +1020,6 @@ export type OcrStage = 'mlkit' | 'vision' | 'claude';
 // the free on-device ML Kit runs.
 export interface PerformOcrOptions {
   allowPaidFallback?: boolean;
-  // Accessibility: OCR the WHOLE frame instead of a centered horizontal band.
-  // Blind users can't orient the product, and lot codes are often printed
-  // vertically / off-center — the band would slice them into partial reads.
-  fullFrame?: boolean;
 }
 
 export async function performOcr(
@@ -1042,7 +1038,10 @@ export async function performOcr(
     console.log('[Lot OCR] Trying ML Kit first (local, fast)...');
     onStage?.('mlkit');
 
-    const processedForMlkit = await preprocessImage(uri, options?.fullFrame ? {} : { cropForLot: true, narrowBand: true });
+    // Recadrage en bande étroite (approche FR) pour ML Kit comme pour l'IA, dans
+    // TOUS les modes : un lot occupe une fine bande ; OCR-er la frame entière noie
+    // le code (trop petit) → lectures incohérentes (c'était le bug du mode malvoyant).
+    const processedForMlkit = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
     result = await runMlkit(processedForMlkit);
 
     try {
@@ -1053,11 +1052,7 @@ export async function performOcr(
 
     // Si ML Kit n'a trouvé aucun lot, basculer sur les fallbacks distants.
     const mlkitLot = await extractLotNumber(result.text, brand);
-    // Mode malvoyant (fullFrame) : router directement vers Vision sur chaque
-    // capture (ML Kit local lit mal les codes gravés → fragments qui bloquent le
-    // consensus). Voir performOcrMultiFrame pour le détail.
-    const preferVision = options?.fullFrame === true;
-    if ((!mlkitLot || preferVision) && allowPaid) {
+    if (!mlkitLot && allowPaid) {
       // Image IA UNIQUE : 2000px JPEG 0.85 (visionPreprocessConfig), calculée
       // une seule fois ici puis réutilisée pour Vision PUIS Claude. Évite de
       // re-préprocesser et garantit que Claude (tier le plus lent) ne lit plus
@@ -1065,9 +1060,7 @@ export async function performOcr(
       let aiImageUri: string | null = null;
       if (isVisionAvailable() || isClaudeAvailable()) {
         try {
-          aiImageUri = await preprocessImage(uri, options?.fullFrame
-            ? { useVisionConfig: true }
-            : { cropForLot: true, narrowBand: true, useVisionConfig: true });
+          aiImageUri = await preprocessImage(uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
         } catch (error) {
           console.warn('[Lot OCR] Failed to build AI image (2000px JPEG)', error);
         }
@@ -1075,9 +1068,7 @@ export async function performOcr(
 
       try {
         if (isVisionAvailable() && aiImageUri) {
-          console.log(preferVision
-            ? '[Lot OCR] Accessibility: routing to Google Vision for a reliable read...'
-            : '[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
+          console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
           onStage?.('vision');
           try {
             const visionResult = await runVisionFallback(aiImageUri);
@@ -1231,7 +1222,7 @@ export async function performOcrMultiFrame(
   const frameResults = await Promise.all(
     uris.map(async (uri, index) => {
       try {
-        const processed = await preprocessImage(uri, options?.fullFrame ? {} : { cropForLot: true, narrowBand: true });
+        const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
         let mlkitResult: OCRResult;
         try {
           mlkitResult = await runMlkit(processed);
@@ -1260,19 +1251,11 @@ export async function performOcrMultiFrame(
   // 3) Vision puis Claude seulement si la meilleure frame ne donne pas de lot.
   let result: OCRResult = best.result;
   const bestLot = await extractLotNumber(best.result.text, brand);
-  // Mode malvoyant (fullFrame) : ML Kit sur l'appareil lit mal les codes gravés /
-  // réfléchissants → ses lectures « réussies » sont souvent des fragments erronés
-  // qui empêchent le consensus de converger (d'où les 4-5 essais en restant
-  // immobile). On route donc directement vers Vision (fiable + rapide en
-  // us-central1) sur la meilleure frame à CHAQUE capture, sans attendre que ML Kit
-  // échoue → lecture fiable dès le 1er essai, consensus en ~2 captures. Le plafond
-  // MAX_PAID_OCR_PER_SESSION protège le coût.
-  const preferVision = options?.fullFrame === true;
-  if ((!bestLot || preferVision) && allowPaid) {
+  if (!bestLot && allowPaid) {
     let aiImageUri: string | null = null;
     if (isVisionAvailable() || isClaudeAvailable()) {
       try {
-        aiImageUri = await preprocessImage(best.uri, options?.fullFrame ? { useVisionConfig: true } : { cropForLot: true, narrowBand: true, useVisionConfig: true });
+        aiImageUri = await preprocessImage(best.uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
       } catch (error) {
         console.warn('[Multi-frame OCR] Failed to build AI image', error);
       }
