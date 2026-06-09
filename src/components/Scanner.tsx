@@ -34,9 +34,6 @@ type ScannerProps = {
   // l'OCR puisse choisir la meilleure (plus robuste sur photo floue/bougée).
   multiFrameCount?: number;
   multiFrameDelayMs?: number;
-  // Zoom caméra 0..1 (0 = aucun). Utilisé sur l'écran lot pour grossir les
-  // petits codes gravés sans avoir à rapprocher le téléphone.
-  zoom?: number;
   isProcessing?: boolean;
   enableBarcodeScanning?: boolean;
   mode?: ScannerMode;
@@ -70,7 +67,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     onBarcodeScanned,
     multiFrameCount = 1,
     multiFrameDelayMs = 200,
-    zoom = 0,
     isProcessing = false,
     enableBarcodeScanning = false,
     mode = 'photo',
@@ -447,7 +443,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           ref={cameraRef}
           style={styles.camera}
           facing="back"
-          zoom={zoom}
           // active={isFocused} : l'écran en arrière-plan LIBÈRE la session caméra
           // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra

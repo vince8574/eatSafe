@@ -29,11 +29,6 @@ import { useKeepAwake } from 'expo-keep-awake';
 const AUTO_CAPTURE_DELAY_VOICE_MS = 3000;
 const AUTO_CAPTURE_DELAY_SIGHTED_MS = 400;
 
-// Zoom caméra sur l'écran lot (0..1) : grossit les petits codes gravés pour les
-// lire sans avoir à rapprocher le téléphone → moins de tentatives. Valeur
-// modérée, ajustable selon le retour terrain (monter si encore trop petit).
-const LOT_CAMERA_ZOOM = 0.08;
-
 // Accessibility-mode constants for blind lot scanning.
 const MAX_ACCESSIBILITY_RETRIES = 10;
 // Blind users can't aim, so they need many accurate (Vision/Claude) reads to reach
@@ -788,7 +783,6 @@ export function ScanLotScreen() {
         flashPosition="top-right"
         multiFrameCount={3}
         multiFrameDelayMs={accessibilityMode ? 250 : 200}
-        zoom={LOT_CAMERA_ZOOM}
         onBack={handleGoBack}
         onRestart={handleRestart}
         onManualEntry={handleManualEntry}
