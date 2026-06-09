@@ -47,11 +47,14 @@ function postJson(url: string, payload: unknown): Promise<{ status: number; body
   });
 }
 
-// One Google Vision TEXT_DETECTION call on a base64 image → parsed text/lines.
+// One Google Vision call on a base64 image → parsed text/lines. `feature` is
+// TEXT_DETECTION (sparse) or DOCUMENT_TEXT_DETECTION (dense — better on packed
+// codes like inkjet/dot-matrix lot numbers).
 async function callVision(
   apiKey: string,
   imageBase64: string,
-  languageHints: string[]
+  languageHints: string[],
+  feature: 'TEXT_DETECTION' | 'DOCUMENT_TEXT_DETECTION' = 'TEXT_DETECTION'
 ): Promise<VisionResult> {
   const { status, body: data } = await postJson(
     `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`,
@@ -59,7 +62,7 @@ async function callVision(
       requests: [
         {
           image: { content: imageBase64 },
-          features: [{ type: 'TEXT_DETECTION' }],
+          features: [{ type: feature }],
           imageContext: { languageHints }
         }
       ]
@@ -99,7 +102,11 @@ async function enhanceForOcr(imageBase64: string): Promise<string | null> {
   try {
     const input = Buffer.from(imageBase64, 'base64');
     const image = await Jimp.read(input);
-    image.greyscale().normalize().contrast(0.35);
+    // greyscale → mild blur BRIDGES the gaps between dot-matrix / inkjet dots so
+    // each character becomes a solid stroke (OCR drops sparse-dot chars, e.g. the
+    // faint "MG"/"49A" in "MG26148R49A") → normalize stretches the histogram →
+    // strong contrast darkens the now-solid faint ink toward black for the OCR.
+    image.greyscale().blur(2).normalize().contrast(0.6);
     const out = await image.getBufferAsync(Jimp.MIME_PNG);
     return out.toString('base64');
   } catch (error) {
@@ -192,9 +199,9 @@ export const ocrVision = functions
       // Build the enhanced variant (local CPU), then OCR raw + enhanced together.
       const enhancedBase64 = await enhanceForOcr(imageBase64);
       const [rawResult, enhancedResult] = await Promise.all([
-        callVision(apiKey, imageBase64, languageHints),
+        callVision(apiKey, imageBase64, languageHints, 'TEXT_DETECTION'),
         enhancedBase64
-          ? callVision(apiKey, enhancedBase64, languageHints).catch((e) => {
+          ? callVision(apiKey, enhancedBase64, languageHints, 'DOCUMENT_TEXT_DETECTION').catch((e) => {
               console.warn('[ocrVision] enhanced pass failed:', e instanceof Error ? e.message : e);
               return null;
             })
@@ -202,14 +209,11 @@ export const ocrVision = functions
       ]);
 
       const merged = mergeReads(rawResult, enhancedResult);
-      console.log(
-        '[ocrVision] raw len:',
-        rawResult.text.length,
-        'enhanced len:',
-        enhancedResult?.text.length ?? 0,
-        'merged lines:',
-        merged.lines.length
-      );
+      // TEMP diagnostics: log exactly what each pass read so the contrast/feature
+      // settings can be tuned against real hard codes. Lot codes aren't PII.
+      console.log('[ocrVision] RAW pass     :', JSON.stringify(rawResult.text));
+      console.log('[ocrVision] ENHANCED pass:', JSON.stringify(enhancedResult?.text ?? ''));
+      console.log('[ocrVision] MERGED lines :', merged.lines.length);
 
       res.status(200).json({
         text: merged.text,
