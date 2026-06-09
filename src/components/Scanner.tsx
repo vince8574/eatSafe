@@ -100,6 +100,10 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  // Mise au point : on bascule 'off'→'on' juste avant la rafale pour FORCER une
+  // reconvergence de l'autofocus (sur iOS il reste souvent verrouillé sur
+  // l'arrière-plan → photo floue alors que la preview semble nette).
+  const [autofocus, setAutofocus] = useState<'on' | 'off'>('on');
   const [scannedBarcode, setScannedBarcode] = useState<string | null>(null);
   const [flashOn, setFlashOn] = useState(false);
 
@@ -152,6 +156,15 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     [enableBarcodeScanning, isProcessing, isFocused, onBarcodeScanned, scannedBarcode]
   );
 
+  // Force l'autofocus à reconverger (toggle 'off'→'on') juste avant de shooter,
+  // pour ne pas capturer pendant que l'AF est verrouillé sur l'arrière-plan.
+  const forceRefocus = useCallback(async () => {
+    setAutofocus('off');
+    await new Promise((resolve) => setTimeout(resolve, 80));
+    setAutofocus('on');
+    await new Promise((resolve) => setTimeout(resolve, 450)); // laisser l'AF converger
+  }, []);
+
   const handleCapture = useCallback(async () => {
     if (!cameraRef.current || isProcessingRef.current || !cameraReady) {
       return;
@@ -166,6 +179,8 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     }
     previewOcrInFlightRef.current = true;
     try {
+      // Reconverge la mise au point sur la scène réelle avant la rafale (anti-flou).
+      await forceRefocus();
       // Rafale de N photos (multiFrameCount) : l'OCR choisira la meilleure.
       // Capture directe comme l'app FR : on pousse la frame dès qu'on a un uri,
       // sans contrôle de taille / re-capture "anti-noir" (ce contrôle rejetait
@@ -180,7 +195,10 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
             skipProcessing: false,
             shutterSound: false
           });
-          if (photo?.uri) uris.push(photo.uri);
+          if (photo?.uri) {
+            console.log(`[Capture] frame ${i + 1}/${frameCount}: ${photo.width}x${photo.height}`);
+            uris.push(photo.uri);
+          }
         } catch (frameError) {
           console.warn(`Capture frame ${i + 1}/${frameCount} failed`, frameError);
         }
@@ -197,7 +215,7 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
     } finally {
       previewOcrInFlightRef.current = false;
     }
-  }, [cameraReady, onCapture, multiFrameCount, multiFrameDelayMs]);
+  }, [cameraReady, onCapture, multiFrameCount, multiFrameDelayMs, forceRefocus]);
 
   const emitCoachingHint = useCallback(
     (hint: CoachingHint) => {
@@ -383,6 +401,8 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           ref={cameraRef}
           style={styles.camera}
           facing="back"
+          mode="picture"
+          autofocus={autofocus}
           // active={isFocused} : l'écran en arrière-plan LIBÈRE la session caméra
           // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
