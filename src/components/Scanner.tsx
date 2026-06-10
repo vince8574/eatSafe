@@ -386,13 +386,10 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           ref={cameraRef}
           style={styles.camera}
           facing="back"
-          // AF CONTINU STATIQUE (jamais togglé) + mode photo, UNIQUEMENT hors
-          // code-barres. Sur iOS, modifier dynamiquement une prop de session caméra
-          // (zoom, autofocus) reconfigure la session → frames noires/floues ; et
-          // mode="picture"/autofocus sur l'écran code-barres cassait sa mise au
-          // point continue. Donc : valeur fixe ici, défauts sur le code-barres.
-          mode={enableBarcodeScanning ? undefined : 'picture'}
-          autofocus={enableBarcodeScanning ? undefined : 'on'}
+          // PAS de prop `mode`/`autofocus` : les défauts d'expo-camera font déjà un
+          // autofocus continu net (prouvé par l'écran code-barres). Forcer
+          // autofocus="on" verrouillait/dégradait le focus sur l'écran lot (preview
+          // floue). Le gain de lecture vient du crop pleine résolution, pas du focus.
           // active={isFocused} : l'écran en arrière-plan LIBÈRE la session caméra
           // (iOS n'autorise qu'une caméra active) → l'écran de lot peut l'obtenir.
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
