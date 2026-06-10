@@ -67,7 +67,10 @@ type ClaudeApiResponse = {
   usage?: ClaudeUsage;
 };
 
-async function runClaudeFallback(uri: string): Promise<OCRResult> {
+async function runClaudeFallback(
+  uri: string,
+  meta?: { nativeWidth?: number; nativeHeight?: number }
+): Promise<OCRResult> {
   const { endpoint } = getClaudeConfig();
   if (!endpoint) throw new Error('ocrClaude Cloud Function endpoint not configured');
 
@@ -95,7 +98,12 @@ async function runClaudeFallback(uri: string): Promise<OCRResult> {
     response = await fetch(endpoint, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ imageBase64: base64Image, mediaType }),
+      body: JSON.stringify({
+        imageBase64: base64Image,
+        mediaType,
+        nativeWidth: meta?.nativeWidth,
+        nativeHeight: meta?.nativeHeight
+      }),
       signal: controller.signal
     });
   } finally {
@@ -134,19 +142,26 @@ async function runClaudeFallback(uri: string): Promise<OCRResult> {
 export async function tryClaudeFallback(
   uri: string,
   previousOcr: OCRResult,
-  context: 'lot'
+  context: 'lot',
+  options?: { force?: boolean; nativeWidth?: number; nativeHeight?: number }
 ): Promise<OCRResult | null> {
   if (!isClaudeAvailable()) {
     console.log('[ClaudeFallback] skipped: endpoint not configured');
     return null;
   }
-  if (hasPlausibleLotPattern(previousOcr.text)) {
+  // `force` : le caller route déjà explicitement vers Claude (ex. lot lu trop
+  // court / probablement tronqué). On bypasse alors le gate "motif plausible" —
+  // sinon un partiel type "48R49A" (lettres+chiffres) bloque Claude à tort.
+  if (!options?.force && hasPlausibleLotPattern(previousOcr.text)) {
     console.log('[ClaudeFallback] skipped: previous OCR already has a lot pattern');
     return null;
   }
   try {
-    console.log(`[ClaudeFallback] invoking Cloud Function for ${context}`);
-    const result = await runClaudeFallback(uri);
+    console.log(`[ClaudeFallback] invoking Cloud Function for ${context}${options?.force ? ' (forced)' : ''}`);
+    const result = await runClaudeFallback(uri, {
+      nativeWidth: options?.nativeWidth,
+      nativeHeight: options?.nativeHeight
+    });
     return result.text ? result : null;
   } catch (e) {
     console.warn('[ClaudeFallback] call failed, keeping previous result', e);

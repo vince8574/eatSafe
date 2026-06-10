@@ -99,7 +99,10 @@ export function shouldUseVisionFallback(result: OCRResult) {
   };
 }
 
-export async function runVisionFallback(uri: string): Promise<OCRResult> {
+export async function runVisionFallback(
+  uri: string,
+  meta?: { nativeWidth?: number; nativeHeight?: number }
+): Promise<OCRResult> {
   const { endpoint } = getVisionConfig();
 
   if (!endpoint) {
@@ -123,7 +126,9 @@ export async function runVisionFallback(uri: string): Promise<OCRResult> {
     headers,
     body: JSON.stringify({
       imageBase64: base64Image,
-      languageHints: ['fr', 'en']
+      languageHints: ['fr', 'en'],
+      nativeWidth: meta?.nativeWidth,
+      nativeHeight: meta?.nativeHeight
     })
   });
 
