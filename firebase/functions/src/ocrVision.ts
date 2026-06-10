@@ -102,7 +102,11 @@ async function enhanceForOcr(imageBase64: string): Promise<string | null> {
   try {
     const input = Buffer.from(imageBase64, 'base64');
     const image = await Jimp.read(input);
-    console.log('[ocrVision] input image:', `${image.getWidth()}x${image.getHeight()}`);
+    // Diagnostic : luminosité moyenne (0-255) pour distinguer une capture NOIRE
+    // (≈0 → frame noire iOS) d'une image floue mais éclairée (focus/distance).
+    const tiny = image.clone().resize(1, 1);
+    const p = Jimp.intToRGBA(tiny.getPixelColor(0, 0));
+    console.log('[ocrVision] input image:', `${image.getWidth()}x${image.getHeight()}`, '| avgBrightness:', Math.round((p.r + p.g + p.b) / 3));
     // Gentle enhancement only: greyscale + histogram normalize + mild contrast.
     // (Aggressive blur+contrast destroyed faint dot-matrix into noise — logs showed
     // a real code degrade to "Y6+88". The raw pass is always merged in, so this
