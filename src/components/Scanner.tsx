@@ -167,11 +167,16 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
       const sizes = await cameraRef.current?.getAvailablePictureSizesAsync?.();
       console.log('[Capture] available picture sizes:', JSON.stringify(sizes));
       if (Array.isArray(sizes) && sizes.length > 0) {
-        // NE PAS prendre la plus grande SURFACE : sur iPhone la plus grande taille
-        // offerte peut être ~CARRÉE (ex. 2224x2160) → la capture coupe les côtés
-        // d'un numéro de lot large (les logs montraient MG26148R49A réduit à
-        // "48R49A"). On privilégie la plus grande taille au format LARGE (4:3/16:9,
-        // ratio ≥ 1.2) pour garder toute la largeur du capteur. Repli : surface max.
+        // iOS : les vrais presets sont des NOMS ("Photo" = pleine résolution 4:3 =
+        // pleine largeur du capteur). Les valeurs numériques type "3840x2160" sont
+        // des presets VIDÉO qu'iOS rend en ~CARRÉ (logs : on demandait 3840x2160 et
+        // la capture sortait en 2224x2160 → côtés du code coupés). On privilégie
+        // donc "Photo" (puis "High") s'ils existent.
+        const namedPhoto = sizes.find((s) => /^photo$/i.test(String(s)))
+          ?? sizes.find((s) => /^high$/i.test(String(s)));
+
+        // Sinon (Android) : plus grande taille au format LARGE (4:3/16:9, ratio
+        // ≥ 1.2) pour garder toute la largeur ; repli sur surface max.
         let best: string | undefined;
         let bestWideArea = 0;
         let bestAnyArea = 0;
@@ -192,11 +197,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
             best = s;
           }
         }
-        const chosen = best ?? bestAny;
-        console.log('[Capture] chosen pictureSize:', chosen, '(wide pref:', best, ')');
+        const chosen = namedPhoto ?? best ?? bestAny;
+        console.log('[Capture] chosen pictureSize:', chosen, '(named:', namedPhoto, 'wide:', best, ')');
         // Remonté aux logs cloud d'OCR pour confirmer le format de capture sans
         // logs appareil (cf. setCaptureDiag / ocrVision).
-        setCaptureDiag(`pictureSizes=${JSON.stringify(sizes)} chosen=${chosen ?? 'none'} widePref=${best ?? 'none'}`);
+        setCaptureDiag(`pictureSizes=${JSON.stringify(sizes)} chosen=${chosen ?? 'none'} named=${namedPhoto ?? 'none'} widePref=${best ?? 'none'}`);
         if (chosen) setPictureSize(chosen);
       }
     } catch {
