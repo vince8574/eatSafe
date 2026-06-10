@@ -22,22 +22,27 @@ function isUnknownBrand(brand: string) {
     return true;
   }
 
-  const unknownTokens = [
+  // Placeholders LONGS : startsWith pour attraper "Unknown Brand" / "Unknown
+  // Product" (normalisés "UNKNOWNBRAND"...) et "Inconnue", etc.
+  const longPlaceholders = [
     'UNKNOWN',
     'INCONNU',
     'DESCONOCIDO',
     'DESCONHECIDO',
     'SCONOSCIUTO',
     'UNBEKANNT',
-    'ONBEKEND',
-    'UNK',
-    'NA',
-    'NONE'
+    'ONBEKEND'
   ];
+  if (longPlaceholders.some((tok) => normalized.startsWith(tok))) {
+    return true;
+  }
 
-  // startsWith so the real defaults "Unknown Brand" / "Unknown Product" (normalized
-  // to "UNKNOWNBRAND" / "UNKNOWNPRODUCT") and localized "Inconnue", etc. are caught.
-  return unknownTokens.some((tok) => normalized === tok || normalized.startsWith(tok));
+  // Codes COURTS : match EXACT uniquement. Avant, startsWith avec "NA"/"UNK"/"NONE"
+  // classait des MARQUES RÉELLES comme inconnues ("NAVITAS", "NATURE", "UNILEVER",
+  // "NABISCO"…). Une marque "inconnue" fait que matchBrands renvoie vrai pour TOUS
+  // les produits → un rappel sans numéro de lot matchait alors TOUTE la base
+  // (fausses alertes "DO NOT CONSUME" massives, ex. rappel FDA H-0533-2026/Navitas).
+  return ['UNK', 'NA', 'NAN', 'NONE', 'NULL'].includes(normalized);
 }
 
 function levenshteinDistance(a: string, b: string) {
@@ -94,6 +99,20 @@ function matchBrands(productBrand: string, recallBrand: string | undefined) {
   return distance <= threshold;
 }
 
+// Marque STRICTE (exact/contains, SANS flou Levenshtein, SANS "unknown") : pour le
+// repli "rappel sans numéro de lot" où il n'y a aucune corroboration par le lot.
+// Un flou ou une marque inconnue y déclencherait des alertes à tort sur toute une
+// gamme / toute la base.
+function brandMatchesStrict(productBrand: string, recallBrand: string | undefined) {
+  if (!recallBrand || !productBrand || isUnknownBrand(productBrand) || isUnknownBrand(recallBrand)) {
+    return false;
+  }
+  const a = normalizeBrand(productBrand);
+  const b = normalizeBrand(recallBrand);
+  if (!a || !b) return false;
+  return a === b || a.includes(b) || b.includes(a);
+}
+
 export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   const normalized = normalizeLot(product.lotNumber);
 
@@ -114,17 +133,17 @@ export function matchLots(product: ScannedProduct, recall: RecallRecord) {
       return true;
     }
 
-    // Sous-chaîne UNIQUEMENT si la PLUS COURTE des deux fait ≥6 caractères,
-    // pour éviter qu'un code court ("2026") matche dans un plus long ("APR2026").
-    const shorter = normalized.length <= candidate.length ? normalized : candidate;
-    const longer = normalized.length > candidate.length ? normalized : candidate;
-    if (shorter.length >= 6 && longer.includes(shorter)) {
+    // Sous-chaîne SÛRE uniquement : le lot SCANNÉ (≥8 car.) entièrement contenu
+    // dans le lot du rappel (cas légitime où la base liste le lot noyé dans un
+    // texte plus long). On NE matche PLUS le sens inverse (un fragment court de
+    // rappel contenu dans un lot scanné/mal lu), source de fausses alertes sur
+    // les lots OCR imparfaits.
+    if (normalized.length >= 8 && candidate.includes(normalized)) {
       return true;
     }
 
-    // PAS de matching flou (Levenshtein) sur les lots : c'était la source
-    // majeure de fausses alertes — un lot-poubelle de 4 caractères tombait à
-    // 1 édition d'un vrai lot de rappel, déclenchant "DO NOT CONSUME" à tort.
+    // PAS de matching flou (Levenshtein) sur les lots : source majeure de fausses
+    // alertes.
     return false;
   });
 }
@@ -163,9 +182,14 @@ export function recallMatchesProduct(
     return true;
   }
 
-  // For recalls without explicit lot codes, require brand match
+  // Rappel SANS numéro de lot ("rappel gamme") : aucune corroboration possible par
+  // le lot, donc on EXIGE une marque de rappel NON VIDE, exploitable, et un match
+  // STRICT (exact/contains, sans Levenshtein). Sinon un rappel mal formé (sans
+  // marque ni lot) OU une marque ressemblante matche toute la base à tort.
   const hasNoLots = !recall.lotNumbers || recall.lotNumbers.length === 0;
-  return hasNoLots && brandMatches;
+  const recallHasUsableBrand =
+    !!recall.brand && recall.brand.trim() !== '' && !isUnknownBrand(recall.brand);
+  return hasNoLots && recallHasUsableBrand && brandMatchesStrict(product.brand, recall.brand);
 }
 
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {

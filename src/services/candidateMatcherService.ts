@@ -26,11 +26,10 @@ function matchCandidate(candidate: string, recallLot: string): boolean {
     return true;
   }
 
-  // Partial match: only if the shorter string is at least 6 chars
-  // (avoids matching short tokens like "123" against everything)
-  const shorter = normalized.length <= recallNormalized.length ? normalized : recallNormalized;
-  const longer = normalized.length > recallNormalized.length ? normalized : recallNormalized;
-  if (shorter.length >= 6 && longer.includes(shorter)) {
+  // Sous-chaîne SÛRE uniquement : le lot SCANNÉ (≥8 car.) entièrement contenu dans
+  // le lot du rappel. On ne matche plus le sens inverse (fragment court de rappel
+  // dans un lot scanné), source de faux positifs sur les lots OCR imparfaits.
+  if (normalized.length >= 8 && recallNormalized.includes(normalized)) {
     return true;
   }
 
