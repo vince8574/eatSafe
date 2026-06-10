@@ -69,7 +69,7 @@ type ClaudeApiResponse = {
 
 async function runClaudeFallback(
   uri: string,
-  meta?: { nativeWidth?: number; nativeHeight?: number }
+  meta?: { nativeWidth?: number; nativeHeight?: number; captureDiag?: string }
 ): Promise<OCRResult> {
   const { endpoint } = getClaudeConfig();
   if (!endpoint) throw new Error('ocrClaude Cloud Function endpoint not configured');
@@ -102,7 +102,8 @@ async function runClaudeFallback(
         imageBase64: base64Image,
         mediaType,
         nativeWidth: meta?.nativeWidth,
-        nativeHeight: meta?.nativeHeight
+        nativeHeight: meta?.nativeHeight,
+        captureDiag: meta?.captureDiag
       }),
       signal: controller.signal
     });
@@ -143,7 +144,7 @@ export async function tryClaudeFallback(
   uri: string,
   previousOcr: OCRResult,
   context: 'lot',
-  options?: { force?: boolean; nativeWidth?: number; nativeHeight?: number }
+  options?: { force?: boolean; nativeWidth?: number; nativeHeight?: number; captureDiag?: string }
 ): Promise<OCRResult | null> {
   if (!isClaudeAvailable()) {
     console.log('[ClaudeFallback] skipped: endpoint not configured');
@@ -160,7 +161,8 @@ export async function tryClaudeFallback(
     console.log(`[ClaudeFallback] invoking Cloud Function for ${context}${options?.force ? ' (forced)' : ''}`);
     const result = await runClaudeFallback(uri, {
       nativeWidth: options?.nativeWidth,
-      nativeHeight: options?.nativeHeight
+      nativeHeight: options?.nativeHeight,
+      captureDiag: options?.captureDiag
     });
     return result.text ? result : null;
   } catch (e) {

@@ -101,7 +101,7 @@ export function shouldUseVisionFallback(result: OCRResult) {
 
 export async function runVisionFallback(
   uri: string,
-  meta?: { nativeWidth?: number; nativeHeight?: number }
+  meta?: { nativeWidth?: number; nativeHeight?: number; captureDiag?: string }
 ): Promise<OCRResult> {
   const { endpoint } = getVisionConfig();
 
@@ -128,7 +128,8 @@ export async function runVisionFallback(
       imageBase64: base64Image,
       languageHints: ['fr', 'en'],
       nativeWidth: meta?.nativeWidth,
-      nativeHeight: meta?.nativeHeight
+      nativeHeight: meta?.nativeHeight,
+      captureDiag: meta?.captureDiag
     })
   });
 

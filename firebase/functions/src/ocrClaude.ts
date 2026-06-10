@@ -75,6 +75,7 @@ export const ocrClaude = functions
       mediaType?: string;
       nativeWidth?: number;
       nativeHeight?: number;
+      captureDiag?: string;
     };
     const imageBase64 = body?.imageBase64;
     const rawMediaType = body?.mediaType ?? 'image/jpeg';
@@ -82,6 +83,9 @@ export const ocrClaude = functions
     // bande). Même image que Vision/ML Kit → si carrée, le code est coupé en amont.
     if (body?.nativeWidth && body?.nativeHeight) {
       console.log(`[ocrClaude] native capture: ${body.nativeWidth}x${body.nativeHeight}`);
+    }
+    if (body?.captureDiag) {
+      console.log(`[ocrClaude] ${body.captureDiag}`);
     }
 
     if (!imageBase64 || typeof imageBase64 !== 'string') {

@@ -55,6 +55,15 @@ const BAND_WIDTH_FACTOR = 1.0;
 let lastPreprocessNative: { w: number; h: number } | null = null;
 export const getLastPreprocessNative = () => lastPreprocessNative;
 
+// Diagnostic capture : tailles `pictureSize` offertes par la caméra + celle
+// choisie (posée par Scanner.handleCameraReady). Remontée aux logs cloud d'OCR
+// pour confirmer, sans logs appareil, qu'on capture bien en format large (4:3/16:9)
+// et pas en carré.
+let captureDiag: string | null = null;
+export const setCaptureDiag = (diag: string | null) => {
+  captureDiag = diag;
+};
+
 export async function preprocessImage(uri: string, options?: PreprocessOptions) {
   const config = options?.useVisionConfig ? visionPreprocessConfig : preprocessConfig;
 
@@ -1132,7 +1141,8 @@ export async function performOcr(
           try {
             const visionResult = await runVisionFallback(aiImageUri, {
               nativeWidth: lastPreprocessNative?.w,
-              nativeHeight: lastPreprocessNative?.h
+              nativeHeight: lastPreprocessNative?.h,
+              captureDiag: captureDiag ?? undefined
             });
             // Garder ML Kit si Vision renvoie un texte vide (frame floue) OU un lot
             // MOINS complet que celui déjà lu (on n'adopte Vision que s'il fait au
@@ -1171,7 +1181,8 @@ export async function performOcr(
           const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
             force: postVisionTooShort,
             nativeWidth: lastPreprocessNative?.w,
-            nativeHeight: lastPreprocessNative?.h
+            nativeHeight: lastPreprocessNative?.h,
+            captureDiag: captureDiag ?? undefined
           });
           if (claudeResult) {
             const claudeLot = await extractLotNumber(claudeResult.text, brand);
@@ -1354,7 +1365,8 @@ export async function performOcrMultiFrame(
         try {
           const visionResult = await runVisionFallback(aiImageUri, {
             nativeWidth: lastPreprocessNative?.w,
-            nativeHeight: lastPreprocessNative?.h
+            nativeHeight: lastPreprocessNative?.h,
+            captureDiag: captureDiag ?? undefined
           });
           // Ne remplacer la meilleure frame ML Kit que si Vision a du texte ET un
           // lot au moins aussi complet (sinon on régresserait sur un partiel pire).
@@ -1383,7 +1395,8 @@ export async function performOcrMultiFrame(
         const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
           force: postVisionTooShort,
           nativeWidth: lastPreprocessNative?.w,
-          nativeHeight: lastPreprocessNative?.h
+          nativeHeight: lastPreprocessNative?.h,
+          captureDiag: captureDiag ?? undefined
         });
         if (claudeResult) {
           const claudeLot = await extractLotNumber(claudeResult.text, brand);
