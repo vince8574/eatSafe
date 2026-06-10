@@ -452,6 +452,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
           // fraîche au focus (key ci-dessus) ; l'écran lot ne remonte pas.
           active={isFocused}
+          // mode="picture" (hors code-barres) : sur expo-camera 55, sans ça la
+          // capture iOS suit le preset VIDÉO et sort ~CARRÉE (logs : 3114x3024 au
+          // lieu du 4:3 plein), coupant les côtés des codes larges. "picture" force
+          // la sortie photo pleine résolution 4:3. N'affecte pas l'autofocus.
+          mode={enableBarcodeScanning ? undefined : 'picture'}
           // Photo pleine résolution (hors code-barres) : sans ça iOS capture en
           // basse résolution → codes de lot pâles illisibles.
           pictureSize={enableBarcodeScanning ? undefined : pictureSize}
