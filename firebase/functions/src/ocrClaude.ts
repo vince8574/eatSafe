@@ -101,7 +101,12 @@ export const ocrClaude = functions
 
     try {
       const message = await client.messages.create({
-        model: 'claude-sonnet-4-6',
+        // Opus 4.8 = modèle le plus capable en vision/OCR (+ support haute
+        // résolution jusqu'à 2576px), nettement plus précis sur les codes durs
+        // (point-matrice pâle) que Sonnet 4.6. Pas de `temperature` : ce paramètre
+        // est supprimé sur Opus 4.8 (renverrait une erreur 400). max_tokens 64 +
+        // prompt système "ONLY the lot code" → sortie directe, sans raisonnement.
+        model: 'claude-opus-4-8',
         max_tokens: 64,
         system: [
           {
