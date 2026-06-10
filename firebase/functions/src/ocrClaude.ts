@@ -70,9 +70,19 @@ export const ocrClaude = functions
 
     if (!(await checkAppCheck(req, res))) return;
 
-    const body = req.body as { imageBase64?: string; mediaType?: string };
+    const body = req.body as {
+      imageBase64?: string;
+      mediaType?: string;
+      nativeWidth?: number;
+      nativeHeight?: number;
+    };
     const imageBase64 = body?.imageBase64;
     const rawMediaType = body?.mediaType ?? 'image/jpeg';
+    // Diagnostic décalage/recadrage capture : dimensions natives de la photo (avant
+    // bande). Même image que Vision/ML Kit → si carrée, le code est coupé en amont.
+    if (body?.nativeWidth && body?.nativeHeight) {
+      console.log(`[ocrClaude] native capture: ${body.nativeWidth}x${body.nativeHeight}`);
+    }
 
     if (!imageBase64 || typeof imageBase64 !== 'string') {
       res.status(400).json({ error: 'imageBase64 required' });

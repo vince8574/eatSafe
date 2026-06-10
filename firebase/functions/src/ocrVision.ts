@@ -177,8 +177,19 @@ export const ocrVision = functions
 
     if (!(await checkAppCheck(req, res))) return;
 
-    const body = req.body as { imageBase64?: string; languageHints?: string[] };
+    const body = req.body as {
+      imageBase64?: string;
+      languageHints?: string[];
+      nativeWidth?: number;
+      nativeHeight?: number;
+    };
     const imageBase64 = body?.imageBase64;
+    // Diagnostic décalage/recadrage capture : dimensions natives de la photo AVANT
+    // recadrage en bande (envoyées par l'app). Si nativeW≈nativeH → capture quasi
+    // carrée = le code est coupé sur les côtés en amont (FOV), pas par la bande.
+    if (body?.nativeWidth && body?.nativeHeight) {
+      console.log(`[ocrVision] native capture: ${body.nativeWidth}x${body.nativeHeight}`);
+    }
     const languageHints =
       Array.isArray(body?.languageHints) && body.languageHints.length > 0
         ? body.languageHints

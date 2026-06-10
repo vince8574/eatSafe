@@ -43,7 +43,17 @@ type PreprocessOptions = {
 // l'utilisateur — notamment malvoyant — ne centre pas parfaitement, et 4-6 points
 // de marge évitent de couper le code pour un coût en bruit négligeable.
 const BAND_HEIGHT_FACTOR = 0.26;
-const BAND_WIDTH_FACTOR = 0.94;
+// Pleine largeur (1.0) : ne JAMAIS rogner horizontalement. Les logs montraient des
+// lectures tronquées à gauche ("3A2110R05" au lieu de "L693A2110R05") ; même un
+// rognage symétrique de 3% pouvait amputer le 1er caractère pâle d'un code calé au
+// bord. On garde 100% de la largeur et on laisse l'OCR isoler le code.
+const BAND_WIDTH_FACTOR = 1.0;
+
+// Dernières dimensions natives mesurées par preprocessImage (mode lot). Remontées
+// à ocrVision ET ocrClaude pour diagnostiquer un éventuel décalage/recadrage de la
+// CAPTURE (visible dans les logs cloud, sans dépendre des logs appareil).
+let lastPreprocessNative: { w: number; h: number } | null = null;
+export const getLastPreprocessNative = () => lastPreprocessNative;
 
 export async function preprocessImage(uri: string, options?: PreprocessOptions) {
   const config = options?.useVisionConfig ? visionPreprocessConfig : preprocessConfig;
@@ -69,6 +79,15 @@ export async function preprocessImage(uri: string, options?: PreprocessOptions) 
         const originY = Math.max(0, Math.floor(nativeH * 0.5 - bandHeight / 2));
         const cropWidth = Math.floor(nativeW * bandWidthFactor);
         const originX = Math.floor((nativeW - cropWidth) / 2);
+
+        // Diagnostic : dimensions natives réelles de la photo. Si nativeW≈nativeH
+        // (quasi carré), la capture coupe déjà les extrémités du code en amont →
+        // le souci est la capture (FOV/aspect), pas cette bande. Mémorisé pour être
+        // remonté jusqu'aux logs cloud d'ocrVision (cf. lastPreprocessNative).
+        lastPreprocessNative = { w: nativeW, h: nativeH };
+        console.log(
+          `[preprocess] native ${nativeW}x${nativeH} -> crop ${cropWidth}x${bandHeight} @ ${originX},${originY}`
+        );
 
         const actions: Parameters<typeof manipulateAsync>[1] = [
           { crop: { originX, originY, width: cropWidth, height: bandHeight } }
@@ -1111,7 +1130,10 @@ export async function performOcr(
           console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
           onStage?.('vision');
           try {
-            const visionResult = await runVisionFallback(aiImageUri);
+            const visionResult = await runVisionFallback(aiImageUri, {
+              nativeWidth: lastPreprocessNative?.w,
+              nativeHeight: lastPreprocessNative?.h
+            });
             // Garder ML Kit si Vision renvoie un texte vide (frame floue) OU un lot
             // MOINS complet que celui déjà lu (on n'adopte Vision que s'il fait au
             // moins aussi bien, sinon on régresserait sur un partiel pire).
@@ -1146,7 +1168,11 @@ export async function performOcr(
               : '[Lot OCR] Vision also produced no extractable lot, trying Claude...'
           );
           onStage?.('claude');
-          const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot');
+          const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
+            force: postVisionTooShort,
+            nativeWidth: lastPreprocessNative?.w,
+            nativeHeight: lastPreprocessNative?.h
+          });
           if (claudeResult) {
             const claudeLot = await extractLotNumber(claudeResult.text, brand);
             // N'adopter Claude que s'il lit un lot AU MOINS aussi complet (longueur)
@@ -1326,7 +1352,10 @@ export async function performOcrMultiFrame(
       if (isVisionAvailable() && aiImageUri) {
         onStage?.('vision');
         try {
-          const visionResult = await runVisionFallback(aiImageUri);
+          const visionResult = await runVisionFallback(aiImageUri, {
+            nativeWidth: lastPreprocessNative?.w,
+            nativeHeight: lastPreprocessNative?.h
+          });
           // Ne remplacer la meilleure frame ML Kit que si Vision a du texte ET un
           // lot au moins aussi complet (sinon on régresserait sur un partiel pire).
           const visionLot = await extractLotNumber(visionResult.text, brand);
@@ -1351,7 +1380,11 @@ export async function performOcrMultiFrame(
             : '[Multi-frame OCR] No extractable lot, trying Claude...'
         );
         onStage?.('claude');
-        const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot');
+        const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
+          force: postVisionTooShort,
+          nativeWidth: lastPreprocessNative?.w,
+          nativeHeight: lastPreprocessNative?.h
+        });
         if (claudeResult) {
           const claudeLot = await extractLotNumber(claudeResult.text, brand);
           // Adopter Claude seulement s'il est au moins aussi complet.
