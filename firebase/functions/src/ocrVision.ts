@@ -182,6 +182,7 @@ export const ocrVision = functions
       languageHints?: string[];
       nativeWidth?: number;
       nativeHeight?: number;
+      captureDiag?: string;
     };
     const imageBase64 = body?.imageBase64;
     // Diagnostic décalage/recadrage capture : dimensions natives de la photo AVANT
@@ -189,6 +190,11 @@ export const ocrVision = functions
     // carrée = le code est coupé sur les côtés en amont (FOV), pas par la bande.
     if (body?.nativeWidth && body?.nativeHeight) {
       console.log(`[ocrVision] native capture: ${body.nativeWidth}x${body.nativeHeight}`);
+    }
+    // Tailles pictureSize offertes par la caméra + celle choisie (pour confirmer
+    // qu'on capture en format large 4:3/16:9 et pas en carré).
+    if (body?.captureDiag) {
+      console.log(`[ocrVision] ${body.captureDiag}`);
     }
     const languageHints =
       Array.isArray(body?.languageHints) && body.languageHints.length > 0

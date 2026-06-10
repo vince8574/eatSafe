@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
+import { setCaptureDiag } from '../services/ocrService';
 
 type ScannerMode = 'barcode' | 'photo' | 'band';
 
@@ -193,6 +194,9 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         }
         const chosen = best ?? bestAny;
         console.log('[Capture] chosen pictureSize:', chosen, '(wide pref:', best, ')');
+        // Remonté aux logs cloud d'OCR pour confirmer le format de capture sans
+        // logs appareil (cf. setCaptureDiag / ocrVision).
+        setCaptureDiag(`pictureSizes=${JSON.stringify(sizes)} chosen=${chosen ?? 'none'} widePref=${best ?? 'none'}`);
         if (chosen) setPictureSize(chosen);
       }
     } catch {
