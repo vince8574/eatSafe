@@ -23,6 +23,29 @@ export function isClaudeAvailable(): boolean {
 }
 
 /**
+ * Retire du texte OCR les marquages réglementaires qui RESSEMBLENT à des lots
+ * mais n'en sont jamais (faux positifs réels observés) :
+ * - "EMB 44014B"        → code EMBALLEUR français (établissement d'emballage).
+ * - "FR 44.014.001 CE"  → marque sanitaire ovale UE (agrément vétérinaire).
+ * - "GB WD028" / "UK ... EC" → marque d'identification ovale UK (usine Kraft),
+ *   pré-imprimée IDENTIQUE sur tous les paquets → fausse alerte de rappel.
+ * - "EST. 38" / "P-123" → ovale d'inspection USDA (établissement US), idem.
+ * Les retirer AVANT le pattern-matching laisse le vrai lot (ex. "148 660 T1",
+ * "6085S53") gagner au lieu du marquage réglementaire.
+ */
+export function stripNonLotMarkings(text: string): string {
+  return text
+    .replace(/\bEMB[\s.:]*[A-Z0-9][A-Z0-9.\-]{1,14}/gi, ' ')
+    .replace(/\bFR[\s.]*\d{2}[\s.]+\d{3}[\s.]+\d{3}[\s.]*(?:CE|EC)?\b/gi, ' ')
+    .replace(/\b(?:GB|UK)[\s.:]*[A-Z]{1,3}[\s.]?\d{2,4}[A-Z]?\b[\s.]*(?:CE|EC)?\b/gi, ' ')
+    // USDA : "EST. 38", "EST 7155A" (le \b évite de toucher "BEST") ; "P-123"
+    // uniquement avec tiret (forme volaille standard) pour ne pas amputer un
+    // vrai lot type "P123".
+    .replace(/\bEST[\s.:#]*\d{1,5}[A-Z]?\b/gi, ' ')
+    .replace(/\bP-\d{1,5}\b/gi, ' ');
+}
+
+/**
  * Returns true when the OCR text already contains something that looks like a
  * plausible lot number. Used as a gate before calling the Cloud Function so we
  * skip the paid 3rd-tier fallback when ML Kit or Vision has already produced
@@ -32,7 +55,9 @@ export function isClaudeAvailable(): boolean {
  */
 function hasPlausibleLotPattern(text: string): boolean {
   if (!text) return false;
-  const cleaned = text.replace(/\s+/g, ' ').toUpperCase();
+  // Un marquage réglementaire (EMB/ovale sanitaire) ne doit pas faire croire
+  // qu'un lot est déjà lu — sinon Claude est court-circuité à tort.
+  const cleaned = stripNonLotMarkings(text).replace(/\s+/g, ' ').toUpperCase();
 
   // Signal fort : préfixe "LOT" suivi d'un code.
   if (/(?:^|[^A-Z])LOT[:\s\-.]*[A-Z0-9]{3,22}/.test(cleaned)) return true;

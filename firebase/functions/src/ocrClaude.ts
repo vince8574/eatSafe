@@ -42,6 +42,14 @@ NEVER return a DATE. This is the single most important rule:
   to digits is a DATE, not a lot — ignore it.
 - Time stamps ("01:28", "HH:MM"), brand names, addresses, phone numbers, weights.
 
+NEVER return REGULATORY MARKINGS — these look like lot codes but are factory
+identifiers, identical on every pack:
+- EU/UK oval identification marks: "FR 44.014.001 CE", "GB WD028", "UK XX123 EC"
+- French packer codes: "EMB 44014B" (anything after "EMB")
+- USDA inspection marks: "EST. 38", "P-123"
+If such a marking appears NEXT TO a separate printed/inkjet code, return the
+inkjet production code, not the marking.
+
 If the ONLY thing you can read is a date (and no separate production code),
 respond with exactly: NONE. Do NOT output the date.
 
@@ -123,6 +131,24 @@ export const ocrClaude = functions
       console.error('[ocrClaude] ANTHROPIC_API_KEY missing');
       res.status(500).json({ error: 'Anthropic key not configured' });
       return;
+    }
+
+    // TEMP DEBUG (à retirer) : sauvegarde la bande reçue dans Storage pour
+    // pouvoir expérimenter hors-app sur l'image RÉELLE que voit Claude
+    // (recadrage/échelle) au lieu d'itérer à l'aveugle. Lots non-PII.
+    try {
+      const admin = await import('firebase-admin');
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      const ext = mediaType === 'image/png' ? 'png' : 'jpg';
+      const debugPath = `debug-ocr/${ts}.${ext}`;
+      await admin
+        .storage()
+        .bucket()
+        .file(debugPath)
+        .save(Buffer.from(imageBase64, 'base64'), { contentType: mediaType });
+      console.log(`[ocrClaude] DEBUG image saved: ${debugPath}`);
+    } catch (e) {
+      console.warn('[ocrClaude] debug save failed (non-blocking):', e instanceof Error ? e.message : e);
     }
 
     // Dynamic import so the SDK is only loaded on the first cold start.
