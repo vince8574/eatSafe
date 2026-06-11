@@ -107,10 +107,6 @@ export const ocrClaude = functions
       nativeWidth?: number;
       nativeHeight?: number;
       captureDiag?: string;
-      // Mode approfondi OPT-IN (2 images + raisonnement, ~3-4 centimes) : réservé
-      // à une action utilisateur explicite. Par défaut : mode économique
-      // (~1 centime, 1 image, sans raisonnement).
-      deep?: boolean;
     };
     const imageBase64 = body?.imageBase64;
     const rawMediaType = body?.mediaType ?? 'image/jpeg';
@@ -149,62 +145,36 @@ export const ocrClaude = functions
     const client = new Anthropic({ apiKey });
 
     try {
-      const deep = body?.deep === true;
       // Variante contrastée (gris + contraste) construite localement (gratuit) :
       // décisive sur les codes point-matrice sombres imprimés sur fond coloré
       // (paquet rouge), où l'image brute est presque illisible pour le modèle.
+      // UNE seule image envoyée — la contrastée si dispo (meilleure lecture,
+      // même coût que la brute) — sans raisonnement : ~1 centime par appel.
       const enhancedBase64 = await enhanceForClaude(imageBase64);
 
-      // Mode ÉCONOMIQUE (défaut, automatique) : UNE seule image — la version
-      // contrastée si dispo (meilleure lecture, même coût que l'image brute),
-      // sans raisonnement → ~1 centime, comme avant.
-      // Mode APPROFONDI (deep, opt-in utilisateur) : les 2 images + raisonnement
-      // adaptatif → ~3-4 centimes, précision max sur les codes ambigus.
-      const userContent: AnthropicTypes.MessageParam['content'] = [];
-      if (deep) {
-        userContent.push({
-          type: 'image',
-          source: { type: 'base64', media_type: mediaType, data: imageBase64 }
-        });
-        if (enhancedBase64) {
-          userContent.push({
-            type: 'image',
-            source: { type: 'base64', media_type: 'image/png', data: enhancedBase64 }
-          });
-        }
-        userContent.push({
-          type: 'text',
-          text: enhancedBase64
-            ? 'Both images show the SAME packaging band: first the raw photo, then a contrast-enhanced grayscale version. Cross-reference them and extract the lot number, verifying it character by character.'
-            : 'Extract the lot number from this packaging image, verifying it character by character.'
-        });
-      } else {
-        userContent.push(
-          enhancedBase64
-            ? {
-                type: 'image',
-                source: { type: 'base64', media_type: 'image/png', data: enhancedBase64 }
-              }
-            : {
-                type: 'image',
-                source: { type: 'base64', media_type: mediaType, data: imageBase64 }
-              }
-        );
-        userContent.push({
+      const userContent: AnthropicTypes.MessageParam['content'] = [
+        enhancedBase64
+          ? {
+              type: 'image',
+              source: { type: 'base64', media_type: 'image/png', data: enhancedBase64 }
+            }
+          : {
+              type: 'image',
+              source: { type: 'base64', media_type: mediaType, data: imageBase64 }
+            },
+        {
           type: 'text',
           text: 'Extract the lot number from this packaging image.'
-        });
-      }
+        }
+      ];
 
       const message = await client.messages.create({
         // Opus 4.8 = modèle le plus capable en vision/OCR (+ support haute
         // résolution jusqu'à 2576px). Pas de `temperature` (supprimé sur Opus 4.8).
-        // Raisonnement adaptatif UNIQUEMENT en mode deep (opt-in) : il coûte
-        // quelques centaines de tokens de sortie — trop cher pour le flux
-        // automatique, réservé à une action utilisateur explicite.
+        // Pas de raisonnement : trop lent/cher pour le flux automatique. max_tokens
+        // 64 + prompt "ONLY the lot code" → réponse directe.
         model: 'claude-opus-4-8',
-        max_tokens: deep ? 2048 : 64,
-        ...(deep ? { thinking: { type: 'adaptive' as const } } : {}),
+        max_tokens: 64,
         system: [
           {
             type: 'text',
@@ -231,7 +201,6 @@ export const ocrClaude = functions
       console.log(
         '[ocrClaude] usage:',
         JSON.stringify({
-          mode: deep ? 'deep' : 'eco',
           text: cleaned,
           cache_read: message.usage.cache_read_input_tokens,
           cache_creation: message.usage.cache_creation_input_tokens,
