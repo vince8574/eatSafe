@@ -6,7 +6,7 @@ import {
   useRef,
   useState
 } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Linking, Platform } from 'react-native';
 import { CameraView, useCameraPermissions, BarcodeScanningResult } from 'expo-camera';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -199,10 +199,18 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         }
         const chosen = namedPhoto ?? best ?? bestAny;
         console.log('[Capture] chosen pictureSize:', chosen, '(named:', namedPhoto, 'wide:', best, ')');
+        // iOS : sur expo-camera 55, DÉFINIR pictureSize (numérique OU "Photo")
+        // force une capture ~CARRÉE (logs : 2224x2160 / 3114x3024) qui coupe les
+        // côtés du code. On NE le définit donc PAS sur iOS → capture par défaut
+        // (= l'état "avant", qui marchait). On le garde sur Android, où pictureSize
+        // expose de vraies tailles WxH et fonctionne normalement.
+        const applied = Platform.OS === 'android' ? chosen : undefined;
         // Remonté aux logs cloud d'OCR pour confirmer le format de capture sans
         // logs appareil (cf. setCaptureDiag / ocrVision).
-        setCaptureDiag(`pictureSizes=${JSON.stringify(sizes)} chosen=${chosen ?? 'none'} named=${namedPhoto ?? 'none'} widePref=${best ?? 'none'}`);
-        if (chosen) setPictureSize(chosen);
+        setCaptureDiag(
+          `os=${Platform.OS} pictureSizes=${JSON.stringify(sizes)} chosen=${chosen ?? 'none'} applied=${applied ?? 'default'}`
+        );
+        if (applied) setPictureSize(applied);
       }
     } catch {
       /* getAvailablePictureSizesAsync indispo → on garde le défaut */
