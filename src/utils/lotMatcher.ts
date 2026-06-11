@@ -182,14 +182,14 @@ export function recallMatchesProduct(
     return true;
   }
 
-  // Rappel SANS numéro de lot ("rappel gamme") : aucune corroboration possible par
-  // le lot, donc on EXIGE une marque de rappel NON VIDE, exploitable, et un match
-  // STRICT (exact/contains, sans Levenshtein). Sinon un rappel mal formé (sans
-  // marque ni lot) OU une marque ressemblante matche toute la base à tort.
-  const hasNoLots = !recall.lotNumbers || recall.lotNumbers.length === 0;
-  const recallHasUsableBrand =
-    !!recall.brand && recall.brand.trim() !== '' && !isUnknownBrand(recall.brand);
-  return hasNoLots && recallHasUsableBrand && brandMatchesStrict(product.brand, recall.brand);
+  // Rappel SANS numéro de lot : PAS de match sur la seule marque. Testé en réel :
+  // un rappel US "Kraft" sans lots extraits flaguait TOUS les produits Kraft
+  // scannés (cheddar français inclus) en "RAPPELÉ" → fausses alertes en série.
+  // Une grande marque vend des milliers de produits ; sans lot (ni GTIN) pour
+  // corroborer, le statut "recalled" est indéfendable. Tant pis pour le rappel
+  // "toutes séries" mal parsé : mieux vaut un faux négatif silencieux qu'une
+  // fausse alerte "NE CONSOMMEZ PAS" qui détruit la confiance.
+  return false;
 }
 
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {
