@@ -6,7 +6,7 @@ import { OCRResult } from '../types';
 import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
 import { tryVisionFallback, runVisionFallback, isVisionAvailable, assessOcrQuality } from './visionFallbackService';
-import { tryClaudeFallback, isClaudeAvailable } from './claudeOcrFallback';
+import { tryClaudeFallback, isClaudeAvailable, stripNonLotMarkings } from './claudeOcrFallback';
 
 const preprocessConfig = {
   resize: { width: 1800 }, // Résolution optimale pour ML Kit (trop élevé peut dégrader la précision)
@@ -584,7 +584,8 @@ export function isReliableLot(candidate: string): boolean {
   return isConfidentLot(candidate);
 }
 
-export async function extractLotNumber(rawText: string, brand?: string): Promise<string> {
+export async function extractLotNumber(rawTextInput: string, brand?: string): Promise<string> {
+  const rawText = stripNonLotMarkings(rawTextInput);
   console.log('[extractLotNumber] Extracting lot number from OCR text');
   console.log('[extractLotNumber] Raw text:', rawText);
 
@@ -822,7 +823,9 @@ export async function extractLotNumber(rawText: string, brand?: string): Promise
 /**
  * Extrait TOUS les candidats de numéros de lot possibles
  */
-export async function extractAllLotCandidates(rawText: string, brand?: string): Promise<string[]> {
+export async function extractAllLotCandidates(rawTextInput: string, brand?: string): Promise<string[]> {
+  // Même filtre que extractLotNumber : EMB / marques sanitaires ovales ≠ lots.
+  const rawText = stripNonLotMarkings(rawTextInput);
   console.log('[extractAllLotCandidates] Extracting all lot candidates from OCR text');
 
   const allCandidates: string[] = [];
