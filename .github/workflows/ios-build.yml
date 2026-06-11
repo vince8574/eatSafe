@@ -7,6 +7,9 @@ on:
     paths-ignore:
       - '**.md'
       - '.gitignore'
+      # Cloud Functions : déployées via Firebase CLI, pas embarquées dans l'app →
+      # inutile de rebuilder l'app pour un changement serveur.
+      - 'firebase/**'
 
 jobs:
   build:
