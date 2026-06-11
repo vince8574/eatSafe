@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions/v1';
 import { defineSecret } from 'firebase-functions/params';
 import type AnthropicTypes from '@anthropic-ai/sdk';
+import Jimp from 'jimp';
 import { checkAppCheck } from './appCheck';
 
 const ANTHROPIC_API_KEY = defineSecret('ANTHROPIC_API_KEY');
@@ -45,11 +46,41 @@ NEVER return a DATE. This is the single most important rule:
 If the ONLY thing you can read is a date (and no separate production code),
 respond with exactly: NONE. Do NOT output the date.
 
+DOT-MATRIX / INKJET CODES (dotted characters) — read with EXTREME care:
+- These codes are printed as a grid of dots, often pale or on a colored
+  background. You may receive TWO versions of the same image (raw color +
+  contrast-enhanced grayscale): cross-reference BOTH before deciding.
+- Count the characters: do NOT drop or invent a character. If the code has 10
+  glyphs, your answer must have exactly 10 characters.
+- Frequent dot-matrix confusions — decide using the dot pattern, the second
+  image, and consistency with neighboring characters:
+  6 vs 8 vs 3 vs 9, 0 vs O vs D, 5 vs S, 1 vs I vs T, B vs 8, H vs M vs N,
+  G vs 6, 4 vs A.
+- Typical layout on such packs: line 1 = date (DD/MM/YYYY), line 2 = time
+  (HH:MM:SS), line 3 = the LOT CODE (letters + digits), line 4 = a secondary
+  counter (often "NNNN:NNNNN" with a colon) — return line 3, not line 4.
+- Verify your reading character by character before answering.
+
 OUTPUT FORMAT:
 - Respond with ONLY the lot code, no quotes, no labels.
 - Strip spaces and special chars ("L 693 A" -> "L693A", "2 493 34315" -> "249334315").
 - Max 22 chars.
 - If no lot code is visible, respond with exactly: NONE`;
+
+// Variante contraste pour Claude : les codes point-matrice sombres sur fond
+// COLORÉ (ex. paquet rouge Francine) deviennent quasi illisibles en JPEG. La
+// version niveaux de gris + normalisation + contraste rend les points nets.
+// On envoie les DEUX versions (brute + contrastée) pour que Claude recoupe.
+async function enhanceForClaude(imageBase64: string): Promise<string | null> {
+  try {
+    const image = await Jimp.read(Buffer.from(imageBase64, 'base64'));
+    image.greyscale().normalize().contrast(0.3);
+    return (await image.getBufferAsync(Jimp.MIME_PNG)).toString('base64');
+  } catch (error) {
+    console.warn('[ocrClaude] enhance failed, sending raw only:', error instanceof Error ? error.message : error);
+    return null;
+  }
+}
 
 export const ocrClaude = functions
   .region('us-central1')
@@ -114,14 +145,40 @@ export const ocrClaude = functions
     const client = new Anthropic({ apiKey });
 
     try {
+      // Variante contrastée (gris + contraste) construite localement : décisive
+      // sur les codes point-matrice sombres imprimés sur fond coloré (paquet
+      // rouge), où l'image brute est presque illisible pour le modèle.
+      const enhancedBase64 = await enhanceForClaude(imageBase64);
+
+      const userContent: AnthropicTypes.MessageParam['content'] = [
+        {
+          type: 'image',
+          source: { type: 'base64', media_type: mediaType, data: imageBase64 }
+        }
+      ];
+      if (enhancedBase64) {
+        userContent.push({
+          type: 'image',
+          source: { type: 'base64', media_type: 'image/png', data: enhancedBase64 }
+        });
+      }
+      userContent.push({
+        type: 'text',
+        text: enhancedBase64
+          ? 'Both images show the SAME packaging band: first the raw photo, then a contrast-enhanced grayscale version. Cross-reference them and extract the lot number, verifying it character by character.'
+          : 'Extract the lot number from this packaging image.'
+      });
+
       const message = await client.messages.create({
         // Opus 4.8 = modèle le plus capable en vision/OCR (+ support haute
-        // résolution jusqu'à 2576px), nettement plus précis sur les codes durs
-        // (point-matrice pâle) que Sonnet 4.6. Pas de `temperature` : ce paramètre
-        // est supprimé sur Opus 4.8 (renverrait une erreur 400). max_tokens 64 +
-        // prompt système "ONLY the lot code" → sortie directe, sans raisonnement.
+        // résolution jusqu'à 2576px). Pas de `temperature` (supprimé sur Opus 4.8).
+        // Raisonnement adaptatif activé : sur les codes point-matrice ambigus
+        // (6/8/3/9, H/M/N), le modèle vérifie caractère par caractère avant de
+        // répondre — gain de précision réel pour quelques centaines de tokens,
+        // uniquement sur ce tier rare (Claude = dernier recours de la cascade).
         model: 'claude-opus-4-8',
-        max_tokens: 64,
+        max_tokens: 2048,
+        thinking: { type: 'adaptive' },
         system: [
           {
             type: 'text',
@@ -132,16 +189,7 @@ export const ocrClaude = functions
         messages: [
           {
             role: 'user',
-            content: [
-              {
-                type: 'image',
-                source: { type: 'base64', media_type: mediaType, data: imageBase64 }
-              },
-              {
-                type: 'text',
-                text: 'Extract the lot number from this packaging image.'
-              }
-            ]
+            content: userContent
           }
         ]
       });
