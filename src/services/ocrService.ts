@@ -1349,8 +1349,28 @@ export async function performOcrMultiFrame(
   // 3) Vision puis Claude seulement si la meilleure frame ne donne pas de lot.
   let result: OCRResult = best.result;
   const bestLot = await extractLotNumber(best.result.text, brand);
-  // Aucun lot — OU un lot trop court (probablement tronqué) → fallbacks distants.
-  if ((!bestLot || isLotTooShort(bestLot)) && allowPaid) {
+
+  // Stabilité inter-frames (gratuit, ~0 ms) : ML Kit a déjà lu chaque frame en
+  // local. Un lot correct se relit À L'IDENTIQUE sur ≥2 frames ; une lecture qui
+  // varie d'une frame à l'autre (point-matrice pâle mal lu, ex. paquet Francine)
+  // est suspecte → on la fait VÉRIFIER par Vision/Claude au lieu de l'accepter en
+  // silence. Les scans stables (la grande majorité) restent instantanés.
+  const perFrameLots = await Promise.all(
+    frameResults.map((f) => extractLotNumber(f.result.text, brand).catch(() => ''))
+  );
+  const bestKey = normLot(bestLot || '');
+  const frameAgreement = bestKey
+    ? perFrameLots.filter((l) => l && normLot(l) === bestKey).length
+    : 0;
+  const unstableLot = !!bestLot && frameResults.length >= 2 && frameAgreement < 2;
+  if (unstableLot) {
+    console.log(
+      `[Multi-frame OCR] Lot "${bestLot}" instable (${frameAgreement}/${frameResults.length} frames concordent) → vérification IA`
+    );
+  }
+
+  // Aucun lot — OU lot trop court (tronqué) — OU lot instable → fallbacks distants.
+  if ((!bestLot || isLotTooShort(bestLot) || unstableLot) && allowPaid) {
     let aiImageUri: string | null = null;
     if (isVisionAvailable() || isClaudeAvailable()) {
       try {
@@ -1385,28 +1405,36 @@ export async function performOcrMultiFrame(
       }
       const postVisionLot = await extractLotNumber(result.text, brand);
       const postVisionTooShort = isLotTooShort(postVisionLot);
-      if ((!postVisionLot || postVisionTooShort) && isClaudeAvailable() && aiImageUri) {
+      if ((!postVisionLot || postVisionTooShort || unstableLot) && isClaudeAvailable() && aiImageUri) {
         console.log(
-          postVisionTooShort
-            ? `[Multi-frame OCR] Lot trop court ("${postVisionLot}"), essai Claude (Opus)...`
-            : '[Multi-frame OCR] No extractable lot, trying Claude...'
+          unstableLot
+            ? `[Multi-frame OCR] Lot instable ("${postVisionLot}"), arbitrage Claude...`
+            : postVisionTooShort
+              ? `[Multi-frame OCR] Lot trop court ("${postVisionLot}"), essai Claude (Opus)...`
+              : '[Multi-frame OCR] No extractable lot, trying Claude...'
         );
         onStage?.('claude');
         const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
-          force: postVisionTooShort,
+          force: postVisionTooShort || unstableLot,
           nativeWidth: lastPreprocessNative?.w,
           nativeHeight: lastPreprocessNative?.h,
           captureDiag: captureDiag ?? undefined
         });
         if (claudeResult) {
           const claudeLot = await extractLotNumber(claudeResult.text, brand);
-          // Adopter Claude seulement s'il est au moins aussi complet.
-          if (lotCharLen(claudeLot) >= lotCharLen(postVisionLot) && (claudeLot || !postVisionLot)) {
+          // Adopter Claude s'il est au moins aussi complet — OU si la lecture
+          // locale est INSTABLE : Claude fait alors foi même s'il lit plus court
+          // (la lecture instable insère souvent des caractères fantômes).
+          const adoptClaude = claudeLot
+            ? lotCharLen(claudeLot) >= lotCharLen(postVisionLot) ||
+              (unstableLot && !isLotTooShort(claudeLot))
+            : !postVisionLot && Boolean(claudeResult.text);
+          if (adoptClaude) {
             console.log('[Multi-frame OCR] Claude fallback used');
             result = claudeResult;
           } else {
             console.log(
-              `[Multi-frame OCR] Claude ("${claudeLot || 'rien'}") pas plus complet que ("${postVisionLot}"), conservé`
+              `[Multi-frame OCR] Claude ("${claudeLot || 'rien'}") pas retenu face à ("${postVisionLot}"), conservé`
             );
           }
         }
@@ -1447,9 +1475,7 @@ export async function performOcrMultiFrame(
   // Anti-truncation (free): ML Kit already ran on each frame. Count how many frames
   // read the SAME reliable lot as the final one. A truncated fragment (curved can)
   // varies frame-to-frame → low agreement; a full lot stabilises.
-  const perFrameLots = await Promise.all(
-    frameResults.map((f) => extractLotNumber(f.result.text, brand).catch(() => ''))
-  );
+  // (perFrameLots déjà calculé plus haut pour la porte de stabilité.)
   const lotKey = normLot(lot);
   const intraFrameAgreement = lotKey
     ? perFrameLots.filter((l) => l && isConfidentLot(l) && normLot(l) === lotKey).length
