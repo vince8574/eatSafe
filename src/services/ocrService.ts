@@ -5,8 +5,8 @@ import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { OCRResult } from '../types';
 import { searchBrands } from './firestoreBrandsService';
 import { DEFAULT_BRAND_NAME } from '../constants/defaults';
-import { tryVisionFallback, runVisionFallback, isVisionAvailable, assessOcrQuality } from './visionFallbackService';
-import { tryClaudeFallback, isClaudeAvailable } from './claudeOcrFallback';
+import { tryVisionFallback, isVisionAvailable, assessOcrQuality } from './visionFallbackService';
+import { tryClaudeFallback, isClaudeAvailable, hasPlausibleLotPattern } from './claudeOcrFallback';
 
 const preprocessConfig = {
   resize: { width: 1800 }, // Résolution optimale pour ML Kit (trop élevé peut dégrader la précision)
@@ -1072,85 +1072,10 @@ export interface LotExtractionResult {
 // Étapes du pipeline OCR, remontées au fur et à mesure pour le feedback UI.
 export type OcrStage = 'mlkit' | 'vision' | 'claude';
 
-// En-deçà de cette longueur (hors espaces), un lot lu est jugé probablement
-// TRONQUÉ (ex. "148R" extrait de "MG26148R49A") : on déclenche alors Claude pour
-// tenter un code complet, même si Vision/ML Kit avaient déjà sorti ce partiel.
-// Crucial en mode malvoyant, où l'utilisateur ne peut pas corriger à la main.
-const MIN_CONFIDENT_LOT_LENGTH = 6;
-const lotCharLen = (lot?: string | null): number => (lot ? lot.replace(/\s/g, '').length : 0);
-const isLotTooShort = (lot?: string | null): boolean => {
-  const len = lotCharLen(lot);
-  return len > 0 && len < MIN_CONFIDENT_LOT_LENGTH;
-};
-
 // In accessibility mode the continuous scan caps paid OCR calls; when false, only
 // the free on-device ML Kit runs.
 export interface PerformOcrOptions {
   allowPaidFallback?: boolean;
-}
-
-// Contre-vérification d'un lot déjà lu par ML Kit. ML Kit ne donne pas de confiance
-// fiable sur iOS, donc on relit via Google Vision (3 passes : brute + contraste +
-// dot-matrix) ; si le lot Vision DIVERGE (caractères différents — typique d'un code
-// point-matrice mal lu, ex. 8↔B, 3↔8), on tranche avec Claude Opus (le plus précis).
-// S'ils concordent, zéro appel Claude. Coût : un appel Vision (peu cher) par scan
-// confirmé, Claude uniquement sur désaccord.
-async function verifyLotWithCrossCheck(
-  sourceUri: string,
-  acceptedLot: string,
-  acceptedResult: OCRResult,
-  brand: string | undefined,
-  onStage: ((stage: OcrStage) => void) | undefined,
-  tag: string
-): Promise<OCRResult> {
-  if (!isVisionAvailable()) return acceptedResult;
-  let aiImageUri: string | null = null;
-  try {
-    aiImageUri = await preprocessImage(sourceUri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
-  } catch (error) {
-    console.warn(`[${tag}] contre-vérif : image IA échouée`, error);
-    return acceptedResult;
-  }
-  const meta = {
-    nativeWidth: lastPreprocessNative?.w,
-    nativeHeight: lastPreprocessNative?.h,
-    captureDiag: captureDiag ?? undefined
-  };
-  try {
-    onStage?.('vision');
-    const visionResult = await runVisionFallback(aiImageUri, meta);
-    const visionLot = await extractLotNumber(visionResult.text, brand);
-    const norm = (s?: string | null) => (s ? s.replace(/\s/g, '').toUpperCase() : '');
-    const a = norm(acceptedLot);
-    const v = norm(visionLot);
-    // Concordance : identiques, ou l'un contenu dans l'autre (partiel) → on garde.
-    if (!v || a === v || a.includes(v) || v.includes(a)) {
-      console.log(`[${tag}] lot confirmé par Vision ("${acceptedLot}")`);
-      return acceptedResult;
-    }
-    console.log(`[${tag}] désaccord ML Kit ("${acceptedLot}") vs Vision ("${visionLot}") → arbitrage Claude`);
-    if (isClaudeAvailable()) {
-      onStage?.('claude');
-      const claudeResult = await tryClaudeFallback(aiImageUri, acceptedResult, 'lot', { force: true, ...meta });
-      const claudeLot = claudeResult ? await extractLotNumber(claudeResult.text, brand) : null;
-      if (claudeResult && claudeLot) {
-        console.log(`[${tag}] Claude tranche : "${claudeLot}"`);
-        return claudeResult;
-      }
-    }
-    // Pas de Claude (ou lecture vide) : adopter Vision s'il est au moins aussi complet.
-    if (lotCharLen(visionLot) >= lotCharLen(acceptedLot)) return visionResult;
-    return acceptedResult;
-  } catch (error) {
-    console.warn(`[${tag}] contre-vérif Vision échouée, on garde ML Kit`, error);
-    return acceptedResult;
-  } finally {
-    try {
-      await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
-    } catch {
-      /* noop */
-    }
-  }
 }
 
 export async function performOcr(
@@ -1181,106 +1106,42 @@ export async function performOcr(
       console.warn('Failed to delete mlkit processed image', error);
     }
 
-    // Si ML Kit n'a trouvé aucun lot — OU un lot trop court (probablement tronqué)
-    // — basculer sur les fallbacks distants pour viser un code complet.
-    const mlkitLot = await extractLotNumber(result.text, brand);
-    if ((!mlkitLot || isLotTooShort(mlkitLot)) && allowPaid) {
-      // Image IA UNIQUE : 2000px JPEG 0.85 (visionPreprocessConfig), calculée
-      // une seule fois ici puis réutilisée pour Vision PUIS Claude. Évite de
-      // re-préprocesser et garantit que Claude (tier le plus lent) ne lit plus
-      // l'image brute pleine résolution mais la même image légère que Vision.
-      let aiImageUri: string | null = null;
-      if (isVisionAvailable() || isClaudeAvailable()) {
-        try {
-          aiImageUri = await preprocessImage(uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
-        } catch (error) {
-          console.warn('[Lot OCR] Failed to build AI image (2000px JPEG)', error);
-        }
-      }
-
+    // Approche FR (rapide) : si ML Kit a déjà un lot PLAUSIBLE, on court-circuite
+    // Vision + Claude (zéro appel réseau → scan instantané). Sinon seulement, UNE
+    // image compacte unique réutilisée pour Vision PUIS Claude. Pas de
+    // contre-vérification systématique (elle alourdissait chaque scan).
+    if (hasPlausibleLotPattern(result.text)) {
+      console.log('[Lot OCR] ML Kit found plausible lot → skipping Vision + Claude');
+    } else if (!allowPaid) {
+      console.log('[Lot OCR] Paid fallback disabled → ML Kit only');
+    } else {
+      const aiImageUri = await preprocessImage(uri, {
+        cropForLot: true,
+        narrowBand: true,
+        useVisionConfig: true
+      });
       try {
-        if (isVisionAvailable() && aiImageUri) {
-          console.log('[Lot OCR] ML Kit found no lot number, forcing Google Vision fallback...');
-          onStage?.('vision');
-          try {
-            const visionResult = await runVisionFallback(aiImageUri, {
-              nativeWidth: lastPreprocessNative?.w,
-              nativeHeight: lastPreprocessNative?.h,
-              captureDiag: captureDiag ?? undefined
-            });
-            // Garder ML Kit si Vision renvoie un texte vide (frame floue) OU un lot
-            // MOINS complet que celui déjà lu (on n'adopte Vision que s'il fait au
-            // moins aussi bien, sinon on régresserait sur un partiel pire).
-            const visionLot = await extractLotNumber(visionResult.text, brand);
-            if (
-              visionResult.text &&
-              visionResult.text.trim().length > 0 &&
-              lotCharLen(visionLot) >= lotCharLen(mlkitLot)
-            ) {
-              result = visionResult;
-              console.log('[Lot OCR] Using Google Vision fallback result');
-            }
-          } catch (error) {
-            console.warn('[Lot OCR] Vision fallback failed, keeping ML Kit result', error);
-          }
-        } else if (!isVisionAvailable()) {
-          console.log('[Lot OCR] Vision not configured, cannot fallback');
+        onStage?.('vision');
+        const visionResult = await tryVisionFallback(aiImageUri, { text: '', lines: [], source: 'none' }, 'lot');
+        if (visionResult) {
+          console.log('[Lot OCR] Vision fallback used');
+          result = visionResult;
         }
-
-        // Niveau 3 — Claude Sonnet via Cloud Function. Déclenché uniquement si
-        // ni ML Kit ni Vision n'ont produit un texte d'où on peut extraire un
-        // numéro de lot. Le check `hasPlausibleLotPattern` interne à
-        // tryClaudeFallback fait un second gate qui couvre les cas où Vision a
-        // produit du texte exploitable mais que notre extracteur n'a pas su
-        // l'isoler. Réutilise la MÊME image 2000px JPEG que Vision.
-        const postVisionLot = await extractLotNumber(result.text, brand);
-        const postVisionTooShort = isLotTooShort(postVisionLot);
-        if ((!postVisionLot || postVisionTooShort) && isClaudeAvailable() && aiImageUri) {
-          console.log(
-            postVisionTooShort
-              ? `[Lot OCR] Lot trop court ("${postVisionLot}"), essai Claude (Opus) pour un code complet...`
-              : '[Lot OCR] Vision also produced no extractable lot, trying Claude...'
-          );
-          onStage?.('claude');
-          const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
-            force: postVisionTooShort,
-            nativeWidth: lastPreprocessNative?.w,
-            nativeHeight: lastPreprocessNative?.h,
-            captureDiag: captureDiag ?? undefined
-          });
-          if (claudeResult) {
-            const claudeLot = await extractLotNumber(claudeResult.text, brand);
-            // N'adopter Claude que s'il lit un lot AU MOINS aussi complet (longueur)
-            // que l'actuel. Si on n'avait aucun lot, tout résultat Claude passe.
-            if (lotCharLen(claudeLot) >= lotCharLen(postVisionLot) && (claudeLot || !postVisionLot)) {
-              console.log('[Lot OCR] Using Claude fallback result');
-              result = claudeResult;
-            } else {
-              console.log(
-                `[Lot OCR] Claude ("${claudeLot || 'rien'}") pas plus complet que ("${postVisionLot}"), conservé`
-              );
-            }
-          }
-        } else if (!postVisionLot && !isClaudeAvailable()) {
-          console.log('[Lot OCR] Claude not configured, no further fallback available');
+        // Claude en dernier recours, sur la MÊME image, uniquement si toujours pas
+        // de lot plausible (tryClaudeFallback se court-circuite sinon).
+        onStage?.('claude');
+        const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot');
+        if (claudeResult) {
+          console.log('[Lot OCR] Claude fallback used');
+          result = claudeResult;
         }
       } finally {
-        // Supprimer l'image IA une seule fois, après Vision ET Claude.
-        if (aiImageUri) {
-          try {
-            await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
-          } catch (error) {
-            console.warn('Failed to delete AI processed image', error);
-          }
+        try {
+          await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
+        } catch (error) {
+          console.warn('Failed to delete AI processed image', error);
         }
       }
-    } else if (mlkitLot && allowPaid) {
-      // ML Kit a lu un lot complet : on le CONTRE-VÉRIFIE via Vision (désaccord →
-      // Claude), car ML Kit n'expose pas de confiance fiable sur iOS et se trompe
-      // sur les caractères point-matrice.
-      result = await verifyLotWithCrossCheck(uri, mlkitLot, result, brand, onStage, 'Lot OCR');
-    } else {
-      console.log('[Lot OCR] ML Kit found lot number; cross-check disabled (no paid OCR)');
     }
 
     console.log('[Lot OCR] OCR source:', result.source);
@@ -1415,85 +1276,40 @@ export async function performOcrMultiFrame(
   const best = frameResults[0];
   console.log(`[Multi-frame OCR] Best frame score=${best.score.toFixed(1)}`);
 
-  // 3) Vision puis Claude seulement si la meilleure frame ne donne pas de lot.
+  // 3) Approche FR : si la meilleure frame a déjà un lot PLAUSIBLE → court-circuit
+  // Vision + Claude (scan instantané). Sinon seulement, UNE image compacte unique
+  // réutilisée pour Vision PUIS Claude. Pas de contre-vérification systématique.
   let result: OCRResult = best.result;
-  const bestLot = await extractLotNumber(best.result.text, brand);
-  // Aucun lot — OU un lot trop court (probablement tronqué) → fallbacks distants.
-  if ((!bestLot || isLotTooShort(bestLot)) && allowPaid) {
-    let aiImageUri: string | null = null;
-    if (isVisionAvailable() || isClaudeAvailable()) {
-      try {
-        aiImageUri = await preprocessImage(best.uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
-      } catch (error) {
-        console.warn('[Multi-frame OCR] Failed to build AI image', error);
-      }
-    }
+  if (hasPlausibleLotPattern(best.result.text)) {
+    console.log('[Multi-frame OCR] Best frame already has plausible lot → skipping Vision + Claude');
+  } else if (!allowPaid) {
+    console.log('[Multi-frame OCR] Paid fallback disabled → ML Kit only');
+  } else {
+    const aiImageUri = await preprocessImage(best.uri, {
+      cropForLot: true,
+      narrowBand: true,
+      useVisionConfig: true
+    });
     try {
-      if (isVisionAvailable() && aiImageUri) {
-        onStage?.('vision');
-        try {
-          const visionResult = await runVisionFallback(aiImageUri, {
-            nativeWidth: lastPreprocessNative?.w,
-            nativeHeight: lastPreprocessNative?.h,
-            captureDiag: captureDiag ?? undefined
-          });
-          // Ne remplacer la meilleure frame ML Kit que si Vision a du texte ET un
-          // lot au moins aussi complet (sinon on régresserait sur un partiel pire).
-          const visionLot = await extractLotNumber(visionResult.text, brand);
-          if (
-            visionResult.text &&
-            visionResult.text.trim().length > 0 &&
-            lotCharLen(visionLot) >= lotCharLen(bestLot)
-          ) {
-            result = visionResult;
-          }
-          console.log('[Multi-frame OCR] Vision fallback used');
-        } catch (error) {
-          console.warn('[Multi-frame OCR] Vision fallback failed, keeping ML Kit result', error);
-        }
+      onStage?.('vision');
+      const visionResult = await tryVisionFallback(aiImageUri, { text: '', lines: [], source: 'none' }, 'lot');
+      if (visionResult) {
+        console.log('[Multi-frame OCR] Vision fallback used');
+        result = visionResult;
       }
-      const postVisionLot = await extractLotNumber(result.text, brand);
-      const postVisionTooShort = isLotTooShort(postVisionLot);
-      if ((!postVisionLot || postVisionTooShort) && isClaudeAvailable() && aiImageUri) {
-        console.log(
-          postVisionTooShort
-            ? `[Multi-frame OCR] Lot trop court ("${postVisionLot}"), essai Claude (Opus)...`
-            : '[Multi-frame OCR] No extractable lot, trying Claude...'
-        );
-        onStage?.('claude');
-        const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot', {
-          force: postVisionTooShort,
-          nativeWidth: lastPreprocessNative?.w,
-          nativeHeight: lastPreprocessNative?.h,
-          captureDiag: captureDiag ?? undefined
-        });
-        if (claudeResult) {
-          const claudeLot = await extractLotNumber(claudeResult.text, brand);
-          // Adopter Claude seulement s'il est au moins aussi complet.
-          if (lotCharLen(claudeLot) >= lotCharLen(postVisionLot) && (claudeLot || !postVisionLot)) {
-            console.log('[Multi-frame OCR] Claude fallback used');
-            result = claudeResult;
-          } else {
-            console.log(
-              `[Multi-frame OCR] Claude ("${claudeLot || 'rien'}") pas plus complet que ("${postVisionLot}"), conservé`
-            );
-          }
-        }
+      onStage?.('claude');
+      const claudeResult = await tryClaudeFallback(aiImageUri, result, 'lot');
+      if (claudeResult) {
+        console.log('[Multi-frame OCR] Claude fallback used');
+        result = claudeResult;
       }
     } finally {
-      if (aiImageUri) {
-        try {
-          await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
-        } catch {
-          /* noop */
-        }
+      try {
+        await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
+      } catch {
+        /* noop */
       }
     }
-  } else if (bestLot && allowPaid) {
-    // La meilleure frame a un lot complet : contre-vérification Vision (désaccord
-    // → Claude), même raison que le mono-frame (ML Kit non fiable sur les
-    // caractères point-matrice).
-    result = await verifyLotWithCrossCheck(best.uri, bestLot, result, brand, onStage, 'Multi-frame OCR');
   }
 
   // 4) Nettoyer toutes les frames capturées.
