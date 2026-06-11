@@ -677,6 +677,17 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
             results.push(code);
           }
         }
+        // "L" COLLÉ aux chiffres ("L26008") : LE format de lot le plus courant en
+        // Europe. Sans cette branche prioritaire, il retombait dans les patterns
+        // génériques au même rang que du charabia OCR (cas réel : "9780LLE",
+        // fragment de "JUILLET" lu tête-bêche, gagnait contre "L26008").
+        const gluedLRegex = /(?:^|[\s\n])(L\d{4,15})\b/gi;
+        while ((match = gluedLRegex.exec(text)) !== null) {
+          const code = match[1].toUpperCase();
+          if (!isPhoneNumber(code.slice(1))) {
+            results.push(code);
+          }
+        }
         return results;
       }
     },
