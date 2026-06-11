@@ -120,23 +120,6 @@ async function enhanceForOcr(imageBase64: string): Promise<string | null> {
   }
 }
 
-// Dot-matrix / inkjet "dot-connecting": these codes are printed as separated dots
-// (e.g. "HG10166383"), which Vision often misreads char-by-char (8<->B, 3<->8,
-// 0<->O). A gentle blur fuses adjacent dots into solid strokes, then a contrast
-// push re-binarises into full characters. More aggressive than enhanceForOcr, but
-// this pass only ever ADDS candidates (raw + enhanced are always merged), so it
-// can never regress. Returns a base64 PNG, or null on failure.
-async function enhanceForDotMatrix(imageBase64: string): Promise<string | null> {
-  try {
-    const image = await Jimp.read(Buffer.from(imageBase64, 'base64'));
-    image.greyscale().normalize().blur(1).contrast(0.5);
-    return (await image.getBufferAsync(Jimp.MIME_PNG)).toString('base64');
-  } catch (error) {
-    console.warn('[ocrVision] dot-matrix enhance failed:', error instanceof Error ? error.message : error);
-    return null;
-  }
-}
-
 // Merge two reads, de-duplicating identical lines (case/space-insensitive), so
 // the app's extractLotNumber sees candidates from BOTH passes and picks the most
 // complete lot. Including the raw read guarantees we never do worse than before.
@@ -235,36 +218,23 @@ export const ocrVision = functions
     }
 
     try {
-      // Build both enhanced variants (local CPU), then OCR raw + enhanced +
-      // dot-matrix together. The dot-matrix pass connects the dots of inkjet codes
-      // for better char accuracy (8<->B, 3<->8); all three are merged so we never
-      // do worse than raw-only.
-      const [enhancedBase64, dotMatrixBase64] = await Promise.all([
-        enhanceForOcr(imageBase64),
-        enhanceForDotMatrix(imageBase64)
-      ]);
-      const [rawResult, enhancedResult, dotMatrixResult] = await Promise.all([
+      // Build the enhanced variant (local CPU), then OCR raw + enhanced together.
+      const enhancedBase64 = await enhanceForOcr(imageBase64);
+      const [rawResult, enhancedResult] = await Promise.all([
         callVision(apiKey, imageBase64, languageHints, 'TEXT_DETECTION'),
         enhancedBase64
           ? callVision(apiKey, enhancedBase64, languageHints, 'DOCUMENT_TEXT_DETECTION').catch((e) => {
               console.warn('[ocrVision] enhanced pass failed:', e instanceof Error ? e.message : e);
               return null;
             })
-          : Promise.resolve(null),
-        dotMatrixBase64
-          ? callVision(apiKey, dotMatrixBase64, languageHints, 'DOCUMENT_TEXT_DETECTION').catch((e) => {
-              console.warn('[ocrVision] dot-matrix pass failed:', e instanceof Error ? e.message : e);
-              return null;
-            })
           : Promise.resolve(null)
       ]);
 
-      const merged = mergeReads(mergeReads(rawResult, enhancedResult), dotMatrixResult);
+      const merged = mergeReads(rawResult, enhancedResult);
       // TEMP diagnostics: log exactly what each pass read so the contrast/feature
       // settings can be tuned against real hard codes. Lot codes aren't PII.
       console.log('[ocrVision] RAW pass     :', JSON.stringify(rawResult.text));
       console.log('[ocrVision] ENHANCED pass:', JSON.stringify(enhancedResult?.text ?? ''));
-      console.log('[ocrVision] DOTMATRIX    :', JSON.stringify(dotMatrixResult?.text ?? ''));
       console.log('[ocrVision] MERGED lines :', merged.lines.length);
 
       res.status(200).json({

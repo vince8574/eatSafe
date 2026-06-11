@@ -30,7 +30,7 @@ export function isClaudeAvailable(): boolean {
  * ScanLotScreen — "LOT XXX", "L" + digits, or 4-22 char alphanumerics that are
  * not pure EAN/GTIN.
  */
-export function hasPlausibleLotPattern(text: string): boolean {
+function hasPlausibleLotPattern(text: string): boolean {
   if (!text) return false;
   const cleaned = text.replace(/\s+/g, ' ').toUpperCase();
 
