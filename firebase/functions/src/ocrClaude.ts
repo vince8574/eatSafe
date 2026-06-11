@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions/v1';
 import { defineSecret } from 'firebase-functions/params';
 import type AnthropicTypes from '@anthropic-ai/sdk';
-import Jimp from 'jimp';
 import { checkAppCheck } from './appCheck';
 
 const ANTHROPIC_API_KEY = defineSecret('ANTHROPIC_API_KEY');
@@ -67,20 +66,6 @@ OUTPUT FORMAT:
 - Max 22 chars.
 - If no lot code is visible, respond with exactly: NONE`;
 
-// Variante contraste pour Claude : les codes point-matrice sombres sur fond
-// COLORÉ (ex. paquet rouge Francine) deviennent quasi illisibles en JPEG. La
-// version niveaux de gris + normalisation + contraste rend les points nets.
-// On envoie les DEUX versions (brute + contrastée) pour que Claude recoupe.
-async function enhanceForClaude(imageBase64: string): Promise<string | null> {
-  try {
-    const image = await Jimp.read(Buffer.from(imageBase64, 'base64'));
-    image.greyscale().normalize().contrast(0.3);
-    return (await image.getBufferAsync(Jimp.MIME_PNG)).toString('base64');
-  } catch (error) {
-    console.warn('[ocrClaude] enhance failed, sending raw only:', error instanceof Error ? error.message : error);
-    return null;
-  }
-}
 
 export const ocrClaude = functions
   .region('us-central1')
@@ -145,23 +130,15 @@ export const ocrClaude = functions
     const client = new Anthropic({ apiKey });
 
     try {
-      // Variante contrastée (gris + contraste) construite localement (gratuit) :
-      // décisive sur les codes point-matrice sombres imprimés sur fond coloré
-      // (paquet rouge), où l'image brute est presque illisible pour le modèle.
-      // UNE seule image envoyée — la contrastée si dispo (meilleure lecture,
-      // même coût que la brute) — sans raisonnement : ~1 centime par appel.
-      const enhancedBase64 = await enhanceForClaude(imageBase64);
-
+      // Image BRUTE uniquement. Testé : la variante jimp greyscale+normalize+
+      // contrast rendait Claude AVEUGLE sur les points pâles (paquet rouge
+      // Francine : lectures "HG1016983" en brut → "" en contrasté). Le modèle
+      // gère mieux la couleur brute que notre prétraitement destructif.
       const userContent: AnthropicTypes.MessageParam['content'] = [
-        enhancedBase64
-          ? {
-              type: 'image',
-              source: { type: 'base64', media_type: 'image/png', data: enhancedBase64 }
-            }
-          : {
-              type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: imageBase64 }
-            },
+        {
+          type: 'image',
+          source: { type: 'base64', media_type: mediaType, data: imageBase64 }
+        },
         {
           type: 'text',
           text: 'Extract the lot number from this packaging image.'
