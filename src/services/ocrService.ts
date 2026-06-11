@@ -1089,6 +1089,70 @@ export interface PerformOcrOptions {
   allowPaidFallback?: boolean;
 }
 
+// Contre-vérification d'un lot déjà lu par ML Kit. ML Kit ne donne pas de confiance
+// fiable sur iOS, donc on relit via Google Vision (3 passes : brute + contraste +
+// dot-matrix) ; si le lot Vision DIVERGE (caractères différents — typique d'un code
+// point-matrice mal lu, ex. 8↔B, 3↔8), on tranche avec Claude Opus (le plus précis).
+// S'ils concordent, zéro appel Claude. Coût : un appel Vision (peu cher) par scan
+// confirmé, Claude uniquement sur désaccord.
+async function verifyLotWithCrossCheck(
+  sourceUri: string,
+  acceptedLot: string,
+  acceptedResult: OCRResult,
+  brand: string | undefined,
+  onStage: ((stage: OcrStage) => void) | undefined,
+  tag: string
+): Promise<OCRResult> {
+  if (!isVisionAvailable()) return acceptedResult;
+  let aiImageUri: string | null = null;
+  try {
+    aiImageUri = await preprocessImage(sourceUri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
+  } catch (error) {
+    console.warn(`[${tag}] contre-vérif : image IA échouée`, error);
+    return acceptedResult;
+  }
+  const meta = {
+    nativeWidth: lastPreprocessNative?.w,
+    nativeHeight: lastPreprocessNative?.h,
+    captureDiag: captureDiag ?? undefined
+  };
+  try {
+    onStage?.('vision');
+    const visionResult = await runVisionFallback(aiImageUri, meta);
+    const visionLot = await extractLotNumber(visionResult.text, brand);
+    const norm = (s?: string | null) => (s ? s.replace(/\s/g, '').toUpperCase() : '');
+    const a = norm(acceptedLot);
+    const v = norm(visionLot);
+    // Concordance : identiques, ou l'un contenu dans l'autre (partiel) → on garde.
+    if (!v || a === v || a.includes(v) || v.includes(a)) {
+      console.log(`[${tag}] lot confirmé par Vision ("${acceptedLot}")`);
+      return acceptedResult;
+    }
+    console.log(`[${tag}] désaccord ML Kit ("${acceptedLot}") vs Vision ("${visionLot}") → arbitrage Claude`);
+    if (isClaudeAvailable()) {
+      onStage?.('claude');
+      const claudeResult = await tryClaudeFallback(aiImageUri, acceptedResult, 'lot', { force: true, ...meta });
+      const claudeLot = claudeResult ? await extractLotNumber(claudeResult.text, brand) : null;
+      if (claudeResult && claudeLot) {
+        console.log(`[${tag}] Claude tranche : "${claudeLot}"`);
+        return claudeResult;
+      }
+    }
+    // Pas de Claude (ou lecture vide) : adopter Vision s'il est au moins aussi complet.
+    if (lotCharLen(visionLot) >= lotCharLen(acceptedLot)) return visionResult;
+    return acceptedResult;
+  } catch (error) {
+    console.warn(`[${tag}] contre-vérif Vision échouée, on garde ML Kit`, error);
+    return acceptedResult;
+  } finally {
+    try {
+      await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
+    } catch {
+      /* noop */
+    }
+  }
+}
+
 export async function performOcr(
   uri: string,
   brand?: string,
@@ -1210,8 +1274,13 @@ export async function performOcr(
           }
         }
       }
+    } else if (mlkitLot && allowPaid) {
+      // ML Kit a lu un lot complet : on le CONTRE-VÉRIFIE via Vision (désaccord →
+      // Claude), car ML Kit n'expose pas de confiance fiable sur iOS et se trompe
+      // sur les caractères point-matrice.
+      result = await verifyLotWithCrossCheck(uri, mlkitLot, result, brand, onStage, 'Lot OCR');
     } else {
-      console.log('[Lot OCR] ML Kit found lot number, skipping Vision API');
+      console.log('[Lot OCR] ML Kit found lot number; cross-check disabled (no paid OCR)');
     }
 
     console.log('[Lot OCR] OCR source:', result.source);
@@ -1420,6 +1489,11 @@ export async function performOcrMultiFrame(
         }
       }
     }
+  } else if (bestLot && allowPaid) {
+    // La meilleure frame a un lot complet : contre-vérification Vision (désaccord
+    // → Claude), même raison que le mono-frame (ML Kit non fiable sur les
+    // caractères point-matrice).
+    result = await verifyLotWithCrossCheck(best.uri, bestLot, result, brand, onStage, 'Multi-frame OCR');
   }
 
   // 4) Nettoyer toutes les frames capturées.
