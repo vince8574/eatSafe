@@ -199,12 +199,11 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         }
         const chosen = namedPhoto ?? best ?? bestAny;
         console.log('[Capture] chosen pictureSize:', chosen, '(named:', namedPhoto, 'wide:', best, ')');
-        // iOS : sur expo-camera 55, DÉFINIR pictureSize (numérique OU "Photo")
-        // force une capture ~CARRÉE (logs : 2224x2160 / 3114x3024) qui coupe les
-        // côtés du code. On NE le définit donc PAS sur iOS → capture par défaut
-        // (= l'état "avant", qui marchait). On le garde sur Android, où pictureSize
-        // expose de vraies tailles WxH et fonctionne normalement.
-        const applied = Platform.OS === 'android' ? chosen : undefined;
+        // SDK 54 / expo-camera 17 : pictureSize fonctionne normalement et donne du
+        // 4:3 pleine résolution (comme FR). On l'applique donc sur les DEUX
+        // plateformes ("Photo" = pleine résolution 4:3 sur iOS). Le bug de capture
+        // carrée était spécifique à expo-camera 55.
+        const applied = chosen;
         // Remonté aux logs cloud d'OCR pour confirmer le format de capture sans
         // logs appareil (cf. setCaptureDiag / ocrVision).
         setCaptureDiag(
@@ -460,11 +459,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           // Pas de freeze de reprise sur le code-barres car il remonte une caméra
           // fraîche au focus (key ci-dessus) ; l'écran lot ne remonte pas.
           active={isFocused}
-          // mode="picture" (hors code-barres) : sur expo-camera 55, sans ça la
-          // capture iOS suit le preset VIDÉO et sort ~CARRÉE (logs : 3114x3024 au
-          // lieu du 4:3 plein), coupant les côtés des codes larges. "picture" force
-          // la sortie photo pleine résolution 4:3. N'affecte pas l'autofocus.
-          mode={enableBarcodeScanning ? undefined : 'picture'}
           // Photo pleine résolution (hors code-barres) : sans ça iOS capture en
           // basse résolution → codes de lot pâles illisibles.
           pictureSize={enableBarcodeScanning ? undefined : pictureSize}
