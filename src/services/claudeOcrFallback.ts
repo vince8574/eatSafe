@@ -34,7 +34,20 @@ export function isClaudeAvailable(): boolean {
  * "6085S53") gagner au lieu du marquage réglementaire.
  */
 export function stripNonLotMarkings(text: string): string {
-  return text
+  // Lignes d'ADRESSE (service consommateurs) : "F 53089 Laval cedex 9",
+  // "CS 90123", "BP 35"… Un "F+5 chiffres" (pays+code postal) passe pour un
+  // lot. Toute ligne contenant CEDEX est une adresse, jamais un lot.
+  let cleaned = text
+    .split('\n')
+    .filter((line) => !/CEDEX/i.test(line) && !/SERVICE\s+CONSO/i.test(line))
+    .join('\n')
+    .replace(/\b(?:CS|BP)[\s.]?\d{2,6}\b/gi, ' ');
+  // Si une mention CEDEX existe quelque part (l'OCR coupe parfois la ligne),
+  // retirer aussi les "F + code postal" isolés.
+  if (/CEDEX/i.test(text)) {
+    cleaned = cleaned.replace(/\bF[\s.\-]?\d{5}\b/gi, ' ');
+  }
+  return cleaned
     .replace(/\bEMB[\s.:]*[A-Z0-9][A-Z0-9.\-]{1,14}/gi, ' ')
     .replace(/\bFR[\s.]*\d{2}[\s.]+\d{3}[\s.]+\d{3}[\s.]*(?:CE|EC)?\b/gi, ' ')
     .replace(/\b(?:GB|UK)[\s.:]*[A-Z]{1,3}[\s.]?\d{2,4}[A-Z]?\b[\s.]*(?:CE|EC)?\b/gi, ' ')
