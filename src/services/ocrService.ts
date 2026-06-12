@@ -603,13 +603,23 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
   const cleaned = rawText.replace(/[^\w\s/:.-]/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
   console.log('[extractLotNumber] Cleaned text:', cleaned);
 
-  // Liste de mots-clés à exclure (codes-barres, dates, etc.)
-  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'SELL BY', 'À CONSOMMER'];
+  // Liste de mots-clés à exclure (codes-barres, dates, vocabulaire d'étiquette).
+  // Les mots nutrition/étiquette collés à des chiffres font de faux lots : cas
+  // réel "ABOUT25" extrait de "About 2.5 servings per container" (Lay's).
+  const excludeKeywords = [
+    'GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP',
+    'USE BY', 'SELL BY', 'À CONSOMMER',
+    'ABOUT', 'SERVING', 'CALORIE', 'TOTAL', 'DAILY', 'VALUE', 'PROTEIN',
+    'SODIUM', 'VITAMIN', 'POTASSIUM', 'CALCIUM', 'CHOLESTEROL', 'NUTRITION'
+  ];
 
-  // Fonction pour vérifier si un texte contient des mots-clés à exclure
+  // Fonction pour vérifier si un texte contient des mots-clés à exclure.
+  // Rejette aussi les tokens "lettres + année" type "TAFR2020" : presque toujours
+  // une DATE mal lue ("26APR2026" garblé), jamais un lot.
   const containsExcludedKeyword = (text: string): boolean => {
     const upperText = text.toUpperCase();
-    return excludeKeywords.some(keyword => upperText.includes(keyword));
+    if (excludeKeywords.some(keyword => upperText.includes(keyword))) return true;
+    return /^[A-Z]{2,8}(?:19|20)\d{2}$/.test(upperText.replace(/\s+/g, ''));
   };
 
   const isPhoneNumber = (text: string): boolean => {
@@ -865,10 +875,17 @@ export async function extractAllLotCandidates(rawTextInput: string, brand?: stri
     return /^0\d{9}$/.test(cleanedNum);
   };
 
-  const excludeKeywords = ['GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP', 'USE BY', 'SELL BY', '? CONSOMMER'];
+  const excludeKeywords = [
+    'GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP',
+    'USE BY', 'SELL BY', '? CONSOMMER',
+    'ABOUT', 'SERVING', 'CALORIE', 'TOTAL', 'DAILY', 'VALUE', 'PROTEIN',
+    'SODIUM', 'VITAMIN', 'POTASSIUM', 'CALCIUM', 'CHOLESTEROL', 'NUTRITION'
+  ];
   const containsExcludedKeyword = (text: string): boolean => {
     const upperText = text.toUpperCase();
-    return excludeKeywords.some(keyword => upperText.includes(keyword));
+    if (excludeKeywords.some(keyword => upperText.includes(keyword))) return true;
+    // Tokens "lettres + année" ("TAFR2020") = date mal lue, jamais un lot.
+    return /^[A-Z]{2,8}(?:19|20)\d{2}$/.test(upperText.replace(/\s+/g, ''));
   };
 
   // Patterns (copie des patterns existants)
