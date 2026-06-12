@@ -691,10 +691,16 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
         // Europe. Sans cette branche prioritaire, il retombait dans les patterns
         // génériques au même rang que du charabia OCR (cas réel : "9780LLE",
         // fragment de "JUILLET" lu tête-bêche, gagnait contre "L26008").
-        const gluedLRegex = /(?:^|[\s\n])(L\d{4,15})\b/gi;
+        // Couvre aussi les lots COMPOSÉS à tiret ("L331-4003263405", Haribo) — dès
+        // 3 chiffres après le L quand un suffixe -chiffres suit (sinon le code
+        // artwork "M517062" du bord d'étiquette gagnait).
+        const gluedLRegex = /(?:^|[\s\n])(L\d{3,15}(?:-\s?\d{2,15})?)\b/gi;
         while ((match = gluedLRegex.exec(text)) !== null) {
-          const code = match[1].toUpperCase();
-          if (!isPhoneNumber(code.slice(1))) {
+          const code = match[1].toUpperCase().replace(/\s+/g, '');
+          // "L" + 3 chiffres SEUL ("L331") est trop court/ambigu : on exige soit
+          // ≥4 chiffres collés, soit le suffixe composé à tiret.
+          const digitsOnly = code.slice(1).replace(/-/g, '');
+          if ((/^L\d{4,}/.test(code) || code.includes('-')) && !isPhoneNumber(digitsOnly)) {
             results.push(code);
           }
         }
@@ -1147,8 +1153,9 @@ async function locateLotZone(uri: string): Promise<string | null> {
       let score = 0;
       // Mot-clé LOT explicite = signal le plus fort.
       if (/\bLOT\b/.test(text)) score += 100;
-      // L collé aux chiffres (L26008) = format européen dominant.
-      if (/(?:^|[\s\n])L\d{4,}/.test(text)) score += 80;
+      // L collé aux chiffres (L26008, et composés "L331-4003263405") = format
+      // européen dominant.
+      if (/(?:^|[\s\n])L\d{3,}(?:[\s-]?\d+)?/.test(text)) score += 80;
       // Tokens denses lettres+chiffres ou numériques longs.
       const tokens = text.match(/[A-Z0-9]{6,22}/g) || [];
       if (tokens.some((t) => /\d/.test(t) && /[A-Z]/.test(t) && !/^(?:19|20)\d{2}/.test(t))) score += 40;
@@ -1456,29 +1463,44 @@ export async function performOcrMultiFrame(
   const frameAgreement = bestKey
     ? perFrameLots.filter((l) => l && normLot(l) === bestKey).length
     : 0;
-  const unstableLot = !!bestLot && frameResults.length >= 2 && frameAgreement < 2;
+  let unstableLot = !!bestLot && frameResults.length >= 2 && frameAgreement < 2;
   if (unstableLot) {
     console.log(
       `[Multi-frame OCR] Lot "${bestLot}" instable (${frameAgreement}/${frameResults.length} frames concordent) → vérification IA`
     );
   }
 
+  // Lot "FORT" = ancré par un marqueur explicite (L+chiffres ou mot-clé LOT dans
+  // le texte). Un lot "faible" (token générique type "M517062", code artwork
+  // pré-imprimé du bord d'étiquette Haribo) ne doit PAS bloquer la localisation
+  // plein-cadre : le vrai lot ("L331-4003263405") est peut-être ailleurs.
+  const isStrongLot = (s: string | null | undefined) => !!s && /^L\d{3,}/i.test(s.replace(/[\s-]/g, ''));
+  const textHasLotKeyword = /\bLOT\b/i.test(best.result.text);
+
   // Localisation PLEIN CADRE (mode mains-libres/malvoyant) : si la bande centrale
-  // n'a donné AUCUN lot, le code est peut-être ailleurs dans l'image (l'utilisateur
-  // aveugle ne peut pas le centrer). On le localise via les positions de blocs
-  // ML Kit (gratuit) et on re-OCR la zone recadrée.
+  // n'a donné AUCUN lot — ou seulement un lot FAIBLE — le vrai code est peut-être
+  // ailleurs dans l'image (l'utilisateur aveugle ne peut pas le centrer). On le
+  // localise via les positions de blocs ML Kit (gratuit) et on re-OCR la zone.
   let zoneUri: string | null = null;
   let effectiveLot = bestLot;
-  if (!bestLot) {
+  if (!bestLot || (!isStrongLot(bestLot) && !textHasLotKeyword)) {
     zoneUri = await locateLotZone(best.uri);
     if (zoneUri) {
       try {
         const zoneRead = await runMlkit(zoneUri);
         const zoneLot = await extractLotNumber(zoneRead.text, brand);
-        if (zoneLot && !isLotTooShort(zoneLot)) {
-          console.log(`[Multi-frame OCR] Lot localisé plein-cadre : "${zoneLot}"`);
+        const zoneIsStrong = isStrongLot(zoneLot) || /\bLOT\b/i.test(zoneRead.text);
+        // Adoption : si on n'avait RIEN, tout lot de zone suffisant passe ; si on
+        // avait un lot FAIBLE, seule une zone FORTE (ancrée L/LOT) le remplace.
+        if (zoneLot && !isLotTooShort(zoneLot) && (!bestLot || zoneIsStrong)) {
+          console.log(
+            `[Multi-frame OCR] Lot localisé plein-cadre : "${zoneLot}"${bestLot ? ` (remplace le lot faible "${bestLot}")` : ''}`
+          );
           result = zoneRead;
           effectiveLot = zoneLot;
+          // Un lot ancré par un marqueur explicite est digne de confiance : pas
+          // d'arbitrage IA superflu déclenché par l'instabilité de l'ANCIEN lot.
+          if (zoneIsStrong) unstableLot = false;
         }
       } catch (error) {
         console.warn('[Multi-frame OCR] re-OCR de la zone localisée échoué', error);
