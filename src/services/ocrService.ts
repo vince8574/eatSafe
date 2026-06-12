@@ -1120,6 +1120,69 @@ export interface PerformOcrOptions {
   allowPaidFallback?: boolean;
 }
 
+// Localisation PLEIN CADRE du lot, pour le mode mains-libres/malvoyant : la bande
+// centrale suppose que l'utilisateur centre le code, ce qu'un utilisateur aveugle
+// ne peut pas faire (cas réel : paquet de bacon tenu entier devant la caméra, la
+// ligne "Lot 26135030" tout en haut → hors bande → charabia "OUT50"). ML Kit (local,
+// gratuit) lit la frame ENTIÈRE et donne la POSITION des blocs ; on choisit le bloc
+// au texte le plus "lot-like" et on renvoie un crop natif recadré dessus, que le
+// pipeline normal (ML Kit → Vision → Claude) relit en gros plan.
+async function locateLotZone(uri: string): Promise<string | null> {
+  try {
+    const probe = await manipulateAsync(uri, []);
+    const imgW = probe.width ?? 0;
+    const imgH = probe.height ?? 0;
+    if (!imgW || !imgH) return null;
+
+    const recognition: any = await TextRecognition.recognize(uri);
+    const blocks: any[] = Array.isArray(recognition?.blocks) ? recognition.blocks : [];
+    let best: { score: number; frame: { left: number; top: number; width: number; height: number } } | null = null;
+
+    for (const block of blocks) {
+      const rawText = String(block?.text ?? '');
+      const text = stripNonLotMarkings(rawText).toUpperCase();
+      const frame = block?.frame;
+      if (!text.trim() || !frame || !frame.width || !frame.height) continue;
+
+      let score = 0;
+      // Mot-clé LOT explicite = signal le plus fort.
+      if (/\bLOT\b/.test(text)) score += 100;
+      // L collé aux chiffres (L26008) = format européen dominant.
+      if (/(?:^|[\s\n])L\d{4,}/.test(text)) score += 80;
+      // Tokens denses lettres+chiffres ou numériques longs.
+      const tokens = text.match(/[A-Z0-9]{6,22}/g) || [];
+      if (tokens.some((t) => /\d/.test(t) && /[A-Z]/.test(t) && !/^(?:19|20)\d{2}/.test(t))) score += 40;
+      if (tokens.some((t) => /^\d{6,12}$/.test(t))) score += 30;
+
+      if (score > 0 && (!best || score > best.score)) {
+        best = { score, frame };
+      }
+    }
+    if (!best) return null;
+
+    // Crop autour du bloc avec une marge généreuse (le lot peut déborder du bloc
+    // détecté, et la marge donne du contexte à Vision/Claude).
+    const marginX = best.frame.width * 0.4 + imgW * 0.02;
+    const marginY = best.frame.height * 1.2;
+    const originX = Math.max(0, Math.floor(best.frame.left - marginX));
+    const originY = Math.max(0, Math.floor(best.frame.top - marginY));
+    const width = Math.min(imgW - originX, Math.ceil(best.frame.width + marginX * 2));
+    const height = Math.min(imgH - originY, Math.ceil(best.frame.height + marginY * 2));
+    if (width < 60 || height < 24) return null;
+
+    const out = await manipulateAsync(
+      uri,
+      [{ crop: { originX, originY, width, height } }],
+      { compress: 0.9, format: SaveFormat.JPEG }
+    );
+    console.log(`[LocateLot] zone lot trouvée (score=${best.score}) crop ${width}x${height} @${originX},${originY}`);
+    return out.uri;
+  } catch (error) {
+    console.warn('[LocateLot] localisation plein-cadre échouée', error);
+    return null;
+  }
+}
+
 export async function performOcr(
   uri: string,
   brand?: string,
@@ -1400,12 +1463,37 @@ export async function performOcrMultiFrame(
     );
   }
 
+  // Localisation PLEIN CADRE (mode mains-libres/malvoyant) : si la bande centrale
+  // n'a donné AUCUN lot, le code est peut-être ailleurs dans l'image (l'utilisateur
+  // aveugle ne peut pas le centrer). On le localise via les positions de blocs
+  // ML Kit (gratuit) et on re-OCR la zone recadrée.
+  let zoneUri: string | null = null;
+  let effectiveLot = bestLot;
+  if (!bestLot) {
+    zoneUri = await locateLotZone(best.uri);
+    if (zoneUri) {
+      try {
+        const zoneRead = await runMlkit(zoneUri);
+        const zoneLot = await extractLotNumber(zoneRead.text, brand);
+        if (zoneLot && !isLotTooShort(zoneLot)) {
+          console.log(`[Multi-frame OCR] Lot localisé plein-cadre : "${zoneLot}"`);
+          result = zoneRead;
+          effectiveLot = zoneLot;
+        }
+      } catch (error) {
+        console.warn('[Multi-frame OCR] re-OCR de la zone localisée échoué', error);
+      }
+    }
+  }
+
   // Aucun lot — OU lot trop court (tronqué) — OU lot instable → fallbacks distants.
-  if ((!bestLot || isLotTooShort(bestLot) || unstableLot) && allowPaid) {
+  if ((!effectiveLot || isLotTooShort(effectiveLot) || unstableLot) && allowPaid) {
     let aiImageUri: string | null = null;
     if (isVisionAvailable() || isClaudeAvailable()) {
       try {
-        aiImageUri = await preprocessImage(best.uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
+        // Si une zone lot a été localisée plein-cadre, l'IA lit CETTE zone (gros
+        // plan) plutôt que la bande centrale aveugle.
+        aiImageUri = zoneUri ?? (await preprocessImage(best.uri, { cropForLot: true, narrowBand: true, useVisionConfig: true }));
       } catch (error) {
         console.warn('[Multi-frame OCR] Failed to build AI image', error);
       }
@@ -1425,7 +1513,7 @@ export async function performOcrMultiFrame(
           if (
             visionResult.text &&
             visionResult.text.trim().length > 0 &&
-            lotCharLen(visionLot) >= lotCharLen(bestLot)
+            lotCharLen(visionLot) >= lotCharLen(effectiveLot)
           ) {
             result = visionResult;
           }
@@ -1478,6 +1566,15 @@ export async function performOcrMultiFrame(
           /* noop */
         }
       }
+    }
+  }
+
+  // Nettoyer la zone localisée (idempotent : déjà supprimée si servie d'image IA).
+  if (zoneUri) {
+    try {
+      await FileSystem.deleteAsync(zoneUri, { idempotent: true });
+    } catch {
+      /* noop */
     }
   }
 
