@@ -608,7 +608,7 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
   // réel "ABOUT25" extrait de "About 2.5 servings per container" (Lay's).
   const excludeKeywords = [
     'GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP',
-    'USE BY', 'SELL BY', 'À CONSOMMER',
+    'USE BY', 'BBF', 'SELL BY', 'À CONSOMMER',
     'ABOUT', 'SERVING', 'CALORIE', 'TOTAL', 'DAILY', 'VALUE', 'PROTEIN',
     'SODIUM', 'VITAMIN', 'POTASSIUM', 'CALCIUM', 'CHOLESTEROL', 'NUTRITION'
   ];
@@ -631,7 +631,7 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
   const isUpc = (text: string): boolean => /^\d{12}$/.test(text.replace(/[\s\-\.]/g, ''));
 
   // Stop keywords — if these appear after the LOT prefix, truncate before them
-  const stopKeywords = ['DLC', 'DLUO', 'DDM', 'EXP', 'BEST', 'USE BY', 'BBD', 'BB', 'BEFORE', 'À CONSOMMER', 'CONSUME', 'DATE', 'GTIN', 'EAN', 'UPC'];
+  const stopKeywords = ['DLC', 'DLUO', 'DDM', 'EXP', 'BEST', 'USE BY', 'BBF', 'BBD', 'BB', 'BEFORE', 'À CONSOMMER', 'CONSUME', 'DATE', 'GTIN', 'EAN', 'UPC'];
 
   // Extract the tight alphanumeric code right after a keyword — stops at spaces/stop-words/dates
   const extractTightCode = (afterKeyword: string): string => {
@@ -877,7 +877,7 @@ export async function extractAllLotCandidates(rawTextInput: string, brand?: stri
 
   const excludeKeywords = [
     'GTIN', 'EAN', 'UPC', 'DDL', 'DDM', 'DLC', 'DLUO', 'BEST', 'BEFORE', 'EXP',
-    'USE BY', 'SELL BY', '? CONSOMMER',
+    'USE BY', 'BBF', 'SELL BY', '? CONSOMMER',
     'ABOUT', 'SERVING', 'CALORIE', 'TOTAL', 'DAILY', 'VALUE', 'PROTEIN',
     'SODIUM', 'VITAMIN', 'POTASSIUM', 'CALCIUM', 'CHOLESTEROL', 'NUTRITION'
   ];
