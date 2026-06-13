@@ -674,6 +674,23 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
         let match;
         while ((match = regex.exec(text)) !== null) {
           const raw = match[1];
+          // Layout FR fréquent : un SEUL en-tête "À consommer avant le : / N° de
+          // lot :" partagé par la DATE puis le vrai lot ("01/02/2027 21:44
+          // 16127040"). Le token juste après "lot" est alors la DATE → on la saute,
+          // ainsi que l'heure, et on prend le 1er vrai code derrière (16127040).
+          if (isDateLike(raw)) {
+            const tail = text.slice(match.index + match[0].length, match.index + match[0].length + 64);
+            for (const tok of tail.split(/\s+/).filter(Boolean)) {
+              const t = tok.replace(/[.,;]+$/, '');
+              if (isDateLike(t) || /^\d{1,2}[:H]\d{2}$/.test(t) || /^(?:19|20)\d{2}$/.test(t) || !/\d/.test(t)) continue;
+              const c = t.replace(/[^A-Z0-9\-]/gi, '').toUpperCase();
+              if (c.length >= 4 && c.length <= 16 && !isPhoneNumber(c) && !isUpc(c) && !containsExcludedKeyword(c)) {
+                results.push(c);
+                break;
+              }
+            }
+            continue;
+          }
           const code = extractTightCode(raw);
           if (code.length >= 2 && /\d/.test(code) && !isPhoneNumber(code) && !isUpc(code) && !containsExcludedKeyword(code)) {
             results.push(code);
