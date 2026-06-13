@@ -34,9 +34,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
     GoogleSignin.configure({
       webClientId:
         process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ??
-        '577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com',
-      offlineAccess: true,
-      forceCodeForRefreshToken: true
+        '577892941568-l3enpddn0gk0sljk59nf60eea67id2vu.apps.googleusercontent.com'
+      // PAS de offlineAccess / forceCodeForRefreshToken : l'app n'utilise que
+      // l'idToken pour Firebase (serverAuthCode jamais lu). Ces deux options
+      // forçaient un échange de server-auth-code (aller-retour réseau en plus) +
+      // l'écran de consentement à CHAQUE connexion → lenteur sur Android.
     });
 
     // Listen for auth state changes
