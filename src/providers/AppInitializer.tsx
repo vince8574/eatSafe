@@ -12,6 +12,10 @@ import { migrateLocalScansToFirestore } from '../services/productMigrationServic
 import { getAllProducts, updateProduct as updateFirestoreProduct } from '../services/firebaseProductsService';
 import { fetchRecallsByCountry } from '../services/apiService';
 import { getRecallStatus } from '../utils/lotMatcher';
+import { prewarmVoiceGuide } from '../hooks/useVoiceGuide';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
+import { getCurrentLanguage } from '../i18n/i18n';
+import { getSpeechLocale } from '../i18n/voiceLocales';
 import type { ScannedProduct } from '../types';
 
 export function AppInitializer() {
@@ -20,6 +24,13 @@ export function AppInitializer() {
   const [alertProducts, setAlertProducts] = useState<ScannedProduct[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
+    // Mode malvoyant : on paie le cold-start du moteur TTS (3-5 s sur Android)
+    // dès le lancement, pendant le splash, pour que la 1re annonce vocale sur
+    // l'écran de scan sorte sans latence.
+    if (usePreferencesStore.getState().accessibilityMode) {
+      prewarmVoiceGuide(getSpeechLocale(getCurrentLanguage()));
+    }
+
     void initializeAppCheck();
     setupNotificationHandler();
     void registerBackgroundTask();

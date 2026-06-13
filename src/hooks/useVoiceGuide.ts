@@ -75,6 +75,18 @@ function warmUpVoiceEngine(speechLocale?: string) {
   }
 }
 
+// Pré-chauffe GLOBALE appelée au démarrage de l'app (AppInitializer), avant même
+// que l'utilisateur n'atteigne un écran vocal. Sur Android, le tout premier
+// `Speech.speak` paie un cold-start du moteur Google TTS (binding du service
+// TextToSpeech) de 3-5 s → la voix semble muette plusieurs secondes. On le paie
+// ici pendant le splash : (1) `getAvailableVoicesAsync` force l'init du moteur,
+// (2) un warm-up quasi-inaudible amorce la synthèse. À l'arrivée sur le scan, le
+// moteur est déjà chaud → la 1re annonce sort immédiatement.
+export function prewarmVoiceGuide(speechLocale?: string): void {
+  warmUpVoiceEngine(speechLocale);
+  void getVoicesAsync();
+}
+
 // iOS : après une mise en veille / passage en arrière-plan, le moteur TTS
 // (AVSpeechSynthesizer) peut rester bloqué "en train de parler" → tous les speak
 // suivants sont ignorés et la voix ne parle plus au retour. On installe (une seule

@@ -529,22 +529,33 @@ export function ScanLotScreen() {
     setIsFinalizing(true);
 
     try {
-      const validation = await validateLotAgainstBrandPatterns(finalBrand, finalLot);
+      // Les 2 opérations lentes — fetch des rappels (réseau) et addProduct
+      // (Firestore) — sont INDÉPENDANTES : on les lance en parallèle au lieu de
+      // les enchaîner, ce qui réduit le temps perçu du "OK" (surtout sur Android,
+      // réseau/Firestore plus lents). Le fetch tape généralement le cache chaud
+      // préchargé à l'ouverture de l'écran.
+      const [recallList, product] = await Promise.all([
+        fetchRecallsByCountry(country),
+        addProduct({
+          brand: finalBrand,
+          lotNumber: finalLot,
+          ...(productName && { productName }),
+          ...(productImage && { productImage })
+        })
+      ]);
 
+      // Apprentissage des patterns de lot : la validation est synchrone (rapide),
+      // mais l'ÉCRITURE d'un nouveau pattern (saveLotPattern) n'est pas nécessaire
+      // avant de naviguer → fire-and-forget pour ne pas allonger le "OK".
+      const validation = validateLotAgainstBrandPatterns(finalBrand, finalLot);
       if (validation.isValid) {
         console.log(`[ScanLotScreen] Lot ${finalLot} validated against existing patterns for ${finalBrand}`);
       } else {
         console.log(`[ScanLotScreen] New lot pattern detected for ${finalBrand}: ${finalLot}`);
-        await saveLotPattern(finalBrand, finalLot);
+        void Promise.resolve(saveLotPattern(finalBrand, finalLot)).catch((e) =>
+          console.warn('[ScanLotScreen] saveLotPattern skipped', e)
+        );
       }
-
-      const recallList = await fetchRecallsByCountry(country);
-      const product = await addProduct({
-        brand: finalBrand,
-        lotNumber: finalLot,
-        ...(productName && { productName }),
-        ...(productImage && { productImage })
-      });
 
       const matchingRecalls = recallList.filter((recall) => {
         // Skip recalls without lot numbers — brand-only matching is too unreliable
@@ -616,7 +627,10 @@ export function ScanLotScreen() {
         });
       }
 
-      await decrementScanCounter();
+      // Décrément du quota : non bloquant pour la navigation (compteur local).
+      void decrementScanCounter().catch((e) =>
+        console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
+      );
 
       resetFlow();
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
@@ -705,6 +719,12 @@ export function ScanLotScreen() {
       lastIntraAgreementRef.current = 0;
       lastLotRef.current = '';
       lastCoachingAtRef.current = 0;
+      // Préchauffe le cache des rappels (réseau FDA+USDA, ~1000 enreg.) dès
+      // l'ouverture de l'écran : le fetch chevauche le temps de scan/lecture de
+      // l'utilisateur, donc le `fetchRecallsByCountry` de handleConfirm tape un
+      // cache chaud → le "OK" est quasi instantané (surtout sur Android où la
+      // connexion réseau/Firestore est plus lente). Cache TTL 5 min ≫ délai scan→OK.
+      void fetchRecallsByCountry(country);
       if (accessibilityMode) {
         speak(t('accessibility.voice.scanLotReady'), { priority: true });
       }
@@ -721,7 +741,7 @@ export function ScanLotScreen() {
           autoCaptureTimerRef.current = null;
         }
       };
-    }, [accessibilityMode, speak, t])
+    }, [accessibilityMode, speak, t, country])
   );
 
   // Blind users: re-announce the lot-scan intro when the app returns to the
