@@ -9,6 +9,11 @@ buildscript {
     classpath('com.android.tools.build:gradle')
     classpath('com.facebook.react:react-native-gradle-plugin')
     classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+    // RÉ-AJOUTÉ après la régén SDK 54 (prebuild ne le remet pas car app.json ne
+    // déclare pas le plugin @react-native-firebase) : sans ce plugin, le
+    // google-services.json n'est pas traité → "Default FirebaseApp is not
+    // initialized" → écran blanc au démarrage Android.
+    classpath('com.google.gms:google-services:4.4.2')
   }
 }
 

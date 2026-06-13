@@ -1,6 +1,10 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+// RÉ-AJOUTÉ après la régén SDK 54 : traite google-services.json pour que
+// @react-native-firebase auto-initialise la FirebaseApp par défaut (sinon crash
+// "Default FirebaseApp is not initialized" → écran blanc).
+apply plugin: "com.google.gms.google-services"
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
