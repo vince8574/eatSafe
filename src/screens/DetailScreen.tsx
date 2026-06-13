@@ -166,10 +166,10 @@ export function DetailScreen() {
           </View>
 
           <TouchableOpacity
-            style={[styles.scanAnotherButton, { backgroundColor: colors.accent }]}
+            style={[styles.scanAnotherButton, { backgroundColor: colors.accent, shadowColor: colors.accent }]}
             onPress={() => router.replace('/(tabs)/scan')}
           >
-            <Text style={[styles.scanAnotherText, { color: colors.surface }]}>{t('details.actions.scanAnother')}</Text>
+            <Text style={[styles.scanAnotherText, { color: colors.onAccent }]}>{t('details.actions.scanAnother')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -388,7 +388,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
-    marginBottom: 12
+    marginBottom: 12,
+    // Ombre colorée → le bouton CTA se détache du fond vert du dégradé.
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 10,
+    elevation: 5
   },
   scanAnotherText: {
     fontSize: 16,
