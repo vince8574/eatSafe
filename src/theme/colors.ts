@@ -4,6 +4,9 @@ export const palette = {
   surfaceAlt: '#173B3A',
   accent: '#35F2A9',
   accentSoft: 'rgba(53, 242, 169, 0.2)',
+  // Texte à poser SUR un fond accent (boutons CTA). Foncé → contraste fort sur le
+  // vert/menthe des deux thèmes (≈6:1 et 10:1), bien plus lisible que du blanc.
+  onAccent: '#06231C',
   textPrimary: '#F7FBFA',
   // BUG-006 : contraste renforcé pour WCAG AA (précédemment #A5C9C7)
   textSecondary: '#D0E4E1',
@@ -22,6 +25,7 @@ export const lightPalette = {
   surfaceAlt: '#EEF6F4',
   accent: '#0BAE86',
   accentSoft: 'rgba(11, 174, 134, 0.15)',
+  onAccent: '#06231C',
   textPrimary: '#1A2D2B',
   // BUG-006 : contraste renforcé pour WCAG AA (précédemment #476562)
   textSecondary: '#32504D',

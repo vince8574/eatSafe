@@ -6,6 +6,7 @@ type Palette = {
   surfaceAlt: string;
   accent: string;
   accentSoft: string;
+  onAccent: string;
   textPrimary: string;
   textSecondary: string;
   text: string;
@@ -38,6 +39,7 @@ const defaultTheme: ThemeType = {
     surfaceAlt: '#173B3A',
     accent: '#35F2A9',
     accentSoft: 'rgba(53, 242, 169, 0.2)',
+    onAccent: '#06231C',
     textPrimary: '#F7FBFA',
     textSecondary: '#A5C9C7',
     text: '#F7FBFA',
