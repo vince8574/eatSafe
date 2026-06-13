@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import * as Speech from 'expo-speech';
 
 import { usePreferencesStore } from '../stores/usePreferencesStore';
@@ -74,6 +75,33 @@ function warmUpVoiceEngine(speechLocale?: string) {
   }
 }
 
+// iOS : après une mise en veille / passage en arrière-plan, le moteur TTS
+// (AVSpeechSynthesizer) peut rester bloqué "en train de parler" → tous les speak
+// suivants sont ignorés et la voix ne parle plus au retour. On installe (une seule
+// fois) un listener AppState qui stoppe le moteur À L'ENTRÉE en arrière-plan et
+// autorise un nouveau warm-up au retour au premier plan.
+// IMPORTANT : on ne stoppe PAS sur 'active' — d'autres écouteurs AppState (ex.
+// ScanLotScreen) appellent speak() dans le même tick et un Speech.stop() ici les
+// réduirait au silence. Le cas "synthétiseur bloqué" est déjà géré par
+// speak({ priority: true }) qui appelle Speech.stop() avant chaque annonce.
+let appStateRecoverySet = false;
+function setupAppStateRecovery(): void {
+  if (appStateRecoverySet) return;
+  appStateRecoverySet = true;
+  AppState.addEventListener('change', (next) => {
+    if (next === 'background') {
+      try {
+        Speech.stop();
+      } catch {
+        /* noop */
+      }
+    }
+    if (next === 'active') {
+      hasWarmedUp = false; // réautorise un warm-up du moteur
+    }
+  });
+}
+
 export function useVoiceGuide() {
   const accessibilityMode = usePreferencesStore((s) => s.accessibilityMode);
   const lastSpeechRef = useRef<{ text: string; at: number } | null>(null);
@@ -83,9 +111,24 @@ export function useVoiceGuide() {
   // Pré-charge les voix et pré-chauffe le moteur dès que le mode malvoyant est
   // actif → premier message net, pas de latence ni de troncature.
   useEffect(() => {
+    setupAppStateRecovery();
     void getVoicesAsync();
     if (accessibilityMode) {
       warmUpVoiceEngine(getSpeechLocale(getCurrentLanguage()));
+
+      // iOS standby : au retour en avant-plan, si aucun écran n'a déjà ré-annoncé
+      // (auquel cas hasWarmedUp est repassé à true par le speak), on déclenche un
+      // warm-up différé de 300 ms pour réveiller le moteur sur les écrans vocaux
+      // SANS ré-annonce propre.
+      const sub = AppState.addEventListener('change', (next) => {
+        if (next === 'active') {
+          setTimeout(() => warmUpVoiceEngine(getSpeechLocale(getCurrentLanguage())), 300);
+        }
+      });
+      return () => {
+        Speech.stop().catch(() => {});
+        sub.remove();
+      };
     }
     return () => {
       Speech.stop().catch(() => {});
