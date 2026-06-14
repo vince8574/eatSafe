@@ -164,7 +164,9 @@ export const ocrClaude = functions
       const debugPath = `debug-ocr/${ts}.${ext}`;
       await admin
         .storage()
-        .bucket()
+        // Bucket dédié créé à la main : Firebase Storage n'a JAMAIS été
+        // provisionné sur ce projet (aucun bucket par défaut), d'où les 404.
+        .bucket('eatsok-6d19f-debug-ocr')
         .file(debugPath)
         .save(Buffer.from(imageBase64, 'base64'), { contentType: mediaType });
       console.log(`[ocrClaude] DEBUG image saved: ${debugPath}`);
