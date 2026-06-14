@@ -164,7 +164,10 @@ export const ocrClaude = functions
       const debugPath = `debug-ocr/${ts}.${ext}`;
       await admin
         .storage()
-        .bucket()
+        // Bucket EXPLICITE : le défaut résout vers "<projet>.appspot.com" qui
+        // n'existe pas (le projet utilise le nouveau nom ".firebasestorage.app")
+        // → 404 "bucket does not exist". Sans ça, aucune image debug n'est sauvée.
+        .bucket('eatsok-6d19f.firebasestorage.app')
         .file(debugPath)
         .save(Buffer.from(imageBase64, 'base64'), { contentType: mediaType });
       console.log(`[ocrClaude] DEBUG image saved: ${debugPath}`);
