@@ -594,6 +594,16 @@ export function isReliableLot(candidate: string): boolean {
   return isConfidentLot(candidate);
 }
 
+// "0220282009L605118B" : une DATE/heure aplatie (chiffres) collée DEVANT un
+// code "L…" par l'OCR — Claude renvoie parfois la ligne entière sans espace
+// (cas réel U sirop framboise : "02/2028 20:09" + "L605118B"). On isole le vrai
+// lot européen "L + chiffres (+ suffixe lettres/chiffres)". Ne touche pas un
+// code sans préfixe-date ("L605118B" seul) ni un lot type "2V152525".
+export function splitGluedDateLot(token: string): string {
+  const m = /^\d{6,}(L\d{4,}[A-Z0-9]*)$/.exec((token || '').toUpperCase());
+  return m ? m[1] : token;
+}
+
 export async function extractLotNumber(rawTextInput: string, brand?: string): Promise<string> {
   const rawText = stripNonLotMarkings(rawTextInput);
   console.log('[extractLotNumber] Extracting lot number from OCR text');
@@ -856,7 +866,7 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
     if (matches.length > 0) {
       console.log(`✅ Found ${matches.length} candidate(s) with pattern "${pattern.name}": ${matches.join(', ')}`);
       const bonus = pattern.priority <= 3 ? 1000 : 0;
-      for (const m of matches) allCandidates.push({ value: m.toUpperCase(), bonus });
+      for (const m of matches) allCandidates.push({ value: splitGluedDateLot(m.toUpperCase()), bonus });
     }
   }
 
