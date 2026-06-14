@@ -7,6 +7,20 @@ import { nanoid } from 'nanoid/non-secure';
 const PRODUCTS_COLLECTION = 'scannedProducts';
 
 /**
+ * Firestore REFUSE toute valeur `undefined` (`.set`/`.update` throw
+ * "Unsupported field value: undefined"). Cas réels : `scannedBy` quand
+ * `getCurrentUserId()` n'est pas encore prêt, ou `recallReference` quand le
+ * produit n'est pas rappelé. On retire les clés undefined avant écriture.
+ */
+function stripUndefined<T extends Record<string, unknown>>(obj: T): T {
+  const out = {} as T;
+  for (const key of Object.keys(obj) as Array<keyof T>) {
+    if (obj[key] !== undefined) out[key] = obj[key];
+  }
+  return out;
+}
+
+/**
  * Service pour gérer les produits scannés au niveau organisation
  * Si l'utilisateur fait partie d'une organisation, les produits sont partagés
  * Sinon, les produits sont stockés au niveau utilisateur
@@ -95,7 +109,7 @@ export async function addProduct(
     .doc(scopeId)
     .collection('products')
     .doc(product.id)
-    .set(product);
+    .set(stripUndefined(product));
 
   console.log(`[firebaseProductsService] Product ${product.id} added to scope ${scopeId}`);
 
@@ -117,7 +131,7 @@ export async function updateProduct(
     .doc(scopeId)
     .collection('products')
     .doc(productId)
-    .update(updates);
+    .update(stripUndefined(updates as Record<string, unknown>));
 
   console.log(`[firebaseProductsService] Product ${productId} updated`);
 }
