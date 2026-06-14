@@ -481,10 +481,11 @@ export function looksLikeNonLot(raw: string): boolean {
   if (/^\d{1,4}(?:[.,]\d+)?\s?(?:MG|KG|G|GR|ML|CL|DL|L|OZ|LB|LBS)$/.test(t)) return true;
   // Conditionnement multiplié : "3X115G", "2X1L" (poids net d'un lot de packs).
   if (/^\d{1,2}\s?X\s?\d{2,4}(?:[.,]\d+)?\s?(?:MG|KG|G|GR|ML|CL|DL|L)$/.test(t)) return true;
-  // Fragment de CODE-BARRES : EAN-13/GTIN (≥13 chiffres) ou 10-13 chiffres
-  // suivis de 1-3 lettres parasites collées (l'OCR lit "...726568" + "Le:" =
-  // "60091726568LE"). isUpc ne couvrait QUE 12 chiffres exacts. Jamais un lot.
-  if (/^\d{13,}$/.test(t.replace(/[\s\-.]/g, ''))) return true;
+  // Fragment de CODE-BARRES : UPC-12 (US) / EAN-13 / GTIN-14 (≥12 chiffres) ou
+  // 10-13 chiffres suivis de 1-3 lettres parasites collées (l'OCR lit "...726568"
+  // + "Le:" = "60091726568LE"). isUpc ne couvrait QUE 12 chiffres exacts au stade
+  // extraction. Jamais un lot.
+  if (/^\d{12,}$/.test(t.replace(/[\s\-.]/g, ''))) return true;
   if (/^\d{10,13}[A-Z]{1,3}$/.test(t)) return true;
   // Prix / devises / pourcentages.
   if (/[€$£]/.test(t) || /\b(?:EUR|USD)\b/.test(t)) return true;
