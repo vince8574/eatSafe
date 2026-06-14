@@ -39,10 +39,13 @@ type PreprocessOptions = {
   useVisionConfig?: boolean; // Utiliser la config haute résolution pour Google Vision
 };
 
-// Facteurs de la bande centrale (mode lot). Élargis légèrement (vs 0.22/0.90) :
-// l'utilisateur — notamment malvoyant — ne centre pas parfaitement, et 4-6 points
-// de marge évitent de couper le code pour un coût en bruit négligeable.
-const BAND_HEIGHT_FACTOR = 0.26;
+// Facteurs de la bande centrale (mode lot). Élargi à 0.34 (vs 0.26) car sur iOS
+// la capture sort en ~carré (3024x3114, recadrage centré du capteur — pictureSize
+// est un quasi no-op sur iOS, bug expo #2874) : on perd ~23 % de champ haut/bas,
+// donc un lot un peu décentré sortait de l'ancienne bande de 26 %. Une bande plus
+// haute le rattrape ; le bruit ajouté est filtré par looksLikeNonLot + le scoring
+// (et locateLotZone repositionne déjà la bande sur la ligne du lot).
+const BAND_HEIGHT_FACTOR = 0.34;
 // Pleine largeur (1.0) : ne JAMAIS rogner horizontalement. Les logs montraient des
 // lectures tronquées à gauche ("3A2110R05" au lieu de "L693A2110R05") ; même un
 // rognage symétrique de 3% pouvait amputer le 1er caractère pâle d'un code calé au
