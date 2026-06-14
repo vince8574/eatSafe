@@ -71,26 +71,41 @@ export function ManualEntryScreen() {
       }
       const finalBrand = brand.trim() || t('common.unknown');
 
+      // SEULE étape essentielle : créer le produit. Si elle échoue → vraie
+      // erreur affichée. Tout le reste (marque, rappel, notif, quota) est
+      // best-effort et ne doit JAMAIS empêcher la navigation, sinon
+      // l'utilisateur reste bloqué sur cet écran (cas réel : decrementScanCounter
+      // = Firestore update() qui throw si le doc n'existe pas / scopeId divergent).
       const product = await addProduct({
         brand: finalBrand,
         lotNumber: lotNumber.trim()
       });
 
       if (brand.trim()) {
-        await incrementBrandUsage(brand.trim());
+        void Promise.resolve(incrementBrandUsage(brand.trim())).catch((e) =>
+          console.warn('[ManualEntry] incrementBrandUsage skipped', e)
+        );
       }
 
-      const recalls = await fetchRecallsByCountry(country);
-      const recallStatus = await updateRecall(product, recalls);
-
-      if (recallStatus.status === 'recalled') {
-        const recall = recalls.find(r => r.id === recallStatus.recallReference);
-        if (recall) {
-          await scheduleRecallNotification(product, recall);
+      // Vérif rappel : best-effort. Le produit est créé ; si la vérif échoue
+      // (réseau), l'écran détail la refera. On ne bloque pas la navigation.
+      try {
+        const recalls = await fetchRecallsByCountry(country);
+        const recallStatus = await updateRecall(product, recalls);
+        if (recallStatus.status === 'recalled') {
+          const recall = recalls.find((r) => r.id === recallStatus.recallReference);
+          if (recall) {
+            await scheduleRecallNotification(product, recall);
+          }
         }
+      } catch (recallError) {
+        console.warn('[ManualEntry] recall check skipped', recallError);
       }
 
-      await decrementScanCounter();
+      // Quota : non bloquant pour la navigation (comme ScanLotScreen).
+      void decrementScanCounter().catch((e) =>
+        console.warn('[ManualEntry] decrementScanCounter skipped', e)
+      );
 
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {
