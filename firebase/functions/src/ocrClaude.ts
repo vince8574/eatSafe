@@ -68,6 +68,27 @@ DOT-MATRIX / INKJET CODES (dotted characters) — read with EXTREME care:
   counter (often "NNNN:NNNNN" with a colon) — return line 3, not line 4.
 - Verify your reading character by character before answering.
 
+EXAMPLES (text visible on the pack -> the ONE correct answer).
+Study how the date, barcode, weight and factory markings are IGNORED:
+- "À consommer avant le : 01/02/2027 21:44 | N° de lot : 16127040 | Origine: USA" -> 16127040
+  (the production code printed BELOW the best-by date+time, not the date)
+- "02/2028 20:09   L605118B" -> L605118B
+  (flattened date+time on the left, the L-code is the lot)
+- "10 09 2026 09:30   L013204---4" -> L013204
+  (strip the trailing dashes and the secondary "4" counter)
+- "08.11.26   615E2VSN-01-2" -> 615E2VSN-01-2
+  (keep the full hyphenated code; the 08.11.26 is the date)
+- "LOT:H26/147-R245   DLC:24/06/26-18:01" -> H26/147-R245
+  (explicit LOT label wins; DLC is the date)
+- "Poids net 3 x 115 g   E L26/1049   31.12.2029   ES 12.06648/C CE   00713" -> L26/1049
+  (ignore the weight "3x115g", the date, and the oval "ES 12.06648/C CE")
+- "Numéro de Lot : 36028   06/2027   ES 26.00298/B UE" -> 36028
+  (ignore the sanitary oval "ES 26.00298/B"; 36028 is the lot)
+- "25/03/28   26084 / 11:31   3760091726568" -> 26084
+  (3760091726568 is the 13-digit BARCODE — never return it)
+- "À consommer 24/06/2026   LOT: 147100  10210740" -> 147100
+  (147100 follows the LOT label; 10210740 is a secondary counter)
+
 OUTPUT FORMAT:
 - Respond with ONLY the lot code, no quotes, no labels.
 - Strip spaces and special chars ("L 693 A" -> "L693A", "2 493 34315" -> "249334315").
