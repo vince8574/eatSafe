@@ -16,10 +16,14 @@ const preprocessConfig = {
 
 const visionPreprocessConfig = {
   // Format imposé pour l'IA (Vision ET Claude) : une SEULE image JPEG, calculée
-  // une fois puis réutilisée. 3000px (au lieu de 2000) car la bande lot est
-  // désormais recadrée À PLEINE RÉSOLUTION puis réduite à cette cible — on garde
-  // donc ~2x plus de pixels par caractère sur les codes point-matrice pâles.
-  resize: { width: 3000 },
+  // une fois puis réutilisée.
+  // ⚠️ COÛT : la largeur = nb de tokens image Claude = $/scan. Mesuré sur les
+  // logs réels : 3000px → ~3541 tokens input → ~0,019 $/scan (au-dessus du
+  // plafond accepté de 0,015 $). 2200px → ~1900 tokens → ~0,011 $/scan, sous le
+  // plafond, tout en gardant plus de pixels/caractère que l'ancien 2000px.
+  // Compromis assumé : les codes point-matrice très pâles (Francine) perdent un
+  // peu de détail vs 3000px → couvert par le bouton « Modifier ».
+  resize: { width: 2200 },
   format: SaveFormat.JPEG,
   compress: 0.85
 } as const;
