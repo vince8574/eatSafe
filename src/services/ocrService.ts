@@ -1247,6 +1247,62 @@ async function locateLotZone(uri: string): Promise<string | null> {
   }
 }
 
+// ⚙️ TEST — MODE TOUT-CLAUDE : quand `true`, on SAUTE ML Kit + Google Vision et
+// chaque scan va DIRECTEMENT à Claude (mesure du taux de réussite Claude seul +
+// du coût). Remettre à `false` pour rétablir la cascade normale (ML Kit gratuit
+// en 1re passe → Vision → Claude). Aucun autre code à toucher.
+const CLAUDE_ONLY = true;
+
+// Court-circuit tout-Claude : construit l'image IA (bande recadrée, config
+// Vision) depuis une frame et lit le lot UNIQUEMENT via Claude. Réutilisé par
+// performOcr et performOcrMultiFrame quand CLAUDE_ONLY est actif.
+async function performClaudeOnly(
+  uri: string,
+  brand: string | undefined,
+  onStage: ((stage: OcrStage) => void) | undefined
+): Promise<LotExtractionResult> {
+  const empty: OCRResult = { text: '', lines: [], source: 'claude-fallback' };
+  if (!isClaudeAvailable()) {
+    console.warn('[Claude-only] Claude non configuré — aucun résultat');
+    return { lot: '', result: empty, candidates: [] };
+  }
+  let aiImageUri: string | null = null;
+  try {
+    aiImageUri = await preprocessImage(uri, { cropForLot: true, narrowBand: true, useVisionConfig: true });
+    onStage?.('claude');
+    const claudeResult = await tryClaudeFallback(aiImageUri, empty, 'lot', {
+      force: true,
+      nativeWidth: lastPreprocessNative?.w,
+      nativeHeight: lastPreprocessNative?.h,
+      captureDiag: captureDiag ?? undefined
+    });
+    const result = claudeResult ?? empty;
+    let filteredText = result.text;
+    if (brand) {
+      const brandUpper = brand.toUpperCase();
+      filteredText = result.text
+        .split('\n')
+        .filter((line) => !line.trim().toUpperCase().includes(brandUpper))
+        .join('\n');
+    }
+    const lot = await extractLotNumber(filteredText, brand);
+    const candidates = await extractAllLotCandidates(filteredText, brand);
+    console.log(`[Claude-only] lot="${lot}" (texte="${result.text.replace(/\n/g, ' ')}")`);
+    return { lot, result, candidates };
+  } catch (error) {
+    console.warn('[Claude-only] échec', error);
+    return { lot: '', result: empty, candidates: [] };
+  } finally {
+    if (aiImageUri) {
+      try {
+        await FileSystem.deleteAsync(aiImageUri, { idempotent: true });
+      } catch {
+        /* noop */
+      }
+    }
+  }
+}
+
 export async function performOcr(
   uri: string,
   brand?: string,
@@ -1254,6 +1310,9 @@ export async function performOcr(
   options?: PerformOcrOptions
 ): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
+  if (CLAUDE_ONLY && options?.allowPaidFallback !== false) {
+    return performClaudeOnly(uri, brand, onStage);
+  }
   const allowPaid = options?.allowPaidFallback !== false;
 
   try {
@@ -1466,6 +1525,20 @@ export async function performOcrMultiFrame(
 
   if (!uris || uris.length === 0) {
     throw new Error('No frames provided to performOcrMultiFrame');
+  }
+  // Mode test tout-Claude : une seule frame envoyée directement à Claude
+  // (inutile de lancer ML Kit sur chaque frame puisqu'on l'ignore). On nettoie
+  // TOUTES les frames ici car le caller délègue ce nettoyage à cette fonction.
+  if (CLAUDE_ONLY && allowPaid) {
+    const claudeOnly = await performClaudeOnly(uris[0], brand, onStage);
+    for (const u of uris) {
+      try {
+        await FileSystem.deleteAsync(u, { idempotent: true });
+      } catch {
+        /* noop */
+      }
+    }
+    return claudeOnly;
   }
   if (uris.length === 1) {
     return performOcr(uris[0], brand, onStage, options);
