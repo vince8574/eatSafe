@@ -1530,7 +1530,38 @@ export async function performOcrMultiFrame(
   // (inutile de lancer ML Kit sur chaque frame puisqu'on l'ignore). On nettoie
   // TOUTES les frames ici car le caller délègue ce nettoyage à cette fonction.
   if (CLAUDE_ONLY && allowPaid) {
-    const claudeOnly = await performClaudeOnly(uris[0], brand, onStage);
+    // Sélection de frame GRATUITE : ML Kit tourne en local (0 $) UNIQUEMENT pour
+    // choisir la frame la plus nette/lisible parmi la rafale, puis on n'envoie
+    // QUE celle-là à Claude → coût Claude inchangé (1 seul appel, ≤ 0,015 $).
+    // Évite d'envoyer la 1re frame (souvent floue, caméra pas stabilisée) qui
+    // faisait rater des codes pourtant nets sur le produit (cas Casa Azzurra).
+    onStage?.('mlkit');
+    let bestUri = uris[0];
+    let bestScore = -1;
+    for (const uri of uris) {
+      try {
+        const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+        let r: OCRResult;
+        try {
+          r = await runMlkit(processed);
+        } finally {
+          try {
+            await FileSystem.deleteAsync(processed, { idempotent: true });
+          } catch {
+            /* noop */
+          }
+        }
+        const s = scoreOcrResult(r);
+        console.log(`[Claude-only] frame score=${s.toFixed(1)} len=${r.text.length}`);
+        if (s > bestScore) {
+          bestScore = s;
+          bestUri = uri;
+        }
+      } catch {
+        /* frame illisible → ignorée pour la sélection */
+      }
+    }
+    const claudeOnly = await performClaudeOnly(bestUri, brand, onStage);
     for (const u of uris) {
       try {
         await FileSystem.deleteAsync(u, { idempotent: true });
