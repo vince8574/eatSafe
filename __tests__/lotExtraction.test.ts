@@ -56,6 +56,11 @@ const MUST_EXTRACT: Array<{ name: string; ocr: string; expected: string }> = [
     name: 'U sirop framboise — date aplatie collée au lot (cas réel Claude)',
     ocr: '0220282009L605118B',
     expected: 'L605118B'
+  },
+  {
+    name: 'Heure (19h25) collée au lot par Claude (cas réel)',
+    ocr: 'L274R19h25',
+    expected: 'L274R'
   }
 ];
 
