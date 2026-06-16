@@ -625,7 +625,16 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
   }
 
   // Nettoyer le texte mais préserver les séparateurs importants
-  const cleaned = rawText.replace(/[^\w\s/:.-]/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
+  const cleaned = rawText
+    .replace(/[^\w\s/:.-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toUpperCase()
+    // L'OCR/Claude colle parfois l'HEURE au lot ("L274R19h25" = lot L274R + heure
+    // 19h25). On retire un motif d'heure (NNh NN / NN:NN) COLLÉ à un code → seul
+    // le vrai lot reste. Une heure isolée (séparée par un espace) n'est pas touchée
+    // ici (elle est déjà écartée comme date/heure plus loin).
+    .replace(/([A-Z0-9])(\d{1,2}[H:]\d{2})(?!\d)/g, '$1 ');
   console.log('[extractLotNumber] Cleaned text:', cleaned);
 
   // Liste de mots-clés à exclure (codes-barres, dates, vocabulaire d'étiquette).
@@ -792,13 +801,17 @@ export async function extractLotNumber(rawTextInput: string, brand?: string): Pr
       }
     },
 
-    // 4. Format "lettres+chiffres" (ex: AB1234, L1234)
+    // 4. Format "lettres+chiffres" (ex: AB1234, L1234, L274R, L693A)
     {
       name: 'Letters+digits',
       priority: 4,
       extract: (text: string): string[] => {
         const results: string[] = [];
-        const regex = /\b([A-Z]{1,3}\d{3,})\b/gi;
+        // Suffixe-lettre OPTIONNEL : capture aussi "L274R"/"L693A" (1-3 lettres +
+        // ≥3 chiffres + 1 lettre), trop courts (5 car.) pour le fallback dense
+        // (≥6) et écartés par 4b (qui exige ≥4 chiffres). Sans ça, après strip de
+        // l'heure le vrai lot "L274R" ne matchait plus aucun pattern.
+        const regex = /\b([A-Z]{1,3}\d{3,}[A-Z]?)\b/gi;
         let match;
         while ((match = regex.exec(text)) !== null) {
           const lotNum = match[1];
@@ -923,7 +936,16 @@ export async function extractAllLotCandidates(rawTextInput: string, brand?: stri
   }
 
   // Nettoyer le texte mais pr?server les s?parateurs importants
-  const cleaned = rawText.replace(/[^\w\s/:.-]/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
+  const cleaned = rawText
+    .replace(/[^\w\s/:.-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toUpperCase()
+    // L'OCR/Claude colle parfois l'HEURE au lot ("L274R19h25" = lot L274R + heure
+    // 19h25). On retire un motif d'heure (NNh NN / NN:NN) COLLÉ à un code → seul
+    // le vrai lot reste. Une heure isolée (séparée par un espace) n'est pas touchée
+    // ici (elle est déjà écartée comme date/heure plus loin).
+    .replace(/([A-Z0-9])(\d{1,2}[H:]\d{2})(?!\d)/g, '$1 ');
 
   // Fonction pour v?rifier si c'est un num?ro de t?l?phone
   const isPhoneNumber = (text: string): boolean => {
@@ -1540,31 +1562,33 @@ export async function performOcrMultiFrame(
     // Évite d'envoyer la 1re frame (souvent floue, caméra pas stabilisée) qui
     // faisait rater des codes pourtant nets sur le produit (cas Casa Azzurra).
     onStage?.('mlkit');
-    let bestUri = uris[0];
-    let bestScore = -1;
-    for (const uri of uris) {
-      try {
-        const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
-        let r: OCRResult;
+    // Scoring des frames EN PARALLÈLE (pas en série) : 3× ML Kit + 3× crop sur
+    // des images 12 MP en séquence ajoutait plusieurs secondes sur iOS. En
+    // parallèle, le temps de sélection ≈ celui d'UNE frame. (ML Kit opère sur des
+    // fichiers déjà capturés → aucune contention caméra.)
+    const scored = await Promise.all(
+      uris.map(async (uri) => {
         try {
-          r = await runMlkit(processed);
-        } finally {
+          const processed = await preprocessImage(uri, { cropForLot: true, narrowBand: true });
+          let r: OCRResult;
           try {
-            await FileSystem.deleteAsync(processed, { idempotent: true });
-          } catch {
-            /* noop */
+            r = await runMlkit(processed);
+          } finally {
+            try {
+              await FileSystem.deleteAsync(processed, { idempotent: true });
+            } catch {
+              /* noop */
+            }
           }
+          return { uri, score: scoreOcrResult(r), len: r.text.length };
+        } catch {
+          return { uri, score: -1, len: 0 };
         }
-        const s = scoreOcrResult(r);
-        console.log(`[Claude-only] frame score=${s.toFixed(1)} len=${r.text.length}`);
-        if (s > bestScore) {
-          bestScore = s;
-          bestUri = uri;
-        }
-      } catch {
-        /* frame illisible → ignorée pour la sélection */
-      }
-    }
+      })
+    );
+    scored.sort((a, b) => b.score - a.score);
+    console.log(`[Claude-only] best frame score=${scored[0].score.toFixed(1)} len=${scored[0].len}`);
+    const bestUri = scored[0]?.uri ?? uris[0];
     const claudeOnly = await performClaudeOnly(bestUri, brand, onStage);
     for (const u of uris) {
       try {
