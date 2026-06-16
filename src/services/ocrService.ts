@@ -1311,10 +1311,31 @@ async function performClaudeOnly(
         .filter((line) => !line.trim().toUpperCase().includes(brandUpper))
         .join('\n');
     }
-    const lot = await extractLotNumber(filteredText, brand);
+    let lot = await extractLotNumber(filteredText, brand);
     const candidates = await extractAllLotCandidates(filteredText, brand);
+    // Claude renvoie DÉJÀ le lot isolé (ex. "Lot:104" → "104"). Notre extracteur
+    // est pensé pour du texte OCR BRUT : il ne sait pas classer un nombre nu et
+    // court (sans mot-clé LOT, sans lettre) → il jetait des lots pourtant valides
+    // (cas réel Giraudet "Lot:104" → non détecté). Si l'extraction est vide mais
+    // que Claude a renvoyé un code plausible (alphanum, pas une date/heure), on
+    // fait confiance à Claude qui a déjà fait le travail d'isolement.
+    if (!lot) {
+      const raw = filteredText.trim().replace(/\s+/g, '').toUpperCase();
+      if (
+        raw &&
+        raw !== 'NONE' &&
+        /\d/.test(raw) &&
+        raw.length >= 2 &&
+        raw.length <= 22 &&
+        !isDateLike(raw) &&
+        !looksLikeNonLot(raw)
+      ) {
+        lot = raw;
+        console.log(`[Claude-only] extraction vide → confiance à la sortie Claude isolée: "${lot}"`);
+      }
+    }
     console.log(`[Claude-only] lot="${lot}" (texte="${result.text.replace(/\n/g, ' ')}")`);
-    return { lot, result, candidates };
+    return { lot, result, candidates: candidates.length ? candidates : lot ? [lot] : [] };
   } catch (error) {
     console.warn('[Claude-only] échec', error);
     return { lot: '', result: empty, candidates: [] };
