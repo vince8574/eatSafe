@@ -185,14 +185,14 @@ export function ManualEntryScreen() {
             sortir). Retour à l'écran précédent (qui a le menu), avec repli sur
             l'accueil si la pile est vide. */}
         <TouchableOpacity
-          style={styles.cancelButton}
+          style={[styles.cancelButton, { borderColor: colors.accent, backgroundColor: colors.surface }]}
           onPress={() => {
             if (router.canGoBack()) router.back();
-            else router.replace('/(tabs)');
+            else router.replace('/(tabs)/home');
           }}
           disabled={isSubmitting}
         >
-          <Text style={[styles.cancelButtonText, { color: colors.textSecondary }]}>
+          <Text style={[styles.cancelButtonText, { color: colors.accent }]}>
             {t('common.cancel')}
           </Text>
         </TouchableOpacity>
@@ -250,14 +250,17 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     marginTop: 14,
-    paddingVertical: 14,
+    marginBottom: 8,
+    paddingVertical: 16,
     borderRadius: 18,
+    borderWidth: 1.5,
     alignItems: 'center'
   },
   cancelButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
-    letterSpacing: 0.5
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase'
   },
   appDisclaimerBox: {
     flexDirection: 'row',
