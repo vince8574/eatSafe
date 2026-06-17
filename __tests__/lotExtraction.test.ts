@@ -71,6 +71,11 @@ const MUST_EXTRACT: Array<{ name: string; ocr: string; expected: string }> = [
     name: 'Code multi-segments à tirets non tronqué',
     ocr: 'L3 701-94422-004',
     expected: '701-94422-004'
+  },
+  {
+    name: 'Mot-clé italien "Lotto: 4085" (Divella)',
+    ocr: '26/09/2026\nLotto: 4085\n18:56 T',
+    expected: '4085'
   }
 ];
 
