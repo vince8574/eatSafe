@@ -61,6 +61,16 @@ const MUST_EXTRACT: Array<{ name: string; ocr: string; expected: string }> = [
     name: 'Heure (19h25) collée au lot par Claude (cas réel)',
     ocr: 'L274R19h25',
     expected: 'L274R'
+  },
+  {
+    name: 'Lot court "L 138" avec espace (Apéro Bistrot)',
+    ocr: 'À CONSOMMER JUSQU AU 02.07.26\n430g e L 138',
+    expected: '138'
+  },
+  {
+    name: 'Code multi-segments à tirets non tronqué',
+    ocr: 'L3 701-94422-004',
+    expected: '701-94422-004'
   }
 ];
 
