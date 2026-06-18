@@ -76,6 +76,11 @@ const MUST_EXTRACT: Array<{ name: string; ocr: string; expected: string }> = [
     name: 'Mot-clé italien "Lotto: 4085" (Divella)',
     ocr: '26/09/2026\nLotto: 4085\n18:56 T',
     expected: '4085'
+  },
+  {
+    name: 'Boîte conserve — lot Q353 entre date et heure (marquage FR collé écarté)',
+    ocr: '01/01/29 Q353 12:16\nR 590 FR84029001 CE',
+    expected: 'Q353'
   }
 ];
 
@@ -105,6 +110,11 @@ const MUST_NOT_RETURN: Array<{ name: string; ocr: string; forbidden: RegExp }> =
     name: 'Ethiquable lentilles — code-barres collé',
     ocr: 'N° lot / à consommer avant le :\n25/03/28\n26084/11:31\n3760091726568',
     forbidden: /60091726568/
+  },
+  {
+    name: 'Marquage sanitaire FR collé "FR84029001 CE" (jamais un lot)',
+    ocr: '01/01/29 Q353 12:16\nR 590 FR84029001 CE',
+    forbidden: /FR84029001/
   },
   {
     name: 'Andric saumon — code-barres EAN-13',
