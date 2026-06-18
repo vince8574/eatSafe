@@ -97,7 +97,14 @@ export async function checkAllCandidates(
     // Phase 2: Check all recalls but require exact lot match only (no substring)
     for (const candidate of candidates) {
       const normalizedCandidate = normalizeLot(candidate);
-      if (normalizedCandidate.length < 5) continue; // Skip very short candidates
+      // Phase 2 matche CROSS-MARQUE (n'importe quelle marque) sur un lot exact.
+      // Un lot court purement numérique ("25041") entre en collision avec des
+      // rappels US sans rapport → fausse alerte. On n'autorise Phase 2 que pour un
+      // lot DISTINCTIF : alphanumérique (lettre) >=4, ou purement numérique >=6.
+      const isDistinctive = /[A-Z]/.test(normalizedCandidate)
+        ? normalizedCandidate.length >= 4
+        : normalizedCandidate.length >= 6;
+      if (!isDistinctive) continue; // lot trop ambigu pour un match cross-marque
 
       for (const recall of allRecalls) {
         for (const recallLot of recall.lotNumbers) {
