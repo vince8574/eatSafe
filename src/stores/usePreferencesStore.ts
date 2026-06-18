@@ -35,10 +35,11 @@ export const usePreferencesStore = create<PreferencesState>()(
       wantsNumelineReferral: false,
       hasSeenWelcome: false,
       hasSeenNotificationPrompt: false,
-      // Accessibility (voice guidance) is ON by default — this app is built first
-      // for blind / low-vision users. New installs start in accessibility mode;
-      // existing users keep whatever they had persisted. Toggle in Settings.
-      accessibilityMode: true,
+      // Accessibility (voice guidance) is OFF by default — the standard hands-free
+      // sighted scan is the default experience. Blind / low-vision users enable it
+      // in Settings. (Existing installs that had the old default `true` are flipped
+      // to false by the v1 migration below, so nobody is stuck in voice mode.)
+      accessibilityMode: false,
       // setCountry removed - country is always 'US'
       setNotificationsEnabled: (notificationsEnabled) => set({ notificationsEnabled }),
       setDarkMode: (darkMode) => set({ darkMode }),
@@ -51,7 +52,19 @@ export const usePreferencesStore = create<PreferencesState>()(
     }),
     {
       name: 'preferences',
-      storage: createJSONStorage(() => AsyncStorage)
+      version: 1,
+      storage: createJSONStorage(() => AsyncStorage),
+      // v0 → v1 : le mode malvoyant n'est plus activé par défaut. Les installs
+      // existantes avaient le défaut `true` persisté → on les bascule à `false`
+      // UNE fois (sinon un utilisateur voyant reste coincé dans la boucle de
+      // re-scan du mode voix). Un malvoyant le réactive dans Réglages.
+      migrate: (persisted, version) => {
+        const state = (persisted ?? {}) as Partial<PreferencesState>;
+        if (version < 1) {
+          state.accessibilityMode = false;
+        }
+        return state as PreferencesState;
+      }
     }
   )
 );
