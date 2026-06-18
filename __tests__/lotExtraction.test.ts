@@ -81,6 +81,11 @@ const MUST_EXTRACT: Array<{ name: string; ocr: string; expected: string }> = [
     name: 'Boîte conserve — lot Q353 entre date et heure (marquage FR collé écarté)',
     ocr: '01/01/29 Q353 12:16\nR 590 FR84029001 CE',
     expected: 'Q353'
+  },
+  {
+    name: 'Tampon DATE-LOT-HEURE prioritaire même si les lignes sont inversées',
+    ocr: 'R590 FR84029001 CE\n01/01/29 Q353 12:16',
+    expected: 'Q353'
   }
 ];
 
