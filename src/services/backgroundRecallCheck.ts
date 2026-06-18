@@ -4,6 +4,7 @@ import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { checkAllProductsForRecalls, RecallCheckResult } from './recallCheckService';
+import { updateProduct as updateFirestoreProduct } from './firebaseProductsService';
 import { t } from '../i18n/i18n';
 import type { ScannedProduct, CountryCode } from '../types';
 
@@ -44,26 +45,50 @@ if (!isExpoGo) {
       // Sauvegarder les nouveaux rappels pour les afficher à l'ouverture de l'app
       await AsyncStorage.setItem(NEW_RECALLS_KEY, JSON.stringify(results));
 
-      // Envoyer une notification pour chaque nouveau rappel
       for (const result of results) {
-        if (result.newRecalls.length > 0) {
-          const product = products.find((p) => p.id === result.productId);
-          if (product) {
-            await Notifications.scheduleNotificationAsync({
-              content: {
-                title: t('notifications.alert.title'),
-                body: t('notifications.alert.body', { brand: product.brand, lot: product.lotNumber, reason: '' }),
-                sound: true,
-                priority: Notifications.AndroidNotificationPriority.MAX,
-                vibrate: [0, 250, 250, 250],
-                data: {
-                  productId: product.id,
-                  type: 'recall-alert'
-                }
-              },
-              trigger: null
+        const product = products.find((p) => p.id === result.productId);
+        if (!product) continue;
+
+        // COHÉRENCE notif ↔ historique : on persiste le statut dans Firestore
+        // (source de vérité de l'historique) AVANT de notifier. Sans ça, une notif
+        // de rappel détectée en fond n'apparaissait jamais dans l'historique (le
+        // produit restait "safe"/"unknown" en base). Best-effort : si l'écriture
+        // échoue (auth pas prête en background), on notifie quand même — la sécurité
+        // prime, et la prochaine synchro au premier plan réconciliera.
+        try {
+          if (result.newRecalls.length > 0) {
+            await updateFirestoreProduct(product.id, {
+              recallStatus: 'recalled',
+              recallReference: result.newRecalls[0].id,
+              lastCheckedAt: Date.now()
+            });
+          } else {
+            // Le produit n'a plus de rappel correspondant (rappel retiré).
+            await updateFirestoreProduct(product.id, {
+              recallStatus: 'safe',
+              lastCheckedAt: Date.now()
             });
           }
+        } catch (e) {
+          console.warn('[BackgroundRecallCheck] Firestore status update skipped', e);
+        }
+
+        // Notifier uniquement les NOUVEAUX rappels (pas les "safe").
+        if (result.newRecalls.length > 0) {
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: t('notifications.alert.title'),
+              body: t('notifications.alert.body', { brand: product.brand, lot: product.lotNumber, reason: '' }),
+              sound: true,
+              priority: Notifications.AndroidNotificationPriority.MAX,
+              vibrate: [0, 250, 250, 250],
+              data: {
+                productId: product.id,
+                type: 'recall-alert'
+              }
+            },
+            trigger: null
+          });
         }
       }
 
