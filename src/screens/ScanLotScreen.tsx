@@ -61,6 +61,19 @@ function normalizeLotValue(lot: string) {
   return lot.replace(/\s+/g, '').replace(/[-_.\/]/g, '').toUpperCase();
 }
 
+// Lot ACCEPTABLE pour confirmer en mode accessibilité. isReliableLot exige
+// >=5 chiffres pour un code purement numérique → un vrai lot court (Giraudet
+// "104", Divella "4085") était jugé "non fiable" et le mode voix re-scannait en
+// BOUCLE (jusqu'à 10×) au lieu de l'annoncer. Claude/Vision ayant déjà ISOLÉ le
+// code, on accepte aussi un court numérique (3-4 chiffres). On NE touche PAS
+// isReliableLot (utilisé par la détection d'aperçu) → l'aperçu ne sur-déclenche
+// pas sur les nombres à 3-4 chiffres d'une étiquette.
+function isAcceptableLotForConfirm(lot: string): boolean {
+  if (!lot) return false;
+  if (isReliableLot(lot)) return true;
+  return /^\d{3,4}$/.test(lot.replace(/\s+/g, ''));
+}
+
 export function ScanLotScreen() {
   // Prevent the screen from sleeping during lot detection (can be long in
   // accessibility mode: continuous scan until consensus).
@@ -223,7 +236,7 @@ export function ScanLotScreen() {
       // lot n'était jamais détecté). On garde juste isReliableLot pour ne pas
       // annoncer une date/un parasite. La voix lit le lot + le statut de rappel.
       const accepted = accessibilityMode
-        ? !!displayLot && isReliableLot(displayLot)
+        ? isAcceptableLotForConfirm(displayLot)
         : !!displayLot;
 
       // Ne pas exiger qu'un lot soit dÃ©tectÃ© - on affiche tout le texte OCR
@@ -303,11 +316,12 @@ export function ScanLotScreen() {
       const intra = lastIntraAgreementRef.current;
       const agreement = Math.max(seen, intra);
       const hadReliableRead = !!lot && isReliableLot(lot);
-      // Voir mutationFn : on confirme dès la 1re lecture fiable (parité avec le
-      // mode normal). Le retry ci-dessous ne sert plus qu'au cas SANS lecture
-      // fiable (OCR n'a rien sorti d'exploitable).
+      // Voir mutationFn : on confirme dès la 1re lecture acceptable (parité avec
+      // le mode normal). Le retry ci-dessous ne sert plus qu'au cas SANS lecture
+      // exploitable (OCR n'a RIEN sorti — texte vide). Un lot court (4085/104)
+      // est désormais ACCEPTÉ → plus de boucle de re-scan sur ces lots.
       const detected = accessibilityMode
-        ? hadReliableRead
+        ? isAcceptableLotForConfirm(lot)
         : !!lot;
 
       // Accessibility: not yet confirmed → keep scanning with rotating guidance.
