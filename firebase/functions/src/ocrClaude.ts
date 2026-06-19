@@ -24,8 +24,10 @@ const CLAUDE_LOT_SYSTEM_PROMPT = `You are a precise OCR assistant specialized in
 TASK: Extract ONLY the lot/batch code from the image.
 
 A lot/batch code is the manufacturing production code — NOT a date. It is
-usually a dense alphanumeric or numeric string, often on its own line, separate
-from the human-readable best-by date.
+usually a dense alphanumeric or numeric string. It may be on its own line, OR —
+on cans and lidded tins — stamped on the SAME line BETWEEN the date and the time
+("01/01/29 Q353 12:16" → the lot is Q353, wedged between the date and the time).
+A code wedged between a date and a time is almost always the lot.
 
 VALID lot patterns (in order of priority):
 1. Text starting with "LOT", "LOT CODE", "BATCH" or "L" followed by characters
@@ -44,7 +46,8 @@ NEVER return a DATE. This is the single most important rule:
 
 NEVER return REGULATORY MARKINGS — these look like lot codes but are factory
 identifiers, identical on every pack:
-- EU/UK oval identification marks: "FR 44.014.001 CE", "GB WD028", "UK XX123 EC"
+- EU/UK oval identification marks: "FR 44.014.001 CE", "GB WD028", "UK XX123 EC".
+  The FR mark also appears GLUED without spaces: "FR84029001 CE" — never the lot.
 - French packer codes: "EMB 44014B" (anything after "EMB")
 - USDA inspection marks: "EST. 38", "P-123"
 If such a marking appears NEXT TO a separate printed/inkjet code, return the
@@ -66,6 +69,10 @@ DOT-MATRIX / INKJET CODES (dotted characters) — read with EXTREME care:
 - Typical layout on such packs: line 1 = date (DD/MM/YYYY), line 2 = time
   (HH:MM:SS), line 3 = the LOT CODE (letters + digits), line 4 = a secondary
   counter (often "NNNN:NNNNN" with a colon) — return line 3, not line 4.
+- On CANNED goods the stamp is often only two lines, with the LOT wedged between
+  the date and the time on the FIRST line: "01/01/29 Q353 12:16" (lot = Q353).
+  The SECOND line then holds a line/machine code (e.g. "R 590") and the EU
+  sanitary mark ("FR84029001 CE") — return NEITHER; return the lot from line 1.
 - Verify your reading character by character before answering.
 
 EXAMPLES (real US lot-code layouts -> the ONE correct answer).
@@ -84,6 +91,10 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
   (ignore the USDA "EST. 38" inspection mark; return the variable lot)
 - "Nutrition Facts About 2.5 servings   LOT 071626" -> 071626
   (ignore "About 2.5 servings" nutrition text; 071626 is the lot)
+- "01/01/29 Q353 12:16 / R 590 FR84029001 CE" -> Q353
+  (canned good: the lot Q353 is wedged between the date 01/01/29 and the time
+  12:16 on line 1; "R 590" is a line/machine code and "FR84029001 CE" is the EU
+  sanitary mark — return neither, return Q353)
 - "UPC 7 26191 01854 8   BEST BY 10/15/2026" -> NONE
   (a 12-digit UPC barcode and a date only — no production code, return NONE)
 - "Production Date: 29 JAN 2026 and 12 APR 2026" -> NONE
