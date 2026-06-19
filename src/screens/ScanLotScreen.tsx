@@ -94,6 +94,11 @@ export function ScanLotScreen() {
 
   const scannerRef = useRef<ScannerHandle | null>(null);
   const lotInFrameAnnouncedRef = useRef(false);
+  // Horodatage de la dernière fois que l'aperçu a vu DU TEXTE (n'importe lequel).
+  // Sert à empêcher la capture de secours de partir "à vide" quand le téléphone
+  // n'est pas encore cadré sur un emballage (cas réel : 1er scan = scène large de
+  // table → "aucun texte détecté", puis la reprise marche).
+  const lastPreviewTextAtRef = useRef(0);
   const autoFlashAppliedRef = useRef(false);
   const userOverrodeFlashRef = useRef(false);
   const autoCaptureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -427,6 +432,10 @@ export function ScanLotScreen() {
 
   const handlePreviewOcrText = useCallback(
     (text: string) => {
+      // Mémoriser qu'on a vu du texte lisible (≥2 alphanum) dans l'aperçu : le
+      // téléphone est cadré sur un emballage. La capture de secours s'appuie
+      // dessus pour ne pas partir à vide. À FAIRE avant les early-returns.
+      if (text && /[A-Z0-9]{2,}/i.test(text)) lastPreviewTextAtRef.current = Date.now();
       // isConfirmModalVisible : un résultat est déjà affiché → on ne re-déclenche
       // PLUS de capture (sinon boucle : le preview re-détecte le lot et recapture).
       if (lotInFrameAnnouncedRef.current || isProcessing || isConfirmModalVisible) return;
@@ -793,14 +802,27 @@ export function ScanLotScreen() {
     if (isConfirmModalVisible) return;
     lotInFrameAnnouncedRef.current = false;
     const delayMs = accessibilityMode ? 5000 : 3000;
-    if (fallbackCaptureTimerRef.current) clearTimeout(fallbackCaptureTimerRef.current);
-    fallbackCaptureTimerRef.current = setTimeout(() => {
-      if (!lotInFrameAnnouncedRef.current && !isProcessingRef.current) {
+    // Au-delà de ce délai sans AUCUN texte vu dans l'aperçu, le téléphone n'est
+    // pas cadré sur un emballage → on n'envoie PAS de capture à vide (sinon Claude
+    // reçoit une scène large et renvoie "aucun texte"). On re-teste périodiquement
+    // et on ne capture QUE lorsque du texte est apparu récemment.
+    const FRESH_TEXT_MS = 2500;
+    const armFallback = (delay: number) => {
+      fallbackCaptureTimerRef.current = setTimeout(() => {
+        if (lotInFrameAnnouncedRef.current || isProcessingRef.current) return;
+        const sawTextRecently = Date.now() - lastPreviewTextAtRef.current < FRESH_TEXT_MS;
+        if (!sawTextRecently) {
+          // Rien de lisible dans le cadre → on attend, on ne capture pas à vide.
+          armFallback(800);
+          return;
+        }
         lotInFrameAnnouncedRef.current = true;
         triggerCaptureFeedback();
         scannerRef.current?.triggerCapture();
-      }
-    }, delayMs);
+      }, delay);
+    };
+    if (fallbackCaptureTimerRef.current) clearTimeout(fallbackCaptureTimerRef.current);
+    armFallback(delayMs);
     return () => {
       if (fallbackCaptureTimerRef.current) {
         clearTimeout(fallbackCaptureTimerRef.current);
