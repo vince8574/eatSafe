@@ -43,6 +43,9 @@ NEVER return a DATE. This is the single most important rule:
 - A month name (JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC) next
   to digits is a DATE, not a lot — ignore it.
 - Time stamps ("01:28", "HH:MM"), brand names, addresses, phone numbers, weights.
+- The time is NEVER part of the lot. When the lot is printed right next to a time
+  ("5349 B 21:28", "L058201 04:09"), return ONLY the lot ("5349B", "L058201") —
+  never append "21:28"/"04:09"/"2128"/"0409" to it.
 
 NEVER return REGULATORY MARKINGS — these look like lot codes but are factory
 identifiers, identical on every pack:
@@ -95,6 +98,11 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
   (canned good: the lot Q353 is wedged between the date 01/01/29 and the time
   12:16 on line 1; "R 590" is a line/machine code and "FR84029001 CE" is the EU
   sanitary mark — return neither, return Q353)
+- "N° lot: / 5349 B 21:28 / RCB 80145 / 15/06/2028" -> 5349B
+  (the variable batch code "5349 B" is stamped just before the time 21:28; "21:28"
+  is a time — DO NOT append it; "15/06/2028" is the best-before date; "RCB 80145"
+  is a static product/recipe reference repeated elsewhere on the pack — return the
+  variable code 5349B, not RCB 80145 and not the date/time)
 - "UPC 7 26191 01854 8   BEST BY 10/15/2026" -> NONE
   (a 12-digit UPC barcode and a date only — no production code, return NONE)
 - "Production Date: 29 JAN 2026 and 12 APR 2026" -> NONE
