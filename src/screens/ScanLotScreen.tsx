@@ -94,11 +94,16 @@ export function ScanLotScreen() {
 
   const scannerRef = useRef<ScannerHandle | null>(null);
   const lotInFrameAnnouncedRef = useRef(false);
-  // Horodatage de la dernière fois que l'aperçu a vu DU TEXTE (n'importe lequel).
-  // Sert à empêcher la capture de secours de partir "à vide" quand le téléphone
-  // n'est pas encore cadré sur un emballage (cas réel : 1er scan = scène large de
-  // table → "aucun texte détecté", puis la reprise marche).
+  // Horodatage de la dernière fois que l'aperçu a vu une vraie ÉTIQUETTE (cadre
+  // rempli de texte). Sert à empêcher la capture de secours de partir sur une
+  // scène large / un texte au loin (cas réel : "aucun texte détecté" sur une vue
+  // de table). Couplé à richTextStreakRef (stabilité) ci-dessous.
   const lastPreviewTextAtRef = useRef(0);
+  // Nombre de lectures d'aperçu consécutives RICHES en texte (étiquette qui
+  // remplit le cadre). Décrémenté sur une lecture pauvre. La capture de secours
+  // n'part que si une étiquette est STABLE (streak >= 2) → moins de photos
+  // floues / mal cadrées qui reviennent "aucun texte".
+  const richTextStreakRef = useRef(0);
   const autoFlashAppliedRef = useRef(false);
   const userOverrodeFlashRef = useRef(false);
   const autoCaptureTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -432,10 +437,18 @@ export function ScanLotScreen() {
 
   const handlePreviewOcrText = useCallback(
     (text: string) => {
-      // Mémoriser qu'on a vu du texte lisible (≥2 alphanum) dans l'aperçu : le
-      // téléphone est cadré sur un emballage. La capture de secours s'appuie
-      // dessus pour ne pas partir à vide. À FAIRE avant les early-returns.
-      if (text && /[A-Z0-9]{2,}/i.test(text)) lastPreviewTextAtRef.current = Date.now();
+      // Richesse du texte vu dans l'aperçu : un GROS plan d'étiquette remplit le
+      // cadre de texte (date + lot + contexte) ; une scène large ou un texte au
+      // loin en a peu. On ne nourrit la capture de secours QUE sur une vraie
+      // étiquette, et on suit la STABILITÉ (lectures riches d'affilée) pour éviter
+      // de capturer une image floue en plein mouvement. À FAIRE avant les returns.
+      const alnumCount = (text.match(/[A-Z0-9]/gi) || []).length;
+      if (alnumCount >= 8) {
+        lastPreviewTextAtRef.current = Date.now();
+        richTextStreakRef.current = Math.min(5, richTextStreakRef.current + 1);
+      } else {
+        richTextStreakRef.current = Math.max(0, richTextStreakRef.current - 1);
+      }
       // isConfirmModalVisible : un résultat est déjà affiché → on ne re-déclenche
       // PLUS de capture (sinon boucle : le preview re-détecte le lot et recapture).
       if (lotInFrameAnnouncedRef.current || isProcessing || isConfirmModalVisible) return;
@@ -810,9 +823,13 @@ export function ScanLotScreen() {
     const armFallback = (delay: number) => {
       fallbackCaptureTimerRef.current = setTimeout(() => {
         if (lotInFrameAnnouncedRef.current || isProcessingRef.current) return;
-        const sawTextRecently = Date.now() - lastPreviewTextAtRef.current < FRESH_TEXT_MS;
-        if (!sawTextRecently) {
-          // Rien de lisible dans le cadre → on attend, on ne capture pas à vide.
+        // Capture de secours UNIQUEMENT si une vraie étiquette est STABLE dans le
+        // cadre (texte riche vu récemment ET sur ≥2 lectures). Sinon (scène large,
+        // texte au loin, image en mouvement) on attend → plus de "aucun texte".
+        const labelStableInFrame =
+          Date.now() - lastPreviewTextAtRef.current < FRESH_TEXT_MS &&
+          richTextStreakRef.current >= 2;
+        if (!labelStableInFrame) {
           armFallback(800);
           return;
         }
