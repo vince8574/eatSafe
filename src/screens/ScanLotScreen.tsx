@@ -1044,11 +1044,21 @@ export function ScanLotScreen() {
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
                   {t('scanLot.ocrDetected')}
                 </Text>
-                <View style={[styles.ocrTextContainer, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
-                  <Text style={[styles.ocrText, { color: colors.textPrimary }]}>
+                <TouchableOpacity
+                  style={[styles.ocrTextContainer, styles.ocrTextContainerEditable, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
+                  onPress={handleEditLot}
+                  activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('scanLot.editHint')}
+                >
+                  <Text style={[styles.ocrText, { color: colors.textPrimary, flex: 1 }]}>
                     {lotNumber || t('scanLot.noText')}
                   </Text>
-                </View>
+                  <Ionicons name="create-outline" size={22} color={colors.accent} />
+                </TouchableOpacity>
+                <Text style={[styles.editHintText, { color: colors.accent }]}>
+                  {t('scanLot.editHint')}
+                </Text>
 
                 {ocrSource && (
                   <View style={[styles.ocrSourceContainer, { backgroundColor: ocrSource === 'vision-fallback' ? '#e8f5e9' : '#e3f2fd' }]}>
@@ -1329,8 +1339,24 @@ const styles = StyleSheet.create({
     maxHeight: 120
   },
   ocrText: {
-    fontSize: 14,
-    lineHeight: 20
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 22
+  },
+  // Case du résultat rendue cliquable (bordure accent + icône crayon) pour
+  // signaler clairement qu'on peut corriger un lot mal lu.
+  ocrTextContainerEditable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 2,
+    marginBottom: 2
+  },
+  editHintText: {
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 8
   },
   ocrSourceContainer: {
     paddingVertical: 6,
