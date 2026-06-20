@@ -500,10 +500,12 @@
     "enterLot": "Введите номер партии",
     "ocrDetected": "Текст, обнаруженный OCR:",
     "noText": "Текст не обнаружен",
+
+    "editHint": "Неверный номер? Нажмите, чтобы исправить",
     "checkingRecalls": "🔍 Проверка отзывов...",
     "recallDetected": "⚠️ ОТЗЫВ ОБНАРУЖЕН",
     "productSafe": "ℹ️ ОТЗЫВ НЕ НАЙДЕН",
-    "edit": "✏️ Редактировать",
+    "edit": "✏️ Изменить номер",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ ОТЗЫВ ОБНАРУЖЕН ({{lot}})",

@@ -465,10 +465,12 @@
     "enterLot": "输入批号",
     "ocrDetected": "OCR检测到的文本：",
     "noText": "未检测到文本",
+
+    "editHint": "号码有误？点击更正",
     "checkingRecalls": "🔍 正在检查召回...",
     "recallDetected": "⚠️ 检测到召回",
     "productSafe": "ℹ️ 未发现召回",
-    "edit": "✏️ 编辑",
+    "edit": "✏️ 编辑号码",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ 检测到召回（{{lot}}）",

@@ -465,10 +465,12 @@
     "enterLot": "Chargennummer eingeben",
     "ocrDetected": "OCR erkannter Text:",
     "noText": "Kein Text erkannt",
+
+    "editHint": "Falsche Nummer? Zum Korrigieren antippen",
     "checkingRecalls": "🔍 Überprüfung auf Rückrufe...",
     "recallDetected": "⚠️ RÜCKRUF ERKANNT",
     "productSafe": "ℹ️ KEIN RÜCKRUF GEFUNDEN",
-    "edit": "✏️ Bearbeiten",
+    "edit": "✏️ Nummer bearbeiten",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ RÜCKRUF ERKANNT ({{lot}})",

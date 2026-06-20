@@ -465,10 +465,12 @@
     "enterLot": "أدخل رقم الدفعة",
     "ocrDetected": "النص المكتشف بواسطة OCR:",
     "noText": "لم يتم اكتشاف نص",
+
+    "editHint": "رقم خاطئ؟ انقر عليه لتصحيحه",
     "checkingRecalls": "🔍 جاري التحقق من الاستدعاءات...",
     "recallDetected": "⚠️ تم اكتشاف استدعاء",
     "productSafe": "ℹ️ لم يُعثر على سحب",
-    "edit": "✏️ تعديل",
+    "edit": "✏️ تعديل الرقم",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ تم اكتشاف استدعاء ({{lot}})",

@@ -500,10 +500,12 @@
     "enterLot": "Voer lotnummer in",
     "ocrDetected": "OCR gedetecteerde tekst:",
     "noText": "Geen tekst gedetecteerd",
+
+    "editHint": "Verkeerd nummer? Tik om te corrigeren",
     "checkingRecalls": "🔍 Controleren op terugroepacties...",
     "recallDetected": "⚠️ TERUGROEPACTIE GEDETECTEERD",
     "productSafe": "ℹ️ GEEN RECALL GEVONDEN",
-    "edit": "✏️ Bewerken",
+    "edit": "✏️ Nummer bewerken",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ TERUGROEPACTIE GEDETECTEERD ({{lot}})",

@@ -465,10 +465,12 @@
     "enterLot": "Унесите број серије",
     "ocrDetected": "OCR откривен текст:",
     "noText": "Није откривен текст",
+
+    "editHint": "Погрешан број? Додирните да исправите",
     "checkingRecalls": "🔍 Провера опозива...",
     "recallDetected": "⚠️ ОПОЗИВ ОТКРИВЕН",
     "productSafe": "ℹ️ ОПОЗИВ НИЈЕ ПРОНАЂЕН",
-    "edit": "✏️ Уреди",
+    "edit": "✏️ Измени број",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ ОПОЗИВ ОТКРИВЕН ({{lot}})",

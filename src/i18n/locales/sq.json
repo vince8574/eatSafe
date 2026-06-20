@@ -465,10 +465,12 @@
     "enterLot": "Vendosni numrin e lotit",
     "ocrDetected": "Teksti i zbuluar nga OCR:",
     "noText": "Nuk u zbulua tekst",
+
+    "editHint": "Numër i gabuar? Prekeni për ta korrigjuar",
     "checkingRecalls": "🔍 Duke kontrolluar tërheqjet...",
     "recallDetected": "⚠️ TËRHEQJE E ZBULUAR",
     "productSafe": "ℹ️ NUK U GJE TËRHEQJE",
-    "edit": "✏️ Redakto",
+    "edit": "✏️ Modifiko numrin",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ TËRHEQJE E ZBULUAR ({{lot}})",

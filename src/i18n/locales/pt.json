@@ -500,10 +500,12 @@
     "enterLot": "Digite o número do lote",
     "ocrDetected": "Texto detectado por OCR:",
     "noText": "Nenhum texto detectado",
+
+    "editHint": "Número errado? Toque para corrigir",
     "checkingRecalls": "🔍 Verificando recalls...",
     "recallDetected": "⚠️ RECALL DETECTADO",
     "productSafe": "ℹ️ SEM RECALL ENCONTRADO",
-    "edit": "✏️ Editar",
+    "edit": "✏️ Editar número",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ RECALL DETECTADO ({{lot}})",
