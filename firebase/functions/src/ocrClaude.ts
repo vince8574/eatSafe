@@ -32,6 +32,9 @@ A code wedged between a date and a time is almost always the lot.
 VALID lot patterns (in order of priority):
 1. Text starting with "LOT", "LOT CODE", "BATCH" or "L" followed by characters
    Examples: "LOT 12345A", "L693A2102R", "L 24123"
+   An "L"/"LOT" marker labels the code on ITS OWN line. If the stamp has several
+   lines (e.g. a date line and an "L ...." line), attach the L to the code on the
+   SAME line as the L, never to a date on the line above/below.
 2. A dense alphanumeric/numeric production code printed/inkjet/laser-etched near
    (but distinct from) the "Best By" / "Use By" / "Guaranteed Fresh" date
    Examples: "249334315", "WN012117E", "SE102922A", "2 493 34315" -> "249334315"
@@ -103,6 +106,10 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
   is a time — DO NOT append it; "15/06/2028" is the best-before date; "RCB 80145"
   is a static product/recipe reference repeated elsewhere on the pack — return the
   variable code 5349B, not RCB 80145 and not the date/time)
+- "23 06 26 / L 22 01 18:36" -> L2201
+  (an "L" lot marker labels the code printed ON ITS OWN line — here "22 01", giving
+  L2201. Do NOT attach the "L" to "23 06 26" (that is the best-before date on the
+  line above) and "18:36" is a time — never L23, never include the date or time)
 - "UPC 7 26191 01854 8   BEST BY 10/15/2026" -> NONE
   (a 12-digit UPC barcode and a date only — no production code, return NONE)
 - "Production Date: 29 JAN 2026 and 12 APR 2026" -> NONE
