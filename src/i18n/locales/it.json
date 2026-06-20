@@ -465,10 +465,12 @@
     "enterLot": "Inserisci il numero di lotto",
     "ocrDetected": "Testo rilevato da OCR:",
     "noText": "Nessun testo rilevato",
+
+    "editHint": "Numero errato? Toccalo per correggerlo",
     "checkingRecalls": "🔍 Verifica richiami in corso...",
     "recallDetected": "⚠️ RICHIAMO RILEVATO",
     "productSafe": "ℹ️ NESSUN RICHIAMO TROVATO",
-    "edit": "✏️ Modifica",
+    "edit": "✏️ Modifica numero",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ RICHIAMO RILEVATO ({{lot}})",

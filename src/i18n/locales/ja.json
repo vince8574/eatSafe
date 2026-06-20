@@ -465,10 +465,12 @@
     "enterLot": "ロット番号を入力",
     "ocrDetected": "OCR検出テキスト：",
     "noText": "テキストが検出されませんでした",
+
+    "editHint": "番号が違いますか？タップして修正",
     "checkingRecalls": "🔍 リコールを確認中...",
     "recallDetected": "⚠️ リコール検出",
     "productSafe": "ℹ️ リコール情報なし",
-    "edit": "✏️ 編集",
+    "edit": "✏️ 番号を編集",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ リコール検出（{{lot}}）",
