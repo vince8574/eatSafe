@@ -139,6 +139,10 @@ export function ScanLotScreen() {
   const [showRecallAlert, setShowRecallAlert] = useState(false);
   const [verifiedAt, setVerifiedAt] = useState<number | null>(null);
   const [scannerResetToken, setScannerResetToken] = useState(0);
+  // Bouton photo manuel : apparaît si aucune capture n'a eu lieu au bout de 5 s
+  // (capture auto qui ne part pas — lot pâle / cadrage difficile) pour laisser
+  // l'utilisateur déclencher la photo lui-même.
+  const [showManualCapture, setShowManualCapture] = useState(false);
 
   const ensureScanQuota = useCallback(async (): Promise<boolean> => {
     const remaining = subscription?.scansRemaining ?? 0;
@@ -848,6 +852,20 @@ export function ScanLotScreen() {
     };
   }, [scannerResetToken, accessibilityMode, triggerCaptureFeedback, isConfirmModalVisible]);
 
+  // Bouton photo manuel de secours (mode voyant) : si aucune capture n'a eu lieu au
+  // bout de 5 s (la capture auto ne part pas : lot trop pâle, cadrage difficile),
+  // on affiche le bouton pour que l'utilisateur déclenche la photo lui-même.
+  // Réinitialisé à chaque (ré)armement du scanner / capture / résultat affiché.
+  useEffect(() => {
+    if (accessibilityMode || isConfirmModalVisible || isProcessing) {
+      setShowManualCapture(false);
+      return;
+    }
+    setShowManualCapture(false);
+    const id = setTimeout(() => setShowManualCapture(true), 5000);
+    return () => clearTimeout(id);
+  }, [scannerResetToken, accessibilityMode, isConfirmModalVisible, isProcessing]);
+
   return (
     <GradientBackground>
       <Scanner
@@ -867,7 +885,7 @@ export function ScanLotScreen() {
         onPreviewOcrText={handlePreviewOcrText}
         lowLightDetectionEnabled
         onLowLight={handleLowLight}
-        hideCaptureButton
+        hideCaptureButton={!showManualCapture}
       />
 
       <Animated.View
