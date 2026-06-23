@@ -30,15 +30,22 @@ on cans and lidded tins — stamped on the SAME line BETWEEN the date and the ti
 A code wedged between a date and a time is almost always the lot.
 
 VALID lot patterns (in order of priority):
-1. Text starting with "LOT", "LOT CODE", "BATCH" or "L" followed by characters
-   Examples: "LOT 12345A", "L693A2102R", "L 24123"
-   An "L"/"LOT" marker labels the code on ITS OWN line. If the stamp has several
-   lines (e.g. a date line and an "L ...." line), attach the L to the code on the
-   SAME line as the L, never to a date on the line above/below.
-2. A dense alphanumeric/numeric production code printed/inkjet/laser-etched near
+1. HIGHEST PRIORITY — an EXPLICIT lot label: "LOT", "LOT :", "LOT CODE", "LOT #",
+   "BATCH". Return EXACTLY the code that follows the label, and nothing else: NOT a
+   token printed BEFORE the label, NOT the time/date after it.
+   Examples: "LOT 12345A" -> "12345A"   "LOT : 16313351" -> "16313351"
+   A short "L3" / "L4" / "M2" printed just BEFORE the label is a LINE/MACHINE number,
+   NOT part of the lot — never prepend it ("L3 Lot: 161" -> "161", never "L3161").
+2. Otherwise (no explicit label), text starting with "L" + characters IS a lot:
+   "L693A2102R", "L 24123". BUT an isolated "L" + ONE digit ("L3", "L4"), especially
+   next to an "M" + digit ("M2") or printed on the date/time line, is a LINE/MACHINE
+   marker, NOT the lot. The "L"/"LOT" marker labels the code on ITS OWN line; if the
+   stamp has several lines, attach the L to the code on the SAME line, never to a date
+   on the line above/below.
+3. A dense alphanumeric/numeric production code printed/inkjet/laser-etched near
    (but distinct from) the "Best By" / "Use By" / "Guaranteed Fresh" date
    Examples: "249334315", "WN012117E", "SE102922A", "2 493 34315" -> "249334315"
-3. A series of 5-12 digits that is NOT a barcode (barcodes/EAN/GTIN are 13-14 digits)
+4. A series of 5-12 digits that is NOT a barcode (barcodes/EAN/GTIN are 13-14 digits)
 
 NEVER return a DATE. This is the single most important rule:
 - Best-before / expiration / "GUARANTEED FRESH UNTIL" dates in ANY form:
@@ -58,6 +65,14 @@ identifiers, identical on every pack:
 - USDA inspection marks: "EST. 38", "P-123"
 If such a marking appears NEXT TO a separate printed/inkjet code, return the
 inkjet production code, not the marking.
+
+NEVER return a LINE / MACHINE marker — on inkjet stamps the production line and
+machine are printed next to the date/time as short tokens:
+- "L3", "L4" (line) — an "L" + a SINGLE digit, NOT a lot.
+- "M2", "M1" (machine), "F128" alone may be a line/oven code printed beside L3/M2.
+When you see "... L3 M2 ..." or "L3 Lot: ..." these are line/machine numbers; the
+real lot is the code AFTER the "Lot:" label (or the dense production code), never
+the "L3"/"M2". Never concatenate "L3"/"M2" with the lot.
 
 If the ONLY thing you can read is a date (and no separate production code),
 respond with exactly: NONE. Do NOT output the date.
@@ -110,6 +125,14 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
   (an "L" lot marker labels the code printed ON ITS OWN line — here "22 01", giving
   L2201. Do NOT attach the "L" to "23 06 26" (that is the best-before date on the
   line above) and "18:36" is a time — never L23, never include the date or time)
+- "L3 Lot: 161 17:52   USE BY 05/07/2026" -> 161
+  (explicit "Lot:" label wins: return ONLY what follows it = 161. "L3" before the
+  label is the production LINE, "17:52" is a time — never "L3", never "L3161".)
+- "BEST BY 29/06/26   LOT : 16313351" -> 16313351
+  (explicit "LOT :" label; return the full code after it. "29/06/26" is the date.)
+- "07/27/2026 19:54 / F128 L3 M2" -> F128
+  (date + time on line 1; line 2 "F128 L3 M2" = production code F128 then line "L3"
+  and machine "M2" — return only F128, drop L3 and M2.)
 - "UPC 7 26191 01854 8   BEST BY 10/15/2026" -> NONE
   (a 12-digit UPC barcode and a date only — no production code, return NONE)
 - "Production Date: 29 JAN 2026 and 12 APR 2026" -> NONE
