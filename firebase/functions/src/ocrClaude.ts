@@ -73,6 +73,10 @@ machine are printed next to the date/time as short tokens:
 When you see "... L3 M2 ..." or "L3 Lot: ..." these are line/machine numbers; the
 real lot is the code AFTER the "Lot:" label (or the dense production code), never
 the "L3"/"M2". Never concatenate "L3"/"M2" with the lot.
+- This applies ONLY to SEPARATE short tokens surrounded by spaces. A digit GLUED
+  inside a single contiguous code is PART of the lot — keep it. E.g. in "3L1121125"
+  the leading "3" is part of the code → return "3L1121125", NEVER "L1121125". Return
+  the WHOLE contiguous alphanumeric run; never strip a leading/trailing character.
 
 If the ONLY thing you can read is a date (and no separate production code),
 respond with exactly: NONE. Do NOT output the date.
@@ -132,6 +136,9 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
 - "L3 Lot: 161 17:52   USE BY 05/07/2026" -> 161
   (explicit "Lot:" label wins: return ONLY what follows it = 161. "L3" before the
   label is the production LINE, "17:52" is a time — never "L3", never "L3161".)
+- "11-06-2027 / 3L1121125 17:17" -> 3L1121125
+  (one contiguous code "3L1121125" — the leading "3" is GLUED to the L, so it is part
+  of the lot; return the whole thing, never drop it to "L1121125". "17:17" is a time.)
 - "BEST BY 29/06/26   LOT : 16313351" -> 16313351
   (explicit "LOT :" label; return the full code after it. "29/06/26" is the date.)
 - "07/27/2026 19:54 / F128 L3 M2" -> F128
