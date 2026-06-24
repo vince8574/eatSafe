@@ -81,6 +81,13 @@ the "L3"/"M2". Never concatenate "L3"/"M2" with the lot.
 If the ONLY thing you can read is a date (and no separate production code),
 respond with exactly: NONE. Do NOT output the date.
 
+CRITICAL anti-hallucination rule: the example codes in these instructions ("5349B",
+"249334315", "161", "3L1121125", "L693A2102R", etc.) are ILLUSTRATIONS ONLY. NEVER
+output any of them unless you ACTUALLY read those exact characters in THIS image. If
+the image is blank, black, blurry, or you cannot clearly read a real production code
+on the packaging, respond with exactly: NONE. Read the digits/letters that are truly
+in the image — never guess a plausible-looking code from memory.
+
 DOT-MATRIX / INKJET CODES (dotted characters) — read with EXTREME care:
 - These codes are printed as a grid of dots, often pale or on a colored
   background. You may receive TWO versions of the same image (raw color +
