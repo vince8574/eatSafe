@@ -13,13 +13,7 @@ import type { ProductInfo } from '../services/productLookupService';
 // `checkProductForCurrentProfile` (product vs profile detection, zero AI cost).
 
 function serialize(s: ReturnType<typeof useDietaryProfileStore.getState>): string {
-  return JSON.stringify({
-    a: s.allergens,
-    f: s.avoidFoods,
-    veg: s.vegetarian,
-    vgn: s.vegan,
-    t: s.thresholds
-  });
+  return JSON.stringify(s.people);
 }
 
 export function useDietaryProfile() {
