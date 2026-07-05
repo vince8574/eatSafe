@@ -7,6 +7,9 @@ import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
 import { Ionicons } from '@expo/vector-icons';
 import { getProductByBarcode } from '../services/productLookupService';
+import { checkProductForCurrentProfile } from '../hooks/useDietaryProfile';
+import type { DietaryCheckResult } from '../services/dietaryCheckService';
+import { DietaryWarningBanner } from '../components/DietaryWarningBanner';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
@@ -33,6 +36,7 @@ export function ScanScreen() {
   const [productImage, setProductImage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [dietaryResult, setDietaryResult] = useState<DietaryCheckResult | null>(null);
   const [isEditingBrand, setIsEditingBrand] = useState(false);
   const [editedBrand, setEditedBrand] = useState('');
   const [scannerResetToken, setScannerResetToken] = useState(0);
@@ -43,6 +47,7 @@ export function ScanScreen() {
     setProductImage('');
     setErrorMessage('');
     setConfirmModalVisible(false);
+    setDietaryResult(null);
     setIsEditingBrand(false);
     setEditedBrand('');
     setScannerResetToken((t) => t + 1);
@@ -194,6 +199,10 @@ export function ScanScreen() {
         setBrandText(productInfo.brand);
         setProductName(productInfo.productName);
         setProductImage(productInfo.imageUrl || '');
+        // Dietary profile detection (allergens / foods / thresholds) — pure, zero
+        // AI cost. Shown in the confirm modal (hierarchy allergen/food > nutrition;
+        // recall comes at the lot stage).
+        setDietaryResult(checkProductForCurrentProfile(productInfo));
         if (accessibilityMode) {
           // Accessibility mode: no "OK" button to aim for → automatically move on
           // to the lot scan. (Sighted mode: show the modal to verify/edit brand.)
@@ -373,6 +382,8 @@ export function ScanScreen() {
                     {productName}
                   </Text>
                 ) : null}
+
+                <DietaryWarningBanner result={dietaryResult} />
 
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
                   {t('scanScreen.brandDetected')}
