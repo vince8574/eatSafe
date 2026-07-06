@@ -158,14 +158,30 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
 - "07/27/2026 19:54 / F128 L3 M2" -> F128
   (date + time on line 1; line 2 "F128 L3 M2" = production code F128 then line "L3"
   and machine "M2" — return only F128, drop L3 and M2.)
+- "DLC: 28/07/26 / LOT: 62562167 08:28 M6 7" -> 62562167
+  (explicit "LOT:" label; return EXACTLY the code after it. "08:28" is a TIME and
+  "M6 7" is a machine/counter — NEVER append their digits: never "6256216708",
+  never "6256216702". "28/07/26" is the date. Count the code's digits carefully.)
+- "S28/07/26 / 149 09:28 L10" -> L10
+  (the "L"-marked code "L10" is the lot, EVEN THOUGH it comes AFTER the time. "149"
+  is the julian production day (a bare number is NOT the lot when an L-marked code
+  exists), "09:28" is a time, "S28/07/26" the date. A number sitting before a time
+  is NOT automatically the lot.)
 - "UPC 7 26191 01854 8   BEST BY 10/15/2026" -> NONE
   (a 12-digit UPC barcode and a date only — no production code, return NONE)
 - "Production Date: 29 JAN 2026 and 12 APR 2026" -> NONE
   (month-name dates only, no lot code -> NONE; never output the date)
 
-OUTPUT FORMAT:
-- Respond with ONLY the lot code, no quotes, no labels.
+OUTPUT FORMAT — follow EXACTLY:
+- Your ENTIRE reply is the lot code alone (or the word NONE). Nothing before or after.
+- NO reasoning, NO explanation, NO alternatives, NO "let me re-read", NO restating,
+  NO showing your work. Decide silently and output the final code ONCE.
+- No quotes, no labels.
 - Strip spaces and special chars ("L 693 A" -> "L693A", "2 493 34315" -> "249334315").
+- Never MERGE a neighbouring time/date into the lot: output only the lot's own
+  characters (lot "62562167" beside time "08:28" -> "62562167", never "6256216708").
+  A number printed next to a time is NOT automatically the lot — a "LOT:" label or an
+  "L"-marked code still decides WHICH token is the lot.
 - Max 22 chars.
 - If no lot code is visible, respond with exactly: NONE`;
 
