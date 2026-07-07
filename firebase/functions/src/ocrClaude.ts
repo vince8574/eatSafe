@@ -30,15 +30,22 @@ on cans and lidded tins — stamped on the SAME line BETWEEN the date and the ti
 A code wedged between a date and a time is almost always the lot.
 
 VALID lot patterns (in order of priority):
-1. Text starting with "LOT", "LOT CODE", "BATCH" or "L" followed by characters
-   Examples: "LOT 12345A", "L693A2102R", "L 24123"
-   An "L"/"LOT" marker labels the code on ITS OWN line. If the stamp has several
-   lines (e.g. a date line and an "L ...." line), attach the L to the code on the
-   SAME line as the L, never to a date on the line above/below.
-2. A dense alphanumeric/numeric production code printed/inkjet/laser-etched near
+1. HIGHEST PRIORITY — an EXPLICIT lot label: "LOT", "LOT :", "LOT CODE", "LOT #",
+   "BATCH". Return EXACTLY the code that follows the label, and nothing else: NOT a
+   token printed BEFORE the label, NOT the time/date after it.
+   Examples: "LOT 12345A" -> "12345A"   "LOT : 16313351" -> "16313351"
+   A short "L3" / "L4" / "M2" printed just BEFORE the label is a LINE/MACHINE number,
+   NOT part of the lot — never prepend it ("L3 Lot: 161" -> "161", never "L3161").
+2. Otherwise (no explicit label), text starting with "L" + characters IS a lot:
+   "L693A2102R", "L 24123". BUT an isolated "L" + ONE digit ("L3", "L4"), especially
+   next to an "M" + digit ("M2") or printed on the date/time line, is a LINE/MACHINE
+   marker, NOT the lot. The "L"/"LOT" marker labels the code on ITS OWN line; if the
+   stamp has several lines, attach the L to the code on the SAME line, never to a date
+   on the line above/below.
+3. A dense alphanumeric/numeric production code printed/inkjet/laser-etched near
    (but distinct from) the "Best By" / "Use By" / "Guaranteed Fresh" date
    Examples: "249334315", "WN012117E", "SE102922A", "2 493 34315" -> "249334315"
-3. A series of 5-12 digits that is NOT a barcode (barcodes/EAN/GTIN are 13-14 digits)
+4. A series of 5-12 digits that is NOT a barcode (barcodes/EAN/GTIN are 13-14 digits)
 
 NEVER return a DATE. This is the single most important rule:
 - Best-before / expiration / "GUARANTEED FRESH UNTIL" dates in ANY form:
@@ -59,19 +66,45 @@ identifiers, identical on every pack:
 If such a marking appears NEXT TO a separate printed/inkjet code, return the
 inkjet production code, not the marking.
 
+NEVER return a LINE / MACHINE marker — on inkjet stamps the production line and
+machine are printed next to the date/time as short tokens:
+- "L3", "L4" (line) — an "L" + a SINGLE digit, NOT a lot.
+- "M2", "M1" (machine), "F128" alone may be a line/oven code printed beside L3/M2.
+When you see "... L3 M2 ..." or "L3 Lot: ..." these are line/machine numbers; the
+real lot is the code AFTER the "Lot:" label (or the dense production code), never
+the "L3"/"M2". Never concatenate "L3"/"M2" with the lot.
+- A SECONDARY line made of a lone letter (e.g. "B") + a counter + a time
+  ("B   166   23:35") is also a line/machine production stamp — IGNORE it entirely.
+  The lot is the MAIN code on the other line; never append the "B"/counter/time.
+- This applies ONLY to SEPARATE short tokens surrounded by spaces. A digit GLUED
+  inside a single contiguous code is PART of the lot — keep it. E.g. in "3L1121125"
+  the leading "3" is part of the code → return "3L1121125", NEVER "L1121125". Return
+  the WHOLE contiguous alphanumeric run; never strip a leading/trailing character.
+
 If the ONLY thing you can read is a date (and no separate production code),
 respond with exactly: NONE. Do NOT output the date.
+
+CRITICAL anti-hallucination rule: the example codes in these instructions ("5349B",
+"249334315", "161", "3L1121125", "L693A2102R", etc.) are ILLUSTRATIONS ONLY. NEVER
+output any of them unless you ACTUALLY read those exact characters in THIS image. If
+the image is blank, black, blurry, or you cannot clearly read a real production code
+on the packaging, respond with exactly: NONE. Read the digits/letters that are truly
+in the image — never guess a plausible-looking code from memory.
 
 DOT-MATRIX / INKJET CODES (dotted characters) — read with EXTREME care:
 - These codes are printed as a grid of dots, often pale or on a colored
   background. You may receive TWO versions of the same image (raw color +
   contrast-enhanced grayscale): cross-reference BOTH before deciding.
-- Count the characters: do NOT drop or invent a character. If the code has 10
-  glyphs, your answer must have exactly 10 characters.
+- Count the characters EXACTLY: do NOT drop, invent, or DUPLICATE a character. If
+  the code has 10 glyphs, your answer must have exactly 10 characters. A faint
+  smudge or wide gap is NOT an extra digit (do not turn "...049" into "...0149").
+- Lot codes often MIX letters and digits ("6552C25049", "L693A2102R"). If a glyph
+  is a LETTER, keep it as a letter — do NOT normalize it to a digit (a "C" between
+  digits stays "C", never "0"; likewise S≠5, B≠8, O≠0, I≠1, G≠6 when it's the letter).
 - Frequent dot-matrix confusions — decide using the dot pattern, the second
-  image, and consistency with neighboring characters:
-  6 vs 8 vs 3 vs 9, 0 vs O vs D, 5 vs S, 1 vs I vs T, B vs 8, H vs M vs N,
-  G vs 6, 4 vs A.
+  image, and consistency with neighboring characters (don't default to a digit):
+  6 vs 8 vs 3 vs 9, 0 vs O vs D vs C vs Q, 5 vs S, 1 vs I vs T, B vs 8, H vs M vs N,
+  G vs 6, 4 vs A, 2 vs Z, 7 vs T.
 - Typical layout on such packs: line 1 = date (DD/MM/YYYY), line 2 = time
   (HH:MM:SS), line 3 = the LOT CODE (letters + digits), line 4 = a secondary
   counter (often "NNNN:NNNNN" with a colon) — return line 3, not line 4.
@@ -110,14 +143,45 @@ Study how the date, UPC barcode, nutrition text and factory marks are IGNORED:
   (an "L" lot marker labels the code printed ON ITS OWN line — here "22 01", giving
   L2201. Do NOT attach the "L" to "23 06 26" (that is the best-before date on the
   line above) and "18:36" is a time — never L23, never include the date or time)
+- "L3 Lot: 161 17:52   USE BY 05/07/2026" -> 161
+  (explicit "Lot:" label wins: return ONLY what follows it = 161. "L3" before the
+  label is the production LINE, "17:52" is a time — never "L3", never "L3161".)
+- "11-06-2027 / 3L1121125 17:17" -> 3L1121125
+  (one contiguous code "3L1121125" — the leading "3" is GLUED to the L, so it is part
+  of the lot; return the whole thing, never drop it to "L1121125". "17:17" is a time.)
+- "W26 159 16   02.08.2027 / B   166   23:35" -> W2615916
+  (the lot is the main code on line 1, "W26 159 16" -> "W2615916"; "02.08.2027" is the
+  date. Line 2 "B 166 23:35" is a line/machine stamp (line B + counter 166 + time) —
+  IGNORE it entirely, never append "B166" or "B16623:35".)
+- "BEST BY 29/06/26   LOT : 16313351" -> 16313351
+  (explicit "LOT :" label; return the full code after it. "29/06/26" is the date.)
+- "07/27/2026 19:54 / F128 L3 M2" -> F128
+  (date + time on line 1; line 2 "F128 L3 M2" = production code F128 then line "L3"
+  and machine "M2" — return only F128, drop L3 and M2.)
+- "DLC: 28/07/26 / LOT: 62562167 08:28 M6 7" -> 62562167
+  (explicit "LOT:" label; return EXACTLY the code after it. "08:28" is a TIME and
+  "M6 7" is a machine/counter — NEVER append their digits: never "6256216708",
+  never "6256216702". "28/07/26" is the date. Count the code's digits carefully.)
+- "S28/07/26 / 149 09:28 L10" -> L10
+  (the "L"-marked code "L10" is the lot, EVEN THOUGH it comes AFTER the time. "149"
+  is the julian production day (a bare number is NOT the lot when an L-marked code
+  exists), "09:28" is a time, "S28/07/26" the date. A number sitting before a time
+  is NOT automatically the lot.)
 - "UPC 7 26191 01854 8   BEST BY 10/15/2026" -> NONE
   (a 12-digit UPC barcode and a date only — no production code, return NONE)
 - "Production Date: 29 JAN 2026 and 12 APR 2026" -> NONE
   (month-name dates only, no lot code -> NONE; never output the date)
 
-OUTPUT FORMAT:
-- Respond with ONLY the lot code, no quotes, no labels.
+OUTPUT FORMAT — follow EXACTLY:
+- Your ENTIRE reply is the lot code alone (or the word NONE). Nothing before or after.
+- NO reasoning, NO explanation, NO alternatives, NO "let me re-read", NO restating,
+  NO showing your work. Decide silently and output the final code ONCE.
+- No quotes, no labels.
 - Strip spaces and special chars ("L 693 A" -> "L693A", "2 493 34315" -> "249334315").
+- Never MERGE a neighbouring time/date into the lot: output only the lot's own
+  characters (lot "62562167" beside time "08:28" -> "62562167", never "6256216708").
+  A number printed next to a time is NOT automatically the lot — a "LOT:" label or an
+  "L"-marked code still decides WHICH token is the lot.
 - Max 22 chars.
 - If no lot code is visible, respond with exactly: NONE`;
 

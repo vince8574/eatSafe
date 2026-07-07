@@ -14,6 +14,16 @@ export interface ProductInfo {
   categories?: string;
   imageUrl?: string;
   source: 'openfoodfacts';
+  // Data for the dietary profile (allergens / foods / nutrition). Populated from
+  // OFF; feeds dietaryCheckService (zero AI cost).
+  ingredientsText?: string;
+  allergensTags?: string[]; // e.g. ["en:milk"]
+  tracesTags?: string[]; // "may contain"
+  ingredientsTags?: string[]; // e.g. ["en:pork"]
+  ingredientsAnalysisTags?: string[]; // e.g. ["en:non-vegetarian","en:vegan"]
+  nutriments?: Record<string, number | undefined>; // sugars_100g, fat_100g, salt_100g...
+  nutriscoreGrade?: string; // a..e
+  novaGroup?: number; // 1..4
 }
 
 const OPEN_FOOD_FACTS_API = 'https://world.openfoodfacts.org/api/v2';
@@ -78,7 +88,17 @@ async function getProductFromOpenFoodFacts(barcode: string): Promise<ProductInfo
       brands: product.brands || '',
       categories: product.categories,
       imageUrl: product.image_url || product.image_front_url,
-      source: 'openfoodfacts'
+      source: 'openfoodfacts',
+      ingredientsText: product.ingredients_text_en || product.ingredients_text || undefined,
+      allergensTags: Array.isArray(product.allergens_tags) ? product.allergens_tags : undefined,
+      tracesTags: Array.isArray(product.traces_tags) ? product.traces_tags : undefined,
+      ingredientsTags: Array.isArray(product.ingredients_tags) ? product.ingredients_tags : undefined,
+      ingredientsAnalysisTags: Array.isArray(product.ingredients_analysis_tags)
+        ? product.ingredients_analysis_tags
+        : undefined,
+      nutriments: product.nutriments || undefined,
+      nutriscoreGrade: product.nutriscore_grade || undefined,
+      novaGroup: typeof product.nova_group === 'number' ? product.nova_group : undefined
     };
 
     console.log(`✅ [OpenFoodFacts] Product found: ${productInfo.productName}`);

@@ -6,6 +6,8 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
 import { nanoid } from 'nanoid/non-secure';
 import { deleteCurrentUserAccount } from '../services/accountDeletionService';
+import { useDietaryProfileStore } from '../stores/useDietaryProfileStore';
+import { fetchDietaryProfileFromFirestore } from '../services/firestoreDietaryProfileService';
 
 export interface AuthContextValue {
   user: FirebaseAuthTypes.User | null;
@@ -46,6 +48,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
       console.log('[AuthContext] Auth state changed:', user?.email || 'anonymous');
       setUser(user);
       setLoading(false);
+      // Dietary profile (allergens/foods/thresholds): loaded from Firestore at
+      // login for cross-device sync (local AsyncStorage serves offline).
+      if (user?.uid) {
+        void (async () => {
+          const profile = await fetchDietaryProfileFromFirestore(user.uid);
+          if (profile) useDietaryProfileStore.getState().setProfile(profile);
+        })();
+      }
     });
 
     return unsubscribe;

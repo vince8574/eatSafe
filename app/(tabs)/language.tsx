@@ -195,6 +195,22 @@ export default function LanguageScreen() {
         )}
       </View>
 
+      {/* Dietary profile */}
+      <View style={styles.legalSection}>
+        <TouchableOpacity
+          style={[styles.legalButton, { backgroundColor: colors.warning }]}
+          onPress={() => router.push('/dietary-profile' as any)}
+        >
+          <View style={styles.legalButtonContent}>
+            <Ionicons name="nutrition-outline" size={24} color={colors.onAccent} />
+            <Text style={[styles.legalButtonText, { color: colors.onAccent, fontWeight: '800' }]}>
+              {t('dietary.settingsRow')}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={colors.onAccent} />
+        </TouchableOpacity>
+      </View>
+
       {/* Section Documents Légaux */}
       <View style={styles.legalSection}>
         <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
