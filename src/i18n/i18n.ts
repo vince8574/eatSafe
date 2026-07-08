@@ -60,6 +60,15 @@ const i18n = new I18n({
 i18n.enableFallback = true;
 i18n.defaultLocale = 'en';  // Langue par défaut: anglais (marché US)
 
+// Locale SYNCHRONE dès le chargement du module (avant tout rendu React) : langue
+// de l'appareil si supportée, sinon 'en'. Évite qu'un 1er rendu parte sur une
+// mauvaise locale puis reste figé si la préférence restaurée (async) coïncide
+// avec l'état initial du contexte (setState no-op → pas de re-rendu).
+{
+  const deviceLang = Localization.getLocales()[0]?.languageCode?.toLowerCase() ?? 'en';
+  i18n.locale = SUPPORTED_LANGUAGES.includes(deviceLang as SupportedLanguage) ? deviceLang : 'en';
+}
+
 export async function initializeI18n(): Promise<string> {
   try {
     const savedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
