@@ -72,6 +72,38 @@ function stripEn(tag: string): string {
   return tag.replace(/^[a-z]{2}:/, '');
 }
 
+const isWordChar = (c: string) => /[a-z0-9]/.test(c);
+
+// Matching en MOT ENTIER (le haystack et le mot-clé sont déjà normalisés) :
+// - début de mot strict : « ham » ne matche plus « cHAMpignon », « ethyl » ne
+//   matcherait plus « mETHYLcellulose », « rum » ne matche plus « cRUMble » ;
+// - fin de mot avec pluriel toléré (s/x) : « jambon » matche « jambons »,
+//   « vin » matche « vins » mais plus « VINaigre ».
+// Les mots-clés multi-mots (« fruits de mer », « lait cru ») marchent tels quels.
+function hasWholeKeyword(haystack: string, keyword: string): boolean {
+  const needle = normalize(keyword).trim();
+  if (!needle) return false;
+  let i = haystack.indexOf(needle);
+  while (i !== -1) {
+    const before = i > 0 ? haystack[i - 1] : '';
+    let end = i + needle.length;
+    if (haystack[end] === 's' || haystack[end] === 'x') end += 1; // pluriel
+    const after = end < haystack.length ? haystack[end] : '';
+    if ((!before || !isWordChar(before)) && (!after || !isWordChar(after))) return true;
+    i = haystack.indexOf(needle, i + 1);
+  }
+  return false;
+}
+
+// Retire les phrases d'exclusion du texte avant matching (ex. « vinaigre
+// d'alcool » ne doit pas compter comme de l'alcool).
+function stripPhrases(haystack: string, phrases?: string[]): string {
+  if (!phrases || phrases.length === 0) return haystack;
+  let out = haystack;
+  for (const p of phrases) out = out.split(normalize(p)).join(' ');
+  return out;
+}
+
 export function checkProductAgainstProfile(
   product: ProductDietaryData,
   profile: DietaryProfile
@@ -97,14 +129,16 @@ export function checkProductAgainstProfile(
   const productHasAllergen = (a: AllergenKey): boolean => {
     if (allergensTags.includes(a)) return true;
     const kws = ALLERGEN_INGREDIENT_KEYWORDS[a];
-    return kws ? kws.some((kw) => ingredientsHaystack.includes(normalize(kw))) : false;
+    return kws ? kws.some((kw) => hasWholeKeyword(ingredientsHaystack, kw)) : false;
   };
-  const hasKeyword = (kws: string[]) => kws.some((kw) => ingredientsHaystack.includes(normalize(kw)));
   const foodMatch = (key: string): 'hard' | 'ambiguous' | null => {
     const def = AVOID_FOODS.find((f) => f.key === key);
     if (!def) return null;
-    if (hasKeyword(def.keywords)) return 'hard';
-    if (def.ambiguousKeywords && hasKeyword(def.ambiguousKeywords)) return 'ambiguous';
+    // Les phrases d'exclusion (ex. « vinaigre d'alcool ») sont retirées AVANT le
+    // matching pour ne pas déclencher à tort.
+    const hay = stripPhrases(ingredientsHaystack, def.excludePhrases);
+    if (def.keywords.some((kw) => hasWholeKeyword(hay, kw))) return 'hard';
+    if (def.ambiguousKeywords?.some((kw) => hasWholeKeyword(hay, kw))) return 'ambiguous';
     return null;
   };
 
@@ -156,9 +190,17 @@ export function checkProductAgainstProfile(
   const pregnant = people.filter((p) => p.pregnant);
   if (pregnant.length > 0) {
     for (const risk of PREGNANCY_RISKS) {
-      if (hasKeyword(risk.keywords)) {
-        warnings.push({ level: 'danger', type: 'pregnancy', key: risk.key, ...who(pregnant) });
+      // Exclusions (ex. « sauce tartare » ≠ tartare de viande crue).
+      const hay = stripPhrases(ingredientsHaystack, risk.excludePhrases);
+      if (risk.keywords.some((kw) => hasWholeKeyword(hay, kw))) {
+        warnings.push({ level: risk.level ?? 'danger', type: 'pregnancy', key: risk.key, ...who(pregnant) });
       }
+    }
+    // Alcool : automatiquement à éviter pour les femmes enceintes, sans avoir à
+    // cocher « alcool » à part. Réutilise la définition alcool (+ ses exclusions
+    // « vinaigre d'alcool », « levure de bière »… → pas de faux positif).
+    if (foodMatch('alcohol') === 'hard') {
+      warnings.push({ level: 'danger', type: 'pregnancy', key: 'alcohol', ...who(pregnant) });
     }
   }
 
