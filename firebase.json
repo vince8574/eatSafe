@@ -13,6 +13,16 @@
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
+    },
+    {
+      "source": "firebase/functions-usda",
+      "codebase": "usda",
+      "ignore": [
+        "venv",
+        ".git",
+        "**/__pycache__",
+        "*.local"
+      ]
     }
   ]
 }

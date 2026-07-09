@@ -5,13 +5,15 @@ type RecallResponse = {
 };
 
 const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=1000&sort=report_date:desc';
-// Official FSIS recall endpoint is /v/1 (the bare /recall path 403s). FSIS sits
-// behind Akamai and rejects requests without a browser-like User-Agent.
-const USDA_ENDPOINT = 'https://www.fsis.usda.gov/fsis/api/recall/v/1';
+// USDA/FSIS (www.fsis.usda.gov/.../api/recall/v/1) sits behind Akamai bot-manager,
+// which returns 403 "Access Denied" to any client whose TLS fingerprint (JA3) is
+// not a real browser — plain fetch / Android OkHttp / .NET all fail, regardless
+// of the User-Agent. So we go through a Cloud Function proxy (Python + curl_cffi
+// with a Safari-iOS TLS handshake) that Akamai lets through, with a 30 min cache.
+// This makes USDA recalls work reliably on EVERY device (incl. Android).
+const USDA_ENDPOINT = 'https://us-central1-eatsok-6d19f.cloudfunctions.net/usdaRecalls';
 const USDA_HEADERS = {
-  Accept: 'application/json',
-  'User-Agent':
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1'
+  Accept: 'application/json'
 };
 
 // Cache for recalls data (5 minutes TTL)
