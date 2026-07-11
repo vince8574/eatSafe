@@ -62,14 +62,6 @@ export function DetailScreen() {
         )}
 
         <View style={styles.section}>
-          <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
-            <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-              {t('details.privacyInfo')}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
           <View style={[styles.card, { backgroundColor: colors.surface }]}>
             <Text style={[styles.brand, { color: colors.textPrimary }]}>{product.brand}</Text>
             {product.productName ? (
@@ -145,28 +137,8 @@ export function DetailScreen() {
             </Text>
           </View>
 
-          <View style={[styles.verifyBox, { backgroundColor: colors.accentSoft, borderColor: colors.accent }]}>
-            <Text style={[styles.verifyText, { color: colors.textPrimary }]}>
-              ℹ️ {t('common.verifyWithSources')}
-            </Text>
-          </View>
-
-          <View style={[styles.governmentInfoBox, { backgroundColor: '#FFA50020', borderColor: '#FFA500' }]}>
-            <Ionicons name="alert-circle" size={16} color="#FFA500" />
-            <Text style={[styles.governmentInfoText, { color: colors.textPrimary }]}>
-              {t('common.governmentInfoDisclaimer')}
-            </Text>
-          </View>
-
-          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
-            <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
-            <Text style={[styles.appDisclaimerText, { color: colors.textPrimary }]}>
-              {t('common.appDisclaimer')}
-            </Text>
-          </View>
-
           <TouchableOpacity
-            style={[styles.scanAnotherButton, { backgroundColor: colors.accent, shadowColor: colors.accent }]}
+            style={[styles.scanAnotherButton, { backgroundColor: colors.accent, borderColor: 'rgba(255,255,255,0.9)', shadowColor: colors.accent }]}
             onPress={() => router.replace('/(tabs)/scan')}
           >
             <Text style={[styles.scanAnotherText, { color: colors.onAccent }]}>{t('details.actions.scanAnother')}</Text>
@@ -188,6 +160,35 @@ export function DetailScreen() {
           >
             <Text style={[styles.deleteText, { color: colors.surface }]}>{t('details.actions.delete')}</Text>
           </TouchableOpacity>
+
+          <View style={[styles.verifyBox, { backgroundColor: colors.accentSoft, borderColor: colors.accent }]}>
+            <Text style={[styles.verifyText, { color: colors.textPrimary }]}>
+              ℹ️ {t('common.verifyWithSources')}
+            </Text>
+          </View>
+
+          <View style={[styles.governmentInfoBox, { backgroundColor: '#FFA50020', borderColor: '#FFA500' }]}>
+            <Ionicons name="alert-circle" size={16} color="#FFA500" />
+            <Text style={[styles.governmentInfoText, { color: colors.textPrimary }]}>
+              {t('common.governmentInfoDisclaimer')}
+            </Text>
+          </View>
+
+          <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
+            <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
+            <Text style={[styles.appDisclaimerText, { color: colors.textPrimary }]}>
+              {t('common.appDisclaimer')}
+            </Text>
+          </View>
+
+        </View>
+
+        <View style={styles.section}>
+          <View style={[styles.infoBox, { backgroundColor: colors.surfaceAlt }]}>
+            <Text style={[styles.infoText, { color: colors.textSecondary }]}>
+              {t('details.privacyInfo')}
+            </Text>
+          </View>
         </View>
       </ScrollView>
       </KeyboardAvoidingView>
@@ -389,11 +390,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 12,
-    // Ombre colorée → le bouton CTA se détache du fond vert du dégradé.
+    borderWidth: 2,
+    // Bordure claire + ombre colorée → le CTA se détache nettement du fond vert.
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.45,
-    shadowRadius: 10,
-    elevation: 5
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 6
   },
   scanAnotherText: {
     fontSize: 16,
