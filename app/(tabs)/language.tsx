@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert, Pressable } from 'react-native';
+import { SHOW_ACCESSIBILITY } from '../../src/config/featureFlags';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -132,6 +133,8 @@ export default function LanguageScreen() {
       </View>
 
       {/* Section Accessibilité */}
+      {/* Section Accessibilité (mode malvoyant) — masquée via SHOW_ACCESSIBILITY (réversible) */}
+      {SHOW_ACCESSIBILITY && (
       <View style={styles.legalSection}>
         <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
           {t('accessibility.title')}
@@ -194,6 +197,7 @@ export default function LanguageScreen() {
           </TouchableOpacity>
         )}
       </View>
+      )}
 
       {/* Dietary profile */}
       <View style={styles.legalSection}>

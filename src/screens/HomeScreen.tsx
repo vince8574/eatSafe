@@ -10,6 +10,7 @@ import { useI18n } from '../i18n/I18nContext';
 import { GradientBackground } from '../components/GradientBackground';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
+import { SHOW_ACCESSIBILITY } from '../config/featureFlags';
 
 function StatCard({
   value,
@@ -113,7 +114,7 @@ export function HomeScreen() {
     <GradientBackground>
       <FlatList
         data={[]}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(_item, index) => String(index)}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
@@ -165,7 +166,8 @@ export function HomeScreen() {
               </Text>
             </Animated.View>
 
-            {/* Accessibility quick toggle */}
+            {/* Accessibility toggle (mode malvoyant) — masqué via SHOW_ACCESSIBILITY (réversible). */}
+            {SHOW_ACCESSIBILITY && (
             <Pressable
               onPress={handleToggleAccessibility}
               accessibilityRole="switch"
@@ -213,6 +215,7 @@ export function HomeScreen() {
                 />
               </View>
             </Pressable>
+            )}
 
             {/* Stats */}
             <View style={styles.statsContainer}>
