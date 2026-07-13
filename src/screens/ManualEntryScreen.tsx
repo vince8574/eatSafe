@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,8 +12,6 @@ import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
 import { GradientBackground } from '../components/GradientBackground';
-import { useSubscription } from '../hooks/useSubscription';
-import { decrementScanCounter } from '../services/subscriptionService';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
@@ -24,37 +22,9 @@ export function ManualEntryScreen() {
   const [brand, setBrand] = useState('');
   const [lotNumber, setLotNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
 
-
-  const ensureScanQuota = useCallback(async (): Promise<boolean> => {
-    const remaining = subscription?.scansRemaining ?? 0;
-    if (remaining > 0) return true;
-
-    return new Promise((resolve) => {
-      Alert.alert(
-        t('quota.reached'),
-        t('quota.addPack'),
-        [
-          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
-          {
-            text: t('quota.pack500'),
-            onPress: async () => {
-              try {
-                await buyPack(500);
-                await refresh();
-                resolve(true);
-              } catch (error) {
-                Alert.alert(t('auth.error'), t('quota.cannotAdd'));
-                resolve(false);
-              }
-            }
-          }
-        ],
-        { cancelable: true }
-      );
-    });
-  }, [subscription?.scansRemaining, buyPack, refresh, t]);
+  // La saisie manuelle du numéro de lot est GRATUITE et ILLIMITÉE (pas d'IA) :
+  // aucun contrôle de quota, aucun décrément du compteur de scans.
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
@@ -64,11 +34,6 @@ export function ManualEntryScreen() {
 
     try {
       setIsSubmitting(true);
-      const hasQuota = await ensureScanQuota();
-      if (!hasQuota) {
-        setIsSubmitting(false);
-        return;
-      }
       const finalBrand = brand.trim() || t('common.unknown');
 
       // SEULE étape essentielle : créer le produit. Si elle échoue → vraie
@@ -101,11 +66,6 @@ export function ManualEntryScreen() {
       } catch (recallError) {
         console.warn('[ManualEntry] recall check skipped', recallError);
       }
-
-      // Quota : non bloquant pour la navigation (comme ScanLotScreen).
-      void decrementScanCounter().catch((e) =>
-        console.warn('[ManualEntry] decrementScanCounter skipped', e)
-      );
 
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
     } catch (error) {
@@ -158,11 +118,6 @@ export function ManualEntryScreen() {
           <View style={styles.appDisclaimerContent}>
             <Text style={[styles.appDisclaimerText, { color: colors.textPrimary }]}>
               {t('common.appDisclaimer')}
-            </Text>
-            <Text style={[styles.quotaText, { color: colors.textSecondary }]}>
-              {subLoading
-                ? t('quota.loading')
-                : `${t('quota.remaining')} ${subscription?.scansRemaining ?? 0}`}
             </Text>
           </View>
         </View>

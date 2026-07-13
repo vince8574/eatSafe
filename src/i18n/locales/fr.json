@@ -491,6 +491,10 @@
   },
   "quota": {
     "reached": "Quota de scans atteint",
+    "gateTitle": "Scans IA gratuits épuisés",
+    "gateSubtitle": "Vous avez utilisé vos 5 scans IA gratuits. Saisissez le numéro de lot à la main (gratuit), ou abonnez-vous pour un scan IA illimité.",
+    "gateManual": "Entrer le numéro de lot à la main",
+    "gateSubscribe": "S'abonner pour des scans illimités",
     "addPack": "Ajoute un pack de scans pour continuer.",
     "pack500": "Pack +500 scans",
     "cannotAdd": "Impossible d'ajouter le pack pour le moment.",

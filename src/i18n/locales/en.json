@@ -491,6 +491,10 @@
   },
   "quota": {
     "reached": "Scan quota reached",
+    "gateTitle": "Free AI scans used up",
+    "gateSubtitle": "You've used your 5 free AI scans. Enter the lot number by hand (free), or subscribe for unlimited AI scanning.",
+    "gateManual": "Enter the lot number by hand",
+    "gateSubscribe": "Subscribe for unlimited scans",
     "addPack": "Add a scan pack to continue.",
     "pack500": "+500 scans pack",
     "cannotAdd": "Cannot add pack at this time.",

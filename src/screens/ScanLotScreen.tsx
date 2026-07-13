@@ -1,6 +1,6 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Alert, Animated, KeyboardAvoidingView, Platform, AppState } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Animated, KeyboardAvoidingView, Platform, AppState } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
 import { useMutation } from '@tanstack/react-query';
@@ -16,6 +16,7 @@ import { GradientBackground } from '../components/GradientBackground';
 import { ResultBottomNav } from '../components/ResultBottomNav';
 import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
 import { useSubscription } from '../hooks/useSubscription';
 import { decrementScanCounter } from '../services/subscriptionService';
@@ -89,7 +90,7 @@ export function ScanLotScreen() {
   const { addProduct, updateRecall, updateProduct } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
   const accessibilityMode = usePreferencesStore((state) => state.accessibilityMode);
-  const { subscription, buyPack, refresh, loading: subLoading } = useSubscription();
+  const { subscription, loading: subLoading } = useSubscription();
   const { speak } = useVoiceGuide();
 
   const scannerRef = useRef<ScannerHandle | null>(null);
@@ -119,6 +120,17 @@ export function ScanLotScreen() {
   const accessibilityRetryRef = useRef(0);
   const lastCoachingAtRef = useRef(0);
   const paidOcrCountRef = useRef(0);
+  // BRIDAGE IA : l'IA (lecture auto du lot) est autorisée si ABONNÉ ou s'il reste
+  // des scans gratuits. Sinon (non-abonné, 5 scans épuisés) → caméra floutée +
+  // saisie manuelle (gratuite, illimitée) + proposition d'abonnement. Pendant le
+  // chargement de l'abonnement on autorise (pour ne pas flasher le gate).
+  const isSubscribed = (subscription?.status ?? 'none') === 'active';
+  const aiAllowed = subLoading || isSubscribed || (subscription?.scansRemaining ?? 0) > 0;
+  const aiAllowedRef = useRef(aiAllowed);
+  aiAllowedRef.current = aiAllowed;
+  // Passe à true dès qu'une lecture IA sert pour CE scan → décrémente au confirm
+  // (le manuel ne consomme rien). Remis à false au reset et à l'entrée manuelle.
+  const aiUsedThisScanRef = useRef(false);
   const lotSeenCountRef = useRef<Map<string, { count: number; display: string }>>(new Map());
   const lastIntraAgreementRef = useRef(0);
 
@@ -144,60 +156,9 @@ export function ScanLotScreen() {
   // l'utilisateur déclencher la photo lui-même.
   const [showManualCapture, setShowManualCapture] = useState(false);
 
-  const ensureScanQuota = useCallback(async (): Promise<boolean> => {
-    const remaining = subscription?.scansRemaining ?? 0;
-    if (remaining > 0) return true;
-
-    // Utilisateur sans abonnement ayant épuisé ses scans gratuits :
-    // message orienté conversion qui pousse vers la prise d'abonnement.
-    const isFreeUser = (subscription?.status ?? 'none') === 'none';
-
-    return new Promise((resolve) => {
-      const packButton = {
-        text: t('quota.pack500'),
-        onPress: async () => {
-          try {
-            await buyPack(500);
-            await refresh();
-            resolve(true);
-          } catch (error) {
-            Alert.alert(t('auth.error'), t('quota.cannotAdd'));
-            resolve(false);
-          }
-        }
-      };
-
-      if (isFreeUser) {
-        Alert.alert(
-          t('quota.upsellTitle'),
-          t('quota.upsellMessage'),
-          [
-            { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
-            packButton,
-            {
-              text: t('quota.viewPlans'),
-              onPress: () => {
-                resolve(false);
-                router.push('/subscription');
-              }
-            }
-          ],
-          { cancelable: true }
-        );
-        return;
-      }
-
-      Alert.alert(
-        t('quota.reached'),
-        t('quota.addPack'),
-        [
-          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
-          packButton
-        ],
-        { cancelable: true }
-      );
-    });
-  }, [subscription?.scansRemaining, subscription?.status, buyPack, refresh, router, t]);
+  // Le quota est désormais appliqué DIRECTEMENT sur la caméra via le gate `aiAllowed`
+  // (caméra floutée + saisie manuelle + abonnement) — plus de blocage au confirm,
+  // la saisie manuelle reste TOUJOURS possible et gratuite.
 
   const lotMutation = useMutation({
     mutationFn: async (lotPhoto: string | string[]) => {
@@ -425,6 +386,10 @@ export function ScanLotScreen() {
       // performOcr et le matching de rappel fonctionnent sans marque (param
       // optionnel) et la confirmation retombe sur "Unknown". On ne bloque donc
       // plus l'OCR ici — sinon la capture flashe mais l'analyse ne démarre jamais.
+      // Bridage IA : hors quota (non-abonné), on ne lance PAS l'OCR IA — le gate
+      // affiché sur la caméra propose la saisie manuelle (gratuite) ou l'abonnement.
+      if (!aiAllowedRef.current) return;
+      aiUsedThisScanRef.current = true; // cette lecture consomme un scan IA (décrément au confirm)
       lotMutation.mutate(uri);
     },
     [lotMutation]
@@ -562,12 +527,6 @@ export function ScanLotScreen() {
     // Allow empty brand (user skipped brand step) - will be set to "Unknown"
     const finalBrand = brand && brand.trim() ? brand.trim() : t('common.unknown');
 
-    const hasQuota = await ensureScanQuota();
-    if (!hasQuota) {
-      setConfirmModalVisible(false);
-      return;
-    }
-
     setIsFinalizing(true);
 
     try {
@@ -669,10 +628,13 @@ export function ScanLotScreen() {
         });
       }
 
-      // Décrément du quota : non bloquant pour la navigation (compteur local).
-      void decrementScanCounter().catch((e) =>
-        console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
-      );
+      // Décrément du quota : UNIQUEMENT si une lecture IA a servi pour ce scan
+      // (la saisie manuelle est gratuite et illimitée). Non bloquant (compteur local).
+      if (aiUsedThisScanRef.current) {
+        void decrementScanCounter().catch((e) =>
+          console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
+        );
+      }
 
       resetFlow();
       router.replace({ pathname: '/details/[id]', params: { id: product.id } });
@@ -695,7 +657,6 @@ export function ScanLotScreen() {
     lotCandidates,
     productName,
     productImage,
-    ensureScanQuota,
     decrementScanCounter,
     resetFlow,
     router,
@@ -745,6 +706,7 @@ export function ScanLotScreen() {
   }, [router]);
 
   const handleManualEntry = useCallback(() => {
+    aiUsedThisScanRef.current = false; // saisie manuelle → aucun scan IA consommé
     setEditedLot('');
     setIsEditingLot(true);
     setConfirmModalVisible(true);
@@ -881,12 +843,43 @@ export function ScanLotScreen() {
         onBack={handleGoBack}
         onRestart={handleRestart}
         onManualEntry={handleManualEntry}
-        previewOcrEnabled={!isConfirmModalVisible}
+        previewOcrEnabled={aiAllowed && !isConfirmModalVisible}
         onPreviewOcrText={handlePreviewOcrText}
         lowLightDetectionEnabled
         onLowLight={handleLowLight}
         hideCaptureButton={!showManualCapture}
       />
+
+      {/* Bridage IA : hors quota (non-abonné) → caméra floutée + saisie manuelle
+          gratuite + proposition d'abonnement. */}
+      {!aiAllowed && (
+        <BlurView intensity={45} tint="dark" style={styles.gateOverlay}>
+          <TouchableOpacity style={styles.gateBack} onPress={handleGoBack} accessibilityRole="button">
+            <Ionicons name="arrow-back" size={26} color="#fff" />
+          </TouchableOpacity>
+          <View style={styles.gateCard}>
+            <Ionicons name="sparkles" size={44} color={colors.accent} />
+            <Text style={styles.gateTitle}>{t('quota.gateTitle')}</Text>
+            <Text style={styles.gateSubtitle}>{t('quota.gateSubtitle')}</Text>
+            <TouchableOpacity
+              style={[styles.gateBtnPrimary, { backgroundColor: colors.accent }]}
+              onPress={handleManualEntry}
+              accessibilityRole="button"
+            >
+              <Ionicons name="create-outline" size={20} color={colors.onAccent} />
+              <Text style={[styles.gateBtnPrimaryText, { color: colors.onAccent }]}>{t('quota.gateManual')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.gateBtnSecondary}
+              onPress={() => router.push('/subscription')}
+              accessibilityRole="button"
+            >
+              <Ionicons name="star" size={18} color="#fff" />
+              <Text style={styles.gateBtnSecondaryText}>{t('quota.gateSubscribe')}</Text>
+            </TouchableOpacity>
+          </View>
+        </BlurView>
+      )}
 
       <Animated.View
         pointerEvents="none"
@@ -1496,5 +1489,27 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: '#FFFFFF',
     zIndex: 20
-  }
+  },
+  gateOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 28,
+    zIndex: 25
+  },
+  gateBack: { position: 'absolute', top: 52, left: 20, padding: 6 },
+  gateCard: { alignItems: 'center', gap: 14, width: '100%', maxWidth: 360 },
+  gateTitle: { color: '#fff', fontSize: 22, fontWeight: '800', textAlign: 'center' },
+  gateSubtitle: { color: 'rgba(255,255,255,0.85)', fontSize: 15, lineHeight: 21, textAlign: 'center', marginBottom: 6 },
+  gateBtnPrimary: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    paddingVertical: 15, paddingHorizontal: 24, borderRadius: 14, width: '100%'
+  },
+  gateBtnPrimaryText: { fontSize: 16, fontWeight: '700' },
+  gateBtnSecondary: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    paddingVertical: 13, paddingHorizontal: 24, borderRadius: 14, borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.9)', width: '100%'
+  },
+  gateBtnSecondaryText: { color: '#fff', fontSize: 15, fontWeight: '700' }
 });
