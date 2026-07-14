@@ -450,7 +450,7 @@
     "loading": "Kontingent wird geladen...",
     "remaining": "Verbleibende Scans:",
     "upsellTitle": "Sie haben alle kostenlosen Scans verbraucht",
-    "upsellMessage": "Gefällt Ihnen EatSafe? Testen Sie jedes Abo 14 Tage kostenlos und scannen Sie ohne Limit.",
+    "upsellMessage": "Sie haben Ihre kostenlosen Scans aufgebraucht. Wählen Sie ein Abo, um unbegrenzt zu scannen.",
     "viewPlans": "Abos ansehen"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ RÜCKRUF ERKANNT ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "In offiziellen Datenbanken geprüft. Das Fehlen eines Rückrufs garantiert nicht die Sicherheit des Produkts."
   },
   "detailsScreen": {
     "lotModified": "Chargennummer geändert",

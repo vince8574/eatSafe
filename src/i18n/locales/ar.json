@@ -450,7 +450,7 @@
     "loading": "جارٍ تحميل الحصة...",
     "remaining": "عمليات المسح المتبقية:",
     "upsellTitle": "لقد استخدمت كل عمليات المسح المجانية",
-    "upsellMessage": "هل أعجبك EatSafe؟ جرّب أي باقة مجانًا لمدة 14 يومًا وامسح بلا حدود.",
+    "upsellMessage": "لقد استخدمت عمليات المسح المجانية. اختر خطة لمواصلة المسح بلا حدود.",
     "viewPlans": "عرض الباقات"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ تم اكتشاف استدعاء ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "تم التحقق في قواعد البيانات الرسمية. غياب الاستدعاء لا يضمن سلامة المنتج."
   },
   "detailsScreen": {
     "lotModified": "تم تعديل رقم الدفعة",

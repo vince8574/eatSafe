@@ -450,7 +450,7 @@
     "loading": "割り当てを読み込み中...",
     "remaining": "残りのスキャン：",
     "upsellTitle": "無料スキャンをすべて使い切りました",
-    "upsellMessage": "EatSafeは気に入りましたか？どのプランも14日間無料でお試しいただけます。無制限にスキャンできます。",
+    "upsellMessage": "無料スキャンを使い切りました。プランを選んで無制限にスキャンしましょう。",
     "viewPlans": "プランを見る"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ リコール検出（{{lot}}）",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "公式データベースで確認済み。リコールがないことは製品の安全性を保証するものではありません。"
   },
   "detailsScreen": {
     "lotModified": "ロット番号が変更されました",

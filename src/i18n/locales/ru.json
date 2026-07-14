@@ -485,7 +485,7 @@
     "loading": "Загрузка квоты...",
     "remaining": "Осталось сканирований:",
     "upsellTitle": "Вы использовали все бесплатные сканирования",
-    "upsellMessage": "Нравится EatSafe? Попробуйте любой тариф бесплатно 14 дней и сканируйте без ограничений.",
+    "upsellMessage": "Вы использовали бесплатные сканирования. Выберите план, чтобы сканировать без ограничений.",
     "viewPlans": "Посмотреть тарифы"
   },
   "immediateRecallAlert": {
@@ -508,7 +508,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ ОТЗЫВ ОБНАРУЖЕН ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "Проверено в официальных базах данных. Отсутствие отзыва не гарантирует безопасность продукта."
   },
   "detailsScreen": {
     "lotModified": "Номер партии изменен",

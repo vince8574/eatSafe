@@ -450,7 +450,7 @@
     "loading": "Duke ngarkuar kuotën...",
     "remaining": "Skanimet e mbetura:",
     "upsellTitle": "Keni përdorur të gjitha skanimet falas",
-    "upsellMessage": "Ju pëlqen EatSafe? Provoni çdo plan falas për 14 ditë dhe skanoni pa kufi.",
+    "upsellMessage": "I keni përdorur skanimet falas. Zgjidhni një plan për të skanuar pa kufi.",
     "viewPlans": "Shiko planet"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ TËRHEQJE E ZBULUAR ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "Kontrolluar në bazat zyrtare të të dhënave. Mungesa e një tërheqjeje nuk garanton sigurinë e produktit."
   },
   "detailsScreen": {
     "lotModified": "Numri i lotit u modifikua",

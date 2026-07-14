@@ -450,7 +450,7 @@
     "loading": "正在加载配额...",
     "remaining": "剩余扫描次数：",
     "upsellTitle": "您已用完所有免费扫描",
-    "upsellMessage": "喜欢 EatSafe 吗？任意套餐免费试用 14 天，无限扫描。",
+    "upsellMessage": "您已用完免费扫描次数。选择套餐即可无限扫描。",
     "viewPlans": "查看套餐"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ 检测到召回（{{lot}}）",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "已在官方数据库中核查。没有召回记录并不保证产品安全。"
   },
   "detailsScreen": {
     "lotModified": "批号已修改",

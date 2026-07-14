@@ -450,7 +450,7 @@
     "loading": "Učitavanje kvote...",
     "remaining": "Preostala skeniranja:",
     "upsellTitle": "Iskoristili ste sva besplatna skeniranja",
-    "upsellMessage": "Sviđa vam se EatSafe? Isprobajte bilo koji plan besplatno 14 dana i skenirajte bez ograničenja.",
+    "upsellMessage": "Iskoristili ste besplatna skeniranja. Izaberite plan da skenirate bez ograničenja.",
     "viewPlans": "Pogledaj planove"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ OPOZIV OTKRIVEN ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "Provjereno u zvaničnim bazama podataka. Odsustvo opoziva ne garantuje bezbjednost proizvoda."
   },
   "detailsScreen": {
     "lotModified": "Broj serije izmijenjen",

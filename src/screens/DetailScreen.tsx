@@ -215,7 +215,8 @@ function getStatusColor(status: string, colors: any) {
     case 'recalled':
       return { color: colors.danger };
     case 'safe':
-      return { color: colors.success };
+      // "No recall found" is NEUTRAL, not green — green would imply "safe" (liability).
+      return { color: colors.textSecondary };
     case 'warning':
       return { color: colors.warning };
     default:

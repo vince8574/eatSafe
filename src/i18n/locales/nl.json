@@ -485,7 +485,7 @@
     "loading": "Quotum laden...",
     "remaining": "Resterende scans:",
     "upsellTitle": "Je hebt al je gratis scans gebruikt",
-    "upsellMessage": "Bevalt EatSafe? Probeer elk abonnement 14 dagen gratis en scan onbeperkt.",
+    "upsellMessage": "Je hebt je gratis scans gebruikt. Kies een abonnement om onbeperkt te scannen.",
     "viewPlans": "Abonnementen bekijken"
   },
   "immediateRecallAlert": {
@@ -508,7 +508,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ TERUGROEPACTIE GEDETECTEERD ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "Gecontroleerd in officiële databanken. Het ontbreken van een terugroepactie garandeert niet dat het product veilig is."
   },
   "detailsScreen": {
     "lotModified": "Lotnummer gewijzigd",

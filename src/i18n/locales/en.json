@@ -492,7 +492,7 @@
   "quota": {
     "reached": "Scan quota reached",
     "gateTitle": "Free AI scans used up",
-    "gateSubtitle": "You've used your 5 free AI scans. Enter the lot number by hand (free), or subscribe for unlimited AI scanning.",
+    "gateSubtitle": "You've used your 3 free AI scans. Enter the lot number by hand (free), or subscribe for unlimited AI scanning.",
     "gateManual": "Enter the lot number by hand",
     "gateSubscribe": "Subscribe for unlimited scans",
     "addPack": "Add a scan pack to continue.",
@@ -501,7 +501,7 @@
     "loading": "Loading quota...",
     "remaining": "Scans remaining:",
     "upsellTitle": "You've used all your free scans",
-    "upsellMessage": "Enjoying EatSafe? Try any plan free for 14 days, then scan without limits.",
+    "upsellMessage": "You've used your free scans. Choose a plan to keep scanning without limits.",
     "viewPlans": "View plans"
   },
   "immediateRecallAlert": {
@@ -524,7 +524,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ RECALL DETECTED ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "Checked in official databases. The absence of a recall does not guarantee product safety."
   },
   "detailsScreen": {
     "lotModified": "Lot number modified",

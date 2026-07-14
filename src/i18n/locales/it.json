@@ -450,7 +450,7 @@
     "loading": "Caricamento quota...",
     "remaining": "Scansioni rimanenti:",
     "upsellTitle": "Hai usato tutte le scansioni gratuite",
-    "upsellMessage": "Ti piace EatSafe? Prova qualsiasi piano gratis per 14 giorni e scansiona senza limiti.",
+    "upsellMessage": "Hai usato le tue scansioni gratuite. Scegli un piano per scansionare senza limiti.",
     "viewPlans": "Vedi i piani"
   },
   "immediateRecallAlert": {
@@ -473,7 +473,8 @@
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
     "recallDetectedWithLot": "⚠️ RICHIAMO RILEVATO ({{lot}})",
-    "ocrSource": "📋 {{source}}"
+    "ocrSource": "📋 {{source}}",
+    "productSafeDetail": "Verificato nei database ufficiali. L'assenza di un richiamo non garantisce la sicurezza del prodotto."
   },
   "detailsScreen": {
     "lotModified": "Numero di lotto modificato",
