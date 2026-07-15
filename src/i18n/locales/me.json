@@ -451,7 +451,10 @@
     "remaining": "Preostala skeniranja:",
     "upsellTitle": "Iskoristili ste sva besplatna skeniranja",
     "upsellMessage": "Iskoristili ste besplatna skeniranja. Izaberite plan da skenirate bez ograničenja.",
-    "viewPlans": "Pogledaj planove"
+    "viewPlans": "Pogledaj planove",
+    "barcodeGateTitle": "Potrošena skeniranja barkoda",
+    "barcodeGateSubtitle": "Iskoristili ste 10 skeniranja barkoda ovog mjeseca. Pretplatite se za neograničeno skeniranje.",
+    "gateSubtitle": "Iskoristili ste besplatno AI skeniranje. Unesite broj serije ručno ili se pretplatite za neograničeno AI skeniranje."
   },
   "immediateRecallAlert": {
     "lotDetected": "Broj serije otkriven:",
@@ -765,6 +768,10 @@
       "alcohol": "алкохол"
     },
     "bannerPregnancyAvoid": "Избегавати (трудноћа): {{name}}",
-    "bannerPregnancyLimit": "Ограничити (трудноћа): {{name}}"
+    "bannerPregnancyLimit": "Ограничити (трудноћа): {{name}}",
+    "lockedPremium": "Vidljivo uz pretplatu",
+    "activePerson": "Aktivan",
+    "activeHint": "Bez pretplate, po skeniranju se analizira samo jedan profil. Izaberite aktivnu osobu.",
+    "allActivePremium": "Pretplata aktivna: svi profili se analiziraju pri svakom skeniranju."
   }
 }

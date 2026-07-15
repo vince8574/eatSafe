@@ -19,9 +19,18 @@ export interface SubscriptionPlan {
 
 export type BillingPeriod = 'monthly' | 'yearly';
 
-// Scans gratuits offerts d'office à l'installation (Android et iOS),
-// avant tout abonnement ou achat de pack.
-export const FREE_SCANS_ON_INSTALL = 3;
+// Scan IA du lot offert d'office à l'installation (Android et iOS), avant tout
+// abonnement ou achat de pack. UN SEUL, à vie : c'est la ressource coûteuse
+// (~0,02-0,04 $/scan). Suivi côté Firestore (scansRemaining).
+export const FREE_SCANS_ON_INSTALL = 1;
+
+// ─── Quotas MENSUELS du palier gratuit (suivis en local, cf. useUsageStore) ───
+// Scan de code-barres : 10 par mois, réinitialisés le 1er de chaque mois.
+export const FREE_BARCODE_MONTHLY_LIMIT = 10;
+// Saisie MANUELLE du lot : 9 le 1er mois (1 scan IA + 9 manuels = 10
+// vérifications), puis 10 par mois. Compteur indépendant du scan IA.
+export const FREE_MANUAL_LOT_FIRST_MONTH = 9;
+export const FREE_MANUAL_LOT_MONTHLY = 10;
 
 export interface ScanPack {
   id: string;

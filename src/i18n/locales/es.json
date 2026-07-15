@@ -451,7 +451,10 @@
     "remaining": "Escaneos restantes:",
     "upsellTitle": "Has usado todos tus escaneos gratuitos",
     "upsellMessage": "Has usado tus escaneos gratuitos. Elige un plan para escanear sin límites.",
-    "viewPlans": "Ver planes"
+    "viewPlans": "Ver planes",
+    "barcodeGateTitle": "Escaneos de código de barras agotados",
+    "barcodeGateSubtitle": "Has usado tus 10 escaneos de código de barras del mes. Suscríbete para escanear sin límites.",
+    "gateSubtitle": "Has usado tu escaneo con IA gratuito. Introduce el número de lote a mano o suscríbete para escaneos con IA ilimitados."
   },
   "immediateRecallAlert": {
     "lotDetected": "Número de lote detectado:",
@@ -765,6 +768,10 @@
       "alcohol": "alcohol"
     },
     "bannerPregnancyAvoid": "Evitar (embarazo): {{name}}",
-    "bannerPregnancyLimit": "Limitar (embarazo): {{name}}"
+    "bannerPregnancyLimit": "Limitar (embarazo): {{name}}",
+    "lockedPremium": "Visible con una suscripción",
+    "activePerson": "Activo",
+    "activeHint": "Sin suscripción, solo se analiza un perfil por escaneo. Elige la persona activa.",
+    "allActivePremium": "Suscripción activa: todos los perfiles se analizan en cada escaneo."
   }
 }

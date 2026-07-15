@@ -492,7 +492,7 @@
   "quota": {
     "reached": "Quota de scans atteint",
     "gateTitle": "Scans IA gratuits épuisés",
-    "gateSubtitle": "Vous avez utilisé vos 3 scans IA gratuits. Saisissez le numéro de lot à la main (gratuit), ou abonnez-vous pour un scan IA illimité.",
+    "gateSubtitle": "Vous avez utilisé votre scan IA offert. Saisissez le numéro de lot à la main, ou abonnez-vous pour un scan IA illimité.",
     "gateManual": "Entrer le numéro de lot à la main",
     "gateSubscribe": "S'abonner pour des scans illimités",
     "addPack": "Ajoute un pack de scans pour continuer.",
@@ -502,7 +502,9 @@
     "remaining": "Scans restants :",
     "upsellTitle": "Vous avez utilisé tous vos scans gratuits",
     "upsellMessage": "Vous avez utilisé vos scans gratuits. Choisissez un abonnement pour scanner sans limite.",
-    "viewPlans": "Voir les abonnements"
+    "viewPlans": "Voir les abonnements",
+    "barcodeGateTitle": "Scans code-barres épuisés",
+    "barcodeGateSubtitle": "Vous avez utilisé vos 10 scans de code-barres du mois. Abonnez-vous pour scanner sans limite."
   },
   "immediateRecallAlert": {
     "lotDetected": "Numéro de lot détecté :",
@@ -778,6 +780,10 @@
       "alcohol": "alcool"
     },
     "bannerPregnancyAvoid": "À éviter (grossesse) : {{name}}",
-    "bannerPregnancyLimit": "À limiter (grossesse) : {{name}}"
+    "bannerPregnancyLimit": "À limiter (grossesse) : {{name}}",
+    "lockedPremium": "Visible avec un abonnement",
+    "activePerson": "Actif",
+    "activeHint": "Sans abonnement, un seul profil est analysé au scan. Choisissez la personne active.",
+    "allActivePremium": "Abonnement actif : tous les profils sont analysés à chaque scan."
   }
 }

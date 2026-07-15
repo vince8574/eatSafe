@@ -12,6 +12,7 @@ import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
 import { GradientBackground } from '../components/GradientBackground';
+import { useUsageQuota } from '../hooks/useUsageQuota';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
@@ -23,12 +24,19 @@ export function ManualEntryScreen() {
   const [lotNumber, setLotNumber] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // La saisie manuelle du numéro de lot est GRATUITE et ILLIMITÉE (pas d'IA) :
-  // aucun contrôle de quota, aucun décrément du compteur de scans.
+  // La saisie manuelle du lot n'utilise pas d'IA, mais elle a son PROPRE quota
+  // mensuel (9 le 1er mois puis 10/mois ; illimitée pour les abonnés) — sinon cet
+  // écran offrirait un contournement gratuit et illimité de la vérification de lot.
+  const { canManualLot, incrementManualLot } = useUsageQuota();
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
       Alert.alert(t('manualEntry.errors.lotRequired'), t('manualEntry.errors.lotRequiredMessage'));
+      return;
+    }
+
+    if (!canManualLot) {
+      router.push('/subscription' as any);
       return;
     }
 
@@ -45,6 +53,9 @@ export function ManualEntryScreen() {
         brand: finalBrand,
         lotNumber: lotNumber.trim()
       });
+
+      // Produit créé = vérification consommée (le reste est best-effort).
+      incrementManualLot();
 
       if (brand.trim()) {
         void Promise.resolve(incrementBrandUsage(brand.trim())).catch((e) =>

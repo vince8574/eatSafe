@@ -451,7 +451,10 @@
     "remaining": "Преостала скенирања:",
     "upsellTitle": "Iskoristili ste sva besplatna skeniranja",
     "upsellMessage": "Искористили сте бесплатна скенирања. Изаберите план да скенирате без ограничења.",
-    "viewPlans": "Pogledaj planove"
+    "viewPlans": "Pogledaj planove",
+    "barcodeGateTitle": "Потрошена скенирања баркода",
+    "barcodeGateSubtitle": "Искористили сте 10 скенирања баркода овог месеца. Претплатите се за неограничено скенирање.",
+    "gateSubtitle": "Искористили сте бесплатно ИИ скенирање. Унесите број серије ручно или се претплатите за неограничено ИИ скенирање."
   },
   "immediateRecallAlert": {
     "lotDetected": "Број серије откривен:",
@@ -765,6 +768,10 @@
       "alcohol": "алкохол"
     },
     "bannerPregnancyAvoid": "Избегавати (трудноћа): {{name}}",
-    "bannerPregnancyLimit": "Ограничити (трудноћа): {{name}}"
+    "bannerPregnancyLimit": "Ограничити (трудноћа): {{name}}",
+    "lockedPremium": "Видљиво уз претплату",
+    "activePerson": "Активан",
+    "activeHint": "Без претплате, по скенирању се анализира само један профил. Изаберите активну особу.",
+    "allActivePremium": "Претплата активна: сви профили се анализирају при сваком скенирању."
   }
 }

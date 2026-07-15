@@ -451,7 +451,10 @@
     "remaining": "Verbleibende Scans:",
     "upsellTitle": "Sie haben alle kostenlosen Scans verbraucht",
     "upsellMessage": "Sie haben Ihre kostenlosen Scans aufgebraucht. Wählen Sie ein Abo, um unbegrenzt zu scannen.",
-    "viewPlans": "Abos ansehen"
+    "viewPlans": "Abos ansehen",
+    "barcodeGateTitle": "Barcode-Scans aufgebraucht",
+    "barcodeGateSubtitle": "Sie haben Ihre 10 Barcode-Scans dieses Monats verbraucht. Abonnieren Sie, um unbegrenzt zu scannen.",
+    "gateSubtitle": "Sie haben Ihren kostenlosen KI-Scan verbraucht. Geben Sie die Chargennummer von Hand ein oder abonnieren Sie für unbegrenzte KI-Scans."
   },
   "immediateRecallAlert": {
     "lotDetected": "Chargennummer erkannt:",
@@ -765,6 +768,10 @@
       "alcohol": "Alkohol"
     },
     "bannerPregnancyAvoid": "Meiden (Schwangerschaft): {{name}}",
-    "bannerPregnancyLimit": "Einschränken (Schwangerschaft): {{name}}"
+    "bannerPregnancyLimit": "Einschränken (Schwangerschaft): {{name}}",
+    "lockedPremium": "Mit einem Abo sichtbar",
+    "activePerson": "Aktiv",
+    "activeHint": "Ohne Abo wird pro Scan nur ein Profil geprüft. Wählen Sie die aktive Person.",
+    "allActivePremium": "Abo aktiv: Bei jedem Scan werden alle Profile geprüft."
   }
 }

@@ -14,6 +14,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
 import { useKeepAwake } from 'expo-keep-awake';
+import { BlurView } from 'expo-blur';
+import { useUsageQuota } from '../hooks/useUsageQuota';
 
 // Hands-free voice coaching for blind users on the barcode screen: after the
 // intro, repeat rotating guidance every few seconds until a barcode is read.
@@ -30,6 +32,16 @@ export function ScanScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const accessibilityMode = usePreferencesStore((s) => s.accessibilityMode);
+  // Barcode quota: 10/month on the free tier, unlimited for subscribers.
+  // Exhausted → blurred camera preview + subscribe CTA (no product lookup).
+  const { canScanBarcode, incrementBarcode } = useUsageQuota();
+  // Read through refs inside handleBarcodeScanned: useUsageQuota returns a NEW
+  // function each render; listing it as a dependency would rebuild the callback
+  // constantly and remount the Scanner (black preview).
+  const canScanBarcodeRef = useRef(canScanBarcode);
+  canScanBarcodeRef.current = canScanBarcode;
+  const incrementBarcodeRef = useRef(incrementBarcode);
+  incrementBarcodeRef.current = incrementBarcode;
   const { speak } = useVoiceGuide();
   const [brandText, setBrandText] = useState('');
   const [productName, setProductName] = useState('');
@@ -184,6 +196,13 @@ export function ScanScreen() {
       return;
     }
 
+    // Monthly quota exhausted → subscribe screen, no product lookup. (The preview
+    // is already blurred; this guards a read fired before the gate showed up.)
+    if (!canScanBarcodeRef.current) {
+      router.push('/subscription' as any);
+      return;
+    }
+
     // A barcode was read → stop the hands-free voice coaching loop.
     barcodeHandledRef.current = true;
     stopBarcodeCoaching();
@@ -196,6 +215,9 @@ export function ScanScreen() {
 
       if (productInfo) {
         console.log('[ScanScreen] Product found:', productInfo);
+        // Only count a credit when a product was actually found: an unknown
+        // barcode gives the user nothing, so it must not cost them a scan.
+        incrementBarcodeRef.current();
         setBrandText(productInfo.brand);
         setProductName(productInfo.productName);
         setProductImage(productInfo.imageUrl || '');
@@ -263,6 +285,26 @@ export function ScanScreen() {
         onManualEntry={() => router.push('/manual-entry')}
         flashPosition="top-right"
       />
+
+      {!canScanBarcode && (
+        <BlurView intensity={45} tint="dark" style={styles.gateOverlay}>
+          <View style={styles.gateCard}>
+            <Ionicons name="lock-closed" size={44} color={colors.accent} />
+            <Text style={styles.gateTitle}>{t('quota.barcodeGateTitle')}</Text>
+            <Text style={styles.gateSubtitle}>{t('quota.barcodeGateSubtitle')}</Text>
+            <TouchableOpacity
+              style={[styles.gateBtnPrimary, { backgroundColor: colors.accent }]}
+              onPress={() => router.push('/subscription' as any)}
+              accessibilityRole="button"
+            >
+              <Ionicons name="star" size={20} color={colors.onAccent} />
+              <Text style={[styles.gateBtnPrimaryText, { color: colors.onAccent }]}>
+                {t('quota.gateSubscribe')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </BlurView>
+      )}
 
       <ScrollView style={styles.feedback} contentContainerStyle={styles.feedbackContent}>
         <View
@@ -383,7 +425,10 @@ export function ScanScreen() {
                   </Text>
                 ) : null}
 
-                <DietaryWarningBanner result={dietaryResult} />
+                <DietaryWarningBanner
+                  result={dietaryResult}
+                  onUpgrade={() => router.push('/subscription' as any)}
+                />
 
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
                   {t('scanScreen.brandDetected')}
@@ -616,5 +661,49 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     flex: 1
+  },
+  // "Barcode credits used up" gate: blurs the camera preview + subscribe CTA.
+  gateOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+    zIndex: 10
+  },
+  gateCard: {
+    width: '100%',
+    maxWidth: 360,
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    borderRadius: 24,
+    padding: 24
+  },
+  gateTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#fff',
+    textAlign: 'center'
+  },
+  gateSubtitle: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: 'rgba(255,255,255,0.85)',
+    textAlign: 'center'
+  },
+  gateBtnPrimary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginTop: 4,
+    width: '100%'
+  },
+  gateBtnPrimaryText: {
+    fontSize: 15,
+    fontWeight: '700'
   }
 });

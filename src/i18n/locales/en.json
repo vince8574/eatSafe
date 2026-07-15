@@ -492,7 +492,7 @@
   "quota": {
     "reached": "Scan quota reached",
     "gateTitle": "Free AI scans used up",
-    "gateSubtitle": "You've used your 3 free AI scans. Enter the lot number by hand (free), or subscribe for unlimited AI scanning.",
+    "gateSubtitle": "You have used your free AI scan. Enter the lot number by hand, or subscribe for unlimited AI scanning.",
     "gateManual": "Enter the lot number by hand",
     "gateSubscribe": "Subscribe for unlimited scans",
     "addPack": "Add a scan pack to continue.",
@@ -502,7 +502,9 @@
     "remaining": "Scans remaining:",
     "upsellTitle": "You've used all your free scans",
     "upsellMessage": "You've used your free scans. Choose a plan to keep scanning without limits.",
-    "viewPlans": "View plans"
+    "viewPlans": "View plans",
+    "barcodeGateTitle": "Barcode scans used up",
+    "barcodeGateSubtitle": "You have used your 10 barcode scans for this month. Subscribe to scan without limits."
   },
   "immediateRecallAlert": {
     "lotDetected": "Lot number detected:",
@@ -778,6 +780,10 @@
       "alcohol": "alcohol"
     },
     "bannerPregnancyAvoid": "Avoid (pregnancy): {{name}}",
-    "bannerPregnancyLimit": "Limit (pregnancy): {{name}}"
+    "bannerPregnancyLimit": "Limit (pregnancy): {{name}}",
+    "lockedPremium": "Visible with a subscription",
+    "activePerson": "Active",
+    "activeHint": "Without a subscription, only one profile is checked per scan. Choose the active person.",
+    "allActivePremium": "Subscription active: every profile is checked on each scan."
   }
 }

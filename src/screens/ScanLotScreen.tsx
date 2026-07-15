@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
 import { useSubscription } from '../hooks/useSubscription';
+import { useUsageQuota } from '../hooks/useUsageQuota';
 import { decrementScanCounter } from '../services/subscriptionService';
 import * as Notifications from 'expo-notifications';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
@@ -91,6 +92,9 @@ export function ScanLotScreen() {
   const country = usePreferencesStore((state) => state.country);
   const accessibilityMode = usePreferencesStore((state) => state.accessibilityMode);
   const { subscription, loading: subLoading } = useSubscription();
+  // Quota de la SAISIE MANUELLE du lot (9 le 1er mois puis 10/mois ; illimitée
+  // pour les abonnés). Distinct du quota de scan IA, qui reste sur Firestore.
+  const { canManualLot, incrementManualLot } = useUsageQuota();
   const { speak } = useVoiceGuide();
 
   const scannerRef = useRef<ScannerHandle | null>(null);
@@ -527,6 +531,14 @@ export function ScanLotScreen() {
     // Allow empty brand (user skipped brand step) - will be set to "Unknown"
     const finalBrand = brand && brand.trim() ? brand.trim() : t('common.unknown');
 
+    // Chemin MANUEL (aucune lecture IA) → consomme un crédit de lot manuel.
+    // Épuisé → écran d'abonnement. (Le chemin IA est bridé en amont par aiAllowed.)
+    if (!aiUsedThisScanRef.current && !canManualLot) {
+      setConfirmModalVisible(false);
+      router.push('/subscription' as any);
+      return;
+    }
+
     setIsFinalizing(true);
 
     try {
@@ -628,12 +640,14 @@ export function ScanLotScreen() {
         });
       }
 
-      // Décrément du quota : UNIQUEMENT si une lecture IA a servi pour ce scan
-      // (la saisie manuelle est gratuite et illimitée). Non bloquant (compteur local).
+      // Décompte sur le BON compteur : scan IA (Firestore) ou lot manuel (local).
+      // Non bloquant.
       if (aiUsedThisScanRef.current) {
         void decrementScanCounter().catch((e) =>
           console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
         );
+      } else {
+        incrementManualLot();
       }
 
       resetFlow();
@@ -658,6 +672,8 @@ export function ScanLotScreen() {
     productName,
     productImage,
     decrementScanCounter,
+    canManualLot,
+    incrementManualLot,
     resetFlow,
     router,
     t,
@@ -706,11 +722,17 @@ export function ScanLotScreen() {
   }, [router]);
 
   const handleManualEntry = useCallback(() => {
-    aiUsedThisScanRef.current = false; // saisie manuelle → aucun scan IA consommé
+    // Aucun scan IA consommé, mais un crédit de LOT MANUEL. Crédits épuisés →
+    // écran d'abonnement, sans ouvrir la saisie.
+    if (!canManualLot) {
+      router.push('/subscription' as any);
+      return;
+    }
+    aiUsedThisScanRef.current = false;
     setEditedLot('');
     setIsEditingLot(true);
     setConfirmModalVisible(true);
-  }, []);
+  }, [canManualLot, router]);
 
   useFocusEffect(
     useCallback(() => {
