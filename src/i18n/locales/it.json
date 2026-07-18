@@ -773,5 +773,14 @@
     "activePerson": "Attivo",
     "activeHint": "Senza abbonamento viene analizzato un solo profilo per scansione. Scegli la persona attiva.",
     "allActivePremium": "Abbonamento attivo: tutti i profili vengono analizzati a ogni scansione."
+  },
+  "consent": {
+    "title": "I tuoi dati sanitari",
+    "intro": "Per avvisarti durante la scansione, l’app deve trattare dati sanitari (allergeni, gravidanza, diete). Queste informazioni sono facoltative e servono solo a confrontare il prodotto con il tuo profilo, sul tuo dispositivo.",
+    "purpose": "Non vengono vendute, condivise né usate a fini pubblicitari.",
+    "rights": "Puoi revocare il consenso in qualsiasi momento eliminando i tuoi profili.",
+    "readPolicy": "Leggi l’informativa sulla privacy",
+    "accept": "Acconsento al trattamento dei miei dati sanitari",
+    "decline": "Più tardi"
   }
 }

@@ -773,5 +773,14 @@
     "activePerson": "Actief",
     "activeHint": "Zonder abonnement wordt er per scan maar één profiel gecontroleerd. Kies de actieve persoon.",
     "allActivePremium": "Abonnement actief: bij elke scan worden alle profielen gecontroleerd."
+  },
+  "consent": {
+    "title": "Je gezondheidsgegevens",
+    "intro": "Om je bij het scannen te waarschuwen, moet de app gezondheidsgegevens verwerken (allergenen, zwangerschap, diëten). Deze informatie is optioneel en wordt alleen gebruikt om het product met je profiel te vergelijken, op je toestel.",
+    "purpose": "Ze worden nooit verkocht, gedeeld of voor reclame gebruikt.",
+    "rights": "Je kunt je toestemming altijd intrekken door je profielen te verwijderen.",
+    "readPolicy": "Lees het privacybeleid",
+    "accept": "Ik geef toestemming voor de verwerking van mijn gezondheidsgegevens",
+    "decline": "Later"
   }
 }

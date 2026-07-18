@@ -773,5 +773,14 @@
     "activePerson": "Aktivan",
     "activeHint": "Bez pretplate, po skeniranju se analizira samo jedan profil. Izaberite aktivnu osobu.",
     "allActivePremium": "Pretplata aktivna: svi profili se analiziraju pri svakom skeniranju."
+  },
+  "consent": {
+    "title": "Vaši zdravstveni podaci",
+    "intro": "Da bi vas upozorila pri skeniranju, aplikacija mora obrađivati zdravstvene podatke (alergene, trudnoću, dijete). Ovi podaci su neobavezni i koriste se samo za poređenje proizvoda sa vašim profilom, na vašem uređaju.",
+    "purpose": "Nikada se ne prodaju, ne dijele niti koriste za oglašavanje.",
+    "rights": "Saglasnost možete povući u bilo kom trenutku brisanjem svojih profila.",
+    "readPolicy": "Pročitajte politiku privatnosti",
+    "accept": "Pristajem na obradu svojih zdravstvenih podataka",
+    "decline": "Kasnije"
   }
 }

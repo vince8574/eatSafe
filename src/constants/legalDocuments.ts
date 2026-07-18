@@ -55,7 +55,9 @@ const LEGAL_HTML: LegalContent = {
       <h3>International transfers</h3>
       <p>Some providers may process data outside your country. We rely on appropriate safeguards when required.</p>
       <h3>Changes</h3>
-      <p>We may update this policy and will update the date above when we do.</p>`,
+      <p>We may update this policy and will update the date above when we do.</p>
+      <h3>Health data (My Diet)</h3>
+      <p>The optional “My Diet” feature lets you enter information that may be health-related (allergens, pregnancy status, diets, nutritional thresholds). It is provided voluntarily and used only to compare a scanned product against your profile on your device. We ask for your explicit consent before you enter it; you can withdraw consent at any time by deleting your profiles, which erases the data. It is never sold, shared, or used for advertising. When synced for a signed-in account, it is stored in the European Union (Google Firebase, eur3 multi-region).</p>`,
     terms: `      <h1>Terms of Service - Numeline</h1>
       <p><strong>Last updated: January 14, 2026</strong></p>
       <p>These terms govern your use of Numeline, a mobile app operated by Olympe et odin (SIRET 91457466000025).</p>
@@ -89,7 +91,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Publisher</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
-      <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
+      <p>Google Firebase (Google Ireland Limited), Gordon House, Barrow Street, Dublin 4, Ireland. Data stored in the European Union (eur3 multi-region: Belgium and the Netherlands).</p>
       <h3>Intellectual property</h3>
       <p>Brand, logo, and content are protected. Reuse requires prior authorization.</p>
       <h3>Data protection</h3>
@@ -154,7 +156,9 @@ const LEGAL_HTML: LegalContent = {
       <h3>Transferts internationaux</h3>
       <p>Certains fournisseurs peuvent traiter des donnees hors de votre pays. Nous utilisons des garanties appropriees si necessaire.</p>
       <h3>Modifications</h3>
-      <p>Nous pouvons mettre a jour cette politique et modifier la date ci-dessus.</p>`,
+      <p>Nous pouvons mettre a jour cette politique et modifier la date ci-dessus.</p>
+      <h3>Données de santé (Mon régime)</h3>
+      <p>La fonctionnalité facultative « Mon régime » vous permet de saisir des informations pouvant relever de la santé (allergènes, grossesse, régimes, seuils nutritionnels). Elles sont fournies volontairement et servent uniquement à comparer un produit scanné à votre profil, sur votre appareil. Nous recueillons votre consentement explicite avant toute saisie ; vous pouvez le retirer à tout moment en supprimant vos profils, ce qui efface les données. Elles ne sont jamais revendues, partagées ni utilisées à des fins publicitaires. En cas de synchronisation pour un compte connecté, elles sont stockées dans l’Union européenne (Google Firebase, multi-région eur3).</p>`,
     terms: `      <h1>Conditions d'utilisation - Numeline</h1>
       <p><strong>Derniere mise a jour : 14 janvier 2026</strong></p>
       <p>Ces conditions regissent l'utilisation de Numeline, une application mobile exploitee par Olympe et odin (SIRET 91457466000025).</p>
@@ -188,7 +192,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Editeur</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hebergement</h3>
-      <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
+      <p>Google Firebase (Google Ireland Limited), Gordon House, Barrow Street, Dublin 4, Ireland. Data stored in the European Union (eur3 multi-region: Belgium and the Netherlands).</p>
       <h3>Propriete intellectuelle</h3>
       <p>Marque, logo et contenus proteges. Reutilisation soumise a autorisation.</p>
       <h3>Protection des donnees</h3>
@@ -253,7 +257,9 @@ const LEGAL_HTML: LegalContent = {
       <h3>Transferencias internacionales</h3>
       <p>Algunos proveedores pueden procesar datos fuera de su pais. Usamos salvaguardas apropiadas cuando es necesario.</p>
       <h3>Cambios</h3>
-      <p>Podemos actualizar esta politica y cambiar la fecha anterior.</p>`,
+      <p>Podemos actualizar esta politica y cambiar la fecha anterior.</p>
+      <h3>Datos de salud (Mi dieta)</h3>
+      <p>La función opcional «Mi dieta» le permite introducir información que puede ser de salud (alérgenos, embarazo, dietas, umbrales nutricionales). Se facilita de forma voluntaria y solo se usa para comparar un producto escaneado con su perfil, en su dispositivo. Pedimos su consentimiento explícito antes de introducirla; puede retirarlo en cualquier momento eliminando sus perfiles, lo que borra los datos. Nunca se vende, comparte ni usa con fines publicitarios. Cuando se sincroniza para una cuenta conectada, se almacena en la Unión Europea (Google Firebase, multirregión eur3).</p>`,
     terms: `      <h1>Terminos de servicio - Numeline</h1>
       <p><strong>Ultima actualizacion: 14 de enero de 2026</strong></p>
       <p>Estos terminos regulan el uso de Numeline, una aplicacion movil operada por Olympe et odin (SIRET 91457466000025).</p>
@@ -287,7 +293,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Editor</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Alojamiento</h3>
-      <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
+      <p>Google Firebase (Google Ireland Limited), Gordon House, Barrow Street, Dublin 4, Ireland. Data stored in the European Union (eur3 multi-region: Belgium and the Netherlands).</p>
       <h3>Propiedad intelectual</h3>
       <p>Marca, logotipo y contenidos protegidos. Requiere autorizacion para reutilizar.</p>
       <h3>Proteccion de datos</h3>
@@ -351,7 +357,9 @@ const LEGAL_HTML: LegalContent = {
       <h3>Trasferimenti internazionali</h3>
       <p>Alcuni fornitori possono trattare dati fuori dal tuo paese. Usiamo garanzie appropriate quando necessario.</p>
       <h3>Modifiche</h3>
-      <p>Possiamo aggiornare questa informativa e modificare la data sopra.</p>`,
+      <p>Possiamo aggiornare questa informativa e modificare la data sopra.</p>
+      <h3>Dati sanitari (La mia dieta)</h3>
+      <p>La funzione facoltativa «La mia dieta» consente di inserire informazioni che possono riguardare la salute (allergeni, gravidanza, diete, soglie nutrizionali). Sono fornite volontariamente e usate solo per confrontare un prodotto scansionato con il tuo profilo, sul tuo dispositivo. Chiediamo il tuo consenso esplicito prima dell’inserimento; puoi revocarlo in qualsiasi momento eliminando i tuoi profili, il che cancella i dati. Non vengono mai vendute, condivise né usate a fini pubblicitari. Se sincronizzate per un account connesso, sono conservate nell’Unione Europea (Google Firebase, multi-regione eur3).</p>`,
     terms: `      <h1>Termini di servizio - Numeline</h1>
       <p><strong>Ultimo aggiornamento: 14 gennaio 2026</strong></p>
       <p>Questi termini regolano l'uso di Numeline, una app mobile gestita da Olympe et odin (SIRET 91457466000025).</p>
@@ -385,7 +393,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Editore</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
-      <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
+      <p>Google Firebase (Google Ireland Limited), Gordon House, Barrow Street, Dublin 4, Ireland. Data stored in the European Union (eur3 multi-region: Belgium and the Netherlands).</p>
       <h3>Proprieta intellettuale</h3>
       <p>Marchio, logo e contenuti protetti. Riutilizzo soggetto ad autorizzazione.</p>
       <h3>Protezione dei dati</h3>
@@ -449,7 +457,9 @@ const LEGAL_HTML: LegalContent = {
       <h3>Transferencias internacionais</h3>
       <p>Alguns fornecedores podem processar dados fora do seu pais. Usamos salvaguardas apropriadas quando necessario.</p>
       <h3>Mudancas</h3>
-      <p>Podemos atualizar esta politica e alterar a data acima.</p>`,
+      <p>Podemos atualizar esta politica e alterar a data acima.</p>
+      <h3>Dados de saúde (A minha dieta)</h3>
+      <p>A funcionalidade opcional “A minha dieta” permite introduzir informações que podem ser de saúde (alergénios, gravidez, dietas, limiares nutricionais). São fornecidas voluntariamente e usadas apenas para comparar um produto lido com o seu perfil, no seu dispositivo. Pedimos o seu consentimento explícito antes da introdução; pode retirá-lo a qualquer momento eliminando os seus perfis, o que apaga os dados. Nunca são vendidas, partilhadas nem usadas para publicidade. Quando sincronizadas para uma conta com sessão iniciada, são armazenadas na União Europeia (Google Firebase, multirregião eur3).</p>`,
     terms: `      <h1>Termos de servico - Numeline</h1>
       <p><strong>Ultima atualizacao: 14 de janeiro de 2026</strong></p>
       <p>Estes termos regem o uso do Numeline, um aplicativo movel operado por Olympe et odin (SIRET 91457466000025).</p>
@@ -483,7 +493,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Editor</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hospedagem</h3>
-      <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
+      <p>Google Firebase (Google Ireland Limited), Gordon House, Barrow Street, Dublin 4, Ireland. Data stored in the European Union (eur3 multi-region: Belgium and the Netherlands).</p>
       <h3>Propriedade intelectual</h3>
       <p>Marca, logotipo e conteudos protegidos. Reutilizacao requer autorizacao.</p>
       <h3>Protecao de dados</h3>
@@ -547,7 +557,9 @@ const LEGAL_HTML: LegalContent = {
       <h3>Internationale Uebermittlungen</h3>
       <p>Einige Anbieter koennen Daten ausserhalb Ihres Landes verarbeiten. Wir verwenden geeignete Schutzmassnahmen, wenn erforderlich.</p>
       <h3>Aenderungen</h3>
-      <p>Wir koennen diese Richtlinie aktualisieren und das Datum oben anpassen.</p>`,
+      <p>Wir koennen diese Richtlinie aktualisieren und das Datum oben anpassen.</p>
+      <h3>Gesundheitsdaten (Meine Ernährung)</h3>
+      <p>Die optionale Funktion „Meine Ernährung“ erlaubt die Eingabe von Angaben, die Gesundheitsdaten sein können (Allergene, Schwangerschaft, Diäten, Nährwertgrenzen). Sie werden freiwillig gemacht und nur verwendet, um ein gescanntes Produkt auf Ihrem Gerät mit Ihrem Profil abzugleichen. Wir holen vor der Eingabe Ihre ausdrückliche Einwilligung ein; Sie können sie jederzeit durch Löschen Ihrer Profile widerrufen, wodurch die Daten gelöscht werden. Sie werden niemals verkauft, geteilt oder für Werbung genutzt. Bei Synchronisierung für ein angemeldetes Konto werden sie in der Europäischen Union gespeichert (Google Firebase, Multi-Region eur3).</p>`,
     terms: `      <h1>Nutzungsbedingungen - Numeline</h1>
       <p><strong>Letzte Aktualisierung: 14. Januar 2026</strong></p>
       <p>Diese Bedingungen regeln die Nutzung von Numeline, einer mobilen App von Olympe et odin (SIRET 91457466000025).</p>
@@ -581,7 +593,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Herausgeber</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
-      <p>Google Firebase, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA</p>
+      <p>Google Firebase (Google Ireland Limited), Gordon House, Barrow Street, Dublin 4, Ireland. Data stored in the European Union (eur3 multi-region: Belgium and the Netherlands).</p>
       <h3>Urheberrecht</h3>
       <p>Marke, Logo und Inhalte sind geschuetzt. Wiederverwendung erfordert Genehmigung.</p>
       <h3>Datenschutz</h3>

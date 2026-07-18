@@ -773,5 +773,14 @@
     "activePerson": "Aktiv",
     "activeHint": "Pa abonim, analizohet vetëm një profil për skanim. Zgjidhni personin aktiv.",
     "allActivePremium": "Abonimi aktiv: të gjitha profilet analizohen në çdo skanim."
+  },
+  "consent": {
+    "title": "Të dhënat tuaja shëndetësore",
+    "intro": "Për t’ju paralajmëruar gjatë skanimit, aplikacioni duhet të përpunojë të dhëna shëndetësore (alergjenë, shtatzëni, dieta). Këto të dhëna janë opsionale dhe përdoren vetëm për të krahasuar produktin me profilin tuaj, në pajisjen tuaj.",
+    "purpose": "Nuk shiten, nuk ndahen dhe nuk përdoren për reklama.",
+    "rights": "Mund ta tërhiqni pëlqimin në çdo kohë duke fshirë profilet tuaja.",
+    "readPolicy": "Lexo politikën e privatësisë",
+    "accept": "Pranoj përpunimin e të dhënave të mia shëndetësore",
+    "decline": "Më vonë"
   }
 }
