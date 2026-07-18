@@ -12,8 +12,14 @@ import type { ProductInfo } from '../services/productLookupService';
 // (debounced) on every change for the signed-in user, and provides
 // `checkProductForCurrentProfile` (product vs profile detection, zero AI cost).
 
+// Inclut la preuve de consentement : accepter le consentement (sans toucher aux
+// profils) doit AUSSI déclencher une sauvegarde Firestore (accountability serveur).
 function serialize(s: ReturnType<typeof useDietaryProfileStore.getState>): string {
-  return JSON.stringify(s.people);
+  return JSON.stringify({
+    people: s.people,
+    healthConsentAt: s.healthConsentAt,
+    healthConsentVersion: s.healthConsentVersion
+  });
 }
 
 export function useDietaryProfile() {

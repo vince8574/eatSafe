@@ -1,4 +1,10 @@
-﻿type LegalDocType = 'privacy' | 'terms' | 'notice' | 'disclaimer';
+﻿// Version de la politique de confidentialité effective. Enregistrée avec le
+// consentement aux données de santé (art. 9) : on sait ainsi à QUELLE version un
+// utilisateur a consenti. À incrémenter à chaque révision matérielle de la
+// section « Health data ».
+export const PRIVACY_POLICY_VERSION = '2026-07-18';
+
+type LegalDocType = 'privacy' | 'terms' | 'notice' | 'disclaimer';
 
 type LegalLocale = 'en' | 'fr' | 'es' | 'it' | 'pt' | 'de';
 
@@ -7,7 +13,7 @@ type LegalContent = Record<LegalLocale, Record<LegalDocType, string>>;
 const LEGAL_HTML: LegalContent = {
   en: {
     privacy: `      <h1>Privacy Policy - Numeline</h1>
-      <p><strong>Last updated: January 14, 2026</strong></p>
+      <p><strong>Last updated: July 18, 2026</strong></p>
       <p>Numeline is a mobile app operated by Olympe et odin (SIRET 91457466000025). This policy explains how we collect and use information.</p>
       <h3>Data controller</h3>
       <p>Olympe et odin, France. Contact: contact@numeline.com</p>
@@ -59,7 +65,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Health data (My Diet)</h3>
       <p>The optional “My Diet” feature lets you enter information that may be health-related (allergens, pregnancy status, diets, nutritional thresholds). It is provided voluntarily and used only to compare a scanned product against your profile on your device. We ask for your explicit consent before you enter it; you can withdraw consent at any time by deleting your profiles, which erases the data. It is never sold, shared, or used for advertising. When synced for a signed-in account, it is stored in the European Union (Google Firebase, eur3 multi-region).</p>`,
     terms: `      <h1>Terms of Service - Numeline</h1>
-      <p><strong>Last updated: January 14, 2026</strong></p>
+      <p><strong>Last updated: July 18, 2026</strong></p>
       <p>These terms govern your use of Numeline, a mobile app operated by Olympe et odin (SIRET 91457466000025).</p>
       <h3>Service</h3>
       <ul>
@@ -87,7 +93,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Contact</h3>
       <p>Contact: contact@numeline.com</p>`,
     notice: `      <h1>Legal Notice - Numeline</h1>
-      <p><strong>Last updated: January 14, 2026</strong></p>
+      <p><strong>Last updated: July 18, 2026</strong></p>
       <h3>Publisher</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
@@ -108,7 +114,7 @@ const LEGAL_HTML: LegalContent = {
   },
   fr: {
     privacy: `      <h1>Politique de confidentialite - Numeline</h1>
-      <p><strong>Derniere mise a jour : 14 janvier 2026</strong></p>
+      <p><strong>Derniere mise a jour : 18 juillet 2026</strong></p>
       <p>Numeline est une application mobile exploitee par Olympe et odin (SIRET 91457466000025). Cette politique explique comment nous collectons et utilisons les informations.</p>
       <h3>Responsable du traitement</h3>
       <p>Olympe et odin, France. Contact : contact@numeline.com</p>
@@ -160,7 +166,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Données de santé (Mon régime)</h3>
       <p>La fonctionnalité facultative « Mon régime » vous permet de saisir des informations pouvant relever de la santé (allergènes, grossesse, régimes, seuils nutritionnels). Elles sont fournies volontairement et servent uniquement à comparer un produit scanné à votre profil, sur votre appareil. Nous recueillons votre consentement explicite avant toute saisie ; vous pouvez le retirer à tout moment en supprimant vos profils, ce qui efface les données. Elles ne sont jamais revendues, partagées ni utilisées à des fins publicitaires. En cas de synchronisation pour un compte connecté, elles sont stockées dans l’Union européenne (Google Firebase, multi-région eur3).</p>`,
     terms: `      <h1>Conditions d'utilisation - Numeline</h1>
-      <p><strong>Derniere mise a jour : 14 janvier 2026</strong></p>
+      <p><strong>Derniere mise a jour : 18 juillet 2026</strong></p>
       <p>Ces conditions regissent l'utilisation de Numeline, une application mobile exploitee par Olympe et odin (SIRET 91457466000025).</p>
       <h3>Service</h3>
       <ul>
@@ -188,7 +194,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Contact</h3>
       <p>Contact : contact@numeline.com</p>`,
     notice: `      <h1>Mentions legales - Numeline</h1>
-      <p><strong>Derniere mise a jour : 14 janvier 2026</strong></p>
+      <p><strong>Derniere mise a jour : 18 juillet 2026</strong></p>
       <h3>Editeur</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hebergement</h3>
@@ -209,7 +215,7 @@ const LEGAL_HTML: LegalContent = {
   },
   es: {
     privacy: `      <h1>Politica de privacidad - Numeline</h1>
-      <p><strong>Ultima actualizacion: 14 de enero de 2026</strong></p>
+      <p><strong>Ultima actualizacion: 18 de julio de 2026</strong></p>
       <p>Numeline es una aplicacion movil operada por Olympe et odin (SIRET 91457466000025). Esta politica explica como recopilamos y usamos la informacion.</p>
       <h3>Responsable</h3>
       <p>Olympe et odin, Francia. Contacto: contact@numeline.com</p>
@@ -261,7 +267,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Datos de salud (Mi dieta)</h3>
       <p>La función opcional «Mi dieta» le permite introducir información que puede ser de salud (alérgenos, embarazo, dietas, umbrales nutricionales). Se facilita de forma voluntaria y solo se usa para comparar un producto escaneado con su perfil, en su dispositivo. Pedimos su consentimiento explícito antes de introducirla; puede retirarlo en cualquier momento eliminando sus perfiles, lo que borra los datos. Nunca se vende, comparte ni usa con fines publicitarios. Cuando se sincroniza para una cuenta conectada, se almacena en la Unión Europea (Google Firebase, multirregión eur3).</p>`,
     terms: `      <h1>Terminos de servicio - Numeline</h1>
-      <p><strong>Ultima actualizacion: 14 de enero de 2026</strong></p>
+      <p><strong>Ultima actualizacion: 18 de julio de 2026</strong></p>
       <p>Estos terminos regulan el uso de Numeline, una aplicacion movil operada por Olympe et odin (SIRET 91457466000025).</p>
       <h3>Servicio</h3>
       <ul>
@@ -289,7 +295,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Contacto</h3>
       <p>Contacto: contact@numeline.com</p>`,
     notice: `      <h1>Aviso legal - Numeline</h1>
-      <p><strong>Ultima actualizacion: 14 de enero de 2026</strong></p>
+      <p><strong>Ultima actualizacion: 18 de julio de 2026</strong></p>
       <h3>Editor</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Alojamiento</h3>
@@ -309,7 +315,7 @@ const LEGAL_HTML: LegalContent = {
   },
   it: {
     privacy: `      <h1>Informativa sulla privacy - Numeline</h1>
-      <p><strong>Ultimo aggiornamento: 14 gennaio 2026</strong></p>
+      <p><strong>Ultimo aggiornamento: 18 luglio 2026</strong></p>
       <p>Numeline e una app mobile gestita da Olympe et odin (SIRET 91457466000025). Questa informativa spiega come raccogliamo e usiamo le informazioni.</p>
       <h3>Titolare del trattamento</h3>
       <p>Olympe et odin, Francia. Contatto: contact@numeline.com</p>
@@ -361,7 +367,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Dati sanitari (La mia dieta)</h3>
       <p>La funzione facoltativa «La mia dieta» consente di inserire informazioni che possono riguardare la salute (allergeni, gravidanza, diete, soglie nutrizionali). Sono fornite volontariamente e usate solo per confrontare un prodotto scansionato con il tuo profilo, sul tuo dispositivo. Chiediamo il tuo consenso esplicito prima dell’inserimento; puoi revocarlo in qualsiasi momento eliminando i tuoi profili, il che cancella i dati. Non vengono mai vendute, condivise né usate a fini pubblicitari. Se sincronizzate per un account connesso, sono conservate nell’Unione Europea (Google Firebase, multi-regione eur3).</p>`,
     terms: `      <h1>Termini di servizio - Numeline</h1>
-      <p><strong>Ultimo aggiornamento: 14 gennaio 2026</strong></p>
+      <p><strong>Ultimo aggiornamento: 18 luglio 2026</strong></p>
       <p>Questi termini regolano l'uso di Numeline, una app mobile gestita da Olympe et odin (SIRET 91457466000025).</p>
       <h3>Servizio</h3>
       <ul>
@@ -389,7 +395,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Contatto</h3>
       <p>Contatto: contact@numeline.com</p>`,
     notice: `      <h1>Note legali - Numeline</h1>
-      <p><strong>Ultimo aggiornamento: 14 gennaio 2026</strong></p>
+      <p><strong>Ultimo aggiornamento: 18 luglio 2026</strong></p>
       <h3>Editore</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hosting</h3>
@@ -409,7 +415,7 @@ const LEGAL_HTML: LegalContent = {
   },
   pt: {
     privacy: `      <h1>Politica de privacidade - Numeline</h1>
-      <p><strong>Ultima atualizacao: 14 de janeiro de 2026</strong></p>
+      <p><strong>Ultima atualizacao: 18 de julho de 2026</strong></p>
       <p>Numeline e um aplicativo movel operado por Olympe et odin (SIRET 91457466000025). Esta politica explica como coletamos e usamos informacoes.</p>
       <h3>Responsavel pelo tratamento</h3>
       <p>Olympe et odin, Franca. Contato: contact@numeline.com</p>
@@ -461,7 +467,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Dados de saúde (A minha dieta)</h3>
       <p>A funcionalidade opcional “A minha dieta” permite introduzir informações que podem ser de saúde (alergénios, gravidez, dietas, limiares nutricionais). São fornecidas voluntariamente e usadas apenas para comparar um produto lido com o seu perfil, no seu dispositivo. Pedimos o seu consentimento explícito antes da introdução; pode retirá-lo a qualquer momento eliminando os seus perfis, o que apaga os dados. Nunca são vendidas, partilhadas nem usadas para publicidade. Quando sincronizadas para uma conta com sessão iniciada, são armazenadas na União Europeia (Google Firebase, multirregião eur3).</p>`,
     terms: `      <h1>Termos de servico - Numeline</h1>
-      <p><strong>Ultima atualizacao: 14 de janeiro de 2026</strong></p>
+      <p><strong>Ultima atualizacao: 18 de julho de 2026</strong></p>
       <p>Estes termos regem o uso do Numeline, um aplicativo movel operado por Olympe et odin (SIRET 91457466000025).</p>
       <h3>Servico</h3>
       <ul>
@@ -489,7 +495,7 @@ const LEGAL_HTML: LegalContent = {
       <h3>Contato</h3>
       <p>Contato: contact@numeline.com</p>`,
     notice: `      <h1>Aviso legal - Numeline</h1>
-      <p><strong>Ultima atualizacao: 14 de janeiro de 2026</strong></p>
+      <p><strong>Ultima atualizacao: 18 de julho de 2026</strong></p>
       <h3>Editor</h3>
       <p>Olympe et odin (SIRET 91457466000025) - contact@numeline.com</p>
       <h3>Hospedagem</h3>
