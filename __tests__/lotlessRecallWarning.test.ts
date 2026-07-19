@@ -4,6 +4,7 @@
 // un statut 'warning' quand la marque ET le type de produit (nom résolu par le
 // code-barres via Open Food Facts) recoupent le rappel.
 import { recallWarnsProduct, getRecallStatus } from '../src/utils/lotMatcher';
+import { extractPressBrand } from '../src/services/apiService';
 import { RecallRecord, ScannedProduct } from '../src/types';
 
 const taylorRecall: RecallRecord = {
@@ -124,6 +125,55 @@ describe('cas réel FDA juillet 2026 — Taylor Fresh Foods / iceberg / Cyclospo
   it("un produit Taylor Farms SANS rapport (salsa) n'est pas flagué", () => {
     const salsa = { brand: 'Taylor Farms', productName: 'Chunky Salsa' };
     expect(recallWarnsProduct(salsa, fdaJuly2026)).toBe(false);
+  });
+});
+
+// Les COMMUNIQUÉS de presse FDA (proxy fdaPress) paraissent des jours avant
+// l'ingestion openFDA. Titres réels du flux du 17 juillet 2026.
+describe('communiqués de presse FDA (source fdaPress)', () => {
+  it('extrait la marque des titres réels du flux', () => {
+    expect(
+      extractPressBrand('Taylor Fresh Foods Recalls Iceberg Lettuce from Central Mexico Because of Possible Health Risk')
+    ).toBe('Taylor Fresh Foods');
+    expect(
+      extractPressBrand('Khong Guan Corporation Issues Recall of Glutinous Rice Balls With Black Sesame Filling Due to Undeclared Peanuts')
+    ).toBe('Khong Guan Corporation');
+    expect(
+      extractPressBrand('MorningStar Farms Voluntarily Recalling Two Varieties Due to Possible Plastic Presence')
+    ).toBe('MorningStar Farms');
+    expect(extractPressBrand('NARA ORGANICS RECALLS ALL LOTS OF NARA INFANT FORMULA')).toBe('NARA ORGANICS');
+  });
+
+  it("titre SANS marque en tête ('Voluntary Recall of…') → pas de marque, donc jamais de warning", () => {
+    expect(
+      extractPressBrand('Voluntary Recall of Two Lots of PEDIGREE Can High Protein Wet Dog Food')
+    ).toBe('');
+  });
+
+  it('un communiqué mappé (sans lots) déclenche le warning bout-en-bout', () => {
+    const title =
+      'Taylor Fresh Foods Recalls Iceberg Lettuce from Central Mexico Because of Possible Health Risk';
+    const pressRecord: RecallRecord = {
+      id: 'fda-press-taylor-fresh-foods-recalls-iceberg-lettuce',
+      title,
+      description:
+        'Taylor Farms de Mexico of Guanajuato, Mexico is voluntarily removing all iceberg lettuce sourced from central Mexico from the U.S. market, because it has the potential to be contaminated with Cyclospora.',
+      lotNumbers: [], // toujours vide pour un communiqué
+      brand: extractPressBrand(title),
+      country: 'US',
+      publishedAt: 'Fri, 17 Jul 2026 02:45:00 EDT'
+    };
+    const scanned: ScannedProduct = {
+      id: 'p-press',
+      brand: 'Taylor Farms',
+      lotNumber: 'ABC12345',
+      productName: 'Shredded Iceberg Lettuce',
+      scannedAt: Date.now(),
+      recallStatus: 'unknown'
+    };
+    const result = getRecallStatus(scanned, [pressRecord]);
+    expect(result.status).toBe('warning');
+    expect(result.recallReference).toBe('fda-press-taylor-fresh-foods-recalls-iceberg-lettuce');
   });
 });
 

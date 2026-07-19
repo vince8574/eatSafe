@@ -12,6 +12,7 @@ const FDA_ENDPOINT = 'https://api.fda.gov/food/enforcement.json?limit=1000&sort=
 // with a Safari-iOS TLS handshake) that Akamai lets through, with a 30 min cache.
 // This makes USDA recalls work reliably on EVERY device (incl. Android).
 const USDA_ENDPOINT = 'https://us-central1-eatsok-6d19f.cloudfunctions.net/usdaRecalls';
+const FDA_PRESS_ENDPOINT = 'https://us-central1-eatsok-6d19f.cloudfunctions.net/fdaPress';
 const USDA_HEADERS = {
   Accept: 'application/json'
 };
@@ -225,6 +226,67 @@ export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
 }
 
 /**
+ * Communiqués de presse FDA (flux "Recalls, Market Withdrawals & Safety
+ * Alerts", via le proxy Cloud Function fdaPress — fda.gov bloque les clients
+ * non-navigateur). Les communiqués paraissent des JOURS avant leur ingestion
+ * dans openFDA enforcement (cas réel : Taylor Fresh Foods iceberg/Cyclospora,
+ * juil. 2026) et n'ont PAS de numéros de lot structurés → lotNumbers reste
+ * VIDE : ces enregistrements n'alimentent QUE le chemin 'warning' ambre
+ * (marque + type de produit recoupent), jamais un "RAPPELÉ" rouge.
+ */
+
+// Marque extraite du titre du communiqué : texte avant le verbe ("Taylor Fresh
+// Foods Recalls Iceberg Lettuce…" → "Taylor Fresh Foods"). Titres sans marque
+// en tête ("Voluntary Recall of…") → '' (l'enregistrement ne matchera rien).
+export function extractPressBrand(title: string): string {
+  const m = title.match(
+    /^(.{2,70}?)\s+(?:Recalls?|Issues?|Voluntarily|Initiates?|Expands?|Announces?|Withdraws?|Alerts?)\s/i
+  );
+  if (!m) return '';
+  const brand = m[1].trim().replace(/[,.]$/, '');
+  // Préambules sans marque ("Voluntary Recall of…", "Urgent Allergy Alert…").
+  if (/^(voluntary|urgent|important|allergy|public|nationwide|update[ds]?)$/i.test(brand)) return '';
+  return brand;
+}
+
+export async function fetchFdaPressRecalls(): Promise<RecallRecord[]> {
+  const response = await fetch(FDA_PRESS_ENDPOINT);
+  if (!response.ok) {
+    console.warn(`[FDA Press] proxy returned status ${response.status}`);
+    return [];
+  }
+
+  const items = await response.json();
+  if (!Array.isArray(items)) return [];
+
+  const results: RecallRecord[] = [];
+  for (const item of items) {
+    const title = typeof item.title === 'string' ? item.title.trim() : '';
+    if (!title) continue;
+    const brand = extractPressBrand(title);
+    // Id STABLE entre les fetchs (le lien Google News varie) : slug du titre.
+    const id =
+      'fda-press-' +
+      title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
+
+    results.push({
+      id,
+      title,
+      description: typeof item.description === 'string' ? item.description : undefined,
+      lotNumbers: [], // jamais de lots structurés dans un communiqué → warning only
+      brand: brand || undefined,
+      country: 'US' as const,
+      publishedAt: typeof item.pubDate === 'string' ? item.pubDate : '',
+      link: typeof item.link === 'string' ? item.link : undefined,
+      imageUrl: undefined
+    });
+  }
+
+  console.log(`[FDA Press] ${results.length} press releases fetched`);
+  return results;
+}
+
+/**
  * Récupère tous les rappels américains (FDA + USDA combinés)
  */
 export async function fetchUsRecalls(): Promise<RecallRecord[]> {
@@ -236,9 +298,10 @@ export async function fetchUsRecalls(): Promise<RecallRecord[]> {
   }
 
   console.log('[US Recalls] Fetching fresh data from APIs...');
-  const [fdaRecalls, usdaRecalls] = await Promise.allSettled([
+  const [fdaRecalls, usdaRecalls, pressRecalls] = await Promise.allSettled([
     fetchFdaRecalls(),
-    fetchUsdaRecalls()
+    fetchUsdaRecalls(),
+    fetchFdaPressRecalls()
   ]);
 
   const results: RecallRecord[] = [];
@@ -251,7 +314,11 @@ export async function fetchUsRecalls(): Promise<RecallRecord[]> {
     results.push(...usdaRecalls.value);
   }
 
-  console.log(`[US Recalls] Total: ${results.length} (FDA: ${fdaRecalls.status === 'fulfilled' ? fdaRecalls.value.length : 0}, USDA: ${usdaRecalls.status === 'fulfilled' ? usdaRecalls.value.length : 0})`);
+  if (pressRecalls.status === 'fulfilled') {
+    results.push(...pressRecalls.value);
+  }
+
+  console.log(`[US Recalls] Total: ${results.length} (FDA: ${fdaRecalls.status === 'fulfilled' ? fdaRecalls.value.length : 0}, USDA: ${usdaRecalls.status === 'fulfilled' ? usdaRecalls.value.length : 0}, Press: ${pressRecalls.status === 'fulfilled' ? pressRecalls.value.length : 0})`);
 
   // Update cache
   recallsCache = results;
