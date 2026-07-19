@@ -215,18 +215,139 @@ export function recallMatchesProduct(
   return false;
 }
 
+// ---------------------------------------------------------------------------
+// Rappels SANS numéro de lot (cas Taylor Farms/FDA : les lots sont dans un PDF,
+// pas dans code_info). On ne peut PAS asserter "RAPPELÉ" (pas de lot à comparer),
+// mais on peut émettre un AVERTISSEMENT "rappel possible — vérifiez l'avis
+// officiel" quand la MARQUE matche strictement ET que le NOM DU PRODUIT (résolu
+// par le code-barres via Open Food Facts) recoupe la description du rappel.
+// Ex. produit "Shredded Iceberg Lettuce" (Taylor Farms) vs rappel FDA
+// "BLEND LETT/ROM ... iceberg lettuce". Sans recoupement produit, pas de
+// warning : sinon TOUTE la gamme d'une grande marque s'affiche "à vérifier".
+// ---------------------------------------------------------------------------
+
+// Mots trop génériques dans les descriptions FDA / noms OFF pour porter un
+// recoupement (raison sociale, conditionnement, unités…).
+const WARNING_STOPWORDS = new Set([
+  'food', 'foods', 'fresh', 'farm', 'farms', 'brand', 'brands', 'company',
+  'product', 'products', 'organic', 'natural', 'original', 'premium', 'classic',
+  'style', 'pack', 'packs', 'size', 'count', 'ounce', 'ounces', 'pound',
+  'pounds', 'gram', 'grams', 'with', 'without', 'from', 'because', 'possible',
+  'recall', 'recalls', 'recalled', 'service', 'distribution', 'inc', 'llc',
+  'corp', 'company', 'retail', 'wholesale', 'blend', 'blends', 'mixed'
+]);
+
+// La FDA renseigne la RAISON SOCIALE ("Taylor Fresh Foods Inc"), pas la marque
+// consommateur ("Taylor Farms" sur Open Food Facts) : le match strict échoue.
+// Repli TOKEN DISTINCTIF : un mot de marque ≥5 lettres, hors termes génériques
+// d'entreprise ("foods", "farms", "fresh", "value"…), partagé entre les deux.
+// "Taylor" relie Taylor Farms ↔ Taylor Fresh Foods ; "Great Value" ↔ "Great
+// Lakes Cheese" ne matche PAS ("great"/"value" sont génériques).
+const BRAND_GENERIC_TOKENS = new Set([
+  'brand', 'brands', 'company', 'corp', 'corporation', 'group', 'holdings',
+  'international', 'incorporated', 'foods', 'food', 'farms', 'farm', 'fresh',
+  'freshly', 'great', 'value', 'best', 'premium', 'choice', 'select', 'quality',
+  'market', 'marketside', 'family', 'house', 'garden', 'valley', 'nature',
+  'natural', 'naturals', 'simply', 'organic', 'organics', 'golden', 'classic',
+  'retail', 'wholesale', 'distribution', 'products', 'produce', 'american'
+]);
+
+function distinctiveBrandTokens(brand: string): Set<string> {
+  const out = new Set<string>();
+  for (const w of brand.toLowerCase().split(/[^a-z]+/i)) {
+    if (w.length >= 5 && !BRAND_GENERIC_TOKENS.has(w)) out.add(w);
+  }
+  return out;
+}
+
+// Marque pour le chemin WARNING : strict (exact/contains) OU token distinctif
+// partagé. Toujours corroboré ensuite par le recoupement produit.
+function brandMatchesForWarning(productBrand: string, recallBrand: string | undefined): boolean {
+  if (brandMatchesStrict(productBrand, recallBrand)) return true;
+  if (!recallBrand || isUnknownBrand(productBrand) || isUnknownBrand(recallBrand)) return false;
+  const mine = distinctiveBrandTokens(productBrand);
+  if (mine.size === 0) return false;
+  const theirs = distinctiveBrandTokens(recallBrand);
+  for (const tok of mine) {
+    if (theirs.has(tok)) return true;
+  }
+  return false;
+}
+
+// Tokens significatifs (≥4 lettres, sans accents, hors stopwords), avec le
+// singulier ajouté pour matcher "lettuces" ↔ "lettuce".
+function productTokens(text: string): Set<string> {
+  const out = new Set<string>();
+  const words = text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .split(/[^a-z]+/);
+  for (const w of words) {
+    if (w.length < 4 || WARNING_STOPWORDS.has(w)) continue;
+    out.add(w);
+    if (w.endsWith('s')) out.add(w.slice(0, -1));
+  }
+  return out;
+}
+
+/**
+ * Un rappel SANS lots publiés concerne-t-il PROBABLEMENT ce produit ?
+ * Conditions cumulatives : marque stricte + recoupement d'au moins un mot-clé
+ * produit. Résultat = statut 'warning' (ambre, "à vérifier"), jamais 'recalled'.
+ */
+export function recallWarnsProduct(
+  product: { brand: string; productName?: string },
+  recall: { brand?: string; lotNumbers?: string[]; title?: string; description?: string; productCategory?: string }
+): boolean {
+  // Uniquement pour les rappels SANS lot : avec lots, c'est recallMatchesProduct
+  // qui tranche (et un non-match de lot signifie "pas concerné", pas "warning").
+  if ((recall.lotNumbers ?? []).length > 0) return false;
+
+  // Marque obligatoire : stricte OU token distinctif partagé (raison sociale
+  // FDA vs marque consommateur, ex. "Taylor Fresh Foods Inc" ↔ "Taylor Farms").
+  if (!brandMatchesForWarning(product.brand, recall.brand)) return false;
+
+  // Recoupement produit : sans nom de produit (scan sans code-barres), on ne
+  // peut pas corroborer → pas de warning (on garde le comportement silencieux).
+  const name = (product.productName ?? '').trim();
+  if (!name || isUnknownBrand(name)) return false;
+
+  const mine = productTokens(name);
+  if (mine.size === 0) return false;
+
+  const theirs = productTokens(
+    [recall.title ?? '', recall.description ?? '', recall.productCategory ?? ''].join(' ')
+  );
+
+  for (const tok of mine) {
+    if (theirs.has(tok)) return true;
+  }
+  return false;
+}
+
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {
   const relevant = recalls.filter((recall) => recallMatchesProduct(product, recall));
 
-  if (relevant.length === 0) {
+  if (relevant.length > 0) {
     return {
-      status: 'safe' as const,
-      recallReference: undefined
+      status: 'recalled' as const,
+      recallReference: relevant[0].id
+    };
+  }
+
+  // Pas de match par lot → repli "warning" : rappel sans lots publiés dont la
+  // marque ET le type de produit recoupent ce produit (cf. recallWarnsProduct).
+  const warnings = recalls.filter((recall) => recallWarnsProduct(product, recall));
+  if (warnings.length > 0) {
+    return {
+      status: 'warning' as const,
+      recallReference: warnings[0].id
     };
   }
 
   return {
-    status: 'recalled' as const,
-    recallReference: relevant[0].id
+    status: 'safe' as const,
+    recallReference: undefined
   };
 }

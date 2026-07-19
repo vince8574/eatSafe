@@ -56,9 +56,17 @@ if (!isExpoGo) {
         // échoue (auth pas prête en background), on notifie quand même — la sécurité
         // prime, et la prochaine synchro au premier plan réconciliera.
         try {
-          if (result.newRecalls.length > 0) {
+          if (result.status === 'recalled') {
             await updateFirestoreProduct(product.id, {
               recallStatus: 'recalled',
+              recallReference: result.newRecalls[0].id,
+              lastCheckedAt: Date.now()
+            });
+          } else if (result.status === 'warning') {
+            // Rappel SANS lots publiés (marque + type de produit recoupent) :
+            // statut 'warning', PAS 'recalled' — aucun lot ne prouve le match.
+            await updateFirestoreProduct(product.id, {
+              recallStatus: 'warning',
               recallReference: result.newRecalls[0].id,
               lastCheckedAt: Date.now()
             });
@@ -73,8 +81,9 @@ if (!isExpoGo) {
           console.warn('[BackgroundRecallCheck] Firestore status update skipped', e);
         }
 
-        // Notifier uniquement les NOUVEAUX rappels (pas les "safe").
-        if (result.newRecalls.length > 0) {
+        // Notifier les NOUVEAUX rappels (pas les "safe"). Rouge = match par lot ;
+        // ambre (défaut, sans vibration MAX) = rappel possible à vérifier.
+        if (result.status === 'recalled') {
           await Notifications.scheduleNotificationAsync({
             content: {
               title: t('notifications.alert.title'),
@@ -85,6 +94,23 @@ if (!isExpoGo) {
               data: {
                 productId: product.id,
                 type: 'recall-alert'
+              }
+            },
+            trigger: null
+          });
+        } else if (result.status === 'warning') {
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: t('notifications.warningAlert.title'),
+              body: t('notifications.warningAlert.body', {
+                brand: product.brand,
+                product: product.productName ?? product.brand
+              }),
+              sound: true,
+              priority: Notifications.AndroidNotificationPriority.DEFAULT,
+              data: {
+                productId: product.id,
+                type: 'recall-warning'
               }
             },
             trigger: null

@@ -69,7 +69,13 @@ export function AppInitializer() {
             // Notify the UI via the hook
             updateRecall(product, matchingRecalls);
           } else {
-            await updateFirestoreProduct(product.id, { recallStatus: 'safe', lastCheckedAt: Date.now() });
+            // 'warning' = rappel sans lots publiés dont la marque + le type de
+            // produit recoupent (cf. recallWarnsProduct) ; sinon 'safe'.
+            await updateFirestoreProduct(product.id, {
+              recallStatus: result.status,
+              ...(result.recallReference ? { recallReference: result.recallReference } : {}),
+              lastCheckedAt: Date.now()
+            });
           }
         }
         console.log(`[AppInitializer] Resolved ${unknownProducts.length} unknown products`);
@@ -97,6 +103,16 @@ export function AppInitializer() {
         if (result.newRecalls.length === 0) continue;
         const product = fresh.find((p) => p.id === result.productId);
         if (!product) continue;
+        if (result.status === 'warning') {
+          // Rappel sans lots publiés : statut ambre "à vérifier", PAS d'alerte
+          // rouge plein écran (aucun lot ne prouve que CE produit est concerné).
+          await updateFirestoreProduct(product.id, {
+            recallStatus: 'warning',
+            recallReference: result.newRecalls[0].id,
+            lastCheckedAt: Date.now()
+          });
+          continue;
+        }
         await updateFirestoreProduct(product.id, {
           recallStatus: 'recalled',
           recallReference: result.newRecalls[0].id,

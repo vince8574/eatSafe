@@ -20,6 +20,12 @@ export type RecallRecord = {
   title: string;
   description?: string;
   lotNumbers: string[];
+  // Texte d'identification BRUT publié par la FDA (code_info) / USDA
+  // (field_product_items). Quand lotNumbers est vide (rappel sans lots publiés,
+  // ex. Taylor Farms : lots dans un PDF), c'est la SEULE info d'identification
+  // (dates "Best if Used By", descriptions produit…) → affichée telle quelle à
+  // l'utilisateur pour qu'il vérifie lui-même son produit.
+  codeInfo?: string;
   brand?: string;
   productCategory?: string;
   country: CountryCode;

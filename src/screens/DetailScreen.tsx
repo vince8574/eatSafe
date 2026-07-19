@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, TextInput, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, TextInput, Alert, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
@@ -32,6 +32,9 @@ export function DetailScreen() {
   );
   const recallReason = useMemo(() => recall ? extractRecallReason(recall) : undefined, [recall]);
   const isRecalled = product?.recallStatus === 'recalled';
+  // 'warning' : rappel FDA/USDA SANS numéros de lot publiés dont la marque et le
+  // type de produit recoupent ce produit — à vérifier par l'utilisateur.
+  const isWarning = product?.recallStatus === 'warning';
 
   if (!product) {
     return (
@@ -58,6 +61,61 @@ export function DetailScreen() {
         {isRecalled && recall && (
           <View style={styles.section}>
             <RecallAlert recall={recall} reason={recallReason} />
+          </View>
+        )}
+
+        {/* Rappel possible SANS numéros de lot publiés (ex. Taylor Farms) :
+            la FDA/USDA n'a pas fourni de lots exploitables → on affiche EN
+            ÉVIDENCE les données d'identification publiées (dates "Best if
+            Used By", descriptions produit…) pour que l'utilisateur vérifie
+            lui-même, + lien vers l'avis officiel. */}
+        {isWarning && (
+          <View style={styles.section}>
+            <View style={[styles.warningCard, { backgroundColor: 'rgba(255,165,0,0.12)', borderColor: colors.warning }]}>
+              <View style={styles.warningHeader}>
+                <Ionicons name="warning" size={24} color={colors.warning} />
+                <Text style={[styles.warningTitle, { color: colors.warning }]}>
+                  {t('details.lotlessWarning.title')}
+                </Text>
+              </View>
+              <Text style={[styles.warningText, { color: colors.textPrimary }]}>
+                {t('details.lotlessWarning.explanation')}
+              </Text>
+              {recall && (
+                <>
+                  <Text style={[styles.warningRecallTitle, { color: colors.textPrimary }]}>
+                    {recall.title}
+                  </Text>
+                  {recall.description ? (
+                    <Text style={[styles.warningText, { color: colors.textSecondary }]}>
+                      {recall.description}
+                    </Text>
+                  ) : null}
+                  {recall.codeInfo ? (
+                    <View style={[styles.warningInfoBox, { borderColor: colors.warning, backgroundColor: 'rgba(255,165,0,0.10)' }]}>
+                      <Text style={[styles.warningInfoLabel, { color: colors.warning }]}>
+                        {t('details.lotlessWarning.identifyLabel')}
+                      </Text>
+                      <Text style={[styles.warningInfoText, { color: colors.textPrimary }]}>
+                        {recall.codeInfo}
+                      </Text>
+                    </View>
+                  ) : null}
+                  {recall.link ? (
+                    <TouchableOpacity
+                      style={[styles.warningLinkBtn, { borderColor: colors.warning }]}
+                      onPress={() => Linking.openURL(recall.link!)}
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="open-outline" size={16} color={colors.warning} />
+                      <Text style={[styles.warningLinkText, { color: colors.warning }]}>
+                        {t('details.lotlessWarning.viewNotice')}
+                      </Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </>
+              )}
+            </View>
           </View>
         )}
 
@@ -119,6 +177,12 @@ export function DetailScreen() {
               <Text style={[styles.status, getStatusColor(product.recallStatus, colors)]}>
                 {t('details.status.recalled')}
               </Text>
+            ) : product.recallStatus === 'warning' ? (
+              <View style={[styles.noRecallBadge, { backgroundColor: 'rgba(255,165,0,0.12)', borderColor: colors.warning }]}>
+                <Text style={[styles.noRecallText, { color: colors.warning }]}>
+                  ⚠️ {t('details.lotlessWarning.statusBadge')}
+                </Text>
+              </View>
             ) : (
               <View style={[styles.noRecallBadge, { backgroundColor: colors.surfaceAlt, borderColor: colors.textSecondary }]}>
                 <Text style={[styles.noRecallText, { color: colors.textPrimary }]}>
@@ -316,6 +380,61 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 8,
     borderWidth: 2
+  },
+  warningCard: {
+    borderRadius: 16,
+    borderWidth: 2,
+    padding: 16,
+    gap: 10
+  },
+  warningHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  },
+  warningTitle: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '800'
+  },
+  warningText: {
+    fontSize: 14,
+    lineHeight: 20
+  },
+  warningRecallTitle: {
+    fontSize: 15,
+    fontWeight: '700'
+  },
+  warningInfoBox: {
+    borderRadius: 12,
+    borderWidth: 1.5,
+    padding: 12,
+    gap: 4
+  },
+  warningInfoLabel: {
+    fontSize: 12,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5
+  },
+  warningInfoText: {
+    fontSize: 15,
+    fontWeight: '600',
+    lineHeight: 22
+  },
+  warningLinkBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderWidth: 1.5,
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14
+  },
+  warningLinkText: {
+    fontSize: 14,
+    fontWeight: '700'
   },
   noRecallText: {
     fontSize: 15,

@@ -18,6 +18,7 @@ import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
+import { recallWarnsProduct } from '../utils/lotMatcher';
 import { useSubscription } from '../hooks/useSubscription';
 import { useUsageQuota } from '../hooks/useUsageQuota';
 import { decrementScanCounter } from '../services/subscriptionService';
@@ -610,11 +611,31 @@ export function ScanLotScreen() {
       });
 
       if (matchingRecalls.length === 0) {
-        // No recalls found — mark product as safe immediately
-        await updateProduct(product.id, {
-          recallStatus: 'safe',
-          lastCheckedAt: Date.now()
-        });
+        // Pas de match par LOT. Repli : rappel SANS lots publiés (cas Taylor
+        // Farms — la FDA met les lots dans un PDF, pas dans code_info) dont la
+        // marque ET le type de produit (nom résolu par code-barres) recoupent →
+        // statut 'warning' ("rappel possible, vérifiez l'avis officiel"), avec
+        // les infos d'identification publiées (dates "Best if Used By"…)
+        // affichées sur l'écran détail. Jamais 'recalled' sans preuve par lot.
+        const warningRecalls = recallList.filter((recall) =>
+          recallWarnsProduct({ brand: finalBrand, productName }, recall)
+        );
+        if (warningRecalls.length > 0) {
+          console.log(
+            `[ScanLotScreen] Lot-less recall warning for ${finalBrand} (${productName ?? 'no product name'}): ${warningRecalls[0].id}`
+          );
+          await updateProduct(product.id, {
+            recallStatus: 'warning',
+            recallReference: warningRecalls[0].id,
+            lastCheckedAt: Date.now()
+          });
+        } else {
+          // No recalls found — mark product as safe immediately
+          await updateProduct(product.id, {
+            recallStatus: 'safe',
+            lastCheckedAt: Date.now()
+          });
+        }
       } else {
         await updateRecall(product, matchingRecalls);
       }

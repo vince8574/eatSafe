@@ -122,6 +122,9 @@ export async function fetchFdaRecalls(): Promise<RecallRecord[]> {
       title: item.product_description,
       description: item.reason_for_recall,
       lotNumbers: extracted,
+      // Texte d'identification brut (dates "Best if Used By", codes…) : seule
+      // info exploitable par l'utilisateur quand aucun lot n'est extrait.
+      codeInfo: typeof item.code_info === 'string' ? item.code_info.trim() : undefined,
       brand: item.recalling_firm,
       productCategory: item.product_description,
       country: 'US' as const,
@@ -200,6 +203,9 @@ export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
         title: item.field_title || 'Meat/Poultry Recall',
         description: reason || stripHtml(item.field_summary).slice(0, 280),
         lotNumbers,
+        // Description brute des produits concernés (dates, formats, codes) :
+        // affichée à l'utilisateur quand aucun lot exploitable n'est extrait.
+        codeInfo: productText ? productText.slice(0, 600) : undefined,
         brand: establishment,
         productCategory: 'Meat/Poultry',
         country: 'US' as const,

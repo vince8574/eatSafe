@@ -1,10 +1,14 @@
 import { fetchRecallsByCountry } from './apiService';
-import { recallMatchesProduct } from '../utils/lotMatcher';
+import { recallMatchesProduct, recallWarnsProduct } from '../utils/lotMatcher';
 import type { CountryCode } from '../types';
 
 export interface RecallCheckResult {
   productId: string;
   wasUpdated: boolean;
+  // 'recalled' = match par LOT (preuve) ; 'warning' = rappel SANS lots publiés
+  // dont marque + type de produit recoupent (à vérifier par l'utilisateur) ;
+  // 'safe' = plus aucun rappel correspondant.
+  status: 'recalled' | 'warning' | 'safe';
   newRecalls: Array<{
     id: string;
     title: string;
@@ -23,6 +27,7 @@ export async function checkAllProductsForRecalls(
     id: string;
     brand: string;
     lotNumber: string;
+    productName?: string;
     recallStatus: 'unknown' | 'safe' | 'recalled' | 'warning';
   }>,
   country: CountryCode
@@ -43,29 +48,40 @@ export async function checkAllProductsForRecalls(
         recallMatchesProduct(product, recall)
       );
 
-      // Si le produit était "safe" ou "unknown" mais a maintenant des rappels
-      if (matchingRecalls.length > 0 && (product.recallStatus === 'safe' || product.recallStatus === 'unknown')) {
-        console.log(`[RecallCheck] ⚠️ Product ${product.id} (${product.brand} ${product.lotNumber}) has new recalls!`);
+      // Statut CIBLE : match par lot → 'recalled' ; sinon rappel SANS lots
+      // publiés recoupant marque + type de produit → 'warning' ; sinon 'safe'.
+      const warningRecalls =
+        matchingRecalls.length === 0
+          ? recalls.filter((recall) => recallWarnsProduct(product, recall))
+          : [];
+      const target: RecallCheckResult['status'] =
+        matchingRecalls.length > 0 ? 'recalled' : warningRecalls.length > 0 ? 'warning' : 'safe';
 
-        results.push({
-          productId: product.id,
-          wasUpdated: true,
-          newRecalls: matchingRecalls.map(recall => ({
-            id: recall.id,
-            title: recall.title,
-            description: recall.description,
-            brand: recall.brand,
-            lotNumbers: recall.lotNumbers
-          }))
-        });
-      } else if (matchingRecalls.length === 0 && product.recallStatus !== 'safe') {
-        // Le produit n'a plus de rappels (rare, mais possible si un rappel est retiré)
-        results.push({
-          productId: product.id,
-          wasUpdated: true,
-          newRecalls: []
-        });
+      // Ne signaler que les CHANGEMENTS de statut (sinon re-notification à
+      // chaque check horaire). Un produit déjà 'recalled' n'est jamais
+      // rétrogradé en 'warning'/"safe" par le repli sans-lot seul, SAUF si le
+      // rappel a réellement disparu de la base (comportement historique).
+      if (target === product.recallStatus) continue;
+
+      const reported = target === 'recalled' ? matchingRecalls : warningRecalls;
+      if (target !== 'safe') {
+        console.log(
+          `[RecallCheck] ${target === 'recalled' ? '🚨' : '⚠️'} Product ${product.id} (${product.brand} ${product.lotNumber}) → ${target}`
+        );
       }
+
+      results.push({
+        productId: product.id,
+        wasUpdated: true,
+        status: target,
+        newRecalls: reported.map(recall => ({
+          id: recall.id,
+          title: recall.title,
+          description: recall.description,
+          brand: recall.brand,
+          lotNumbers: recall.lotNumbers
+        }))
+      });
     }
 
     console.log(`[RecallCheck] Found ${results.length} products with status changes`);

@@ -106,6 +106,13 @@
       "unknown": "❓ UNKNOWN",
       "warning": "⚠️ WARNING"
     },
+    "lotlessWarning": {
+      "title": "Possible recall — check your product",
+      "statusBadge": "POSSIBLE RECALL — NO LOT NUMBERS PUBLISHED",
+      "explanation": "An official recall matches this brand and product type, but the FDA/USDA did not publish lot numbers for it. We cannot confirm whether YOUR item is affected. Check your product against the identification details below.",
+      "identifyLabel": "Published identification details",
+      "viewNotice": "View the official recall notice"
+    },
     "recallInfo": "Recall information",
     "actions": {
       "delete": "Delete scan",
@@ -166,6 +173,10 @@
     "alert": {
       "title": "🚨 CONTAMINATED PRODUCT ALERT",
       "body": "⚠️ {{brand}} - Lot {{lot}}\nReason: {{reason}}\n\n🚫 DO NOT CONSUME\nIf consumed, contact emergency services (911)"
+    },
+    "warningAlert": {
+      "title": "⚠️ Possible recall — check your product",
+      "body": "A recall matches {{brand}} ({{product}}), but no lot numbers were published. Open the app to compare your item with the official identification details."
     },
     "dailyCheck": {
       "title": "Numeline Verification",

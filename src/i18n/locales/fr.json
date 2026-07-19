@@ -106,6 +106,13 @@
       "unknown": "❓ INCONNU",
       "warning": "⚠️ AVERTISSEMENT"
     },
+    "lotlessWarning": {
+      "title": "Rappel possible — vérifiez votre produit",
+      "statusBadge": "RAPPEL POSSIBLE — AUCUN NUMÉRO DE LOT PUBLIÉ",
+      "explanation": "Un rappel officiel correspond à cette marque et à ce type de produit, mais la FDA/USDA n'a publié aucun numéro de lot. Impossible de confirmer si VOTRE article est concerné. Vérifiez votre produit avec les informations d'identification ci-dessous.",
+      "identifyLabel": "Informations d'identification publiées",
+      "viewNotice": "Voir l'avis de rappel officiel"
+    },
     "recallInfo": "Informations du rappel",
     "actions": {
       "delete": "Supprimer le scan",
@@ -166,6 +173,10 @@
     "alert": {
       "title": "🚨 ALERTE PRODUIT CONTAMINÉ",
       "body": "⚠️ {{brand}} - Lot {{lot}}\nRaison: {{reason}}\n\n🚫 NE PAS CONSOMMER\nEn cas de consommation, contactez les urgences (15 ou 112)"
+    },
+    "warningAlert": {
+      "title": "⚠️ Rappel possible — vérifiez votre produit",
+      "body": "Un rappel correspond à {{brand}} ({{product}}), mais aucun numéro de lot n'a été publié. Ouvrez l'app pour comparer votre article aux informations d'identification officielles."
     },
     "dailyCheck": {
       "title": "Vérification Numeline",
