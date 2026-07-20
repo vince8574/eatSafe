@@ -399,6 +399,31 @@
 
     .highlight p:last-child { margin-bottom: 0; }
 
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .shot { text-align: center; }
+
+    .shot img {
+      width: 100%;
+      max-width: 210px;
+      display: block;
+      margin: 0 auto 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 26px var(--shadow);
+    }
+
+    .shot span {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
     @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
@@ -435,6 +460,7 @@
       <div class="brand">Numeline</div>
       <nav class="nav">
         <a href="#features">Features</a>
+        <a href="#app">The app</a>
         <a href="#trust">Trust</a>
         <a href="pricing.html">Pricing</a>
         <a href="subscribers.html">Partners</a>
@@ -543,6 +569,43 @@
         <p>
           A possible recall is never shown as a confirmed one: without a lot number, nothing proves your
           specific item is affected. The official notice is always one tap away.
+        </p>
+      </div>
+    </section>
+
+    <section id="app" class="section fade-up" style="--delay: 0.26s;">
+      <h2>Inside the app</h2>
+      <p>Two steps at the counter: scan the barcode, then the lot number. Numeline identifies the product, checks every profile you set up, and matches the lot against official recalls.</p>
+      <div class="shots">
+        <div class="shot">
+          <img src="/images/us-home.jpeg" alt="Numeline home screen with scan statistics" loading="lazy" />
+          <span>Your scans at a glance</span>
+        </div>
+        <div class="shot">
+          <img src="/images/us-scan-diet-check.jpeg" alt="Detected brand with a per-profile dietary check" loading="lazy" />
+          <span>Who can eat it</span>
+        </div>
+        <div class="shot">
+          <img src="/images/us-confirm-lot.jpeg" alt="Lot number confirmation with recall status" loading="lazy" />
+          <span>Confirm the lot</span>
+        </div>
+        <div class="shot">
+          <img src="/images/us-result.jpeg" alt="Result screen showing no recall found" loading="lazy" />
+          <span>The answer</span>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top: 22px; border-left-color: var(--accent);">
+        <h3>Every profile checked, on every scan</h3>
+        <p>
+          Set up a profile for each person and Numeline tells you who a product suits and who it
+          doesn't — here, gummy sweets flagged as possibly containing pork and gelatin for one
+          profile, while two others are clear.
+        </p>
+        <p>
+          Ingredient data comes from Open Food Facts and is declarative, so it can be incomplete.
+          Numeline flags what it finds and tells you when an origin needs checking; always read the
+          label. A "no recall found" result means no matching recall was in the official databases
+          at that moment — it is not a guarantee that the product is safe.
         </p>
       </div>
     </section>
