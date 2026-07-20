@@ -23,6 +23,12 @@
 
     * { box-sizing: border-box; }
 
+    /* Garde-fou responsive : les éléments de grille ont min-width:auto, donc une
+       image plus large que sa piste imposerait sa taille intrinsèque et ferait
+       déborder la page. Utile depuis l'ajout des captures d'écran ci-dessous. */
+    img { max-width: 100%; height: auto; }
+    .hero > *, .cards > *, .shots > *, .steps > *, .legal-grid > * { min-width: 0; }
+
     body {
       margin: 0;
       color: var(--ink-soft);
@@ -300,6 +306,67 @@
 
     .lang-switch:hover { background: var(--surface-alt); }
 
+    .badge-new {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      vertical-align: middle;
+    }
+
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .shot { text-align: center; }
+
+    .shot img {
+      width: 100%;
+      max-width: 210px;
+      display: block;
+      margin: 0 auto 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 26px var(--shadow);
+    }
+
+    .shot span {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .step b {
+      display: block;
+      color: var(--accent-dark);
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .step p { margin: 0; font-size: 14px; line-height: 1.5; }
+
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; }
       h1 { font-size: 34px; }
@@ -319,6 +386,8 @@
       <div class="brand">NumelineFR</div>
       <nav class="nav">
         <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#regime">Mon régime</a>
+        <a href="#parcours">Le scan</a>
         <a href="#sources">Sources</a>
         <a href="#legal">Légal</a>
         <a class="lang-switch" href="/">🌐 English</a>
@@ -377,19 +446,97 @@
       <div class="cards">
         <div class="card">
           <h3>Numéros de lot</h3>
-          <p>Scannez les numéros de lot de vos produits alimentaires.</p>
+          <p>Photographiez le numéro de lot : il est lu automatiquement et confronté aux rappels en vigueur, sans comparaison manuelle.</p>
         </div>
         <div class="card">
           <h3>Alertes rappel</h3>
-          <p>Soyez notifié dès qu'un produit scanné correspond à un rappel officiel RappelConso.</p>
+          <p>Soyez notifié dès qu'un produit scanné correspond à un rappel officiel RappelConso, même après le scan et application fermée.</p>
+        </div>
+        <div class="card">
+          <h3>Correction et saisie manuelle<span class="badge-new">NOUVEAU</span></h3>
+          <p>Code en pointillés, reflet ou impression effacée ? Corrigez le numéro d'un appui, ou saisissez marque et lot à la main.</p>
+        </div>
+        <div class="card">
+          <h3>Mode cœliaque<span class="badge-new">NOUVEAU</span></h3>
+          <p>Évitement strict du gluten, traces comprises : le produit est signalé même en cas de simple « peut contenir ».</p>
+        </div>
+        <div class="card">
+          <h3>Des milliers d'ingrédients<span class="badge-new">NOUVEAU</span></h3>
+          <p>Recherchez un ingrédient précis à éviter dans un catalogue de plusieurs milliers d'entrées, ou ajoutez le vôtre.</p>
+        </div>
+        <div class="card">
+          <h3>Sulfites et anhydride sulfureux<span class="badge-new">NOUVEAU</span></h3>
+          <p>Détection ajoutée aux allergènes, y compris via les codes E220 à E228 présents dans la liste d'ingrédients.</p>
         </div>
         <div class="card">
           <h3>Vie privée d'abord</h3>
-          <p>Les photos sont traitées localement et supprimées après analyse. Aucune image n'est stockée.</p>
+          <p>Les photos sont traitées puis supprimées immédiatement. Seuls la marque et le numéro de lot sont conservés.</p>
         </div>
         <div class="card">
           <h3>Professionnel</h3>
           <p>Export PDF et XLSX de l'historique, jusqu'à 500 scans/mois pour les pros de la restauration.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="regime" class="section fade-up" style="--delay: 0.24s;">
+      <h2>Un profil par personne</h2>
+      <p>
+        Chacun crée son profil : allergènes, aliments à éviter, grossesse, régime végétarien ou vegan,
+        et seuils nutritionnels. À chaque scan, NumelineFR précise pour qui le produit convient — et pour qui il ne convient pas.
+      </p>
+      <div class="shots">
+        <div class="shot">
+          <img src="/images/regime-profils.jpeg" alt="Liste des profils de la famille dans NumelineFR" loading="lazy" />
+          <span>Un profil par personne</span>
+        </div>
+        <div class="shot">
+          <img src="/images/regime-allergenes.jpeg" alt="Sélection des allergènes dans NumelineFR" loading="lazy" />
+          <span>Allergènes</span>
+        </div>
+        <div class="shot">
+          <img src="/images/regime-aliments-eviter.jpeg" alt="Aliments à éviter dans NumelineFR" loading="lazy" />
+          <span>Aliments à éviter</span>
+        </div>
+        <div class="shot">
+          <img src="/images/regime-seuils.jpeg" alt="Régime et seuils nutritionnels dans NumelineFR" loading="lazy" />
+          <span>Régime et seuils</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="parcours" class="section fade-up" style="--delay: 0.28s;">
+      <h2>Deux étapes au lieu de cinq</h2>
+      <p>
+        Vérifier un rappel demandait jusqu'ici d'enchaîner les manipulations et de comparer soi-même
+        des numéros de lot minuscules. Le produit est identifié, le lot est lu, la réponse arrive.
+      </p>
+      <div class="steps">
+        <div class="step">
+          <b>1 · Scan du code-barres</b>
+          <p>La marque et le produit sont identifiés automatiquement.</p>
+        </div>
+        <div class="step">
+          <b>2 · Lecture du numéro de lot</b>
+          <p>Le lot est lu sur l'emballage, puis confronté aux rappels officiels en vigueur.</p>
+        </div>
+      </div>
+      <div class="shots" style="margin-top: 22px;">
+        <div class="shot">
+          <img src="/images/scan-1-marque-detectee.jpeg" alt="Marque détectée après le scan du code-barres" loading="lazy" />
+          <span>1 · Marque détectée</span>
+        </div>
+        <div class="shot">
+          <img src="/images/scan-2-lecture-lot.jpeg" alt="Lecture du numéro de lot sur l'emballage" loading="lazy" />
+          <span>2 · Lecture du lot</span>
+        </div>
+        <div class="shot">
+          <img src="/images/lot-correction.jpeg" alt="Correction manuelle du numéro de lot" loading="lazy" />
+          <span>Correction du numéro</span>
+        </div>
+        <div class="shot">
+          <img src="/images/saisie-manuelle.jpeg" alt="Saisie manuelle de la marque et du numéro de lot" loading="lazy" />
+          <span>Saisie manuelle</span>
         </div>
       </div>
     </section>

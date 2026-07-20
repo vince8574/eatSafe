@@ -25,6 +25,12 @@
       box-sizing: border-box;
     }
 
+    /* Responsive safeguard: grid items default to min-width:auto, so an image
+       wider than its track would impose its intrinsic size and overflow the
+       page. Caps images and lets the tracks shrink. */
+    img { max-width: 100%; height: auto; }
+    .hero > *, .cards > *, .legal-grid > * { min-width: 0; }
+
     body {
       margin: 0;
       color: var(--ink-soft);
@@ -358,6 +364,41 @@
       flex-shrink: 0;
     }
 
+    .badge-new {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      vertical-align: middle;
+    }
+
+    .highlight {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 4px solid #e8a33d;
+      border-radius: 16px;
+      padding: 22px 24px;
+      box-shadow: 0 10px 24px rgba(10, 31, 31, 0.08);
+    }
+
+    .highlight h3 {
+      margin: 0 0 10px;
+      font-size: 19px;
+      color: var(--accent-dark);
+    }
+
+    .highlight p {
+      margin: 0 0 10px;
+      line-height: 1.6;
+    }
+
+    .highlight p:last-child { margin-bottom: 0; }
+
     @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
@@ -456,20 +497,53 @@
       <div class="cards">
         <div class="card">
           <h3>Lot numbers</h3>
-          <p>Scan lot numbers and barcodes.</p>
+          <p>Photograph the lot code: it is read for you and checked, by brand and lot, against official FDA and USDA recalls.</p>
         </div>
         <div class="card">
           <h3>Recall alerts</h3>
-          <p>Get notified when a scanned product matches an official recall list.</p>
+          <p>Get notified when a scanned product matches an official recall — monitoring continues even when the app is closed.</p>
+        </div>
+        <div class="card">
+          <h3>Faster FDA detection<span class="badge-new">NEW</span></h3>
+          <p>We also monitor FDA recall press releases, which are often published days before the enforcement database is updated.</p>
+        </div>
+        <div class="card">
+          <h3>Celiac mode<span class="badge-new">NEW</span></h3>
+          <p>Strict gluten avoidance including traces: a product is flagged even on a simple "may contain" statement.</p>
+        </div>
+        <div class="card">
+          <h3>Thousands of ingredients<span class="badge-new">NEW</span></h3>
+          <p>Search a catalog of thousands of ingredients to avoid, or add your own foods to your profile.</p>
+        </div>
+        <div class="card">
+          <h3>Pregnancy mode<span class="badge-new">NEW</span></h3>
+          <p>Flags raw milk, deli meat, raw fish, meat and eggs, sprouts, high-mercury fish, liver, and caffeine.</p>
         </div>
         <div class="card">
           <h3>Privacy first</h3>
-          <p>Images are processed locally and deleted after analysis. Payments stay in the store.</p>
+          <p>Images are processed and deleted after analysis. Only the brand and lot number are kept. Payments stay in the store.</p>
         </div>
         <div class="card">
           <h3>Team ready</h3>
-          <p>Share recall visibility across teams with organization features and role controls.</p>
+          <p>Share recall visibility across teams with organization features, role controls, and PDF, CSV, or XLSX exports.</p>
         </div>
+      </div>
+
+      <div class="highlight" style="margin-top: 22px;">
+        <h3>When a recall has no lot number<span class="badge-new">NEW</span></h3>
+        <p>
+          The FDA and USDA sometimes announce a recall without publishing any lot codes — the affected
+          items are identified only by a table of "Best if Used By" dates, or by a linked PDF.
+        </p>
+        <p>
+          Rather than reporting that nothing was found, Numeline flags a <strong>possible recall</strong>
+          when the brand and product type match what you scanned, and shows you the identification details
+          that were actually published, so you can check your own item against them.
+        </p>
+        <p>
+          A possible recall is never shown as a confirmed one: without a lot number, nothing proves your
+          specific item is affected. The official notice is always one tap away.
+        </p>
       </div>
     </section>
 
