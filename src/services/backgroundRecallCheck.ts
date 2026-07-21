@@ -98,24 +98,12 @@ if (!isExpoGo) {
             },
             trigger: null
           });
-        } else if (result.status === 'warning') {
-          await Notifications.scheduleNotificationAsync({
-            content: {
-              title: t('notifications.warningAlert.title'),
-              body: t('notifications.warningAlert.body', {
-                brand: product.brand,
-                product: product.productName ?? product.brand
-              }),
-              sound: true,
-              priority: Notifications.AndroidNotificationPriority.DEFAULT,
-              data: {
-                productId: product.id,
-                type: 'recall-warning'
-              }
-            },
-            trigger: null
-          });
         }
+        // PAS de notification push pour le statut 'warning' (rappel sans lot) :
+        // c'est un signal INCERTAIN (marque + type de produit, sans preuve par
+        // lot). Poussé en fond, il générait des alertes en série sur les
+        // méga-marques et se re-déclenchait à chaque cycle. Le statut ambre
+        // reste visible DANS l'app (écran détail) ; seul le push est retiré.
       }
 
       // Mettre à jour la date de dernière vérification

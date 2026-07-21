@@ -113,19 +113,6 @@ function matchBrands(productBrand: string, recallBrand: string | undefined) {
   return distance <= threshold;
 }
 
-// Marque STRICTE (exact/contains, SANS flou Levenshtein, SANS "unknown") : pour le
-// repli "rappel sans numéro de lot" où il n'y a aucune corroboration par le lot.
-// Un flou ou une marque inconnue y déclencherait des alertes à tort sur toute une
-// gamme / toute la base.
-function brandMatchesStrict(productBrand: string, recallBrand: string | undefined) {
-  if (!recallBrand || !productBrand || isUnknownBrand(productBrand) || isUnknownBrand(recallBrand)) {
-    return false;
-  }
-  const a = normalizeBrand(productBrand);
-  const b = normalizeBrand(recallBrand);
-  if (!a || !b) return false;
-  return a === b || a.includes(b) || b.includes(a);
-}
 
 export function matchLots(product: ScannedProduct, recall: RecallRecord) {
   const normalized = normalizeLot(product.lotNumber);
@@ -234,7 +221,19 @@ const WARNING_STOPWORDS = new Set([
   'style', 'pack', 'packs', 'size', 'count', 'ounce', 'ounces', 'pound',
   'pounds', 'gram', 'grams', 'with', 'without', 'from', 'because', 'possible',
   'recall', 'recalls', 'recalled', 'service', 'distribution', 'inc', 'llc',
-  'corp', 'company', 'retail', 'wholesale', 'blend', 'blends', 'mixed'
+  'corp', 'company', 'retail', 'wholesale', 'blend', 'blends', 'mixed',
+  // Catégories d'aliments TROP génériques pour désigner un produit précis : un
+  // rappel "cheese"/"chicken" d'une méga-marque ne concerne pas TOUS ses
+  // fromages/poulets. On n'accepte le recoupement que sur un mot DISTINCTIF
+  // (ex. "iceberg", "cantaloupe"), jamais sur une catégorie large. (EN + FR.)
+  'cheese', 'cheddar', 'cream', 'creme', 'milk', 'butter', 'yogurt', 'yoghurt',
+  'sauce', 'ketchup', 'mayo', 'mayonnaise', 'caramel', 'coffee', 'cafe',
+  'chocolate', 'chocolat', 'vanilla', 'vanille', 'sugar', 'sucre', 'water',
+  'juice', 'jus', 'bread', 'pain', 'flour', 'farine', 'chicken', 'poulet',
+  'beef', 'boeuf', 'pork', 'porc', 'turkey', 'dinde', 'salad', 'salade',
+  'soup', 'soupe', 'pizza', 'pasta', 'pates', 'sausage', 'saucisse', 'snack',
+  'snacks', 'candy', 'drink', 'soda', 'cola', 'entiere', 'soluble', 'saveur',
+  'biscuit', 'biscuits', 'cookie', 'cookies', 'yaourt', 'lait', 'fromage'
 ]);
 
 // La FDA renseigne la RAISON SOCIALE ("Taylor Fresh Foods Inc"), pas la marque
@@ -260,13 +259,19 @@ function distinctiveBrandTokens(brand: string): Set<string> {
   return out;
 }
 
-// Marque pour le chemin WARNING : strict (exact/contains) OU token distinctif
-// partagé. Toujours corroboré ensuite par le recoupement produit.
+// Marque pour le chemin WARNING. On EXIGE soit une égalité normalisée EXACTE,
+// soit un TOKEN DISTINCTIF partagé (≥5 lettres, hors termes d'entreprise). On
+// n'utilise PAS de sous-chaîne : "U" (1 lettre) est contenu dans presque toutes
+// les raisons sociales ("Georgia N-U-T Co"), et "Coca-Cola" ⊂ "CocaCola
+// Southwest Beverages" → faux positifs en série. Les marques trop courtes
+// (< token distinctif) ne peuvent donc pas déclencher d'avertissement.
 function brandMatchesForWarning(productBrand: string, recallBrand: string | undefined): boolean {
-  if (brandMatchesStrict(productBrand, recallBrand)) return true;
   if (!recallBrand || isUnknownBrand(productBrand) || isUnknownBrand(recallBrand)) return false;
+  const a = normalizeBrand(productBrand);
+  const b = normalizeBrand(recallBrand);
+  if (a && b && a === b) return true; // égalité exacte (ex. "Kraft" == "Kraft")
   const mine = distinctiveBrandTokens(productBrand);
-  if (mine.size === 0) return false;
+  if (mine.size === 0) return false; // pas de token distinctif → jamais d'alerte
   const theirs = distinctiveBrandTokens(recallBrand);
   for (const tok of mine) {
     if (theirs.has(tok)) return true;
@@ -274,9 +279,11 @@ function brandMatchesForWarning(productBrand: string, recallBrand: string | unde
   return false;
 }
 
-// Tokens significatifs (≥4 lettres, sans accents, hors stopwords), avec le
-// singulier ajouté pour matcher "lettuces" ↔ "lettuce".
-function productTokens(text: string): Set<string> {
+// Tokens produit DISTINCTIFS : ≥5 lettres, sans accents, hors stopwords (dont
+// les catégories d'aliments larges) ET hors tokens de marque fournis. Un mot de
+// marque présent à la fois dans le nom du produit et dans le titre du rappel
+// (ex. "nestle") ne prouve PAS que c'est le même produit → on l'exclut.
+function productTokens(text: string, exclude: Set<string> = new Set()): Set<string> {
   const out = new Set<string>();
   const words = text
     .toLowerCase()
@@ -284,7 +291,7 @@ function productTokens(text: string): Set<string> {
     .replace(/[̀-ͯ]/g, '')
     .split(/[^a-z]+/);
   for (const w of words) {
-    if (w.length < 4 || WARNING_STOPWORDS.has(w)) continue;
+    if (w.length < 5 || WARNING_STOPWORDS.has(w) || exclude.has(w)) continue;
     out.add(w);
     if (w.endsWith('s')) out.add(w.slice(0, -1));
   }
@@ -313,11 +320,19 @@ export function recallWarnsProduct(
   const name = (product.productName ?? '').trim();
   if (!name || isUnknownBrand(name)) return false;
 
-  const mine = productTokens(name);
+  // Les tokens de MARQUE (produit + rappel) sont exclus du recoupement produit :
+  // sinon "Nestle crunch" recoupe "Nestle ... Lean Cuisine" via le mot "nestle".
+  const brandTokens = new Set<string>([
+    ...distinctiveBrandTokens(product.brand),
+    ...distinctiveBrandTokens(recall.brand ?? '')
+  ]);
+
+  const mine = productTokens(name, brandTokens);
   if (mine.size === 0) return false;
 
   const theirs = productTokens(
-    [recall.title ?? '', recall.description ?? '', recall.productCategory ?? ''].join(' ')
+    [recall.title ?? '', recall.description ?? '', recall.productCategory ?? ''].join(' '),
+    brandTokens
   );
 
   for (const tok of mine) {

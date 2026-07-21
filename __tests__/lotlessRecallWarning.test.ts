@@ -177,6 +177,36 @@ describe('communiqués de presse FDA (source fdaPress)', () => {
   });
 });
 
+// RÉGRESSION incident 2026-07-20 : le statut 'warning' notifiait en masse sur
+// des méga-marques et des marques courtes. Aucun de ces cas RÉELS ne doit
+// déclencher d'avertissement (données relevées sur les notifications reçues).
+describe('anti-faux-positifs (incident notifications)', () => {
+  const mk = (id: string, brand: string, title: string, description = ''): RecallRecord => ({
+    id, title, description, brand, lotNumbers: [], country: 'US', publishedAt: '2026-07-01'
+  });
+
+  const cases: Array<[string, { brand: string; productName: string }, RecallRecord]> = [
+    ['Kraft cheddar vs Kraft Heinz ham & cheese',
+      { brand: 'Kraft', productName: 'cheddar cheese' },
+      mk('r1', 'Kraft Heinz Foods Company', 'Kraft Heinz Foods Company Recalls Ready-To-Eat Ham and Cheese Loaf')],
+    ['marque "U" (1 lettre) vs Georgia Nut Co',
+      { brand: 'U', productName: 'Crème entière UHT 30%MG' },
+      mk('r2', 'Georgia Nut Co', 'tru fru Strawberries + Creme Freeze-Dried Fresh')],
+    ['Nestlé crunch vs Nestlé Lean Cuisine (marque partagée seule)',
+      { brand: 'Nestlé', productName: 'Nestle crunch' },
+      mk('r3', 'Nestle Prepared Foods Company', 'Nestle Prepared Foods Company Recalls Lean Cuisine Fettuccine')],
+    ['Coca-Cola vs CocaCola Southwest Beverages (sous-chaîne)',
+      { brand: 'Coca-Cola', productName: 'PET 1.75L COCA' },
+      mk('r4', 'COCACOLA SOUTHWEST BEVERAGES LLC', 'Coca-Cola 12oz Can - 24 pack')]
+  ];
+
+  for (const [label, product, recall] of cases) {
+    it(`n'avertit PAS : ${label}`, () => {
+      expect(recallWarnsProduct(product, recall)).toBe(false);
+    });
+  }
+});
+
 describe('getRecallStatus avec repli warning', () => {
   it("renvoie 'warning' + référence quand seul le repli sans-lot matche", () => {
     const result = getRecallStatus(scannedLettuce, [taylorRecall]);
