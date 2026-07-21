@@ -131,7 +131,8 @@ export async function fetchFdaRecalls(): Promise<RecallRecord[]> {
       country: 'US' as const,
       publishedAt: item.report_date,
       link: item.more_details,
-      imageUrl: undefined
+      imageUrl: undefined,
+      source: 'fda' as const
     };
   });
 
@@ -212,7 +213,8 @@ export async function fetchUsdaRecalls(): Promise<RecallRecord[]> {
         country: 'US' as const,
         publishedAt: item.field_recall_date || item.field_last_modified_date || '',
         link: item.field_recall_url,
-        imageUrl: undefined
+        imageUrl: undefined,
+        source: 'usda' as const
       };
     });
 
@@ -274,11 +276,22 @@ export async function fetchFdaPressRecalls(): Promise<RecallRecord[]> {
       title,
       description: typeof item.description === 'string' ? item.description : undefined,
       lotNumbers: [], // jamais de lots structurés dans un communiqué → warning only
+      // Dates "Best if Used By" / lots extraits de la PAGE du communiqué par le
+      // proxy (tableau + prose) : affichés à l'utilisateur pour qu'il vérifie.
+      codeInfo: typeof item.codeInfo === 'string' ? item.codeInfo : undefined,
       brand: brand || undefined,
       country: 'US' as const,
       publishedAt: typeof item.pubDate === 'string' ? item.pubDate : '',
-      link: typeof item.link === 'string' ? item.link : undefined,
-      imageUrl: undefined
+      // articleUrl = la vraie page fda.gov (le lien du flux peut être une
+      // redirection Google News opaque).
+      link:
+        typeof item.articleUrl === 'string'
+          ? item.articleUrl
+          : typeof item.link === 'string'
+            ? item.link
+            : undefined,
+      imageUrl: undefined,
+      source: 'fda-press' as const
     });
   }
 

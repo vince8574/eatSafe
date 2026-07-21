@@ -611,12 +611,12 @@ export function ScanLotScreen() {
       });
 
       if (matchingRecalls.length === 0) {
-        // Pas de match par LOT. Repli : rappel SANS lots publiés (cas Taylor
-        // Farms — la FDA met les lots dans un PDF, pas dans code_info) dont la
-        // marque ET le type de produit (nom résolu par code-barres) recoupent →
-        // statut 'warning' ("rappel possible, vérifiez l'avis officiel"), avec
-        // les infos d'identification publiées (dates "Best if Used By"…)
-        // affichées sur l'écran détail. Jamais 'recalled' sans preuve par lot.
+        // Pas de match par LOT. Repli : COMMUNIQUÉ FDA récent sans lots publiés
+        // (cas Taylor Farms — les lots/dates sont dans la page de l'avis) dont
+        // la MARQUE correspond → statut 'warning' ("rappel possible, vérifiez
+        // l'avis officiel"), avec les infos d'identification publiées (dates
+        // "Best if Used By"…) affichées sur l'écran détail. Jamais 'recalled'
+        // sans preuve par lot.
         const warningRecalls = recallList.filter((recall) =>
           recallWarnsProduct({ brand: finalBrand, productName }, recall)
         );

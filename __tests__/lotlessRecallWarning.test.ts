@@ -1,136 +1,114 @@
-// Rappels FDA/USDA SANS numéros de lot publiés (cas réel : Taylor Fresh Foods,
-// juillet 2026 — laitue iceberg/Cyclospora, lots dans un PDF, code_info vide).
-// L'app ne peut pas asserter "RAPPELÉ" (aucun lot à comparer) mais doit émettre
-// un statut 'warning' quand la marque ET le type de produit (nom résolu par le
-// code-barres via Open Food Facts) recoupent le rappel.
+// Alerte "rappel possible" sur COMMUNIQUÉ FDA sans numéro de lot.
+//
+// Politique (objectif produit : alerter dès le communiqué, cas réel Taylor
+// Fresh Foods juil. 2026 — lots/dates publiés seulement dans la page) :
+// - SOURCE : uniquement le flux RSS officiel des communiqués ('fda-press').
+//   Les ~2 400 enregistrements enforcement sans lot n'alertent JAMAIS
+//   (incident du 20/07 : notifications en série sur Kraft/Nestlé/Coca/"U").
+// - RÉCENCE : communiqué de moins de 60 jours.
+// - MARQUE : égalité exacte OU token distinctif partagé (≥4 lettres, hors
+//   termes d'entreprise). Jamais de sous-chaîne.
+// - Alerte au NIVEAU MARQUE : toute la gamme passe "à vérifier" (ambre), avec
+//   les infos publiées (dates "Best if Used By") affichées. Jamais rouge.
 import { recallWarnsProduct, getRecallStatus } from '../src/utils/lotMatcher';
 import { extractPressBrand } from '../src/services/apiService';
 import { RecallRecord, ScannedProduct } from '../src/types';
 
-const taylorRecall: RecallRecord = {
-  id: 'F-2026-1234',
-  title: 'Taylor Fresh Foods recalls iceberg lettuce from Central Mexico',
-  description:
-    'BLEND LETT/ROM 50/50 — shredded iceberg lettuce recalled because of possible Cyclospora health risk',
-  lotNumbers: [], // la FDA n'a rien publié dans code_info
-  codeInfo: 'Best if Used By 7/16/2026 - 8/1/2026',
-  brand: 'Taylor Fresh Foods',
-  productCategory: 'Iceberg lettuce',
+const RECENT = new Date(Date.now() - 5 * 24 * 3600 * 1000).toUTCString();
+const STALE = new Date(Date.now() - 90 * 24 * 3600 * 1000).toUTCString();
+
+const press = (brand: string, title: string, over: Partial<RecallRecord> = {}): RecallRecord => ({
+  id: 'fda-press-' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60),
+  title,
+  brand,
+  lotNumbers: [],
   country: 'US',
-  publishedAt: '2026-07-17'
-};
+  publishedAt: RECENT,
+  source: 'fda-press',
+  ...over
+});
 
-const scannedLettuce: ScannedProduct = {
-  id: 'p1',
-  brand: 'Taylor Fresh Foods',
-  lotNumber: 'TF20260710',
-  productName: 'Shredded Iceberg Lettuce',
-  scannedAt: Date.now(),
-  recallStatus: 'unknown'
-};
+const taylorPress = press(
+  'Taylor Fresh Foods',
+  'Taylor Fresh Foods Recalls Iceberg Lettuce from Central Mexico Because of Possible Health Risk',
+  { codeInfo: 'Best if Used By 7/16/2026 - 8/3/2026' }
+);
 
-describe('recallWarnsProduct (rappels sans lots publiés)', () => {
-  it('avertit quand marque + type de produit recoupent un rappel sans lots', () => {
-    expect(recallWarnsProduct(scannedLettuce, taylorRecall)).toBe(true);
+describe('recallWarnsProduct — communiqués FDA (alerte niveau marque)', () => {
+  it('avertit : marque consommateur ≠ raison sociale (Taylor Farms ↔ Taylor Fresh Foods)', () => {
+    expect(recallWarnsProduct({ brand: 'Taylor Farms', productName: 'Shredded Iceberg Lettuce' }, taylorPress)).toBe(true);
   });
 
-  it("n'avertit PAS pour un autre produit de la même marque (pas de recoupement)", () => {
-    const salsa = { ...scannedLettuce, productName: 'Chunky Salsa Dip' };
-    expect(recallWarnsProduct(salsa, taylorRecall)).toBe(false);
+  it('avertit TOUTE la gamme de la marque (salade en kit, sans mot "iceberg")', () => {
+    expect(recallWarnsProduct({ brand: 'Taylor Farms', productName: 'Chopped Salad Kit' }, taylorPress)).toBe(true);
+  });
+
+  it('avertit même sans nom de produit (scan sans code-barres)', () => {
+    expect(recallWarnsProduct({ brand: 'Taylor Farms' }, taylorPress)).toBe(true);
+  });
+
+  it('avertit une marque COURTE de 4 lettres (Dole)', () => {
+    const dole = press('Dole Fresh Vegetables Inc', 'Dole Recalls Shredded Lettuce');
+    expect(recallWarnsProduct({ brand: 'Dole', productName: 'Shredded Lettuce' }, dole)).toBe(true);
+  });
+
+  it('avertit sur égalité exacte de marque (Malichita)', () => {
+    const m = press('Malichita', 'Malichita Brand Cantaloupes Recalled');
+    expect(recallWarnsProduct({ brand: 'Malichita', productName: 'Whole Cantaloupe' }, m)).toBe(true);
   });
 
   it("n'avertit PAS quand la marque diffère", () => {
-    const other = { ...scannedLettuce, brand: 'Dole' };
-    expect(recallWarnsProduct(other, taylorRecall)).toBe(false);
-  });
-
-  it("n'avertit PAS sans nom de produit (scan sans code-barres)", () => {
-    const noName = { ...scannedLettuce, productName: undefined };
-    expect(recallWarnsProduct(noName, taylorRecall)).toBe(false);
+    expect(recallWarnsProduct({ brand: 'Marketside', productName: 'Iceberg Lettuce' }, taylorPress)).toBe(false);
   });
 
   it("n'avertit PAS quand le rappel a des lots publiés (le match par lot tranche)", () => {
-    const withLots = { ...taylorRecall, lotNumbers: ['ABC123'] };
-    expect(recallWarnsProduct(scannedLettuce, withLots)).toBe(false);
+    expect(recallWarnsProduct({ brand: 'Taylor Farms' }, { ...taylorPress, lotNumbers: ['ABC123'] })).toBe(false);
   });
 
-  it("n'avertit PAS sur des mots génériques seuls (fresh/foods/pack…)", () => {
-    const generic = { ...scannedLettuce, productName: 'Fresh Food Pack' };
-    expect(recallWarnsProduct(generic, taylorRecall)).toBe(false);
+  it("n'avertit PAS pour un communiqué PÉRIMÉ (> 60 jours)", () => {
+    expect(recallWarnsProduct({ brand: 'Taylor Farms' }, { ...taylorPress, publishedAt: STALE })).toBe(false);
   });
 
-  it('matche singulier/pluriel (lettuces ↔ lettuce)', () => {
-    const plural = { ...scannedLettuce, productName: 'Iceberg Lettuces Mix' };
-    expect(recallWarnsProduct(plural, taylorRecall)).toBe(true);
+  it("n'avertit PAS quand la date du communiqué est illisible", () => {
+    expect(recallWarnsProduct({ brand: 'Taylor Farms' }, { ...taylorPress, publishedAt: '' })).toBe(false);
   });
 });
 
-// Données RÉELLES du rappel FDA de juillet 2026 (page "Taylor Fresh Foods
-// Recalls Iceberg Lettuce from Central Mexico Because of Possible Health
-// Risk") : firme = raison sociale "Taylor Fresh Foods" (≠ marque consommateur
-// "Taylor Farms" renvoyée par Open Food Facts), descriptions food-service
-// abrégées ("BLEND LETT/ROM 50/50 NOCLR 4/5#"), lots publiés uniquement en
-// PDF (code_info vide), identification par dates "Best if Used By".
-describe('cas réel FDA juillet 2026 — Taylor Fresh Foods / iceberg / Cyclospora', () => {
-  const fdaJuly2026: RecallRecord = {
-    id: 'F-2026-TAYLOR',
-    title: 'BLEND LETT/ROM 50/50 NOCLR 4/5#; LETTUCE CHOP 4/5#; shredded iceberg product',
-    description:
-      'This action was prompted by the multistate Cyclospora outbreak. Iceberg lettuce from Central Mexico, possible health risk. Distributed June 29th thru July 16th in AL, AR, CT, FL, GA, IA, IL, IN, KS, KY, LA, MA, MD, MI, MO, MS, NC, NH, NJ, OH, OK, PA, SC, TN, TX, VA, and WI.',
-    lotNumbers: [], // les lots sont dans un PDF lié, pas dans code_info
-    codeInfo: 'Best if Used By 7/16/2026 - 8/1/2026',
-    brand: 'Taylor Fresh Foods, Inc.',
-    productCategory: 'BLEND LETT/ROM 50/50 NOCLR 4/5#',
-    country: 'US',
-    publishedAt: '2026-07-17',
-    link: 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/taylor-fresh-foods-recalls-iceberg-lettuce-central-mexico-because-possible-health-risk'
-  };
-
-  it("avertit malgré raison sociale ≠ marque consommateur (Taylor Fresh Foods ↔ Taylor Farms)", () => {
-    const offProduct = { brand: 'Taylor Farms', productName: 'Shredded Iceberg Lettuce' };
-    expect(recallWarnsProduct(offProduct, fdaJuly2026)).toBe(true);
-  });
-
-  it('avertit sur les descriptions food-service abrégées (LETTUCE CHOP)', () => {
-    const offProduct = { brand: 'Taylor Farms', productName: 'Chopped Lettuce Salad' };
-    expect(recallWarnsProduct(offProduct, fdaJuly2026)).toBe(true);
-  });
-
-  it("statut 'warning' avec référence + codeInfo (Best if Used By) exposés", () => {
-    const scanned: ScannedProduct = {
-      id: 'p-real',
-      brand: 'Taylor Farms',
-      lotNumber: 'TFRS999X',
-      productName: 'Shredded Iceberg Lettuce',
-      scannedAt: Date.now(),
-      recallStatus: 'unknown'
+// RÉGRESSION incident 2026-07-20 : notifications en masse. Ces cas RÉELS
+// (relevés sur les notifications reçues) ne doivent JAMAIS alerter.
+describe('anti-faux-positifs (incident notifications du 20/07)', () => {
+  it("les enregistrements ENFORCEMENT sans lot n'alertent jamais, marque identique ou pas", () => {
+    const enforcement: RecallRecord = {
+      id: 'r1',
+      title: 'Kraft Heinz Foods Company Recalls Ready-To-Eat Ham and Cheese Loaf',
+      brand: 'Kraft Heinz Foods Company',
+      lotNumbers: [],
+      country: 'US',
+      publishedAt: RECENT,
+      source: 'usda'
     };
-    const result = getRecallStatus(scanned, [fdaJuly2026]);
-    expect(result.status).toBe('warning');
-    expect(result.recallReference).toBe('F-2026-TAYLOR');
+    expect(recallWarnsProduct({ brand: 'Kraft', productName: 'cheddar cheese' }, enforcement)).toBe(false);
+    // idem sans tag source (donnée ancienne non migrée)
+    expect(recallWarnsProduct({ brand: 'Kraft' }, { ...enforcement, source: undefined })).toBe(false);
   });
 
-  it("un token de marque GÉNÉRIQUE ne suffit pas (Great Value ↔ Great Lakes Cheese)", () => {
-    const cheeseRecall: RecallRecord = {
-      ...fdaJuly2026,
-      id: 'F-2026-CHEESE',
-      title: 'Shredded cheddar cheese 8oz bags',
-      description: 'Possible Listeria contamination in shredded cheese',
-      brand: 'Great Lakes Cheese Co'
-    };
-    const walmart = { brand: 'Great Value', productName: 'Shredded Cheddar Cheese' };
-    expect(recallWarnsProduct(walmart, cheeseRecall)).toBe(false);
+  it("une marque d'UNE lettre ('U') n'alerte jamais, même sur communiqué", () => {
+    const p = press('Georgia Nut Co', 'Georgia Nut Co Recalls tru fru Strawberries');
+    expect(recallWarnsProduct({ brand: 'U', productName: 'Crème entière UHT' }, p)).toBe(false);
   });
 
-  it("un produit Taylor Farms SANS rapport (salsa) n'est pas flagué", () => {
-    const salsa = { brand: 'Taylor Farms', productName: 'Chunky Salsa' };
-    expect(recallWarnsProduct(salsa, fdaJuly2026)).toBe(false);
+  it('pas de sous-chaîne : Coca-Cola ≠ COCACOLA SOUTHWEST BEVERAGES (mot collé)', () => {
+    const p = press('COCACOLA SOUTHWEST BEVERAGES LLC', 'Coca-Cola 12oz Can Recall');
+    expect(recallWarnsProduct({ brand: 'Coca-Cola', productName: 'PET 1.75L' }, p)).toBe(false);
+  });
+
+  it('un token de marque GÉNÉRIQUE ne relie pas deux marques (Great Value ↔ Great Lakes Cheese)', () => {
+    const p = press('Great Lakes Cheese Co', 'Great Lakes Cheese Recalls Shredded Cheese');
+    expect(recallWarnsProduct({ brand: 'Great Value', productName: 'Shredded Cheddar' }, p)).toBe(false);
   });
 });
 
-// Les COMMUNIQUÉS de presse FDA (proxy fdaPress) paraissent des jours avant
-// l'ingestion openFDA. Titres réels du flux du 17 juillet 2026.
-describe('communiqués de presse FDA (source fdaPress)', () => {
+describe('extraction de marque des titres de communiqués', () => {
   it('extrait la marque des titres réels du flux', () => {
     expect(
       extractPressBrand('Taylor Fresh Foods Recalls Iceberg Lettuce from Central Mexico Because of Possible Health Risk')
@@ -144,90 +122,45 @@ describe('communiqués de presse FDA (source fdaPress)', () => {
     expect(extractPressBrand('NARA ORGANICS RECALLS ALL LOTS OF NARA INFANT FORMULA')).toBe('NARA ORGANICS');
   });
 
-  it("titre SANS marque en tête ('Voluntary Recall of…') → pas de marque, donc jamais de warning", () => {
-    expect(
-      extractPressBrand('Voluntary Recall of Two Lots of PEDIGREE Can High Protein Wet Dog Food')
-    ).toBe('');
+  it("titre SANS marque en tête ('Voluntary Recall of…') → pas de marque, donc jamais d'alerte", () => {
+    expect(extractPressBrand('Voluntary Recall of Two Lots of PEDIGREE Can High Protein Wet Dog Food')).toBe('');
+    const p = press('', 'Voluntary Recall of Two Lots of PEDIGREE Can High Protein Wet Dog Food');
+    expect(recallWarnsProduct({ brand: 'Pedigree' }, p)).toBe(false);
   });
-
-  it('un communiqué mappé (sans lots) déclenche le warning bout-en-bout', () => {
-    const title =
-      'Taylor Fresh Foods Recalls Iceberg Lettuce from Central Mexico Because of Possible Health Risk';
-    const pressRecord: RecallRecord = {
-      id: 'fda-press-taylor-fresh-foods-recalls-iceberg-lettuce',
-      title,
-      description:
-        'Taylor Farms de Mexico of Guanajuato, Mexico is voluntarily removing all iceberg lettuce sourced from central Mexico from the U.S. market, because it has the potential to be contaminated with Cyclospora.',
-      lotNumbers: [], // toujours vide pour un communiqué
-      brand: extractPressBrand(title),
-      country: 'US',
-      publishedAt: 'Fri, 17 Jul 2026 02:45:00 EDT'
-    };
-    const scanned: ScannedProduct = {
-      id: 'p-press',
-      brand: 'Taylor Farms',
-      lotNumber: 'ABC12345',
-      productName: 'Shredded Iceberg Lettuce',
-      scannedAt: Date.now(),
-      recallStatus: 'unknown'
-    };
-    const result = getRecallStatus(scanned, [pressRecord]);
-    expect(result.status).toBe('warning');
-    expect(result.recallReference).toBe('fda-press-taylor-fresh-foods-recalls-iceberg-lettuce');
-  });
-});
-
-// RÉGRESSION incident 2026-07-20 : le statut 'warning' notifiait en masse sur
-// des méga-marques et des marques courtes. Aucun de ces cas RÉELS ne doit
-// déclencher d'avertissement (données relevées sur les notifications reçues).
-describe('anti-faux-positifs (incident notifications)', () => {
-  const mk = (id: string, brand: string, title: string, description = ''): RecallRecord => ({
-    id, title, description, brand, lotNumbers: [], country: 'US', publishedAt: '2026-07-01'
-  });
-
-  const cases: Array<[string, { brand: string; productName: string }, RecallRecord]> = [
-    ['Kraft cheddar vs Kraft Heinz ham & cheese',
-      { brand: 'Kraft', productName: 'cheddar cheese' },
-      mk('r1', 'Kraft Heinz Foods Company', 'Kraft Heinz Foods Company Recalls Ready-To-Eat Ham and Cheese Loaf')],
-    ['marque "U" (1 lettre) vs Georgia Nut Co',
-      { brand: 'U', productName: 'Crème entière UHT 30%MG' },
-      mk('r2', 'Georgia Nut Co', 'tru fru Strawberries + Creme Freeze-Dried Fresh')],
-    ['Nestlé crunch vs Nestlé Lean Cuisine (marque partagée seule)',
-      { brand: 'Nestlé', productName: 'Nestle crunch' },
-      mk('r3', 'Nestle Prepared Foods Company', 'Nestle Prepared Foods Company Recalls Lean Cuisine Fettuccine')],
-    ['Coca-Cola vs CocaCola Southwest Beverages (sous-chaîne)',
-      { brand: 'Coca-Cola', productName: 'PET 1.75L COCA' },
-      mk('r4', 'COCACOLA SOUTHWEST BEVERAGES LLC', 'Coca-Cola 12oz Can - 24 pack')]
-  ];
-
-  for (const [label, product, recall] of cases) {
-    it(`n'avertit PAS : ${label}`, () => {
-      expect(recallWarnsProduct(product, recall)).toBe(false);
-    });
-  }
 });
 
 describe('getRecallStatus avec repli warning', () => {
-  it("renvoie 'warning' + référence quand seul le repli sans-lot matche", () => {
-    const result = getRecallStatus(scannedLettuce, [taylorRecall]);
+  const scanned: ScannedProduct = {
+    id: 'p1',
+    brand: 'Taylor Farms',
+    lotNumber: 'TF20260710',
+    productName: 'Shredded Iceberg Lettuce',
+    scannedAt: Date.now(),
+    recallStatus: 'unknown'
+  };
+
+  it("renvoie 'warning' + référence quand seul un communiqué matche", () => {
+    const result = getRecallStatus(scanned, [taylorPress]);
     expect(result.status).toBe('warning');
-    expect(result.recallReference).toBe('F-2026-1234');
+    expect(result.recallReference).toBe(taylorPress.id);
   });
 
   it("'recalled' (match par lot) prime sur 'warning'", () => {
     const lotRecall: RecallRecord = {
-      ...taylorRecall,
+      ...taylorPress,
       id: 'F-2026-9999',
-      lotNumbers: ['TF20260710']
+      // enregistrement enforcement : marque consommateur + lots publiés
+      brand: 'Taylor Farms',
+      lotNumbers: ['TF20260710'],
+      source: 'fda'
     };
-    const result = getRecallStatus(scannedLettuce, [taylorRecall, lotRecall]);
+    const result = getRecallStatus(scanned, [taylorPress, lotRecall]);
     expect(result.status).toBe('recalled');
     expect(result.recallReference).toBe('F-2026-9999');
   });
 
-  it("renvoie 'safe' quand ni lot ni recoupement produit", () => {
-    const unrelated = { ...scannedLettuce, brand: 'Kraft', productName: 'Cheddar Cheese' };
-    const result = getRecallStatus(unrelated, [taylorRecall]);
-    expect(result.status).toBe('safe');
+  it("renvoie 'safe' quand ni lot ni communiqué de la marque", () => {
+    const unrelated = { ...scanned, brand: 'Kraft', productName: 'Cheddar Cheese' };
+    expect(getRecallStatus(unrelated, [taylorPress]).status).toBe('safe');
   });
 });

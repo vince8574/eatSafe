@@ -32,6 +32,15 @@ export type RecallRecord = {
   publishedAt: string;
   link?: string;
   imageUrl?: string;
+  // Provenance de l'enregistrement :
+  // - 'fda-press' : flux RSS OFFICIEL de la FDA "Recalls, Market Withdrawals &
+  //   Safety Alerts" (servi par le proxy fdaPress ; Google News n'est que le
+  //   repli réseau du même flux). Récents, peu nombreux, dignes d'une alerte →
+  //   SEULE source autorisée à produire le statut 'warning' (rappel sans lot).
+  // - 'fda' / 'usda' : bases enforcement. Leurs milliers d'anciens
+  //   enregistrements sans lot n'alertent JAMAIS (source du spam du 20/07) ;
+  //   ils matchent par numéro de lot uniquement.
+  source?: 'fda' | 'usda' | 'fda-press';
 };
 
 export type OCRResult = {

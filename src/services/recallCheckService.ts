@@ -5,8 +5,8 @@ import type { CountryCode } from '../types';
 export interface RecallCheckResult {
   productId: string;
   wasUpdated: boolean;
-  // 'recalled' = match par LOT (preuve) ; 'warning' = rappel SANS lots publiés
-  // dont marque + type de produit recoupent (à vérifier par l'utilisateur) ;
+  // 'recalled' = match par LOT (preuve) ; 'warning' = communiqué FDA récent
+  // sans lots publiés dont la marque correspond (à vérifier par l'utilisateur) ;
   // 'safe' = plus aucun rappel correspondant.
   status: 'recalled' | 'warning' | 'safe';
   newRecalls: Array<{
@@ -15,6 +15,10 @@ export interface RecallCheckResult {
     description?: string;
     brand?: string;
     lotNumbers: string[];
+    // Infos d'identification publiées (dates "Best if Used By"…) et lien vers
+    // l'avis officiel — affichés dans la notification/l'écran détail.
+    codeInfo?: string;
+    link?: string;
   }>;
 }
 
@@ -79,7 +83,9 @@ export async function checkAllProductsForRecalls(
           title: recall.title,
           description: recall.description,
           brand: recall.brand,
-          lotNumbers: recall.lotNumbers
+          lotNumbers: recall.lotNumbers,
+          codeInfo: recall.codeInfo,
+          link: recall.link
         }))
       });
     }

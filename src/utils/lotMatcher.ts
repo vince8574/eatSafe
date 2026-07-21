@@ -203,45 +203,27 @@ export function recallMatchesProduct(
 }
 
 // ---------------------------------------------------------------------------
-// Rappels SANS numéro de lot (cas Taylor Farms/FDA : les lots sont dans un PDF,
-// pas dans code_info). On ne peut PAS asserter "RAPPELÉ" (pas de lot à comparer),
-// mais on peut émettre un AVERTISSEMENT "rappel possible — vérifiez l'avis
-// officiel" quand la MARQUE matche strictement ET que le NOM DU PRODUIT (résolu
-// par le code-barres via Open Food Facts) recoupe la description du rappel.
-// Ex. produit "Shredded Iceberg Lettuce" (Taylor Farms) vs rappel FDA
-// "BLEND LETT/ROM ... iceberg lettuce". Sans recoupement produit, pas de
-// warning : sinon TOUTE la gamme d'une grande marque s'affiche "à vérifier".
+// COMMUNIQUÉS de presse FDA sans numéro de lot (cas Taylor Farms juil. 2026 :
+// les lots/dates sont dans la page, pas dans les données structurées). On ne
+// peut PAS asserter "RAPPELÉ" (aucun lot à comparer), mais on émet un
+// AVERTISSEMENT "rappel possible — vérifiez" au NIVEAU MARQUE : l'objectif
+// produit est d'alerter le consommateur dès le communiqué FDA, en lui montrant
+// les infos d'identification publiées (dates "Best if Used By"…).
+//
+// Garde-fous anti-spam (incident du 20/07 : notifications en série) :
+// 1. SOURCE : uniquement le flux RSS officiel FDA des communiqués
+//    ('fda-press', ~20-100 entrées récentes). Les ~2 400 enregistrements
+//    enforcement sans lot (FDA/USDA) n'alertent JAMAIS.
+// 2. RÉCENCE : communiqué de moins de 60 jours.
+// 3. MARQUE : égalité exacte normalisée OU token distinctif partagé (≥4
+//    lettres, hors termes d'entreprise). JAMAIS de sous-chaîne : "U" est
+//    contenu dans presque tout, "CocaCola" ⊂ "CocaCola Southwest Beverages".
 // ---------------------------------------------------------------------------
 
-// Mots trop génériques dans les descriptions FDA / noms OFF pour porter un
-// recoupement (raison sociale, conditionnement, unités…).
-const WARNING_STOPWORDS = new Set([
-  'food', 'foods', 'fresh', 'farm', 'farms', 'brand', 'brands', 'company',
-  'product', 'products', 'organic', 'natural', 'original', 'premium', 'classic',
-  'style', 'pack', 'packs', 'size', 'count', 'ounce', 'ounces', 'pound',
-  'pounds', 'gram', 'grams', 'with', 'without', 'from', 'because', 'possible',
-  'recall', 'recalls', 'recalled', 'service', 'distribution', 'inc', 'llc',
-  'corp', 'company', 'retail', 'wholesale', 'blend', 'blends', 'mixed',
-  // Catégories d'aliments TROP génériques pour désigner un produit précis : un
-  // rappel "cheese"/"chicken" d'une méga-marque ne concerne pas TOUS ses
-  // fromages/poulets. On n'accepte le recoupement que sur un mot DISTINCTIF
-  // (ex. "iceberg", "cantaloupe"), jamais sur une catégorie large. (EN + FR.)
-  'cheese', 'cheddar', 'cream', 'creme', 'milk', 'butter', 'yogurt', 'yoghurt',
-  'sauce', 'ketchup', 'mayo', 'mayonnaise', 'caramel', 'coffee', 'cafe',
-  'chocolate', 'chocolat', 'vanilla', 'vanille', 'sugar', 'sucre', 'water',
-  'juice', 'jus', 'bread', 'pain', 'flour', 'farine', 'chicken', 'poulet',
-  'beef', 'boeuf', 'pork', 'porc', 'turkey', 'dinde', 'salad', 'salade',
-  'soup', 'soupe', 'pizza', 'pasta', 'pates', 'sausage', 'saucisse', 'snack',
-  'snacks', 'candy', 'drink', 'soda', 'cola', 'entiere', 'soluble', 'saveur',
-  'biscuit', 'biscuits', 'cookie', 'cookies', 'yaourt', 'lait', 'fromage'
-]);
+const WARNING_MAX_AGE_MS = 60 * 24 * 60 * 60 * 1000; // 60 jours
 
-// La FDA renseigne la RAISON SOCIALE ("Taylor Fresh Foods Inc"), pas la marque
-// consommateur ("Taylor Farms" sur Open Food Facts) : le match strict échoue.
-// Repli TOKEN DISTINCTIF : un mot de marque ≥5 lettres, hors termes génériques
-// d'entreprise ("foods", "farms", "fresh", "value"…), partagé entre les deux.
-// "Taylor" relie Taylor Farms ↔ Taylor Fresh Foods ; "Great Value" ↔ "Great
-// Lakes Cheese" ne matche PAS ("great"/"value" sont génériques).
+// Termes d'entreprise/génériques : jamais suffisants à eux seuls pour relier
+// deux marques ("Great Value" ↔ "Great Lakes Cheese" ne matche pas).
 const BRAND_GENERIC_TOKENS = new Set([
   'brand', 'brands', 'company', 'corp', 'corporation', 'group', 'holdings',
   'international', 'incorporated', 'foods', 'food', 'farms', 'farm', 'fresh',
@@ -251,25 +233,23 @@ const BRAND_GENERIC_TOKENS = new Set([
   'retail', 'wholesale', 'distribution', 'products', 'produce', 'american'
 ]);
 
+// La FDA renseigne la RAISON SOCIALE ("Taylor Fresh Foods Inc"), pas la marque
+// consommateur ("Taylor Farms" sur Open Food Facts) : l'égalité échoue mais le
+// token distinctif "taylor" les relie. Seuil ≥4 lettres : couvre "Dole",
+// bloque "U" (les marques de 1-3 lettres ne peuvent pas alerter).
 function distinctiveBrandTokens(brand: string): Set<string> {
   const out = new Set<string>();
   for (const w of brand.toLowerCase().split(/[^a-z]+/i)) {
-    if (w.length >= 5 && !BRAND_GENERIC_TOKENS.has(w)) out.add(w);
+    if (w.length >= 4 && !BRAND_GENERIC_TOKENS.has(w)) out.add(w);
   }
   return out;
 }
 
-// Marque pour le chemin WARNING. On EXIGE soit une égalité normalisée EXACTE,
-// soit un TOKEN DISTINCTIF partagé (≥5 lettres, hors termes d'entreprise). On
-// n'utilise PAS de sous-chaîne : "U" (1 lettre) est contenu dans presque toutes
-// les raisons sociales ("Georgia N-U-T Co"), et "Coca-Cola" ⊂ "CocaCola
-// Southwest Beverages" → faux positifs en série. Les marques trop courtes
-// (< token distinctif) ne peuvent donc pas déclencher d'avertissement.
 function brandMatchesForWarning(productBrand: string, recallBrand: string | undefined): boolean {
   if (!recallBrand || isUnknownBrand(productBrand) || isUnknownBrand(recallBrand)) return false;
   const a = normalizeBrand(productBrand);
   const b = normalizeBrand(recallBrand);
-  if (a && b && a === b) return true; // égalité exacte (ex. "Kraft" == "Kraft")
+  if (a && b && a === b) return true; // égalité exacte (ex. "Malichita" == "Malichita")
   const mine = distinctiveBrandTokens(productBrand);
   if (mine.size === 0) return false; // pas de token distinctif → jamais d'alerte
   const theirs = distinctiveBrandTokens(recallBrand);
@@ -279,66 +259,37 @@ function brandMatchesForWarning(productBrand: string, recallBrand: string | unde
   return false;
 }
 
-// Tokens produit DISTINCTIFS : ≥5 lettres, sans accents, hors stopwords (dont
-// les catégories d'aliments larges) ET hors tokens de marque fournis. Un mot de
-// marque présent à la fois dans le nom du produit et dans le titre du rappel
-// (ex. "nestle") ne prouve PAS que c'est le même produit → on l'exclut.
-function productTokens(text: string, exclude: Set<string> = new Set()): Set<string> {
-  const out = new Set<string>();
-  const words = text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .split(/[^a-z]+/);
-  for (const w of words) {
-    if (w.length < 5 || WARNING_STOPWORDS.has(w) || exclude.has(w)) continue;
-    out.add(w);
-    if (w.endsWith('s')) out.add(w.slice(0, -1));
-  }
-  return out;
-}
-
 /**
- * Un rappel SANS lots publiés concerne-t-il PROBABLEMENT ce produit ?
- * Conditions cumulatives : marque stricte + recoupement d'au moins un mot-clé
- * produit. Résultat = statut 'warning' (ambre, "à vérifier"), jamais 'recalled'.
+ * Un COMMUNIQUÉ FDA récent (sans lots publiés) concerne-t-il la marque de ce
+ * produit ? Alerte au niveau marque : toute la gamme est signalée "rappel
+ * possible — à vérifier" (ambre), jamais "RAPPELÉ" (rouge). L'utilisateur
+ * tranche avec les infos publiées (dates "Best if Used By", descriptions).
  */
 export function recallWarnsProduct(
   product: { brand: string; productName?: string },
-  recall: { brand?: string; lotNumbers?: string[]; title?: string; description?: string; productCategory?: string }
+  recall: {
+    brand?: string;
+    lotNumbers?: string[];
+    source?: string;
+    publishedAt?: string;
+    title?: string;
+    description?: string;
+  }
 ): boolean {
-  // Uniquement pour les rappels SANS lot : avec lots, c'est recallMatchesProduct
-  // qui tranche (et un non-match de lot signifie "pas concerné", pas "warning").
+  // Avec lots, c'est recallMatchesProduct qui tranche (un non-match de lot
+  // signifie "pas concerné", pas "warning").
   if ((recall.lotNumbers ?? []).length > 0) return false;
 
-  // Marque obligatoire : stricte OU token distinctif partagé (raison sociale
-  // FDA vs marque consommateur, ex. "Taylor Fresh Foods Inc" ↔ "Taylor Farms").
-  if (!brandMatchesForWarning(product.brand, recall.brand)) return false;
+  // Uniquement le flux RSS officiel des communiqués FDA — jamais les vieux
+  // enregistrements enforcement sans lot (source du spam de notifications).
+  if (recall.source !== 'fda-press') return false;
 
-  // Recoupement produit : sans nom de produit (scan sans code-barres), on ne
-  // peut pas corroborer → pas de warning (on garde le comportement silencieux).
-  const name = (product.productName ?? '').trim();
-  if (!name || isUnknownBrand(name)) return false;
+  // Communiqué RÉCENT uniquement (date illisible → pas d'alerte, jamais
+  // l'inverse).
+  const ts = Date.parse(recall.publishedAt ?? '');
+  if (!Number.isFinite(ts) || Date.now() - ts > WARNING_MAX_AGE_MS) return false;
 
-  // Les tokens de MARQUE (produit + rappel) sont exclus du recoupement produit :
-  // sinon "Nestle crunch" recoupe "Nestle ... Lean Cuisine" via le mot "nestle".
-  const brandTokens = new Set<string>([
-    ...distinctiveBrandTokens(product.brand),
-    ...distinctiveBrandTokens(recall.brand ?? '')
-  ]);
-
-  const mine = productTokens(name, brandTokens);
-  if (mine.size === 0) return false;
-
-  const theirs = productTokens(
-    [recall.title ?? '', recall.description ?? '', recall.productCategory ?? ''].join(' '),
-    brandTokens
-  );
-
-  for (const tok of mine) {
-    if (theirs.has(tok)) return true;
-  }
-  return false;
+  return brandMatchesForWarning(product.brand, recall.brand);
 }
 
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {

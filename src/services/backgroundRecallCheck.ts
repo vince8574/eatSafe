@@ -11,6 +11,11 @@ import type { ScannedProduct, CountryCode } from '../types';
 const BACKGROUND_RECALL_CHECK_TASK = 'background-recall-check';
 const LAST_CHECK_KEY = 'last-recall-check';
 const NEW_RECALLS_KEY = 'new-recalls-found';
+// Avertissements déjà notifiés ("productId::recallId") : UNE seule notification
+// par produit et par communiqué, à vie. Sans ça, le cycle horaire re-notifiait
+// en boucle (incident du 20/07).
+const NOTIFIED_WARNINGS_KEY = 'notified-warning-keys';
+const NOTIFIED_WARNINGS_MAX = 300;
 const isExpoGo = Constants.appOwnership === 'expo';
 
 // Définir la tâche en arrière-plan
@@ -45,9 +50,19 @@ if (!isExpoGo) {
       // Sauvegarder les nouveaux rappels pour les afficher à l'ouverture de l'app
       await AsyncStorage.setItem(NEW_RECALLS_KEY, JSON.stringify(results));
 
+      // Registre des avertissements déjà notifiés (1 notif par produit+rappel).
+      let notified: string[] = [];
+      try {
+        notified = JSON.parse((await AsyncStorage.getItem(NOTIFIED_WARNINGS_KEY)) ?? '[]');
+      } catch {
+        notified = [];
+      }
+      const notifiedSet = new Set(notified);
+
       for (const result of results) {
-        const product = products.find((p) => p.id === result.productId);
-        if (!product) continue;
+        const productIndex = products.findIndex((p) => p.id === result.productId);
+        if (productIndex < 0) continue;
+        const product = products[productIndex];
 
         // COHÉRENCE notif ↔ historique : on persiste le statut dans Firestore
         // (source de vérité de l'historique) AVANT de notifier. Sans ça, une notif
@@ -63,7 +78,7 @@ if (!isExpoGo) {
               lastCheckedAt: Date.now()
             });
           } else if (result.status === 'warning') {
-            // Rappel SANS lots publiés (marque + type de produit recoupent) :
+            // Communiqué FDA sans lots publiés (marque correspondante) :
             // statut 'warning', PAS 'recalled' — aucun lot ne prouve le match.
             await updateFirestoreProduct(product.id, {
               recallStatus: 'warning',
@@ -81,8 +96,16 @@ if (!isExpoGo) {
           console.warn('[BackgroundRecallCheck] Firestore status update skipped', e);
         }
 
-        // Notifier les NOUVEAUX rappels (pas les "safe"). Rouge = match par lot ;
-        // ambre (défaut, sans vibration MAX) = rappel possible à vérifier.
+        // Mettre à jour AUSSI la copie locale : le cycle suivant relit
+        // AsyncStorage — sans ça le "changement" était re-détecté et re-notifié
+        // toutes les heures (cause du storm du 20/07).
+        products[productIndex] = {
+          ...product,
+          recallStatus: result.status,
+          ...(result.newRecalls[0] ? { recallReference: result.newRecalls[0].id } : {})
+        };
+
+        // Notifier les NOUVEAUX rappels (pas les "safe"). Rouge = match par lot.
         if (result.status === 'recalled') {
           await Notifications.scheduleNotificationAsync({
             content: {
@@ -98,12 +121,47 @@ if (!isExpoGo) {
             },
             trigger: null
           });
+        } else if (result.status === 'warning') {
+          // Ambre = communiqué FDA, marque correspondante, pas de lot publié.
+          // UNE SEULE notification par produit+communiqué, avec les infos
+          // d'identification (dates "Best if Used By") quand elles existent.
+          const recall = result.newRecalls[0];
+          const key = `${product.id}::${recall.id}`;
+          if (!notifiedSet.has(key)) {
+            notifiedSet.add(key);
+            let body = t('notifications.warningAlert.body', {
+              brand: product.brand,
+              product: product.productName ?? product.brand
+            });
+            if (recall.codeInfo) {
+              body += `\n${recall.codeInfo.split('\n')[0].slice(0, 120)}`;
+            }
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: t('notifications.warningAlert.title'),
+                body,
+                sound: true,
+                priority: Notifications.AndroidNotificationPriority.DEFAULT,
+                data: {
+                  productId: product.id,
+                  type: 'recall-warning'
+                }
+              },
+              trigger: null
+            });
+          }
         }
-        // PAS de notification push pour le statut 'warning' (rappel sans lot) :
-        // c'est un signal INCERTAIN (marque + type de produit, sans preuve par
-        // lot). Poussé en fond, il générait des alertes en série sur les
-        // méga-marques et se re-déclenchait à chaque cycle. Le statut ambre
-        // reste visible DANS l'app (écran détail) ; seul le push est retiré.
+      }
+
+      // Persister la copie locale synchronisée et le registre de notifs.
+      try {
+        await AsyncStorage.setItem('scanned-products', JSON.stringify(products));
+        await AsyncStorage.setItem(
+          NOTIFIED_WARNINGS_KEY,
+          JSON.stringify([...notifiedSet].slice(-NOTIFIED_WARNINGS_MAX))
+        );
+      } catch (e) {
+        console.warn('[BackgroundRecallCheck] local cache update skipped', e);
       }
 
       // Mettre à jour la date de dernière vérification
