@@ -22,36 +22,37 @@ import {
 } from 'react-native-iap';
 
 // Product IDs - must match Google Play Console
+// NB : "restaurant_premium(_yearly)" (Advanced) retiré de l'offre le 22/07/2026.
 export const SUBSCRIPTION_PRODUCT_IDS = [
   // Monthly
   'starter_basic',
   'foodtruck_starter',
   'foodtruck_pro',
   'restaurant_standard',
-  'restaurant_premium',
   'school_security',
   // Yearly (2 months free)
   'starter_basic_yearly',
   'foodtruck_starter_yearly',
   'foodtruck_pro_yearly',
   'restaurant_standard_yearly',
-  'restaurant_premium_yearly',
   'school_security_yearly',
 ];
 
+// Nouvelle grille de packs (22/07/2026). Nouveaux SKUs — les anciens
+// pack_small/medium/large/xlarge sont abandonnés.
 export const CONSUMABLE_PRODUCT_IDS = [
-  'pack_small',
-  'pack_medium',
-  'pack_large',
-  'pack_xlarge',
+  'pack_10',
+  'pack_50',
+  'pack_100',
+  'pack_210',
 ];
 
 // Map pack IDs to scan quantities
 export const PACK_QUANTITIES: Record<string, number> = {
-  pack_small: 100,
-  pack_medium: 500,
-  pack_large: 1000,
-  pack_xlarge: 2500,
+  pack_10: 10,
+  pack_50: 50,
+  pack_100: 100,
+  pack_210: 210,
 };
 
 export type BillingProduct = ProductOrSubscription;

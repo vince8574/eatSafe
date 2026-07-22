@@ -155,60 +155,45 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     sitesLimit: null,
     regulatoryFormat: true
   },
-  {
-    id: 'restaurant_premium',
-    idYear: 'restaurant_premium_yearly',
-    labelKey: 'subscription.plans.restaurantPremium.label',
-    category: 'restaurant',
-    price: '$69.99 / mo',
-    pricePerMonth: 69.99,
-    priceYear: '$699.99 / yr',
-    pricePerYear: 699.99,
-    descriptionKeys: [
-      'subscription.plans.restaurantPremium.desc1',
-      'subscription.plans.restaurantPremium.desc2',
-      'subscription.plans.restaurantPremium.desc3',
-      'subscription.plans.restaurantPremium.desc4'
-    ],
-    scansIncluded: 5000,
-    historyRetentionDays: 365,
-    exportEnabled: true,
-    exportFormats: ['pdf', 'xlsx', 'csv'],
-    employeesLimit: 10,
-    sitesLimit: null,
-    regulatoryFormat: false
-  },
 ];
+// NB : le plan "Advanced" (restaurant_premium, 5000 scans, 69,99 $/mois +
+// annuel) a été retiré de l'offre le 22/07/2026. getPlanById le résout encore
+// pour les ANCIENS abonnés via le repli "plan inconnu" de subscriptionService ;
+// penser à retirer/archiver les produits restaurant_premium(_yearly) dans App
+// Store Connect et Play Console.
 
-// Packs de scans supplémentaires (comme recommandé pour App Store / Google Play)
+// Packs de scans supplémentaires (consommables App Store / Google Play).
+// Nouvelle grille du 22/07/2026 — les IDs pack_small/medium/large/xlarge
+// (100/500/1000/2500 scans) sont abandonnés : quantités ET prix changent, on
+// crée de NOUVEAUX produits plutôt que de changer le sens des anciens SKUs.
 export const SCAN_PACKS: ScanPack[] = [
   {
-    id: 'pack_small',
+    id: 'pack_10',
     labelKey: 'subscription.packs.small',
-    quantity: 100,
-    price: '$0.99',
-    priceUSD: 0.99
+    quantity: 10,
+    price: '$2.50',
+    priceUSD: 2.5
   },
   {
-    id: 'pack_medium',
+    id: 'pack_50',
     labelKey: 'subscription.packs.medium',
-    quantity: 500,
-    price: '$4.99',
-    priceUSD: 4.99
+    quantity: 50,
+    price: '$7.99',
+    priceUSD: 7.99
   },
   {
-    id: 'pack_large',
+    id: 'pack_100',
     labelKey: 'subscription.packs.large',
-    quantity: 1000,
-    price: '$9.99',
-    priceUSD: 9.99
+    quantity: 100,
+    price: '$14.99',
+    priceUSD: 14.99
   },
   {
-    id: 'pack_xlarge',
+    id: 'pack_210',
     labelKey: 'subscription.packs.xlarge',
-    quantity: 2500,
-    price: '$19.99',
-    priceUSD: 19.99
+    quantity: 210,
+    price: '$27.99',
+    priceUSD: 27.99
   }
 ];
 
