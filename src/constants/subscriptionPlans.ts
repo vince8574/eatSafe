@@ -171,8 +171,9 @@ export const SCAN_PACKS: ScanPack[] = [
     id: 'pack_10',
     labelKey: 'subscription.packs.small',
     quantity: 10,
-    price: '$2.50',
-    priceUSD: 2.5
+    // iOS n'autorise pas 2,50 $ (paliers de prix App Store) → 2,49 $.
+    price: '$2.49',
+    priceUSD: 2.49
   },
   {
     id: 'pack_50',
