@@ -364,6 +364,32 @@
       flex-shrink: 0;
     }
 
+    .video-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 9 / 16;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 40px var(--shadow);
+      background: #000;
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .badge-new {
       display: inline-block;
       margin-left: 8px;
@@ -459,6 +485,7 @@
     <header class="topbar">
       <div class="brand">Numeline</div>
       <nav class="nav">
+        <a href="#demo">Demo</a>
         <a href="#features">Features</a>
         <a href="#app">The app</a>
         <a href="#trust">Trust</a>
@@ -516,6 +543,23 @@
         <div class="caption">Feature graphic used for the store listing.</div>
       </div>
     </main>
+
+    <section id="demo" class="section fade-up" style="--delay: 0.18s;">
+      <h2>Numeline in action</h2>
+      <p>A short walkthrough — from scanning the lot number to an instant answer.</p>
+      <div class="video-wrap">
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/AObdQe4dQ8s"
+            title="Numeline demo"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
 
     <section id="features" class="section fade-up" style="--delay: 0.2s;">
       <h2>Made for confident decisions</h2>
