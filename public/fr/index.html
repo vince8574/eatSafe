@@ -3,8 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NumelineFR - Détecteur de rappels alimentaires</title>
-  <meta name="description" content="NumelineFR vous permet de scanner vos produits alimentaires, de vérifier leur statut de rappel et de recevoir des alertes. Rapide, clair et respectueux de votre vie privée." />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <script src="/favicon-anim.js" defer></script>
+  <title>NumelineFR — Scanner un produit et vérifier les rappels RappelConso</title>
+  <meta name="description" content="NumelineFR scanne le numéro de lot d'un produit et le confronte en temps réel aux rappels officiels RappelConso. Alertes de rappel, détection d'allergènes, respect de la vie privée. iOS et Android." />
+  <link rel="canonical" href="https://numeline.com/fr/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="alternate" hreflang="fr" href="https://numeline.com/fr/" />
+  <link rel="alternate" hreflang="en" href="https://numeline.com/" />
+  <link rel="alternate" hreflang="x-default" href="https://numeline.com/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="NumelineFR" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:title" content="NumelineFR — Scanner un produit et vérifier les rappels RappelConso" />
+  <meta property="og:description" content="Scannez le numéro de lot d'un produit et vérifiez-le en temps réel face aux rappels officiels RappelConso. Alertes et détection d'allergènes." />
+  <meta property="og:url" content="https://numeline.com/fr/" />
+  <meta property="og:image" content="https://numeline.com/feature-graphic-1024x500.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="NumelineFR — Scanner un produit et vérifier les rappels RappelConso" />
+  <meta name="twitter:description" content="Scannez un numéro de lot, vérifiez les rappels officiels RappelConso en temps réel. Alertes et allergènes." />
+  <meta name="twitter:image" content="https://numeline.com/feature-graphic-1024x500.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://numeline.com/#org",
+        "name": "Numeline",
+        "url": "https://numeline.com/",
+        "logo": "https://numeline.com/feature-graphic-1024x500.png"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://numeline.com/fr/#website",
+        "url": "https://numeline.com/fr/",
+        "name": "NumelineFR",
+        "inLanguage": "fr-FR",
+        "publisher": { "@id": "https://numeline.com/#org" }
+      },
+      {
+        "@type": "MobileApplication",
+        "name": "NumelineFR",
+        "operatingSystem": "iOS, Android",
+        "applicationCategory": "LifestyleApplication",
+        "description": "Scannez le numéro de lot d'un produit alimentaire et vérifiez-le face aux rappels officiels RappelConso en temps réel, avec détection d'allergènes.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "installUrl": "https://apps.apple.com/fr/app/numelinefr/id6772080722",
+        "publisher": { "@id": "https://numeline.com/#org" }
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -398,9 +454,26 @@
       h1 { font-size: 34px; }
     }
 
+    .nav-toggle {
+      display: none;
+      flex-direction: column; justify-content: center; gap: 5px;
+      width: 42px; height: 38px; padding: 9px;
+      background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+    }
+    .nav-toggle span { display: block; height: 2px; width: 100%; background: var(--accent-dark); border-radius: 2px; transition: transform 0.2s ease, opacity 0.2s ease; }
+    .topbar.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .topbar.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+    .topbar.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
     @media (max-width: 600px) {
-      .topbar { flex-direction: column; align-items: flex-start; }
-      .nav { gap: 10px; }
+      .topbar { flex-wrap: wrap; align-items: center; }
+      .nav-toggle { display: flex; }
+      .nav {
+        display: none; order: 5; width: 100%;
+        flex-direction: column; gap: 0; margin-top: 12px;
+      }
+      .topbar.nav-open .nav { display: flex; }
+      .nav a { padding: 12px 10px; border-radius: 0; border-bottom: 1px solid var(--line); }
       .nav-badges { display: none; }
       .page { padding: 16px 16px 40px; }
     }
@@ -411,6 +484,7 @@
     <header class="topbar">
       <div class="brand">NumelineFR</div>
       <nav class="nav">
+        <a href="/fr/blog/">Blog</a>
         <a href="#demo">Démo</a>
         <a href="#fonctionnalites">Fonctionnalités</a>
         <a href="#regime">Mon régime</a>

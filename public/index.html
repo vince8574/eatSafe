@@ -3,8 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Numeline - Food Recall Scanner</title>
-  <meta name="description" content="Numeline helps you scan food products, check recall status, and receive alerts. Privacy-first, fast, and clear." />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <script src="/favicon-anim.js" defer></script>
+  <title>Numeline — Scan Food Products & Check FDA/USDA Recalls</title>
+  <meta name="description" content="Numeline scans a product's lot number and checks it against official FDA and USDA recalls in real time. Get alerts, spot allergens, and know if your food is affected. iOS & Android." />
+  <link rel="canonical" href="https://numeline.com/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="alternate" hreflang="en" href="https://numeline.com/" />
+  <link rel="alternate" hreflang="fr" href="https://numeline.com/fr/" />
+  <link rel="alternate" hreflang="x-default" href="https://numeline.com/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Numeline" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="fr_FR" />
+  <meta property="og:title" content="Numeline — Scan Food Products & Check FDA/USDA Recalls" />
+  <meta property="og:description" content="Scan a product's lot number and instantly check it against official FDA and USDA recalls. Alerts, allergen detection, privacy-first." />
+  <meta property="og:url" content="https://numeline.com/" />
+  <meta property="og:image" content="https://numeline.com/feature-graphic-1024x500.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Numeline — Scan Food Products & Check FDA/USDA Recalls" />
+  <meta name="twitter:description" content="Scan a lot number, check official FDA & USDA recalls in real time. Alerts and allergen detection." />
+  <meta name="twitter:image" content="https://numeline.com/feature-graphic-1024x500.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://numeline.com/#org",
+        "name": "Numeline",
+        "url": "https://numeline.com/",
+        "logo": "https://numeline.com/feature-graphic-1024x500.png"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://numeline.com/#website",
+        "url": "https://numeline.com/",
+        "name": "Numeline",
+        "inLanguage": "en-US",
+        "publisher": { "@id": "https://numeline.com/#org" }
+      },
+      {
+        "@type": "MobileApplication",
+        "name": "Numeline",
+        "operatingSystem": "iOS, Android",
+        "applicationCategory": "LifestyleApplication",
+        "description": "Scan a food product's lot number and check it against official FDA and USDA recalls in real time, with allergen detection.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "installUrl": "https://apps.apple.com/app/id6758400953",
+        "publisher": { "@id": "https://numeline.com/#org" }
+      }
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -460,14 +516,40 @@
       }
     }
 
+    .nav-toggle {
+      display: none;
+      flex-direction: column; justify-content: center; gap: 5px;
+      width: 42px; height: 38px; padding: 9px;
+      background: #fff; border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
+    }
+    .nav-toggle span { display: block; height: 2px; width: 100%; background: var(--accent-dark); border-radius: 2px; transition: transform 0.2s ease, opacity 0.2s ease; }
+    .topbar.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .topbar.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+    .topbar.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
     @media (max-width: 600px) {
       .topbar {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: wrap;
+        align-items: center;
       }
 
+      .nav-toggle { display: flex; }
+
       .nav {
-        gap: 10px;
+        display: none;
+        order: 5;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        margin-top: 12px;
+      }
+
+      .topbar.nav-open .nav { display: flex; }
+
+      .nav a {
+        padding: 12px 10px;
+        border-radius: 0;
+        border-bottom: 1px solid var(--line);
       }
 
       .nav-badges {
@@ -485,6 +567,7 @@
     <header class="topbar">
       <div class="brand">Numeline</div>
       <nav class="nav">
+        <a href="/blog/">Blog</a>
         <a href="#demo">Demo</a>
         <a href="#features">Features</a>
         <a href="#app">The app</a>

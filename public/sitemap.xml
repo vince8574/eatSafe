@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://numeline.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://numeline.com/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://numeline.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://numeline.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://numeline.com/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://numeline.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://numeline.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://numeline.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url><loc>https://numeline.com/pricing.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Blog EN -->
+  <url><loc>https://numeline.com/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/blog/taylor-farms-cyclospora-iceberg-recall</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://numeline.com/blog/maple-leaf-bacon-import-recall</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://numeline.com/blog/resers-pasta-salad-allergen-recall</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- Blog FR -->
+  <url><loc>https://numeline.com/fr/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/fr/blog/prestige-de-la-sarthe-rappel-listeria</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://numeline.com/fr/blog/truite-fumee-bio-rappel-listeria</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- Légal -->
+  <url><loc>https://numeline.com/privacy-policy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://numeline.com/terms-of-service.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+</urlset>
