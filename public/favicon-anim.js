@@ -14,47 +14,57 @@
     var ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Lien favicon dédié à l'animation (les liens statiques restent en repli).
-    var link = document.createElement('link');
-    link.rel = 'icon';
-    link.type = 'image/png';
-    link.setAttribute('data-anim', '1');
-    document.head.appendChild(link);
-
     var img = new Image();
     var bg = '#2f3d2b';        // repli ; remplacé par la vraie couleur de fond
-    var t = 0, last = 0, running = false;
+    var t = 0, last = 0, running = false, started = false;
 
-    // Courbe de battement : deux « thumps » rapprochés puis repos.
+    // Courbe de battement : deux « thumps » rapprochés puis léger repos.
     function beat(p) {
       function bump(x, c, w) { return Math.exp(-Math.pow((x - c) / w, 2)); }
-      return bump(p, 0.12, 0.05) + 0.55 * bump(p, 0.26, 0.05);
+      return bump(p, 0.14, 0.06) + 0.6 * bump(p, 0.30, 0.06);
+    }
+
+    // On REMPLACE le <link rel="icon"> à chaque frame : certains navigateurs ne
+    // repeignent pas le favicon sur un simple changement de href, mais le font
+    // sur un nouveau nœud. DOM négligeable (petit élément, ~20 fps).
+    function setIcon(href) {
+      var olds = document.querySelectorAll('link[rel~="icon"]');
+      for (var i = 0; i < olds.length; i++) olds[i].parentNode.removeChild(olds[i]);
+      var l = document.createElement('link');
+      l.rel = 'icon';
+      l.type = 'image/png';
+      l.setAttribute('data-anim', '1');
+      l.href = href;
+      document.head.appendChild(l);
     }
 
     function draw(ts) {
       if (document.hidden) { running = false; return; }
       running = true;
-      if (ts - last >= 55) {          // ~18 fps
+      if (ts - last >= 50) {           // ~20 fps
         last = ts;
-        t = (t + 0.02) % 1;
-        var s = 0.84 + 0.14 * beat(t); // échelle 0.84 → ~0.97 (jamais de débord)
+        t = (t + 0.045) % 1;           // cycle ~1,1 s : battements réguliers
+        var s = 0.78 + 0.20 * beat(t); // échelle 0.78 → ~0.98
         var d = SIZE * s, o = (SIZE - d) / 2;
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, SIZE, SIZE);
         ctx.drawImage(img, o, o, d, d);
-        link.href = canvas.toDataURL('image/png');
+        setIcon(canvas.toDataURL('image/png'));
       }
       window.requestAnimationFrame(draw);
     }
 
     function start() {
       if (running || !img.complete || !img.naturalWidth) return;
-      // Couleur de fond = pixel du coin du logo (fond vert plein).
-      try {
-        ctx.drawImage(img, 0, 0, SIZE, SIZE);
-        var px = ctx.getImageData(1, 1, 1, 1).data;
-        bg = 'rgb(' + px[0] + ',' + px[1] + ',' + px[2] + ')';
-      } catch (e) { /* CORS/lecture impossible : on garde le repli */ }
+      if (!started) {
+        started = true;
+        // Couleur de fond = pixel du coin du logo (fond vert plein).
+        try {
+          ctx.drawImage(img, 0, 0, SIZE, SIZE);
+          var px = ctx.getImageData(1, 1, 1, 1).data;
+          bg = 'rgb(' + px[0] + ',' + px[1] + ',' + px[2] + ')';
+        } catch (e) { /* lecture impossible : on garde le repli */ }
+      }
       window.requestAnimationFrame(draw);
     }
 
