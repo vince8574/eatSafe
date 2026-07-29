@@ -536,6 +536,7 @@
     "edit": "✏️ Edit number",
     "ocrSourceVision": "🤖 Google Vision API",
     "ocrSourceMlKit": "📱 ML Kit",
+    "ocrSourceAdvanced": "✨ Advanced analysis",
     "recallDetectedWithLot": "⚠️ RECALL DETECTED ({{lot}})",
     "ocrSource": "📋 {{source}}",
     "productSafeDetail": "Checked in official databases. The absence of a recall does not guarantee product safety."
