@@ -28,6 +28,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # The AAB + APK build filled the runner disk ("No space left on device").
+      # ubuntu-latest ships ~14 GB free; reclaim ~20-30 GB by removing large
+      # toolchains this Android build never touches (.NET, GHC/Haskell, CodeQL,
+      # Swift, cached Docker images). The Android SDK/NDK, Java and Node stay.
+      - name: Free disk space
+        run: |
+          echo "Before:"; df -h /
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/share/swift \
+            /usr/local/share/powershell || true
+          sudo docker image prune --all --force || true
+          echo "After:"; df -h /
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
