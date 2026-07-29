@@ -23,12 +23,14 @@
 
   <!-- Blog EN -->
   <url><loc>https://numeline.com/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/blog/greenwise-organic-blueberries-ecoli-recall</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://numeline.com/blog/taylor-farms-cyclospora-iceberg-recall</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://numeline.com/blog/maple-leaf-bacon-import-recall</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://numeline.com/blog/resers-pasta-salad-allergen-recall</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
   <!-- Blog FR -->
   <url><loc>https://numeline.com/fr/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/fr/blog/bouchee-a-la-reine-rappel-listeria</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://numeline.com/fr/blog/prestige-de-la-sarthe-rappel-listeria</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://numeline.com/fr/blog/truite-fumee-bio-rappel-listeria</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
