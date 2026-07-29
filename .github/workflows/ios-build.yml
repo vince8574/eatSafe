@@ -10,6 +10,12 @@ on:
       # Cloud Functions : déployées via Firebase CLI, pas embarquées dans l'app →
       # inutile de rebuilder l'app pour un changement serveur.
       - 'firebase/**'
+      # Site web (numeline.com) : déployé par Vercel, pas embarqué dans l'app →
+      # un changement purement site ne doit pas relancer un build d'app.
+      - 'public/**'
+      - 'blog/**'
+      - 'docs/**'
+      - 'vercel.json'
 
 jobs:
   build:
