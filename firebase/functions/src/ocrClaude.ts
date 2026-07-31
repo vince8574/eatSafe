@@ -309,13 +309,31 @@ export const ocrClaude = functions
         ]
       });
 
-      const text = message.content
+      const raw = message.content
         .filter((block): block is AnthropicTypes.TextBlock => block.type === 'text')
         .map((b) => b.text.trim())
         .join('')
         .trim();
 
-      const cleaned = text.toUpperCase() === 'NONE' ? '' : text;
+      // SÛRETÉ SORTIE : un lot valide est un token compact (lettres/chiffres, +
+      // éventuels "-" ou "/"), SANS espace. Sur Opus 5 avec thinking désactivé, le
+      // modèle FUIT parfois son raisonnement dans la réponse ("… no, that includes
+      // a time. Let me output …"). Ce texte parasite ne doit JAMAIS repartir comme
+      // numéro de lot (risque de faux rappel). On n'accepte qu'un token propre ;
+      // sinon on tente de récupérer un unique candidat, et à défaut on REJETTE
+      // (l'app repasse en saisie manuelle — bien plus sûr qu'un mauvais lot).
+      const upper = raw.toUpperCase();
+      const LOT_RE = /^[A-Z0-9][A-Z0-9/-]{2,23}$/;
+      let cleaned = '';
+      if (upper && upper !== 'NONE') {
+        if (LOT_RE.test(upper)) {
+          cleaned = upper;
+        } else {
+          const candidates = Array.from(new Set(upper.match(/[A-Z0-9][A-Z0-9/-]{2,23}/g) ?? []));
+          cleaned = candidates.length === 1 ? candidates[0] : '';
+          console.warn('[ocrClaude] non-bare output', JSON.stringify({ raw, salvaged: cleaned }));
+        }
+      }
 
       console.log(
         '[ocrClaude] usage:',
