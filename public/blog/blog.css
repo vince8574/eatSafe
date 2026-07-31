@@ -157,3 +157,28 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
   .topbar.nav-open .nav { display: flex; }
   .nav a { padding: 12px 8px; border-radius: 0; border-bottom: 1px solid var(--line); }
 }
+
+/* CTA de téléchargement de l'app — en bas de chaque article */
+.cta-app {
+  margin-top: 34px;
+  padding: 30px 26px;
+  border-radius: 20px;
+  background: var(--accent-dark);
+  color: #fff;
+  text-align: center;
+}
+.cta-app h3 { margin: 0 0 10px; color: #fff; font-family: "Fraunces", Georgia, serif; font-size: 23px; }
+.cta-app p { margin: 0 auto 20px; max-width: 48ch; color: rgba(255, 255, 255, 0.85); font-size: 15px; line-height: 1.6; }
+.cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-btn {
+  display: inline-block;
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #06231c;
+  font-weight: 600;
+  font-size: 14px;
+  transition: filter 0.2s ease;
+}
+.cta-btn:hover { filter: brightness(1.06); }
+.cta-btn.secondary { background: rgba(255, 255, 255, 0.12); color: #fff; }
