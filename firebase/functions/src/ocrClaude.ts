@@ -280,17 +280,20 @@ export const ocrClaude = functions
         },
         {
           type: 'text',
-          text: 'Extract the lot number from this packaging image.'
+          text: 'Extract the lot number from this packaging image. Never include internal reasoning or XML tags in your reply.'
         }
       ];
 
       const message = await client.messages.create({
-        // Opus 4.8 = modèle le plus capable en vision/OCR (+ support haute
-        // résolution jusqu'à 2576px). Pas de `temperature` (supprimé sur Opus 4.8).
-        // Pas de raisonnement : trop lent/cher pour le flux automatique. max_tokens
-        // 64 + prompt "ONLY the lot code" → réponse directe.
-        model: 'claude-opus-4-8',
+        // Opus 5 = moteur vision/OCR le plus capable (support haute résolution
+        // jusqu'à 2576px), au MÊME prix qu'Opus 4.8 ($5/$25 par 1M tokens). Pas de
+        // `temperature` (supprimé sur Opus 5). thinking DÉSACTIVÉ : sur Opus 5 le
+        // raisonnement est ON par défaut et PARTAGE le budget max_tokens (64) → il
+        // tronquerait la réponse ET la ralentirait. On le coupe pour garder la
+        // rapidité/coût d'Opus 4.8 (`disabled` autorisé tant que l'effort ≤ high).
+        model: 'claude-opus-5',
         max_tokens: 64,
+        thinking: { type: 'disabled' },
         system: [
           {
             type: 'text',
