@@ -31,6 +31,30 @@ const person = (o: Partial<DietaryPerson>): DietaryPerson => ({
 const prof = (p: DietaryPerson): DietaryProfile =>
   ({ people: [p], updatedAt: 0 } as DietaryProfile);
 
+describe('dietaryCheck — barcode detection unreliable (no ingredient data)', () => {
+  it('names each allergen / avoided food as a suspected trace (warn), not a silent "unknown"', () => {
+    const product: ProductDietaryData = { productName: 'Produit inconnu' }; // aucune donnée d'ingrédients
+    const res = checkProductAgainstProfile(product, prof(person({ allergens: ['milk'], avoidFoods: ['pork'] })));
+    expect(res.status).toBe('warn');
+    const milk = res.warnings.find((w) => w.type === 'trace' && w.key === 'milk');
+    expect(milk?.unverified).toBe(true);
+    expect(milk?.level).toBe('warn');
+    const pork = res.warnings.find((w) => w.type === 'avoidFood' && w.key === 'pork');
+    expect(pork?.unverified).toBe(true);
+  });
+
+  it('celiac: unverifiable gluten becomes a suspected trace (warn)', () => {
+    const res = checkProductAgainstProfile({ productName: 'X' }, prof(person({ celiac: true })));
+    const g = res.warnings.find((w) => w.type === 'trace' && w.key === 'gluten' && w.unverified);
+    expect(g?.level).toBe('warn');
+  });
+
+  it('does NOT add suspected traces when the product HAS ingredient data', () => {
+    const res = checkProductAgainstProfile({ ingredientsText: 'eau, sucre, sel' }, prof(person({ allergens: ['milk'] })));
+    expect(res.warnings.some((w) => w.unverified)).toBe(false);
+  });
+});
+
 describe('dietaryCheck — pork false positive (rennet / présure)', () => {
   it('does NOT flag pork for a gorgonzola whose ingredients list "présure"', () => {
     const product: ProductDietaryData = {
