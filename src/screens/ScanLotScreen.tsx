@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
 import { recallWarnsProduct } from '../utils/lotMatcher';
+import { extractBestByDate, bestByInRecallWindow } from '../utils/bestByDate';
 import { useSubscription } from '../hooks/useSubscription';
 import { useUsageQuota } from '../hooks/useUsageQuota';
 import { decrementScanCounter } from '../services/subscriptionService';
@@ -75,6 +76,28 @@ function isAcceptableLotForConfirm(lot: string): boolean {
   if (!lot) return false;
   if (isReliableLot(lot)) return true;
   return /^\d{3,4}$/.test(lot.replace(/\s+/g, ''));
+}
+
+// Matching « sans numéro de lot » : un rappel identifie souvent le produit par
+// une PLAGE de dates Best/Use-By publiée dans son code_info (ex. Taylor Farms
+// "Best if Used By 7/16/2026 - 8/3/2026"). Match = MARQUE concordante ET date
+// scannée dans la fenêtre. C'est le mode d'identification officiel de la FDA
+// pour ces produits — on l'affiche comme un vrai match.
+function findBestByRecalls(
+  recalls: { brand?: string; codeInfo?: string }[],
+  brand: string,
+  dateIso: string
+): any[] {
+  const brandLower = (brand || '').trim().toLowerCase();
+  if (!brandLower || !dateIso) return [];
+  return recalls.filter((recall) => {
+    const recallBrandLower = (recall.brand || '').toLowerCase();
+    const isBrandMatch =
+      brandLower === recallBrandLower ||
+      (brandLower.length >= 3 && recallBrandLower.includes(brandLower)) ||
+      (recallBrandLower.length >= 3 && brandLower.includes(recallBrandLower));
+    return isBrandMatch && bestByInRecallWindow(dateIso, recall.codeInfo);
+  });
 }
 
 export function ScanLotScreen() {
@@ -160,6 +183,14 @@ export function ScanLotScreen() {
   // (capture auto qui ne part pas — lot pâle / cadrage difficile) pour laisser
   // l'utilisateur déclencher la photo lui-même.
   const [showManualCapture, setShowManualCapture] = useState(false);
+  // Mode « Pas de numéro de lot » : beaucoup de produits (frais, marques
+  // distributeur type Trader Joe's) n'ont pas de lot — la FDA/USDA les identifie
+  // alors par la date "Best if Used By"/"Use By" (souvent une plage). Dans ce
+  // mode, l'OCR lit la DATE au lieu du lot, l'affiche à l'utilisateur, et le
+  // matching se fait par fenêtre de dates du rappel (bestByInRecallWindow).
+  const [bestByMode, setBestByMode] = useState(false);
+  const bestByModeRef = useRef(false);
+  const [bestByIso, setBestByIso] = useState<string | null>(null);
 
   // Le quota est désormais appliqué DIRECTEMENT sur la caméra via le gate `aiAllowed`
   // (caméra floutée + saisie manuelle + abonnement) — plus de blocage au confirm,
@@ -186,7 +217,16 @@ export function ScanLotScreen() {
       // séparés par des '/' (ce que renvoyait l'ancien repli sur les candidats).
       // lot extrait, sinon LE MEILLEUR candidat (le plus long/lot-like), pas le
       // premier — pour afficher "249334315" et non un fragment "2493".
-      const displayLot = lot || bestDisplayLot(candidates || []);
+      // Mode « Pas de numéro de lot » : on lit la DATE Best/Use-By au lieu du lot.
+      let displayLot: string;
+      if (bestByModeRef.current) {
+        const parsed = extractBestByDate(result.text);
+        setBestByIso(parsed?.iso ?? null);
+        displayLot = parsed?.display ?? '';
+      } else {
+        setBestByIso(null);
+        displayLot = lot || bestDisplayLot(candidates || []);
+      }
       // Vibration de confirmation dès qu'un numéro de lot est détecté.
       if (displayLot) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
@@ -250,9 +290,22 @@ export function ScanLotScreen() {
         const { checkAllCandidates } = await import('../services/candidateMatcherService');
 
         try {
-          // Match recalls against ONLY the confirmed lot — never the noisy
-          // candidate list (partial/misread tokens, dates) that caused false alerts.
-          const matchResult = await checkAllCandidates([displayLot], brand, country);
+          let matchResult: { hasRecall: boolean; matchedCandidate?: string; matchedRecall?: any };
+          if (bestByModeRef.current) {
+            // Mode « Pas de numéro de lot » : match par MARQUE + fenêtre de dates
+            // Best/Use-By publiée dans le rappel (jamais par lot).
+            const parsed = extractBestByDate(result.text);
+            const recallsForDate = parsed ? findBestByRecalls(await fetchRecallsByCountry(country), brand, parsed.iso) : [];
+            matchResult = {
+              hasRecall: recallsForDate.length > 0,
+              matchedCandidate: displayLot,
+              matchedRecall: recallsForDate[0]
+            };
+          } else {
+            // Match recalls against ONLY the confirmed lot — never the noisy
+            // candidate list (partial/misread tokens, dates) that caused false alerts.
+            matchResult = await checkAllCandidates([displayLot], brand, country);
+          }
           setHasRecall(matchResult.hasRecall);
           setVerifiedAt(Date.now());
           if (matchResult.matchedCandidate) {
@@ -359,6 +412,7 @@ export function ScanLotScreen() {
     setIsEditingLot(false);
     setEditedLot('');
     setVerifiedAt(null);
+    setBestByIso(null); // le mode Best-By reste actif, seule la date lue est purgée
     setScannerResetToken((token) => token + 1);
     lotInFrameAnnouncedRef.current = false;
     autoFlashAppliedRef.current = false;
@@ -514,7 +568,22 @@ export function ScanLotScreen() {
   });
 
   const handleConfirm = useCallback(async () => {
-    const finalLot = isEditingLot ? editedLot.trim().toUpperCase() : lotNumber;
+    // Mode « Pas de numéro de lot » : la valeur confirmée est une DATE Best/Use-By.
+    // Repli manuel : si l'utilisateur a édité, on parse sa saisie comme une date.
+    let confirmedBestByIso: string | null = null;
+    let finalLot: string;
+    if (bestByMode) {
+      const manual = isEditingLot ? extractBestByDate(editedLot) : null;
+      confirmedBestByIso = manual?.iso ?? bestByIso;
+      finalLot = manual?.display ?? (isEditingLot ? '' : lotNumber);
+      if (!confirmedBestByIso || !finalLot) {
+        setErrorMessage(t('scanLot.bestByParseFailed'));
+        setConfirmModalVisible(false);
+        return;
+      }
+    } else {
+      finalLot = isEditingLot ? editedLot.trim().toUpperCase() : lotNumber;
+    }
     const normalizedOcrText = normalizeLotValue(ocrText || '');
     // Purge the garbage: once a lot is confirmed, match recalls against ONLY that
     // lot — not the noisy OCR candidate list — so a partial/misread token can
@@ -561,17 +630,25 @@ export function ScanLotScreen() {
       // Apprentissage des patterns de lot : la validation est synchrone (rapide),
       // mais l'ÉCRITURE d'un nouveau pattern (saveLotPattern) n'est pas nécessaire
       // avant de naviguer → fire-and-forget pour ne pas allonger le "OK".
-      const validation = validateLotAgainstBrandPatterns(finalBrand, finalLot);
-      if (validation.isValid) {
-        console.log(`[ScanLotScreen] Lot ${finalLot} validated against existing patterns for ${finalBrand}`);
-      } else {
-        console.log(`[ScanLotScreen] New lot pattern detected for ${finalBrand}: ${finalLot}`);
-        void Promise.resolve(saveLotPattern(finalBrand, finalLot)).catch((e) =>
-          console.warn('[ScanLotScreen] saveLotPattern skipped', e)
-        );
+      // (Sauf en mode Best-By : une date n'est pas un pattern de lot.)
+      if (!confirmedBestByIso) {
+        const validation = validateLotAgainstBrandPatterns(finalBrand, finalLot);
+        if (validation.isValid) {
+          console.log(`[ScanLotScreen] Lot ${finalLot} validated against existing patterns for ${finalBrand}`);
+        } else {
+          console.log(`[ScanLotScreen] New lot pattern detected for ${finalBrand}: ${finalLot}`);
+          void Promise.resolve(saveLotPattern(finalBrand, finalLot)).catch((e) =>
+            console.warn('[ScanLotScreen] saveLotPattern skipped', e)
+          );
+        }
       }
 
-      const matchingRecalls = recallList.filter((recall) => {
+      const matchingRecalls = confirmedBestByIso
+        ? // Mode « Pas de numéro de lot » : match par MARQUE + fenêtre de dates
+          // Best/Use-By publiée dans le rappel (c'est l'identification officielle
+          // FDA/USDA pour les produits sans lot).
+          findBestByRecalls(recallList, finalBrand, confirmedBestByIso)
+        : recallList.filter((recall) => {
         // Skip recalls without lot numbers — brand-only matching is too unreliable
         if (!recall.lotNumbers || recall.lotNumbers.length === 0) {
           return false;
@@ -686,6 +763,8 @@ export function ScanLotScreen() {
     brand,
     country,
     lotNumber,
+    bestByMode,
+    bestByIso,
     isEditingLot,
     editedLot,
     ocrText,
@@ -966,9 +1045,48 @@ export function ScanLotScreen() {
               { color: colors.textPrimary }
             ]}
           >
-            {isProcessing ? processingLabel : t('scan.lotInstruction')}
+            {isProcessing
+              ? processingLabel
+              : bestByMode
+                ? t('scanLot.bestByInstruction')
+                : t('scan.lotInstruction')}
           </Text>
         </View>
+
+        {/* Beaucoup de produits (frais, marques distributeur) n'ont PAS de lot :
+            la FDA/USDA les identifie alors par la date "Best if Used By". Ce
+            bouton bascule l'OCR sur la lecture de cette date. */}
+        <TouchableOpacity
+          style={[
+            styles.bestByToggle,
+            {
+              backgroundColor: bestByMode ? colors.accent : colors.surface,
+              borderColor: bestByMode ? colors.accent : colors.border
+            }
+          ]}
+          onPress={() => {
+            const next = !bestByMode;
+            setBestByMode(next);
+            bestByModeRef.current = next;
+            resetFlow();
+          }}
+          accessibilityRole="button"
+          accessibilityState={{ selected: bestByMode }}
+        >
+          <Ionicons
+            name={bestByMode ? 'calendar' : 'calendar-outline'}
+            size={18}
+            color={bestByMode ? colors.onAccent : colors.textSecondary}
+          />
+          <Text
+            style={[
+              styles.bestByToggleText,
+              { color: bestByMode ? colors.onAccent : colors.textPrimary }
+            ]}
+          >
+            {bestByMode ? t('scanLot.bestByModeOn') : t('scanLot.noLotNumber')}
+          </Text>
+        </TouchableOpacity>
 
         {(productImage || productName) && (
           <View style={[styles.productInfoCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -1012,7 +1130,9 @@ export function ScanLotScreen() {
               }
             ]}
           >
-            <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>{t('scan.lotLabel')}</Text>
+            <Text style={[styles.statusLabel, { color: colors.textSecondary }]}>
+              {bestByMode ? t('scanLot.bestByLabel') : t('scan.lotLabel')}
+            </Text>
             <Text style={[styles.statusValue, { color: colors.textPrimary }]}>
               {lotNumber || (lotMutation.isPending ? t('scan.analyzing') : t('scan.waiting'))}
             </Text>
@@ -1058,19 +1178,19 @@ export function ScanLotScreen() {
           >
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
-              {t('scan.confirmLotTitle')}
+              {bestByMode ? t('scanLot.confirmBestByTitle') : t('scan.confirmLotTitle')}
             </Text>
 
             {isEditingLot ? (
               <>
                 <Text style={[styles.modalMessage, { color: colors.textSecondary, marginTop: 12 }]}>
-                  {t('scanLot.editManually')}
+                  {bestByMode ? t('scanLot.editBestByManually') : t('scanLot.editManually')}
                 </Text>
                 <TextInput
                   style={[styles.editInput, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
                   value={editedLot}
                   onChangeText={setEditedLot}
-                  placeholder={t('scanLot.enterLot')}
+                  placeholder={bestByMode ? t('scanLot.enterBestBy') : t('scanLot.enterLot')}
                   placeholderTextColor={colors.textSecondary}
                   autoCapitalize="characters"
                   autoFocus
@@ -1102,7 +1222,7 @@ export function ScanLotScreen() {
             ) : (
               <>
                 <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
-                  {t('scanLot.ocrDetected')}
+                  {bestByMode ? t('scanLot.bestByDetected') : t('scanLot.ocrDetected')}
                 </Text>
                 <TouchableOpacity
                   style={[styles.ocrTextContainer, styles.ocrTextContainerEditable, { backgroundColor: colors.surfaceAlt, borderColor: colors.accent }]}
@@ -1238,6 +1358,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 4
   },
+  bestByToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 12,
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingVertical: 12,
+    paddingHorizontal: 18
+  },
+  bestByToggleText: { fontSize: 14, fontWeight: '700' },
   stepLabel: {
     fontSize: 13,
     fontWeight: '800',

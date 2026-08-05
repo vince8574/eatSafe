@@ -539,7 +539,16 @@
     "ocrSourceAdvanced": "✨ Analyse approfondie",
     "recallDetectedWithLot": "⚠️ RAPPEL DÉTECTÉ ({{lot}})",
     "ocrSource": "📋 {{source}}",
-    "productSafeDetail": "Vérifié dans les bases officielles. L'absence de rappel ne garantit pas la sécurité du produit."
+    "productSafeDetail": "Vérifié dans les bases officielles. L'absence de rappel ne garantit pas la sécurité du produit.",
+    "noLotNumber": "Pas de numéro de lot ? Scannez la date limite",
+    "bestByModeOn": "Lecture de la date limite — touchez pour scanner un lot",
+    "bestByInstruction": "Visez la date « À consommer de préférence avant » / « Best if Used By » sur l’emballage.",
+    "bestByLabel": "Date limite",
+    "bestByDetected": "Date limite détectée :",
+    "confirmBestByTitle": "Confirmer la date limite",
+    "editBestByManually": "Saisissez la date imprimée sur l’emballage (ex. 03/08/2026)",
+    "enterBestBy": "JJ/MM/AAAA",
+    "bestByParseFailed": "Date illisible. Saisissez-la au format JJ/MM/AAAA."
   },
   "detailsScreen": {
     "lotModified": "Numéro de lot modifié",

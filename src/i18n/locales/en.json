@@ -539,7 +539,16 @@
     "ocrSourceAdvanced": "✨ Advanced analysis",
     "recallDetectedWithLot": "⚠️ RECALL DETECTED ({{lot}})",
     "ocrSource": "📋 {{source}}",
-    "productSafeDetail": "Checked in official databases. The absence of a recall does not guarantee product safety."
+    "productSafeDetail": "Checked in official databases. The absence of a recall does not guarantee product safety.",
+    "noLotNumber": "No lot number? Scan the Best By date",
+    "bestByModeOn": "Reading the Best By date — tap to scan a lot instead",
+    "bestByInstruction": "Point at the \"Best if Used By\" / \"Use By\" date on the package.",
+    "bestByLabel": "Best By date",
+    "bestByDetected": "Best By date detected:",
+    "confirmBestByTitle": "Confirm the Best By date",
+    "editBestByManually": "Enter the date printed on the package (e.g. 08/03/2026)",
+    "enterBestBy": "MM/DD/YYYY",
+    "bestByParseFailed": "Couldn't read a valid date. Enter it as MM/DD/YYYY."
   },
   "detailsScreen": {
     "lotModified": "Lot number modified",
