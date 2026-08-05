@@ -142,8 +142,13 @@ function mergeReads(a: VisionResult, b: VisionResult | null): VisionResult {
 /**
  * ocrVision — server-side proxy to the Google Cloud Vision REST API.
  *
- * Deployed in us-central1 (next to ocrClaude and the US user base). minInstances:1
- * keeps one instance warm to kill the 2-5s cold start.
+ * Deployed in us-central1 (next to ocrClaude and the US user base).
+ *
+ * NO minInstances: the client runs CLAUDE_ONLY (see src/services/ocrService.ts),
+ * so this function currently receives zero traffic — a warm instance here was
+ * paying ~$4.4/month to keep an uncalled function hot. The reservation moved to
+ * ocrClaude, which is the one actually on the scan path. If Vision is ever
+ * re-enabled client-side, move it back (or add one here too).
  *
  * For hard codes (pale dot-matrix), it OCRs the raw image AND a contrast-enhanced
  * variant in parallel and merges the text, so faint characters the raw pass drops
@@ -158,8 +163,7 @@ export const ocrVision = functions
   .runWith({
     secrets: [GOOGLE_VISION_API_KEY],
     memory: '512MB',
-    timeoutSeconds: 30,
-    minInstances: 1
+    timeoutSeconds: 30
   })
   .https.onRequest(async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');

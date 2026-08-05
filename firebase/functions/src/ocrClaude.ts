@@ -188,7 +188,11 @@ OUTPUT FORMAT — follow EXACTLY:
 
 export const ocrClaude = functions
   .region('us-central1')
-  .runWith({ secrets: [ANTHROPIC_API_KEY], memory: '512MB', timeoutSeconds: 30 })
+  // minInstances:1 — le client est en CLAUDE_ONLY : CETTE fonction est sur le
+  // chemin critique de chaque scan de lot. Sans instance chaude, les démarrages à
+  // froid faisaient passer l'exécution de ~2,4 s à 5,4-5,7 s. La réservation a été
+  // reprise à ocrVision (qui ne reçoit plus aucun trafic) → coût net inchangé.
+  .runWith({ secrets: [ANTHROPIC_API_KEY], memory: '512MB', timeoutSeconds: 30, minInstances: 1 })
   .https.onRequest(async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
