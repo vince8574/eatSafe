@@ -46,4 +46,10 @@
   <url><loc>https://numeline.com/privacy-policy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://numeline.com/terms-of-service.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 
+  <url><loc>https://numeline.com/blog/cyclospora-outbreak-first-deaths-reported</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/blog/shell-eggs-salmonella-outbreak-recall</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/blog/fusia-kimbap-undeclared-fish-recall</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/fr/blog/bonne-maman-confiture-bris-de-verre</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/fr/blog/galettes-riz-lima-aflatoxine</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://numeline.com/fr/blog/vague-salmonelle-viande-fromage-aout-2026</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
