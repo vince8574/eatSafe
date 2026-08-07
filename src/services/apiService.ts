@@ -252,13 +252,27 @@ export function extractPressBrand(title: string): string {
 }
 
 export async function fetchFdaPressRecalls(): Promise<RecallRecord[]> {
-  const response = await fetch(FDA_PRESS_ENDPOINT);
-  if (!response.ok) {
-    console.warn(`[FDA Press] proxy returned status ${response.status}`);
-    return [];
+  // 1) DIRECT depuis l'appareil. fda.gov bloque les IP datacenter (401 depuis
+  //    GCP, mesuré) mais pas une IP mobile : le téléphone lit le flux ET les
+  //    pages d'articles, donc récupère les dates "Best if Used By" que le proxy
+  //    ne peut plus extraire. 2) Repli sur la Cloud Function si ça échoue
+  //    (réseau d'entreprise filtrant, changement côté FDA…).
+  let items: any[] | null = null;
+  try {
+    const { fetchFdaPressDirect } = await import('./fdaPressDirect');
+    items = await fetchFdaPressDirect();
+  } catch (error) {
+    console.warn('[FDA Press] direct fetch failed, falling back to proxy:', error);
   }
 
-  const items = await response.json();
+  if (!items) {
+    const response = await fetch(FDA_PRESS_ENDPOINT);
+    if (!response.ok) {
+      console.warn(`[FDA Press] proxy returned status ${response.status}`);
+      return [];
+    }
+    items = await response.json();
+  }
   if (!Array.isArray(items)) return [];
 
   const results: RecallRecord[] = [];
