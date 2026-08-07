@@ -37,6 +37,25 @@ FDA_RSS_URL = (
 GOOGLE_NEWS_RSS_URL = (
     "https://news.google.com/rss/search?q=recall%20site:fda.gov&hl=en-US&gl=US&ceid=US:en"
 )
+# 3e niveau : relais de lecture. Mesuré le 2026-08-07 depuis GCP, fda.gov renvoie
+# 401 et Google News 503 — le blocage porte sur l'IP DATACENTER, pas sur
+# l'empreinte TLS (les 15 profils testés passent en 200 depuis une IP normale).
+# Ce relais lit la page pour nous et renvoie du Markdown, d'où un parseur dédié.
+# Dépendance TIERCE assumée et volontairement en DERNIER : si elle tombe, on
+# retombe sur le cache périmé puis sur "aucun communiqué" — jamais sur une
+# fausse assurance.
+import urllib.parse as _up
+
+_RSS_Q = _up.quote(FDA_RSS_URL, safe="")
+# Plusieurs relais essayés dans l'ordre : le 1er qui rend le flux gagne. Chacun a
+# un format de sortie différent, d'où le drapeau "md" (Markdown du relais de
+# lecture) vs XML brut (simples proxies pass-through).
+PRESS_RELAYS = [
+    ("https://r.jina.ai/" + FDA_RSS_URL, "md"),
+    ("https://api.codetabs.com/v1/proxy?quest=" + _RSS_Q, "xml"),
+    ("https://api.allorigins.win/raw?url=" + _RSS_Q, "xml"),
+    ("https://corsproxy.io/?" + _RSS_Q, "xml"),
+]
 CACHE_TTL_SECONDS = 30 * 60  # recalls change slowly; 30 min is plenty
 
 # Module-level caches, reused across invocations on a warm instance.
@@ -122,6 +141,58 @@ def _parse_press_rss(xml_text: str) -> str:
     return items
 
 
+def _parse_press_markdown(md_text: str):
+    """Markdown du relais de lecture → MÊME structure que _parse_press_rss :
+    [{title, description, link, pubDate}].
+
+    Le relais rend le flux RSS sous cette forme, par item :
+        ### [TITRE](URL)
+        <paragraphe de description>
+        [URL](URL)
+        Wed, 05 Aug 2026 17:42:00 EDT
+    On repart donc des titres `### [..](..)` et on lit, dans le bloc qui suit,
+    la 1re ligne de prose (description) et la ligne de date RFC-822 (pubDate).
+    """
+    import html as _html
+
+    items = []
+    # Coupe le préambule ("Title:", "URL Source:", "Markdown Content:")
+    body = md_text.split("Markdown Content:", 1)[-1]
+    # Chaque item commence à un "### [titre](lien)"
+    blocks = re.split(r"^###\s+", body, flags=re.M)[1:]
+    date_re = re.compile(
+        r"^[A-Z][a-z]{2},\s+\d{1,2}\s+[A-Z][a-z]{2}\s+\d{4}\s+[\d:]{5,8}\s+[A-Z]{2,4}$"
+    )
+    for block in blocks:
+        head = re.match(r"\[(.+?)\]\((https?://[^)]+)\)", block.strip(), re.S)
+        if not head:
+            continue
+        title = _html.unescape(head.group(1)).replace("\n", " ").strip()
+        link = head.group(2).strip()
+        description, pub_date = "", ""
+        for line in block[head.end():].splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if date_re.match(line):
+                pub_date = line
+                break  # la date clôt l'item
+            # Ignore la ligne "[url](url)" répétée sous la description
+            if line.startswith("[http"):
+                continue
+            if not description:
+                description = _strip_html(line)[:500]
+        items.append(
+            {
+                "title": title,
+                "description": description,
+                "link": link,
+                "pubDate": pub_date,
+            }
+        )
+    return items
+
+
 # ─── Enrichissement : dates "Best if Used By" depuis la page du communiqué ────
 # Le flux RSS n'a que le titre. Les données d'identification (tableau Brand /
 # Description / Best if Used By, cas Taylor Fresh Foods juil. 2026) sont dans la
@@ -178,6 +249,24 @@ def _get_page(url, deadline, allow_save=True):
                 return r2.text
     except Exception:
         pass
+    # Relais de lecture — même raison que pour le flux : depuis GCP, fda.gov
+    # renvoie 401 et Wayback n'a souvent archivé que la page de blocage. Sans ce
+    # niveau, les dates "Best if Used By" ne sont JAMAIS extraites (codeInfo vide),
+    # ce qui prive le mode « pas de numéro de lot » de sa donnée de référence.
+    for relay_tpl in (
+        "https://api.codetabs.com/v1/proxy?quest={q}",
+        "https://api.allorigins.win/raw?url={q}",
+        "https://r.jina.ai/{u}",
+    ):
+        if time.time() >= deadline:
+            break
+        try:
+            relay_url = relay_tpl.format(q=_up.quote(url, safe=""), u=url)
+            r = cffi.get(relay_url, impersonate="chrome", timeout=12)
+            if r.status_code == 200 and len(r.text) > 2000 and "FDA Apology" not in r.text[:3000]:
+                return r.text
+        except Exception:
+            continue
     # Sauvegarde (~10-30 s mesurés) : seulement si le budget le permet. La
     # capture continue côté archive.org même en cas de timeout ici → le cycle
     # suivant la trouvera via "available".
@@ -367,6 +456,40 @@ def fdaPress(req: https_fn.Request) -> https_fn.Response:
                 last_err += f"; google-news status {r.status_code}"
         except Exception as exc:
             last_err += f"; google-news: {exc}"
+
+    # 3e niveau — relais de lecture. fda.gov (401) ET Google News (503) bloquent
+    # tous deux l'IP datacenter ; ce relais lit la page pour nous. Volontairement
+    # en dernier : c'est une dépendance tierce, elle ne sert que si les deux
+    # sources officielles directes sont inaccessibles.
+    if items is None:
+        for relay_url, fmt in PRESS_RELAYS:
+            name = _up.urlparse(relay_url).netloc
+            try:
+                r = cffi.get(
+                    relay_url,
+                    impersonate="chrome",
+                    headers={"Accept": "text/plain,application/xml;q=0.9,*/*;q=0.8"},
+                    timeout=30,
+                )
+                if r.status_code != 200:
+                    last_err += f"; {name} status {r.status_code}"
+                    continue
+                if fmt == "md":
+                    if "Markdown Content:" not in r.text[:4000]:
+                        last_err += f"; {name} not markdown"
+                        continue
+                    parsed = _parse_press_markdown(r.text)
+                else:
+                    if not r.text.lstrip().startswith("<?xml"):
+                        last_err += f"; {name} not xml"
+                        continue
+                    parsed = _parse_press_rss(r.text)
+                if parsed:  # un parse vide n'est PAS un succès
+                    items = parsed
+                    break
+                last_err += f"; {name} parsed 0 items"
+            except Exception as exc:
+                last_err += f"; {name}: {str(exc)[:60]}"
 
     if items is None:
         if _press_cache["body"] is not None:
