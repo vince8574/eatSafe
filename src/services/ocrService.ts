@@ -1250,6 +1250,9 @@ const isLotTooShort = (lot?: string | null): boolean => {
 // the free on-device ML Kit runs.
 export interface PerformOcrOptions {
   allowPaidFallback?: boolean;
+  // 'bestby' = mode « pas de numéro de lot » : on demande à Claude la DATE
+  // (prompt serveur dédié, strictement séparé du prompt lot). Absent = lot.
+  mode?: 'lot' | 'bestby';
 }
 
 // Localisation PLEIN CADRE du lot, pour le mode mains-libres/malvoyant : la bande
@@ -1336,7 +1339,8 @@ const CLAUDE_ONLY = true;
 async function performClaudeOnly(
   uri: string,
   brand: string | undefined,
-  onStage: ((stage: OcrStage) => void) | undefined
+  onStage: ((stage: OcrStage) => void) | undefined,
+  mode?: 'lot' | 'bestby'
 ): Promise<LotExtractionResult> {
   const empty: OCRResult = { text: '', lines: [], source: 'claude-fallback' };
   if (!isClaudeAvailable()) {
@@ -1351,9 +1355,18 @@ async function performClaudeOnly(
       force: true,
       nativeWidth: lastPreprocessNative?.w,
       nativeHeight: lastPreprocessNative?.h,
-      captureDiag: captureDiag ?? undefined
+      captureDiag: captureDiag ?? undefined,
+      mode
     });
     const result = claudeResult ?? empty;
+    // Mode « pas de numéro de lot » : Claude renvoie la DATE telle qu'imprimée.
+    // On la remonte brute — c'est l'écran qui la parse (extractBestByDate) et la
+    // confronte à la fenêtre de dates du rappel. Aucune extraction de lot ici.
+    if (mode === 'bestby') {
+      const raw = result.text.trim();
+      const date = raw.toUpperCase() === 'NONE' ? '' : raw;
+      return { lot: date, result, candidates: date ? [date] : [] };
+    }
     let filteredText = result.text;
     if (brand) {
       const brandUpper = brand.toUpperCase();
@@ -1409,7 +1422,7 @@ export async function performOcr(
 ): Promise<LotExtractionResult> {
   ensureMlkitAvailable();
   if (CLAUDE_ONLY && options?.allowPaidFallback !== false) {
-    return performClaudeOnly(uri, brand, onStage);
+    return performClaudeOnly(uri, brand, onStage, options?.mode);
   }
   const allowPaid = options?.allowPaidFallback !== false;
 
@@ -1633,7 +1646,7 @@ export async function performOcrMultiFrame(
     // (scoreOcrResult favorise la frame avec le PLUS de texte — souvent la zone
     // ingrédients/nutrition, pas le lot le mieux net) dégradait la détection.
     // On revient au comportement de lundi : 1re frame → Claude, point.
-    const claudeOnly = await performClaudeOnly(uris[0], brand, onStage);
+    const claudeOnly = await performClaudeOnly(uris[0], brand, onStage, options?.mode);
     for (const u of uris) {
       try {
         await FileSystem.deleteAsync(u, { idempotent: true });

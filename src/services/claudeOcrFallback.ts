@@ -123,7 +123,7 @@ type ClaudeApiResponse = {
 
 async function runClaudeFallback(
   uri: string,
-  meta?: { nativeWidth?: number; nativeHeight?: number; captureDiag?: string }
+  meta?: { nativeWidth?: number; nativeHeight?: number; captureDiag?: string; mode?: 'lot' | 'bestby' }
 ): Promise<OCRResult> {
   const { endpoint } = getClaudeConfig();
   if (!endpoint) throw new Error('ocrClaude Cloud Function endpoint not configured');
@@ -157,7 +157,10 @@ async function runClaudeFallback(
         mediaType,
         nativeWidth: meta?.nativeWidth,
         nativeHeight: meta?.nativeHeight,
-        captureDiag: meta?.captureDiag
+        captureDiag: meta?.captureDiag,
+        // 'bestby' → la Cloud Function bascule sur le prompt DATE, strictement
+        // séparé du prompt LOT. Champ absent = chemin lot historique inchangé.
+        mode: meta?.mode
       }),
       signal: controller.signal
     });
@@ -198,7 +201,7 @@ export async function tryClaudeFallback(
   uri: string,
   previousOcr: OCRResult,
   context: 'lot',
-  options?: { force?: boolean; nativeWidth?: number; nativeHeight?: number; captureDiag?: string }
+  options?: { force?: boolean; nativeWidth?: number; nativeHeight?: number; captureDiag?: string; mode?: 'lot' | 'bestby' }
 ): Promise<OCRResult | null> {
   if (!isClaudeAvailable()) {
     console.log('[ClaudeFallback] skipped: endpoint not configured');
@@ -216,7 +219,8 @@ export async function tryClaudeFallback(
     const result = await runClaudeFallback(uri, {
       nativeWidth: options?.nativeWidth,
       nativeHeight: options?.nativeHeight,
-      captureDiag: options?.captureDiag
+      captureDiag: options?.captureDiag,
+      mode: options?.mode
     });
     return result.text ? result : null;
   } catch (e) {

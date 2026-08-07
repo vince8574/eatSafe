@@ -206,9 +206,12 @@ export function ScanLotScreen() {
       }
       // Cap paid OCR (Vision/Claude) per scan session in accessibility continuous mode.
       const allowPaidFallback = paidOcrCountRef.current < MAX_PAID_OCR_PER_SESSION;
+      // Mode « pas de numéro de lot » → l'OCR serveur bascule sur le prompt DATE
+      // (strictement séparé du prompt lot : l'un ne renvoie jamais ce que l'autre cherche).
+      const ocrMode: 'lot' | 'bestby' = bestByModeRef.current ? 'bestby' : 'lot';
       const { lot, result, candidates, intraFrameAgreement } = Array.isArray(lotPhoto)
-        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback })
-        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback });
+        ? await performOcrMultiFrame(lotPhoto, brand, setOcrStage, { allowPaidFallback, mode: ocrMode })
+        : await performOcr(lotPhoto, brand, setOcrStage, { allowPaidFallback, mode: ocrMode });
       if (allowPaidFallback && (result.source === 'vision-fallback' || result.source === 'claude-fallback')) {
         paidOcrCountRef.current += 1;
       }
@@ -220,9 +223,12 @@ export function ScanLotScreen() {
       // Mode « Pas de numéro de lot » : on lit la DATE Best/Use-By au lieu du lot.
       let displayLot: string;
       if (bestByModeRef.current) {
-        const parsed = extractBestByDate(result.text);
+        // `lot` porte ici la date telle qu'imprimée (renvoyée par le prompt DATE).
+        const parsed = extractBestByDate(lot || result.text);
         setBestByIso(parsed?.iso ?? null);
-        displayLot = parsed?.display ?? '';
+        // Date reconnue → affichage normalisé ; sinon on montre quand même ce qui a
+        // été lu, pour que l'utilisateur puisse corriger à la main au lieu d'un vide.
+        displayLot = parsed?.display ?? (lot || '').trim();
       } else {
         setBestByIso(null);
         displayLot = lot || bestDisplayLot(candidates || []);
@@ -294,7 +300,7 @@ export function ScanLotScreen() {
           if (bestByModeRef.current) {
             // Mode « Pas de numéro de lot » : match par MARQUE + fenêtre de dates
             // Best/Use-By publiée dans le rappel (jamais par lot).
-            const parsed = extractBestByDate(result.text);
+            const parsed = extractBestByDate(lot || result.text);
             const recallsForDate = parsed ? findBestByRecalls(await fetchRecallsByCountry(country), brand, parsed.iso) : [];
             matchResult = {
               hasRecall: recallsForDate.length > 0,

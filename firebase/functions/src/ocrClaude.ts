@@ -185,6 +185,44 @@ OUTPUT FORMAT — follow EXACTLY:
 - Max 22 chars.
 - If no lot code is visible, respond with exactly: NONE`;
 
+// Prompt du mode « PAS DE NUMÉRO DE LOT » (bouton dédié côté app). STRICTEMENT
+// SÉPARÉ du prompt lot ci-dessus : ici on veut la DATE et JAMAIS un code de lot ;
+// là-haut on veut le lot et JAMAIS une date. Le client choisit via `mode`, les
+// deux ne se mélangent jamais. Beaucoup de produits (frais, marques distributeur)
+// n'ont pas de lot : la FDA/USDA les identifie alors par cette date.
+const CLAUDE_BESTBY_SYSTEM_PROMPT = `You are a precise OCR assistant specialized in reading the DATE printed on food packaging (US market).
+
+TASK: Extract ONLY the "best if used by" / "use by" / "sell by" / expiration date.
+
+WHAT TO RETURN:
+- The date printed next to a label such as: "BEST IF USED BY", "BEST BY", "BEST BEFORE",
+  "USE BY", "USE BEFORE", "SELL BY", "EXP", "EXPIRES", "BB", "GUARANTEED FRESH UNTIL",
+  "ENJOY BY", "FRESH BY".
+- If several dates are printed, prefer the one attached to such a label.
+- If NO label is present but a single plausible date is printed, return that date.
+- If a date RANGE is printed, return the LAST (latest) date.
+
+NEVER return:
+- A LOT / BATCH code (e.g. "L693A2102R", "249334315", "Q353"). Those are production
+  codes, NOT dates — this task ignores them completely.
+- A time stamp ("18:36", "HH:MM"), a line/machine marker ("L3", "M2"),
+  a UPC/EAN barcode, a plant number, a weight, a price, a phone number.
+- A "packed on" / "production date" if a best-by/use-by date is also present.
+
+READING RULES:
+- The stamp is often inkjet dot-matrix, faint or on a busy background. Read carefully.
+- Common US formats: "08/03/2026", "8/3/26", "AUG 03 2026", "AUG0326", "03AUG2026",
+  "2026-08-03", "080326" (MMDDYY).
+- Keep the ORIGINAL printed form — do not reformat, do not convert, do not guess a
+  missing year. Return the characters as printed.
+- A 2-digit year stays 2 digits ("8/3/26" -> "8/3/26").
+
+OUTPUT FORMAT — follow EXACTLY:
+- Your ENTIRE reply is the date alone (or the word NONE). Nothing before or after.
+- NO reasoning, NO explanation, NO label, NO quotes. Decide silently, output once.
+- Keep the date's own separators ("08/03/2026", "AUG 03 2026").
+- If no date is visible, respond with exactly: NONE`;
+
 
 export const ocrClaude = functions
   .region('us-central1')
@@ -215,8 +253,13 @@ export const ocrClaude = functions
       nativeWidth?: number;
       nativeHeight?: number;
       captureDiag?: string;
+      mode?: string;
     };
     const imageBase64 = body?.imageBase64;
+    // 'bestby' = mode « pas de numéro de lot » (bouton dédié). Tout le reste, y
+    // compris l'absence de champ (anciennes versions de l'app), reste sur le
+    // chemin LOT historique — aucun changement de comportement par défaut.
+    const isBestBy = body?.mode === 'bestby';
     const rawMediaType = body?.mediaType ?? 'image/jpeg';
     // Diagnostic décalage/recadrage capture : dimensions natives de la photo (avant
     // bande). Même image que Vision/ML Kit → si carrée, le code est coupé en amont.
@@ -284,7 +327,9 @@ export const ocrClaude = functions
         },
         {
           type: 'text',
-          text: 'Extract the lot number from this packaging image. Never include internal reasoning or XML tags in your reply.'
+          text: isBestBy
+            ? 'Extract the best-by / use-by date from this packaging image. Never include internal reasoning or XML tags in your reply.'
+            : 'Extract the lot number from this packaging image. Never include internal reasoning or XML tags in your reply.'
         }
       ];
 
@@ -301,7 +346,7 @@ export const ocrClaude = functions
         system: [
           {
             type: 'text',
-            text: CLAUDE_LOT_SYSTEM_PROMPT,
+            text: isBestBy ? CLAUDE_BESTBY_SYSTEM_PROMPT : CLAUDE_LOT_SYSTEM_PROMPT,
             cache_control: { type: 'ephemeral' }
           }
         ],
