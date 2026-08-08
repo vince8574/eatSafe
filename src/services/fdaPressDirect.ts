@@ -81,10 +81,13 @@ export function parsePressRss(xml: string): PressItem[] {
   for (const block of blocks) {
     const title = stripTags(tag(block, 'title'));
     if (!title) continue;
+    const link = tag(block, 'link');
     items.push({
       title,
       description: stripTags(tag(block, 'description')).slice(0, 500) || undefined,
-      link: tag(block, 'link') || undefined,
+      // Normalisé en https dès le parsing : le lien sert à la fois à lire
+      // l'article ET à être ouvert par l'utilisateur.
+      link: link ? toHttps(link) : undefined,
       pubDate: tag(block, 'pubDate') || undefined
     });
   }
@@ -149,6 +152,16 @@ export function extractCodeInfo(html: string): string | undefined {
   return out ? out.slice(0, 600) : undefined;
 }
 
+/**
+ * Les <link> du flux FDA sont en http:// — bloqués en clair sur mobile (ATS côté
+ * iOS, cleartext désactivé côté Android). Sans cette promotion, chaque lecture
+ * d'article échouait silencieusement : le flux remontait bien, mais 0 codeInfo,
+ * donc aucune date "Best if Used By" (constaté sur appareil, 20 items / 0 date).
+ */
+function toHttps(url: string): string {
+  return url.replace(/^http:\/\//i, 'https://');
+}
+
 /** Un communiqué susceptible de porter des dates d'identification alimentaires. */
 function looksFoodRelated(item: PressItem): boolean {
   const hay = `${item.title} ${item.description ?? ''}`;
@@ -185,23 +198,24 @@ export async function fetchFdaPressDirect(): Promise<PressItem[]> {
     if (enriched >= MAX_ENRICH_ITEMS || Date.now() >= deadline) break;
     if (!item.link || !looksFoodRelated(item)) continue;
 
-    const cached = articleCache.get(item.link);
+    const articleUrl = toHttps(item.link);
+    const cached = articleCache.get(articleUrl);
     if (cached && Date.now() - cached.ts < (cached.ok ? ARTICLE_TTL_OK_MS : ARTICLE_TTL_FAIL_MS)) {
       if (cached.codeInfo) item.codeInfo = cached.codeInfo;
-      item.articleUrl = item.link;
+      item.articleUrl = articleUrl;
       continue;
     }
 
     try {
-      const page = await fetchWithTimeout(item.link, ARTICLE_TIMEOUT_MS);
+      const page = await fetchWithTimeout(articleUrl, ARTICLE_TIMEOUT_MS);
       if (!page.ok) throw new Error(String(page.status));
       const html = await page.text();
       const codeInfo = extractCodeInfo(html);
       if (codeInfo) item.codeInfo = codeInfo;
-      item.articleUrl = item.link;
-      articleCache.set(item.link, { ts: Date.now(), codeInfo, ok: true });
+      item.articleUrl = articleUrl;
+      articleCache.set(articleUrl, { ts: Date.now(), codeInfo, ok: true });
     } catch {
-      articleCache.set(item.link, { ts: Date.now(), ok: false });
+      articleCache.set(articleUrl, { ts: Date.now(), ok: false });
     }
     enriched += 1;
   }

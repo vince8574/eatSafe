@@ -31,6 +31,20 @@ describe('parsePressRss', () => {
     expect(items[0].description).toBe('Because of possible health risk from Cyclospora.');
   });
 
+  test('promeut les liens http:// en https:// (bloqués en clair sur mobile)', () => {
+    // Le flux FDA publie ses <link> en http:// ; ATS (iOS) et le blocage du
+    // cleartext (Android) les refusent → la lecture de l'article échouait
+    // silencieusement et aucune date "Best if Used By" n'était extraite.
+    const httpXml = `<?xml version="1.0"?><rss><channel><item>
+      <title>Blank Slate Creamery Issues Allergy Alert</title>
+      <link>http://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/blank-slate</link>
+    </item></channel></rss>`;
+    const [item] = parsePressRss(httpXml);
+    expect(item.link).toBe(
+      'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/blank-slate'
+    );
+  });
+
   test('flux vide ou non-RSS → aucun item', () => {
     expect(parsePressRss('<?xml version="1.0"?><rss><channel></channel></rss>')).toEqual([]);
     expect(parsePressRss('')).toEqual([]);
