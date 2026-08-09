@@ -269,6 +269,7 @@ export function recallWarnsProduct(
   product: { brand: string; productName?: string },
   recall: {
     brand?: string;
+    brandAliases?: string[];
     lotNumbers?: string[];
     source?: string;
     publishedAt?: string;
@@ -289,7 +290,11 @@ export function recallWarnsProduct(
   const ts = Date.parse(recall.publishedAt ?? '');
   if (!Number.isFinite(ts) || Date.now() - ts > WARNING_MAX_AGE_MS) return false;
 
-  return brandMatchesForWarning(product.brand, recall.brand);
+  // La société qui rappelle n'est pas la marque en rayon ("Boticelli Foods"
+  // rappelle « bettergoods ») : on teste aussi le segment produit du titre,
+  // sinon l'utilisateur qui saisit la marque du pot n'est jamais averti.
+  if (brandMatchesForWarning(product.brand, recall.brand)) return true;
+  return (recall.brandAliases ?? []).some((alias) => brandMatchesForWarning(product.brand, alias));
 }
 
 export function getRecallStatus(product: ScannedProduct, recalls: RecallRecord[]) {

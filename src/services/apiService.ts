@@ -56,12 +56,18 @@ export function normalizeLotNumber(lot: string | undefined | null): string {
 // alors, et le repli partiel (≥8 caractères) ne rattrapait pas un lot de 7 →
 // rappel réel jamais détecté (cas Amy's Kitchen, vérifié sur données live).
 const LOT_TAIL_KEYWORDS =
-  /\b(?:BEST|BEFORE|EXP(?:IRES?|IRATION)?|USE|SELL|BY|DATE[SD]?|UPC|SKU|NET|WT|MFG|MANUFACTURED|PACKED|PRODUCED|UNTIL|THRU|THROUGH|AND|OR|WITH|ITEM|CASE|SIZE)\b/i;
+  /\b(?:BEST|BEFORE|EXP(?:IRES?|IRATION)?|USE|SELL|BY|DATE[SD]?|UPC|SKU|NET|WT|MFG|MANUFACTURED|PACKED|PRODUCED|UNTIL|THRU|THROUGH|AND|OR|WITH|ITEM|CASE|SIZE|PRINTED|STAMPED|BEARING|IDENTIFIED|RECALLED|PURCHASED|CONSUME|URGED|SHOULD|MAY|ARE|IS|WAS|WERE|NOT|TO|ON|IN|AT|FROM|THE|THIS|THESE)\b/i;
+
+// Préfixes de libellé capturés avec le lot : « Lot Code LB028ACP04 » donne
+// "Code LB028ACP04". Sans ce nettoyage, le lot normalisé devient CODELB028ACP04
+// et l'égalité exacte avec la saisie de l'utilisateur échoue.
+const LOT_LABEL_PREFIX = /^(?:code[sd]?|number[s]?|no\.?|#|num|batch|codes?\s+no\.?)\s*[:#.\-]?\s*/i;
 
 /** Coupe une capture au 1er mot « non-lot » (ex. "60D0924 BEST BEFORE" → "60D0924"). */
 function trimLotTail(raw: string): string {
-  const m = LOT_TAIL_KEYWORDS.exec(raw);
-  return (m ? raw.slice(0, m.index) : raw).trim();
+  const withoutPrefix = raw.replace(LOT_LABEL_PREFIX, '');
+  const m = LOT_TAIL_KEYWORDS.exec(withoutPrefix);
+  return (m ? withoutPrefix.slice(0, m.index) : withoutPrefix).trim();
 }
 
 export function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
@@ -75,6 +81,9 @@ export function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
     // Un lot contient TOUJOURS au moins un chiffre. Sans ce garde-fou, "No lot
     // codes." produisait le faux lot "codes" — un rappel SANS lot passait alors
     // pour un rappel AVEC lot et entrait dans la comparaison.
+    // Une année seule ("…date of January 28, 2027 printed on the jar" → "2027")
+    // n'est pas un lot : c'est le reste d'une date coupée.
+    if (/^(?:19|20)\d{2}$/.test(trimmed)) return;
     if (trimmed && trimmed.length >= 3 && /\d/.test(trimmed) && !isDate(trimmed)) {
       lotNumbers.push(trimmed);
     }
@@ -268,6 +277,24 @@ export function extractPressBrand(title: string): string {
   return brand;
 }
 
+// Le titre FDA nomme la SOCIÉTÉ qui rappelle, pas la marque en rayon :
+//   "Boticelli Foods Recalls Bettergoods Pistachio Nut Butter Because of…"
+//   "PT Organics Limited Recalls Select Pumpkin Tree Peter Rabbit Organics…"
+// Le consommateur, lui, lit « bettergoods » ou « Peter Rabbit Organics » sur
+// l'emballage. On garde donc aussi le segment PRODUIT — entre le verbe et le
+// motif — comme alias de marque, sans quoi ces rappels sont introuvables.
+export function extractPressProductSegment(title: string): string {
+  const m = title.match(
+    /\s(?:Recalls?|Issues?|Voluntarily|Initiates?|Expands?|Announces?|Withdraws?|Alerts?)\s+(.{3,140}?)(?:\s+(?:Due to|Because|After|Over|Following|Amid|For Possible|For Undeclared)\b|$)/i
+  );
+  if (!m) return '';
+  return m[1]
+    // Mots de liaison qui ne font pas partie d'une marque.
+    .replace(/^(?:a\s+|an\s+|the\s+|select\s+|certain\s+|all\s+|one\s+|two\s+|three\s+|specific\s+|voluntary\s+|nationwide\s+|its\s+)+/i, '')
+    .replace(/^(?:lots?\s+of\s+|recall\s+of\s+|allerg\w*\s+alert\s+on\s+)+/i, '')
+    .trim();
+}
+
 export async function fetchFdaPressRecalls(): Promise<RecallRecord[]> {
   // 1) DIRECT depuis l'appareil. fda.gov bloque les IP datacenter (401 depuis
   //    GCP, mesuré) mais pas une IP mobile : le téléphone lit le flux ET les
@@ -302,15 +329,23 @@ export async function fetchFdaPressRecalls(): Promise<RecallRecord[]> {
       'fda-press-' +
       title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
 
+    const codeInfo = typeof item.codeInfo === 'string' ? item.codeInfo : undefined;
+    const productSegment = extractPressProductSegment(title);
+
     results.push({
       id,
       title,
       description: typeof item.description === 'string' ? item.description : undefined,
-      lotNumbers: [], // jamais de lots structurés dans un communiqué → warning only
+      // La PAGE du communiqué porte souvent un vrai numéro de lot en prose
+      // ("Lot Code LB028ACP04") : le jeter privait l'app du seul identifiant
+      // exact de ces rappels, qui ne pouvaient alors produire qu'un warning
+      // ambre. Le matching reste strict (égalité exacte, ou ≥8 car. avec marque).
+      lotNumbers: extractFdaLotNumbers(codeInfo),
       // Dates "Best if Used By" / lots extraits de la PAGE du communiqué par le
       // proxy (tableau + prose) : affichés à l'utilisateur pour qu'il vérifie.
-      codeInfo: typeof item.codeInfo === 'string' ? item.codeInfo : undefined,
+      codeInfo,
       brand: brand || undefined,
+      brandAliases: productSegment ? [productSegment] : undefined,
       country: 'US' as const,
       publishedAt: typeof item.pubDate === 'string' ? item.pubDate : '',
       // articleUrl = la vraie page fda.gov (le lien du flux peut être une

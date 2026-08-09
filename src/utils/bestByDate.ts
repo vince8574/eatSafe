@@ -234,19 +234,45 @@ export function bestByInRecallWindow(dateIso: string, codeInfo?: string): boolea
  * Partagé par l'écran de scan de lot ET la saisie manuelle, pour que les deux
  * chemins ne puissent pas donner des réponses différentes sur le même produit.
  */
-export function findBestByRecalls<T extends { brand?: string; codeInfo?: string }>(
+export function findBestByRecalls<T extends BrandBearing & { codeInfo?: string }>(
   recalls: T[],
   brand: string,
   dateIso: string
 ): T[] {
-  const brandLower = (brand || '').trim().toLowerCase();
-  if (!brandLower || !dateIso) return [];
-  return recalls.filter((recall) => {
-    const recallBrandLower = (recall.brand || '').toLowerCase();
-    const isBrandMatch =
-      brandLower === recallBrandLower ||
-      (brandLower.length >= 3 && recallBrandLower.includes(brandLower)) ||
-      (recallBrandLower.length >= 3 && brandLower.includes(recallBrandLower));
-    return isBrandMatch && bestByInRecallWindow(dateIso, recall.codeInfo);
-  });
+  if (!brand?.trim() || !dateIso) return [];
+  return recalls.filter(
+    (recall) => brandMatchesRecall(brand, recall) && bestByInRecallWindow(dateIso, recall.codeInfo)
+  );
+}
+
+export type BrandBearing = { brand?: string; brandAliases?: string[] };
+
+/**
+ * La marque saisie désigne-t-elle ce rappel ?
+ *
+ * Les titres FDA nomment la société qui rappelle, pas la marque en rayon
+ * ("Boticelli Foods Recalls Bettergoods Pistachio Nut Butter") : comparer la
+ * seule `brand` laissait ces rappels introuvables pour l'utilisateur, qui lit
+ * « bettergoods » sur le pot. On accepte donc aussi les alias — le segment
+ * produit du titre — mais à un seuil PLUS STRICT (4 caractères, et seulement
+ * marque-saisie ⊂ alias), parce qu'un alias est une phrase entière : y chercher
+ * un fragment court ferait matcher n'importe quoi.
+ */
+export function brandMatchesRecall(scanned: string, recall: BrandBearing): boolean {
+  const a = (scanned || '').trim().toLowerCase();
+  if (!a) return false;
+
+  const b = (recall.brand || '').toLowerCase();
+  if (b) {
+    if (a === b) return true;
+    if (a.length >= 3 && b.includes(a)) return true;
+    if (b.length >= 3 && a.includes(b)) return true;
+  }
+
+  if (a.length >= 4) {
+    for (const alias of recall.brandAliases ?? []) {
+      if (alias.toLowerCase().includes(a)) return true;
+    }
+  }
+  return false;
 }

@@ -61,8 +61,16 @@ describe('extractCodeInfo', () => {
         <tr><td>JB</td><td>BLEND LETT/ROM</td><td>8/3/2026</td></tr>
       </table></body></html>`;
     const out = extractCodeInfo(html);
-    expect(out).toContain('Best if Used By 7/16/2026 - 8/3/2026'); // plage calculée
+    // DEUX produits, chacun avec SA date : ce n'est pas un intervalle. La version
+    // précédente résumait « 7/16 - 8/3 », ce qui aurait déclaré rappelée une
+    // salade datée du 25/07 alors qu'aucun des deux produits ne porte cette date.
+    expect(out).toContain('Best if Used By 7/16/2026, 8/3/2026');
     expect(out).toContain('LETTUCE SHRED');
+  });
+
+  test('un VRAI intervalle reste un intervalle', () => {
+    const html = `<html><body><p>Best if Used By 7/16/2026 through 8/3/2026.</p></body></html>`;
+    expect(extractCodeInfo(html)).toContain('Best if Used By 7/16/2026 - 8/3/2026');
   });
 
   test('repli en PROSE quand il n’y a pas de tableau', () => {

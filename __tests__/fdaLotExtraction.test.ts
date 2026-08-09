@@ -4,8 +4,18 @@
 // actif) produisait le lot "60D0924 BEST BEFORE". Le match EXACT échouait, et le
 // repli partiel exige ≥8 caractères alors que le lot en fait 7 → le rappel
 // n'était jamais détecté, ni depuis la modale de scan ni à la confirmation.
-import { extractFdaLotNumbers } from '../src/services/apiService';
-import { extractBestByDate, bestByInRecallWindow, findBestByRecalls } from '../src/utils/bestByDate';
+import {
+  extractFdaLotNumbers,
+  extractPressBrand,
+  extractPressProductSegment
+} from '../src/services/apiService';
+import { extractCodeInfo } from '../src/services/fdaPressDirect';
+import {
+  extractBestByDate,
+  bestByInRecallWindow,
+  findBestByRecalls,
+  brandMatchesRecall
+} from '../src/utils/bestByDate';
 
 describe('extractFdaLotNumbers — coupe la prose qui suit le lot', () => {
   test('cas Amy’s Kitchen : le lot ne doit pas emporter "BEST BEFORE"', () => {
@@ -117,6 +127,85 @@ describe('mode « pas de numéro de lot » — dates lues dans les mêmes code_i
     const ci = 'LOT: 60D0924 BEST BEFORE: 4/2027';
     expect(bestByInRecallWindow('2027-04-15', ci)).toBe(true); // dans le mois rappelé
     expect(bestByInRecallWindow('2027-05-15', ci)).toBe(false);
+  });
+});
+
+// Cas réels pris sur le flux RSS FDA du 9 août 2026. Ces deux rappels ne
+// remontaient PAS dans l'app : le titre FDA nomme la société qui rappelle, pas
+// la marque imprimée sur l'emballage.
+describe('avis FDA du flux RSS — les deux modes sur des produits en rayon', () => {
+  const BETTERGOODS =
+    'Boticelli Foods Recalls Bettergoods Pistachio Nut Butter Because of Possible Health Risk';
+  const PETER_RABBIT =
+    'PT Organics Limited Recalls Select Pumpkin Tree Peter Rabbit Organics Banana & Strawberry Fruit Puree Pouches Due to the Potential for Soft Plastic to Enter the Finished Product';
+
+  test('la marque du RAYON est retrouvée, pas seulement la société', () => {
+    // Ce que l'app affichait comme marque : la société qui rappelle.
+    expect(extractPressBrand(BETTERGOODS)).toBe('Boticelli Foods');
+    expect(extractPressBrand(PETER_RABBIT)).toBe('PT Organics Limited');
+
+    // Ce que l'utilisateur lit sur l'emballage doit désormais matcher.
+    const bg = { brand: 'Boticelli Foods', brandAliases: [extractPressProductSegment(BETTERGOODS)] };
+    expect(brandMatchesRecall('bettergoods', bg)).toBe(true);
+    // L'OCR remonte souvent marque + produit : la saisie plus longue matche aussi
+    // tant qu'elle reste contenue dans l'alias.
+    expect(brandMatchesRecall('Bettergoods Pistachio', bg)).toBe(true);
+    // …mais un mot qui n'y figure pas ne matche pas.
+    expect(brandMatchesRecall('Bettergoods Almond', bg)).toBe(false);
+
+    const pr = { brand: 'PT Organics Limited', brandAliases: [extractPressProductSegment(PETER_RABBIT)] };
+    expect(brandMatchesRecall('Peter Rabbit Organics', pr)).toBe(true);
+    expect(brandMatchesRecall('Pumpkin Tree', pr)).toBe(true);
+
+    // Une marque étrangère ne doit pas matcher par accident.
+    expect(brandMatchesRecall('Trader Joe’s', bg)).toBe(false);
+  });
+
+  test('« Select » et consorts ne polluent pas l’alias', () => {
+    expect(extractPressProductSegment(PETER_RABBIT)).toMatch(/^Pumpkin Tree Peter Rabbit Organics/);
+  });
+
+  test('bettergoods Pistachio Nut Butter (Walmart) — par le lot', () => {
+    const ci =
+      'The recalled product comes in a 6.7oz (190g) glass jar bearing UPC 194346207961 and is identified by Lot Code LB028ACP04, with an expiration date of January 28, 2027 printed on the jar.';
+    // Le libellé « Code » ne doit pas rester collé au lot, sinon l'égalité
+    // exacte avec la saisie de l'utilisateur échoue.
+    expect(extractFdaLotNumbers(ci)).toEqual(['LB028ACP04']);
+  });
+
+  // extractCodeInfo agrégeait TOUTES les dates de la page en un intervalle
+  // min→max. Sur l'avis Peter Rabbit, la période de VENTE (mars 2026) se
+  // retrouvait fusionnée avec les dates limites (2027) : un intervalle de 14
+  // mois, qui aurait déclaré « RAPPELÉ » des produits qui ne le sont pas.
+  test('une liste de dates ne doit jamais devenir un intervalle', () => {
+    const html = `<p>The recalled product was sold exclusively through Kroger, Meijer,
+      and Target retail stores nationwide between 03/06/2026 and 07/13/2026. The pouches
+      can be identified by the following codes: Barcode: 8 15367 01078 0
+      Best-Before-Date (BBD) of 01/19/2027, 01/20/2027, 03/17/2027, 03/18/2027,
+      05/14/2027, or 05/15/2027.</p>`;
+    const ci = extractCodeInfo(html);
+    expect(ci).toBeDefined();
+
+    // Les six dates rappelées déclenchent…
+    for (const iso of ['2027-01-19', '2027-03-18', '2027-05-15']) {
+      expect(bestByInRecallWindow(iso, ci)).toBe(true);
+    }
+    // …et rien d'autre. Ni entre deux dates de la liste, ni la période de vente.
+    for (const iso of ['2027-02-15', '2027-04-20', '2026-05-01']) {
+      expect(bestByInRecallWindow(iso, ci)).toBe(false);
+    }
+  });
+
+  test('Peter Rabbit Organics (Target/Kroger) — AUCUN lot, que des dates', () => {
+    // L'avis n'publie aucun numéro de lot : le produit n'est identifiable que par
+    // sa date. C'est précisément ce que le mode « pas de numéro de lot » adresse.
+    const ci =
+      'Best-Before-Date (BBD) of 01/19/2027, 01/20/2027, 03/17/2027, 03/18/2027, 05/14/2027, or 05/15/2027';
+    for (const iso of ['2027-01-19', '2027-01-20', '2027-03-17', '2027-05-15']) {
+      expect(bestByInRecallWindow(iso, ci)).toBe(true);
+    }
+    expect(bestByInRecallWindow('2027-02-19', ci)).toBe(false);
+    expect(bestByInRecallWindow('2027-05-16', ci)).toBe(false);
   });
 });
 

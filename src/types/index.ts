@@ -27,6 +27,11 @@ export type RecallRecord = {
   // l'utilisateur pour qu'il vérifie lui-même son produit.
   codeInfo?: string;
   brand?: string;
+  // Autres noms sous lesquels le CONSOMMATEUR connaît le produit. Les titres FDA
+  // nomment la société qui rappelle, pas la marque en rayon ("Boticelli Foods
+  // Recalls Bettergoods Pistachio Nut Butter") : sans ces alias, un utilisateur
+  // qui saisit la marque imprimée sur le pot ne matche jamais le rappel.
+  brandAliases?: string[];
   productCategory?: string;
   country: CountryCode;
   publishedAt: string;

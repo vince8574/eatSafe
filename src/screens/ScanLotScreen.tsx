@@ -19,7 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
 import { recallWarnsProduct } from '../utils/lotMatcher';
-import { extractBestByDate, findBestByRecalls } from '../utils/bestByDate';
+import { extractBestByDate, findBestByRecalls, brandMatchesRecall } from '../utils/bestByDate';
 import { useSubscription } from '../hooks/useSubscription';
 import { useUsageQuota } from '../hooks/useUsageQuota';
 import { decrementScanCounter } from '../services/subscriptionService';
@@ -644,11 +644,7 @@ export function ScanLotScreen() {
         }
 
         // Check if brand matches (required for partial lot matching)
-        const brandLower = finalBrand.toLowerCase();
-        const recallBrandLower = (recall.brand || '').toLowerCase();
-        const isBrandMatch = brandLower === recallBrandLower ||
-          (brandLower.length >= 3 && recallBrandLower.includes(brandLower)) ||
-          (recallBrandLower.length >= 3 && brandLower.includes(recallBrandLower));
+        const isBrandMatch = brandMatchesRecall(finalBrand, recall);
 
         const lotMatch = recall.lotNumbers.some((lot) => {
           const normalizedRecallLot = normalizeLotValue(lot);
