@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -34,6 +34,14 @@ export function ManualEntryScreen() {
     () => (bestByMode && lotNumber.trim() ? extractBestByDate(lotNumber) : null),
     [bestByMode, lotNumber]
   );
+
+  // Préchauffe le cache des rappels DÈS l'ouverture. Sans ça, tout le réseau
+  // (FDA + USDA + flux des communiqués et leurs pages) démarrait seulement APRÈS
+  // la validation : l'utilisateur attendait, écran figé, alors que ce temps peut
+  // être couvert par sa saisie. Le fetch est mutualisé et mis en cache.
+  useEffect(() => {
+    void fetchRecallsByCountry(country);
+  }, [country]);
 
   // La saisie manuelle du lot n'utilise pas d'IA, mais elle a son PROPRE quota
   // mensuel (9 le 1er mois puis 10/mois ; illimitée pour les abonnés) — sinon cet

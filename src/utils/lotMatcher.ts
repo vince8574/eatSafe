@@ -1,4 +1,5 @@
 import { ScannedProduct, RecallRecord } from '../types';
+import { aliasMatchesBrand } from './bestByDate';
 
 function normalizeLot(lot: string) {
   return lot
@@ -156,7 +157,7 @@ export function matchLots(product: ScannedProduct, recall: RecallRecord) {
  */
 export function recallMatchesProduct(
   product: { brand: string; lotNumber: string },
-  recall: { brand?: string; lotNumbers?: string[] }
+  recall: { brand?: string; brandAliases?: string[]; lotNumbers?: string[] }
 ): boolean {
   // Marque INCONNUE : aucune corroboration possible par la marque, donc on
   // exige un match de lot EXACT (ni sous-chaîne ni flou) et assez long. Sinon
@@ -194,6 +195,16 @@ export function recallMatchesProduct(
 
   // Rappel AVEC marque exploitable : exiger marque ET lot.
   if (matchBrands(product.brand, recall.brand)) {
+    return true;
+  }
+
+  // La marque du rappel est souvent la SOCIÉTÉ ("Boticelli Foods"), pas celle
+  // du rayon ("bettergoods"). Le lot ayant déjà matché, accepter aussi un alias
+  // issu du titre reste sûr — et sans ça, ce chemin de vérification (saisie
+  // manuelle, re-contrôle depuis l'écran détail) rejetait un vrai rappel que
+  // l'écran de scan, lui, détectait. Deux réponses différentes pour un même
+  // produit : le pire des cas.
+  if (aliasMatchesBrand(product.brand, recall.brandAliases)) {
     return true;
   }
 

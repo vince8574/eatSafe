@@ -269,10 +269,16 @@ export function brandMatchesRecall(scanned: string, recall: BrandBearing): boole
     if (b.length >= 3 && a.includes(b)) return true;
   }
 
-  if (a.length >= 4) {
-    for (const alias of recall.brandAliases ?? []) {
-      if (alias.toLowerCase().includes(a)) return true;
-    }
-  }
-  return false;
+  return aliasMatchesBrand(scanned, recall.brandAliases);
+}
+
+/**
+ * Un alias est une PHRASE (le segment produit du titre FDA), pas un nom de
+ * marque : on n'y cherche donc que la marque saisie, entière, et à partir de 4
+ * caractères — y accepter un fragment court ferait matcher n'importe quoi.
+ */
+export function aliasMatchesBrand(scanned: string, aliases: string[] | undefined): boolean {
+  const a = (scanned || '').trim().toLowerCase();
+  if (a.length < 4 || !aliases?.length) return false;
+  return aliases.some((alias) => alias.toLowerCase().includes(a));
 }

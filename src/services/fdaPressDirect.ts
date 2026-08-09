@@ -41,9 +41,56 @@ const ARTICLE_TIMEOUT_MS = 7000;
 
 let feedCache: { ts: number; items: PressItem[] } | null = null;
 // Cache par article : une page lue une fois n'est pas relue (TTL long si succès).
-const articleCache = new Map<string, { ts: number; codeInfo?: string; ok: boolean }>();
+type ArticleEntry = { ts: number; codeInfo?: string; ok: boolean };
+const articleCache = new Map<string, ArticleEntry>();
 const ARTICLE_TTL_OK_MS = 24 * 60 * 60 * 1000;
 const ARTICLE_TTL_FAIL_MS = 60 * 60 * 1000;
+
+// Le cache d'articles était purement en mémoire : à CHAQUE démarrage de l'app,
+// une douzaine de pages (~45 Ko chacune) étaient relues avant qu'un résultat
+// puisse s'afficher. On le persiste — le flux RSS, lui, reste rechargé à chaque
+// fois : il est petit (~19 Ko) et c'est lui qui apporte les nouveaux rappels.
+const ARTICLE_CACHE_KEY = 'fdaPress.articleCache.v1';
+const ARTICLE_CACHE_MAX = 80;
+let articleCacheLoaded = false;
+
+async function asyncStorage(): Promise<any | null> {
+  try {
+    return (await import('@react-native-async-storage/async-storage')).default;
+  } catch {
+    return null; // hors app (tests) : le cache reste simplement en mémoire
+  }
+}
+
+async function loadArticleCache(): Promise<void> {
+  if (articleCacheLoaded) return;
+  articleCacheLoaded = true;
+  try {
+    const store = await asyncStorage();
+    const raw = await store?.getItem(ARTICLE_CACHE_KEY);
+    if (!raw) return;
+    const now = Date.now();
+    for (const [url, entry] of JSON.parse(raw) as [string, ArticleEntry][]) {
+      if (now - entry.ts < (entry.ok ? ARTICLE_TTL_OK_MS : ARTICLE_TTL_FAIL_MS)) {
+        articleCache.set(url, entry);
+      }
+    }
+  } catch {
+    /* cache illisible → on repart de zéro, sans bloquer */
+  }
+}
+
+function persistArticleCache(): void {
+  void (async () => {
+    try {
+      const store = await asyncStorage();
+      const entries = Array.from(articleCache.entries()).slice(-ARTICLE_CACHE_MAX);
+      await store?.setItem(ARTICLE_CACHE_KEY, JSON.stringify(entries));
+    } catch {
+      /* la persistance est un confort, jamais un prérequis */
+    }
+  })();
+}
 
 function fetchWithTimeout(url: string, timeoutMs: number, headers?: Record<string, string>) {
   const controller = new AbortController();
@@ -231,6 +278,14 @@ export function looksFoodRelated(item: PressItem): boolean {
 export async function fetchFdaPressDirect(): Promise<PressItem[]> {
   const now = Date.now();
   if (feedCache && now - feedCache.ts < FEED_TTL_MS) return feedCache.items;
+  // Blindage : un cache illisible ne doit JAMAIS faire échouer la récupération
+  // directe. Sinon l'app bascule sur le proxy, qui ne peut pas lire fda.gov
+  // depuis un datacenter et renvoie des rappels SANS lot ni date — donc muets.
+  try {
+    await loadArticleCache();
+  } catch {
+    /* on repart d'un cache vide */
+  }
 
   const res = await fetchWithTimeout(FDA_RSS_URL, FEED_TIMEOUT_MS, {
     Accept: 'application/rss+xml,application/xml;q=0.9,*/*;q=0.8'
@@ -279,6 +334,7 @@ export async function fetchFdaPressDirect(): Promise<PressItem[]> {
     }
     await Promise.all(toFetch.slice(i, i + ENRICH_CONCURRENCY).map(readArticle));
   }
+  if (toFetch.length) persistArticleCache();
 
   feedCache = { ts: Date.now(), items };
   console.log(
