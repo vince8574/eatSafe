@@ -213,6 +213,8 @@ READING RULES:
 - The stamp is often inkjet dot-matrix, faint or on a busy background. Read carefully.
 - Common US formats: "08/03/2026", "8/3/26", "AUG 03 2026", "AUG0326", "03AUG2026",
   "2026-08-03", "080326" (MMDDYY).
+- MANY packages print only a MONTH and a YEAR ("BEST BEFORE 4/2027", "EXP APR 2027",
+  "04/2027"). That IS the date — return it as printed. Do NOT invent a day.
 - Keep the ORIGINAL printed form — do not reformat, do not convert, do not guess a
   missing year. Return the characters as printed.
 - A 2-digit year stays 2 digits ("8/3/26" -> "8/3/26").
@@ -372,13 +374,21 @@ export const ocrClaude = functions
       // sinon on tente de récupérer un unique candidat, et à défaut on REJETTE
       // (l'app repasse en saisie manuelle — bien plus sûr qu'un mauvais lot).
       const upper = raw.toUpperCase();
+      // Une DATE contient des espaces ("AUG 03 2026") : la valider avec le motif
+      // d'un lot (qui les interdit) la faisait rejeter en bloc → « no text
+      // detected » sur tous les formats à mois écrit. Chaque mode a donc sa forme.
       const LOT_RE = /^[A-Z0-9][A-Z0-9/-]{2,23}$/;
+      const DATE_RE = /^[A-Z0-9][A-Z0-9 ,./-]{2,29}$/;
+      const DATE_TOKEN =
+        /(?:[A-Z]{3,9}\.?\s+\d{1,2}(?:ST|ND|RD|TH)?,?\s+\d{2,4}|\d{1,2}(?:ST|ND|RD|TH)?\s+[A-Z]{3,9}\.?,?\s+\d{2,4}|\d{4}\s*[-/.]\s*\d{1,2}\s*[-/.]\s*\d{1,2}|\d{1,2}\s*[-/.]\s*\d{1,2}\s*[-/.]\s*\d{2,4}|[A-Z]{3,9}\.?\s+\d{4}|\d{1,2}\s*[-/.]\s*\d{4}|\d{6,8})/g;
+      const shapeRe = isBestBy ? DATE_RE : LOT_RE;
+      const salvageRe = isBestBy ? DATE_TOKEN : /[A-Z0-9][A-Z0-9/-]{2,23}/g;
       let cleaned = '';
       if (upper && upper !== 'NONE') {
-        if (LOT_RE.test(upper)) {
+        if (shapeRe.test(upper)) {
           cleaned = upper;
         } else {
-          const candidates = Array.from(new Set(upper.match(/[A-Z0-9][A-Z0-9/-]{2,23}/g) ?? []));
+          const candidates = Array.from(new Set(upper.match(salvageRe) ?? [])).map((c) => c.trim());
           cleaned = candidates.length === 1 ? candidates[0] : '';
           console.warn('[ocrClaude] non-bare output', JSON.stringify({ raw, salvaged: cleaned }));
         }

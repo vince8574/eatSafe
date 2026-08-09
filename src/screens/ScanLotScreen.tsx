@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useRef, useState } from 'react';
+﻿import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Modal, TextInput, Image, Animated, KeyboardAvoidingView, Platform, AppState } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -583,8 +583,13 @@ export function ScanLotScreen() {
       confirmedBestByIso = manual?.iso ?? bestByIso;
       finalLot = manual?.display ?? (isEditingLot ? '' : lotNumber);
       if (!confirmedBestByIso || !finalLot) {
+        // On garde la modale ouverte et la saisie en place : fermer effacerait ce
+        // que l'utilisateur vient de taper pour une simple faute de format.
         setErrorMessage(t('scanLot.bestByParseFailed'));
-        setConfirmModalVisible(false);
+        if (!isEditingLot) {
+          setEditedLot('');
+          setIsEditingLot(true);
+        }
         return;
       }
     } else {
@@ -823,6 +828,25 @@ export function ScanLotScreen() {
     setEditedLot('');
   }, []);
 
+  // Bascule lot ⇄ date. Changer de mode change ce que l'OCR cherche : on repart
+  // d'un scan propre pour ne pas confirmer une lecture faite dans l'autre mode.
+  const selectBestByMode = useCallback(
+    (next: boolean) => {
+      if (next === bestByModeRef.current) return;
+      setBestByMode(next);
+      bestByModeRef.current = next;
+      resetFlow();
+    },
+    [resetFlow]
+  );
+
+  // Relecture à la volée de ce que l'utilisateur tape : il voit tout de suite si
+  // sa date est comprise, au lieu de découvrir l'échec après validation.
+  const manualBestBy = useMemo(
+    () => (bestByMode && isEditingLot && editedLot.trim() ? extractBestByDate(editedLot) : null),
+    [bestByMode, isEditingLot, editedLot]
+  );
+
   const handleGoBack = useCallback(() => {
     router.back();
   }, [router]);
@@ -1060,37 +1084,52 @@ export function ScanLotScreen() {
         </View>
 
         {/* Beaucoup de produits (frais, marques distributeur) n'ont PAS de lot :
-            la FDA/USDA les identifie alors par la date "Best if Used By". Ce
-            bouton bascule l'OCR sur la lecture de cette date. */}
+            la FDA/USDA les identifie alors par la date "Best if Used By". Les
+            deux modes sont donc présentés côte à côte, mode courant en évidence,
+            plutôt qu'en bascule cachée derrière un seul bouton. */}
+        <View style={[styles.modeSwitch, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
+          {([
+            { on: false, icon: 'pricetag-outline' as const, label: t('scanLot.modeLot') },
+            { on: true, icon: 'calendar-outline' as const, label: t('scanLot.modeBestBy') }
+          ]).map((opt) => {
+            const active = bestByMode === opt.on;
+            return (
+              <TouchableOpacity
+                key={opt.label}
+                style={[styles.modeSegment, active && { backgroundColor: colors.accent }]}
+                onPress={() => selectBestByMode(opt.on)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+              >
+                <Ionicons
+                  name={opt.icon}
+                  size={16}
+                  color={active ? colors.onAccent : colors.textSecondary}
+                />
+                <Text
+                  style={[styles.modeSegmentText, { color: active ? colors.onAccent : colors.textPrimary }]}
+                  numberOfLines={1}
+                >
+                  {opt.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <Text style={[styles.modeHelp, { color: colors.textSecondary }]}>
+          {bestByMode ? t('scanLot.modeBestByHelp') : t('scanLot.modeLotHelp')}
+        </Text>
+
+        {/* La saisie manuelle existait, mais seulement APRÈS un scan raté. Ici
+            elle est offerte d'emblée : emballage abîmé, date gravée illisible… */}
         <TouchableOpacity
-          style={[
-            styles.bestByToggle,
-            {
-              backgroundColor: bestByMode ? colors.accent : colors.surface,
-              borderColor: bestByMode ? colors.accent : colors.border
-            }
-          ]}
-          onPress={() => {
-            const next = !bestByMode;
-            setBestByMode(next);
-            bestByModeRef.current = next;
-            resetFlow();
-          }}
+          style={[styles.manualCta, { borderColor: colors.accent }]}
+          onPress={handleManualEntry}
           accessibilityRole="button"
-          accessibilityState={{ selected: bestByMode }}
         >
-          <Ionicons
-            name={bestByMode ? 'calendar' : 'calendar-outline'}
-            size={18}
-            color={bestByMode ? colors.onAccent : colors.textSecondary}
-          />
-          <Text
-            style={[
-              styles.bestByToggleText,
-              { color: bestByMode ? colors.onAccent : colors.textPrimary }
-            ]}
-          >
-            {bestByMode ? t('scanLot.bestByModeOn') : t('scanLot.noLotNumber')}
+          <Ionicons name="create-outline" size={16} color={colors.accent} />
+          <Text style={[styles.manualCtaText, { color: colors.accent }]}>
+            {bestByMode ? t('scanLot.manualBestByCta') : t('scanLot.manualLotCta')}
           </Text>
         </TouchableOpacity>
 
@@ -1195,15 +1234,33 @@ export function ScanLotScreen() {
                 <TextInput
                   style={[styles.editInput, { backgroundColor: colors.surfaceAlt, color: colors.textPrimary, borderColor: colors.accent }]}
                   value={editedLot}
-                  onChangeText={setEditedLot}
+                  onChangeText={(value) => {
+                    setEditedLot(value);
+                    if (errorMessage) setErrorMessage('');
+                  }}
                   placeholder={bestByMode ? t('scanLot.enterBestBy') : t('scanLot.enterLot')}
                   placeholderTextColor={colors.textSecondary}
                   autoCapitalize="characters"
                   autoFocus
-                  multiline
-                  numberOfLines={3}
+                  multiline={!bestByMode}
+                  numberOfLines={bestByMode ? 1 : 3}
                   textAlignVertical="top"
                 />
+                {bestByMode && editedLot.trim().length > 0 ? (
+                  <Text
+                    style={[
+                      styles.bestByPreview,
+                      { color: manualBestBy ? colors.success : colors.textSecondary }
+                    ]}
+                  >
+                    {manualBestBy
+                      ? t('scanLot.bestByPreview', { date: manualBestBy.display })
+                      : t('scanLot.bestByNotParsed')}
+                  </Text>
+                ) : null}
+                {errorMessage ? (
+                  <Text style={[styles.bestByPreview, { color: colors.danger }]}>{errorMessage}</Text>
+                ) : null}
                 <View style={styles.modalButtons}>
                   <TouchableOpacity
                     style={[styles.modalButton, { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border }]}
@@ -1364,18 +1421,47 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 4
   },
-  bestByToggle: {
+  modeSwitch: {
+    flexDirection: 'row',
+    gap: 4,
+    padding: 4,
+    borderWidth: 1,
+    borderRadius: 14
+  },
+  modeSegment: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    borderRadius: 10
+  },
+  modeSegmentText: { fontSize: 13, fontWeight: '700' },
+  modeHelp: {
+    fontSize: 12,
+    lineHeight: 17,
+    textAlign: 'center',
+    marginTop: -8
+  },
+  manualCta: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    marginTop: 12,
     borderWidth: 1,
-    borderRadius: 999,
-    paddingVertical: 12,
-    paddingHorizontal: 18
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    paddingVertical: 11,
+    marginTop: -6
   },
-  bestByToggleText: { fontSize: 14, fontWeight: '700' },
+  manualCtaText: { fontSize: 13, fontWeight: '700' },
+  bestByPreview: {
+    fontSize: 13,
+    fontWeight: '700',
+    marginTop: 8,
+    textAlign: 'center'
+  },
   stepLabel: {
     fontSize: 13,
     fontWeight: '800',

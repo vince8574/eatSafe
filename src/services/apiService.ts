@@ -50,15 +50,32 @@ export function normalizeLotNumber(lot: string | undefined | null): string {
  * Gère des formats comme "Lot: 58041", "Lot #12345", "Lots 12255, 22265",
  * "Batch 12345", "Code: 12345", "L#12345", "L: 12345", "L=12345", etc.
  */
-function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
+// Mots qui, dans un code_info, marquent la FIN de la liste des lots et le début
+// d'autre chose (date, UPC, poids…). Sans cette coupe, "LOT: 60D0924 BEST BEFORE:
+// 4/2027" produisait le faux lot "60D0924 BEST BEFORE" : le match EXACT échouait
+// alors, et le repli partiel (≥8 caractères) ne rattrapait pas un lot de 7 →
+// rappel réel jamais détecté (cas Amy's Kitchen, vérifié sur données live).
+const LOT_TAIL_KEYWORDS =
+  /\b(?:BEST|BEFORE|EXP(?:IRES?|IRATION)?|USE|SELL|BY|DATE[SD]?|UPC|SKU|NET|WT|MFG|MANUFACTURED|PACKED|PRODUCED|UNTIL|THRU|THROUGH|AND|OR|WITH|ITEM|CASE|SIZE)\b/i;
+
+/** Coupe une capture au 1er mot « non-lot » (ex. "60D0924 BEST BEFORE" → "60D0924"). */
+function trimLotTail(raw: string): string {
+  const m = LOT_TAIL_KEYWORDS.exec(raw);
+  return (m ? raw.slice(0, m.index) : raw).trim();
+}
+
+export function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
   if (!codeInfo) return [];
 
   const lotNumbers: string[] = [];
   const isDate = (s: string) => /^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}$/.test(s);
 
   const pushIfValid = (raw: string) => {
-    const trimmed = raw.trim().replace(/[.,;:\s]+$/, '');
-    if (trimmed && trimmed.length >= 3 && !isDate(trimmed)) {
+    const trimmed = trimLotTail(raw).replace(/[.,;:\s]+$/, '');
+    // Un lot contient TOUJOURS au moins un chiffre. Sans ce garde-fou, "No lot
+    // codes." produisait le faux lot "codes" — un rappel SANS lot passait alors
+    // pour un rappel AVEC lot et entrait dans la comparaison.
+    if (trimmed && trimmed.length >= 3 && /\d/.test(trimmed) && !isDate(trimmed)) {
       lotNumbers.push(trimmed);
     }
   };
