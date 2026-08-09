@@ -31,10 +31,38 @@ describe('extractFdaLotNumbers — coupe la prose qui suit le lot', () => {
     }
   });
 
+  // Des lots de 3 caractères existent réellement dans la fenêtre FDA courante
+  // (216 / 687 / 506 / 013 chez Imu-Tek, Jack & The Green Sprouts, Inner Waymark).
+  // Ils doivent survivre à l'extraction — c'est la phase de MATCHING qui exige
+  // ensuite une marque concordante, pas l'extraction qui les jette.
+  test('un lot de 3 caractères est conservé', () => {
+    expect(extractFdaLotNumbers('Lot 216 Best By 10/2026')).toContain('216');
+    expect(extractFdaLotNumbers('Lot: 013')).toContain('013'); // le zéro de tête est gardé
+    expect(extractFdaLotNumbers('Lots 216, 687, 506')).toEqual(
+      expect.arrayContaining(['216', '687', '506'])
+    );
+  });
+
   test('champ vide ou sans lot → aucun résultat', () => {
     expect(extractFdaLotNumbers(undefined)).toEqual([]);
-    expect(extractFdaLotNumbers('No lot codes.')).toEqual([]);
     expect(extractFdaLotNumbers('UPC 7 26191 01854 8 BEST BY 10/15/2026')).toEqual([]);
+  });
+
+  // Sur 1000 rappels FDA en cours, 173 des 834 « lots » extraits n'avaient AUCUN
+  // chiffre — et pas un seul n'était un vrai lot : uniquement de la prose captée
+  // après le mot « lot ». D'où l'exigence d'au moins un chiffre.
+  test('la prose captée après le mot « lot » n’est pas un lot', () => {
+    for (const prose of [
+      'No lot codes.',
+      'Lot Numbers not provided',
+      'Lot code on label',
+      'Lots shipped to distributors'
+    ]) {
+      for (const lot of extractFdaLotNumbers(prose)) {
+        expect(lot).toMatch(/\d/);
+      }
+    }
+    expect(extractFdaLotNumbers('No lot codes.')).toEqual([]);
   });
 });
 
