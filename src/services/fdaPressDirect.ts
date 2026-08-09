@@ -199,20 +199,28 @@ function toHttps(url: string): string {
 }
 
 /** Un communiqué susceptible de porter des dates d'identification alimentaires. */
-function looksFoodRelated(item: PressItem): boolean {
+export function looksFoodRelated(item: PressItem): boolean {
   const hay = `${item.title} ${item.description ?? ''}`;
-  // Écarte les rappels médicaments/dispositifs, majoritaires dans ce flux. Sans
-  // « circuit/needle/… », des dispositifs médicaux (circuits respiratoires
-  // néonatals Medline) passaient le filtre et consommaient une place de lecture
-  // au détriment d'un vrai rappel alimentaire.
+  // ATTENTION aux limites de mot : ces motifs sont des RADICAUX, donc pas de \b
+  // FINAL. Avec « \brecall\b », « Recalls » et « recalling » ne matchaient pas —
+  // c'est ce qui rendait invisible le rappel Peter Rabbit (« PT Organics Limited
+  // RecallS … Due to … Soft Plastic », aucun agent pathogène nommé) : il n'était
+  // même pas mis en file de lecture. Symétriquement « \bvial\b » laissait passer
+  // « Vials », donc des médicaments.
+
+  // Écarte les rappels médicaments/dispositifs, majoritaires dans ce flux.
   if (
-    /\b(tablet|capsule|injection|vial|syringe|catheter|infusion|drug|pharmac|sterile|device|needle|obturator|breathing circuits?|intraosseous|imaging|canine|veterinar)\b/i.test(
+    /\b(tablet|capsule|injection|vial|syringe|catheter|infusion|drug|pharmac|sterile|device|needle|obturator|breathing circuit|intraosseous|imaging|canine|feline|veterinar)/i.test(
       hay
     )
   ) {
     return false;
   }
-  return /\b(recall|allerg|undeclared|listeria|salmonella|e\.? ?coli|cyclospora|botulism|contamin)\b/i.test(hay);
+  // Ce qui reste dans ce flux est alimentaire. On accepte largement : un rappel
+  // pour corps étranger (plastique, verre, métal) ne nomme aucun pathogène.
+  return /\b(recall|withdraw|allerg|undeclared|mislabel|listeria|salmonella|e\.? ?coli|cyclospora|botulism|contamin|foreign object|plastic|glass|metal)/i.test(
+    hay
+  );
 }
 
 /**

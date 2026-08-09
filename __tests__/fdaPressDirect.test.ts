@@ -1,6 +1,6 @@
 // Récupération directe du flux de communiqués FDA depuis l'appareil : parsing
 // RSS et extraction des dates d'identification ("Best if Used By") de la page.
-import { parsePressRss, extractCodeInfo } from '../src/services/fdaPressDirect';
+import { parsePressRss, extractCodeInfo, looksFoodRelated } from '../src/services/fdaPressDirect';
 
 describe('parsePressRss', () => {
   const xml = `<?xml version="1.0" encoding="utf-8"?>
@@ -48,6 +48,42 @@ describe('parsePressRss', () => {
   test('flux vide ou non-RSS → aucun item', () => {
     expect(parsePressRss('<?xml version="1.0"?><rss><channel></channel></rss>')).toEqual([]);
     expect(parsePressRss('')).toEqual([]);
+  });
+});
+
+// Le piège est la limite de mot FINALE : ces motifs sont des radicaux.
+// « \brecall\b » ne matche ni « Recalls » ni « recalling », et « \bvial\b » ne
+// matche pas « Vials ». Résultat constaté sur le flux réel : un vrai rappel
+// alimentaire (Peter Rabbit) n'était même pas mis en file de lecture, tandis
+// qu'un rappel de MÉDICAMENT consommait une place.
+describe('looksFoodRelated', () => {
+  const item = (title: string, description = '') => ({ title, description });
+
+  test('garde un rappel alimentaire sans pathogène nommé', () => {
+    expect(
+      looksFoodRelated(
+        item(
+          'PT Organics Limited Recalls Select Pumpkin Tree Peter Rabbit Organics Banana & Strawberry Fruit Puree Pouches Due to the Potential for Soft Plastic to Enter the Finished Product'
+        )
+      )
+    ).toBe(true);
+    expect(
+      looksFoodRelated(item('Ukrop’s Homestyle Foods Announces a Voluntary Recall Due to Possible Foreign Object'))
+    ).toBe(true);
+  });
+
+  test('écarte médicaments et dispositifs médicaux', () => {
+    expect(
+      looksFoodRelated(
+        item('Victory Medical Center Pharmacy Issues Voluntary Nationwide Recall of Compounded Glutathione Multi-Dose Vials')
+      )
+    ).toBe(false);
+    expect(
+      looksFoodRelated(item('Medline Industries, LP Issues Nationwide Recall of Hudson RCI Heated Wire Breathing Circuits'))
+    ).toBe(false);
+    expect(
+      looksFoodRelated(item('American Regent Issues Recall of Two Lots of Adequan Canine'))
+    ).toBe(false);
   });
 });
 
