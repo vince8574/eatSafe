@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,16 +13,27 @@ import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
 import { GradientBackground } from '../components/GradientBackground';
 import { useUsageQuota } from '../hooks/useUsageQuota';
+import { extractBestByDate, findBestByRecalls } from '../utils/bestByDate';
 
 export function ManualEntryScreen() {
   const { colors } = useTheme();
   const { t } = useI18n();
   const router = useRouter();
-  const { addProduct, updateRecall } = useScannedProducts();
+  const { addProduct, updateRecall, updateProduct } = useScannedProducts();
   const country = usePreferencesStore((state) => state.country);
   const [brand, setBrand] = useState('');
   const [lotNumber, setLotNumber] = useState('');
+  // Beaucoup de produits (frais, marques distributeur) n'ont PAS de lot : les
+  // rappels FDA/USDA les identifient alors par leur date limite. Le même choix
+  // qu'à l'écran de scan doit exister ici, sinon la saisie manuelle est un
+  // cul-de-sac pour exactement les produits qui en ont le plus besoin.
+  const [bestByMode, setBestByMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const parsedBestBy = useMemo(
+    () => (bestByMode && lotNumber.trim() ? extractBestByDate(lotNumber) : null),
+    [bestByMode, lotNumber]
+  );
 
   // La saisie manuelle du lot n'utilise pas d'IA, mais elle a son PROPRE quota
   // mensuel (9 le 1er mois puis 10/mois ; illimitée pour les abonnés) — sinon cet
@@ -33,6 +44,20 @@ export function ManualEntryScreen() {
     if (!lotNumber.trim()) {
       Alert.alert(t('manualEntry.errors.lotRequired'), t('manualEntry.errors.lotRequiredMessage'));
       return;
+    }
+
+    if (bestByMode) {
+      if (!parsedBestBy) {
+        Alert.alert(t('scanLot.confirmBestByTitle'), t('scanLot.bestByParseFailed'));
+        return;
+      }
+      // Sans marque, une date ne distingue rien : des milliers de produits
+      // partagent la même date limite. On refuse plutôt que de rendre un
+      // « aucun rappel » qui n'a rien vérifié.
+      if (!brand.trim()) {
+        Alert.alert(t('manualEntry.errors.brandRequired'), t('manualEntry.errors.brandRequiredMessage'));
+        return;
+      }
     }
 
     if (!canManualLot) {
@@ -51,7 +76,9 @@ export function ManualEntryScreen() {
       // = Firestore update() qui throw si le doc n'existe pas / scopeId divergent).
       const product = await addProduct({
         brand: finalBrand,
-        lotNumber: lotNumber.trim()
+        // En mode date, on enregistre la date normalisée ("Apr 15, 2027") plutôt
+        // que la frappe brute : c'est ce que l'écran détail affichera.
+        lotNumber: parsedBestBy ? parsedBestBy.display : lotNumber.trim()
       });
 
       // Produit créé = vérification consommée (le reste est best-effort).
@@ -67,11 +94,26 @@ export function ManualEntryScreen() {
       // (réseau), l'écran détail la refera. On ne bloque pas la navigation.
       try {
         const recalls = await fetchRecallsByCountry(country);
-        const recallStatus = await updateRecall(product, recalls);
-        if (recallStatus.status === 'recalled') {
-          const recall = recalls.find((r) => r.id === recallStatus.recallReference);
-          if (recall) {
-            await scheduleRecallNotification(product, recall);
+        if (parsedBestBy) {
+          // Mode date : le matching par lot ne s'applique pas. On compare la
+          // MARQUE et la fenêtre de dates publiée par le rappel — même règle
+          // exacte qu'à l'écran de scan (fonction partagée).
+          const matching = findBestByRecalls(recalls, finalBrand, parsedBestBy.iso);
+          await updateProduct(product.id, {
+            recallStatus: matching.length > 0 ? 'recalled' : 'safe',
+            ...(matching.length > 0 && { recallReference: matching[0].id }),
+            lastCheckedAt: Date.now()
+          });
+          if (matching.length > 0) {
+            await scheduleRecallNotification(product, matching[0]);
+          }
+        } else {
+          const recallStatus = await updateRecall(product, recalls);
+          if (recallStatus.status === 'recalled') {
+            const recall = recalls.find((r) => r.id === recallStatus.recallReference);
+            if (recall) {
+              await scheduleRecallNotification(product, recall);
+            }
           }
         }
       } catch (recallError) {
@@ -112,16 +154,56 @@ export function ManualEntryScreen() {
           autoCapitalize="words"
         />
 
+        <View style={[styles.modeSwitch, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}>
+          {[
+            { on: false, icon: 'pricetag-outline' as const, label: t('scanLot.modeLot') },
+            { on: true, icon: 'calendar-outline' as const, label: t('scanLot.modeBestBy') }
+          ].map((opt) => {
+            const active = bestByMode === opt.on;
+            return (
+              <TouchableOpacity
+                key={opt.label}
+                style={[styles.modeSegment, active && { backgroundColor: colors.accent }]}
+                onPress={() => setBestByMode(opt.on)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+              >
+                <Ionicons name={opt.icon} size={16} color={active ? colors.onAccent : colors.textSecondary} />
+                <Text
+                  style={[styles.modeSegmentText, { color: active ? colors.onAccent : colors.textPrimary }]}
+                  numberOfLines={1}
+                >
+                  {opt.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <Text style={[styles.modeHelp, { color: colors.textSecondary }]}>
+          {bestByMode ? t('scanLot.modeBestByHelp') : t('scanLot.modeLotHelp')}
+        </Text>
+
         <View style={[styles.field, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.label, { color: colors.textSecondary }]}>{t('manualEntry.lotLabel')}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>
+            {bestByMode ? t('scanLot.bestByLabel') : t('manualEntry.lotLabel')}
+          </Text>
           <TextInput
             style={[styles.input, { color: colors.textPrimary, letterSpacing: 1.2 }]}
-            placeholder={t('manualEntry.lotPlaceholder')}
+            placeholder={bestByMode ? t('scanLot.enterBestBy') : t('manualEntry.lotPlaceholder')}
             placeholderTextColor={colors.textSecondary}
             value={lotNumber}
             onChangeText={setLotNumber}
             autoCapitalize="characters"
           />
+          {bestByMode && lotNumber.trim().length > 0 ? (
+            <Text
+              style={[styles.bestByPreview, { color: parsedBestBy ? colors.success : colors.textSecondary }]}
+            >
+              {parsedBestBy
+                ? t('scanLot.bestByPreview', { date: parsedBestBy.display })
+                : t('scanLot.bestByNotParsed')}
+            </Text>
+          ) : null}
         </View>
 
         <View style={[styles.appDisclaimerBox, { backgroundColor: colors.surfaceAlt, borderColor: 'rgba(255,255,255,0.06)' }]}>
@@ -201,6 +283,34 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 18,
     fontWeight: '600'
+  },
+  modeSwitch: {
+    flexDirection: 'row',
+    gap: 4,
+    padding: 4,
+    borderWidth: 1,
+    borderRadius: 14,
+    marginTop: 20
+  },
+  modeSegment: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    borderRadius: 10
+  },
+  modeSegmentText: { fontSize: 13, fontWeight: '700' },
+  modeHelp: {
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 8
+  },
+  bestByPreview: {
+    fontSize: 13,
+    fontWeight: '700',
+    marginTop: 10
   },
   button: {
     marginTop: 32,

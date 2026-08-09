@@ -5,7 +5,7 @@
 // repli partiel exige ≥8 caractères alors que le lot en fait 7 → le rappel
 // n'était jamais détecté, ni depuis la modale de scan ni à la confirmation.
 import { extractFdaLotNumbers } from '../src/services/apiService';
-import { extractBestByDate, bestByInRecallWindow } from '../src/utils/bestByDate';
+import { extractBestByDate, bestByInRecallWindow, findBestByRecalls } from '../src/utils/bestByDate';
 
 describe('extractFdaLotNumbers — coupe la prose qui suit le lot', () => {
   test('cas Amy’s Kitchen : le lot ne doit pas emporter "BEST BEFORE"', () => {
@@ -117,5 +117,29 @@ describe('mode « pas de numéro de lot » — dates lues dans les mêmes code_i
     const ci = 'LOT: 60D0924 BEST BEFORE: 4/2027';
     expect(bestByInRecallWindow('2027-04-15', ci)).toBe(true); // dans le mois rappelé
     expect(bestByInRecallWindow('2027-05-15', ci)).toBe(false);
+  });
+});
+
+// findBestByRecalls est partagée par l'écran de scan ET la saisie manuelle : les
+// deux chemins doivent répondre la même chose sur le même produit.
+describe('findBestByRecalls — marque obligatoire, date dans la fenêtre', () => {
+  const recalls = [
+    { id: 'amy', brand: "Amy's Kitchen Inc.", codeInfo: 'LOT: 60D0924 BEST BEFORE: 4/2027' },
+    { id: 'taylor', brand: 'Taylor Farms', codeInfo: 'Best if Used By 7/16/2026 - 8/3/2026' }
+  ];
+
+  test('marque + date dans la fenêtre → rappel trouvé', () => {
+    expect(findBestByRecalls(recalls, "Amy's Kitchen", '2027-04').map((r) => r.id)).toEqual(['amy']);
+    expect(findBestByRecalls(recalls, 'Taylor Farms', '2026-07-20').map((r) => r.id)).toEqual(['taylor']);
+  });
+
+  test('bonne marque mais date hors fenêtre → rien', () => {
+    expect(findBestByRecalls(recalls, 'Taylor Farms', '2026-09-01')).toEqual([]);
+  });
+
+  test('date correcte mais marque absente ou différente → rien', () => {
+    // Une date seule n'identifie aucun produit : sans marque, on ne conclut pas.
+    expect(findBestByRecalls(recalls, '', '2027-04')).toEqual([]);
+    expect(findBestByRecalls(recalls, 'Trader Joe’s', '2027-04')).toEqual([]);
   });
 });

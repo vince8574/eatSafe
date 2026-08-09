@@ -221,3 +221,32 @@ export function bestByInRecallWindow(dateIso: string, codeInfo?: string): boolea
   // Il désigne alors tout le mois : une date scannée dans ce mois correspond.
   return findMonthYears(codeInfo).some((m) => m.date.iso === month);
 }
+
+/**
+ * Rappels correspondant à un produit SANS numéro de lot : MARQUE concordante ET
+ * date imprimée dans la fenêtre publiée par le rappel. C'est le mode
+ * d'identification officiel de la FDA/USDA pour ces produits.
+ *
+ * La marque est OBLIGATOIRE ici : une date seule ne distingue rien (des milliers
+ * de produits partagent la même date limite), asserter un rappel sur ce seul
+ * critère serait une fausse alerte garantie.
+ *
+ * Partagé par l'écran de scan de lot ET la saisie manuelle, pour que les deux
+ * chemins ne puissent pas donner des réponses différentes sur le même produit.
+ */
+export function findBestByRecalls<T extends { brand?: string; codeInfo?: string }>(
+  recalls: T[],
+  brand: string,
+  dateIso: string
+): T[] {
+  const brandLower = (brand || '').trim().toLowerCase();
+  if (!brandLower || !dateIso) return [];
+  return recalls.filter((recall) => {
+    const recallBrandLower = (recall.brand || '').toLowerCase();
+    const isBrandMatch =
+      brandLower === recallBrandLower ||
+      (brandLower.length >= 3 && recallBrandLower.includes(brandLower)) ||
+      (recallBrandLower.length >= 3 && brandLower.includes(recallBrandLower));
+    return isBrandMatch && bestByInRecallWindow(dateIso, recall.codeInfo);
+  });
+}

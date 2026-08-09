@@ -85,6 +85,8 @@
     "errors": {
       "lotRequired": "Numéro de lot requis",
       "lotRequiredMessage": "Veuillez renseigner un numéro de lot pour continuer.",
+      "brandRequired": "Marque requise",
+      "brandRequiredMessage": "Une date limite seule n’identifie pas un produit — des milliers partagent la même date. Renseignez la marque pour que la vérification ait un sens.",
       "saveFailed": "Enregistrement échoué",
       "checkFailed": "Impossible de vérifier les rappels pour le moment."
     }

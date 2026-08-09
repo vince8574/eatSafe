@@ -19,7 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
 import { recallWarnsProduct } from '../utils/lotMatcher';
-import { extractBestByDate, bestByInRecallWindow } from '../utils/bestByDate';
+import { extractBestByDate, findBestByRecalls } from '../utils/bestByDate';
 import { useSubscription } from '../hooks/useSubscription';
 import { useUsageQuota } from '../hooks/useUsageQuota';
 import { decrementScanCounter } from '../services/subscriptionService';
@@ -76,28 +76,6 @@ function isAcceptableLotForConfirm(lot: string): boolean {
   if (!lot) return false;
   if (isReliableLot(lot)) return true;
   return /^\d{3,4}$/.test(lot.replace(/\s+/g, ''));
-}
-
-// Matching « sans numéro de lot » : un rappel identifie souvent le produit par
-// une PLAGE de dates Best/Use-By publiée dans son code_info (ex. Taylor Farms
-// "Best if Used By 7/16/2026 - 8/3/2026"). Match = MARQUE concordante ET date
-// scannée dans la fenêtre. C'est le mode d'identification officiel de la FDA
-// pour ces produits — on l'affiche comme un vrai match.
-function findBestByRecalls(
-  recalls: { brand?: string; codeInfo?: string }[],
-  brand: string,
-  dateIso: string
-): any[] {
-  const brandLower = (brand || '').trim().toLowerCase();
-  if (!brandLower || !dateIso) return [];
-  return recalls.filter((recall) => {
-    const recallBrandLower = (recall.brand || '').toLowerCase();
-    const isBrandMatch =
-      brandLower === recallBrandLower ||
-      (brandLower.length >= 3 && recallBrandLower.includes(brandLower)) ||
-      (recallBrandLower.length >= 3 && brandLower.includes(recallBrandLower));
-    return isBrandMatch && bestByInRecallWindow(dateIso, recall.codeInfo);
-  });
 }
 
 export function ScanLotScreen() {

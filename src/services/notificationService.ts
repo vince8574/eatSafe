@@ -53,7 +53,11 @@ export async function requestNotificationPermissions() {
       name: 'Recall Alerts',
       importance: Notifications.AndroidImportance.MAX,
       sound: 'default',
-      vibrationPattern: [0, 250, 250, 250]
+      vibrationPattern: [0, 250, 250, 250],
+      // Teinte du logo dans la barre d'état. Le rouge du cœur reste lisible sur
+      // un volet clair COMME sombre — le vert très foncé de la marque y
+      // disparaissait presque entièrement.
+      lightColor: '#C62828'
     });
   }
 

@@ -3,7 +3,7 @@
     "name": "Numeline",
     "slug": "eatsok",
     "scheme": "eatsafe",
-    "version": "1.0.37",
+    "version": "1.0.38",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -76,8 +76,8 @@
         "expo-notifications",
         {
           "mode": "production",
-          "icon": "./assets/icon.png",
-          "color": "#0A1F1F"
+          "icon": "./assets/notification-icon.png",
+          "color": "#C62828"
         }
       ],
       "expo-localization",

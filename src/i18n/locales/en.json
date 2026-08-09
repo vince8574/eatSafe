@@ -85,6 +85,8 @@
     "errors": {
       "lotRequired": "Lot number required",
       "lotRequiredMessage": "Please enter a lot number to continue.",
+      "brandRequired": "Brand required",
+      "brandRequiredMessage": "A Best By date alone can't identify a product — thousands share the same date. Enter the brand so we can actually check.",
       "saveFailed": "Save failed",
       "checkFailed": "Unable to check recalls at the moment."
     }
