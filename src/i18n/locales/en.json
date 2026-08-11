@@ -64,6 +64,9 @@
     "waitingForCapture": "Waiting for capture...",
     "aiPrecision": "AI used for better accuracy",
     "productNotPubliclyListed": "This product is not publicly listed.\nScan the label to check the lot number and recalls.",
+    "brandPromptTitle": "Which brand is it?",
+    "brandPromptMessage": "This barcode isn't in the public databases. Type the brand printed on the package — recalls are matched by brand, so without it we can check far less.",
+    "brandPromptSkip": "Continue without",
     "errors": {
       "brandCaptureFailed": "Brand capture failed.",
       "scanFailed": "Scan failed.",

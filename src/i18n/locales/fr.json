@@ -64,6 +64,9 @@
     "waitingForCapture": "En attente de capture...",
     "aiPrecision": "IA utilisée pour plus de précision",
     "productNotPubliclyListed": "Ce produit n'est pas référencé publiquement.\nScannez l'étiquette pour vérifier le numéro de lot et les rappels.",
+    "brandPromptTitle": "Quelle est la marque ?",
+    "brandPromptMessage": "Ce code-barres n'est pas dans les bases publiques. Saisissez la marque imprimée sur l'emballage — les rappels se comparent par marque, sans elle la vérification est bien plus limitée.",
+    "brandPromptSkip": "Continuer sans",
     "errors": {
       "brandCaptureFailed": "La capture de la marque a échoué.",
       "scanFailed": "Le scan a échoué.",

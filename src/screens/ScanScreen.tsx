@@ -10,6 +10,7 @@ import { getProductByBarcode } from '../services/productLookupService';
 import { checkProductForCurrentProfile } from '../hooks/useDietaryProfile';
 import type { DietaryCheckResult } from '../services/dietaryCheckService';
 import { DietaryWarningBanner } from '../components/DietaryWarningBanner';
+import { BrandAutocomplete } from '../components/BrandAutocomplete';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePreferencesStore } from '../stores/usePreferencesStore';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
@@ -50,6 +51,10 @@ export function ScanScreen() {
   const [isConfirmModalVisible, setConfirmModalVisible] = useState(false);
   const [dietaryResult, setDietaryResult] = useState<DietaryCheckResult | null>(null);
   const [isEditingBrand, setIsEditingBrand] = useState(false);
+  // Code-barres inconnu des bases publiques → on demande la marque plutôt que
+  // d'enchaîner sans elle.
+  const [brandPromptVisible, setBrandPromptVisible] = useState(false);
+  const [promptedBrand, setPromptedBrand] = useState('');
   const [editedBrand, setEditedBrand] = useState('');
   const [scannerResetToken, setScannerResetToken] = useState(0);
 
@@ -62,6 +67,8 @@ export function ScanScreen() {
     setDietaryResult(null);
     setIsEditingBrand(false);
     setEditedBrand('');
+    setBrandPromptVisible(false);
+    setPromptedBrand('');
     setScannerResetToken((t) => t + 1);
     // Re-arm barcode handling for the next scan (e.g. the Reload button, which
     // resets the flow without re-focusing the screen).
@@ -243,28 +250,45 @@ export function ScanScreen() {
           setConfirmModalVisible(true);
         }
       } else {
-        // Produit non trouvé dans les bases publiques
-        // Passer directement au scan du lot pour vérifier les rappels
-        console.log('[ScanScreen] Product not found in databases, proceeding to lot scan');
+        // Produit absent des bases publiques (fréquent : codes internes magasin,
+        // marques régionales). On DEMANDE la marque au lieu d'enchaîner sans
+        // elle : sans marque, un lot court ne peut rien matcher et le mode
+        // « pas de numéro de lot » ne peut RIEN vérifier du tout.
+        console.log('[ScanScreen] Product not found in databases, asking for the brand');
         setErrorMessage(t('scan.productNotPubliclyListed'));
         if (accessibilityMode) {
+          // Mode accessibilité : pas de modale à viser à l'écran → on garde
+          // l'enchaînement automatique, comme avant.
           speak(t('accessibility.voice.productNotFound'), { priority: true });
+          setTimeout(() => router.push('/scan-lot' as any), 1500);
+        } else {
+          setBrandPromptVisible(true);
         }
-
-        // Attendre 2 secondes pour que l'utilisateur lise le message
-        setTimeout(() => {
-          router.push('/scan-lot' as any);
-        }, 1500);
       }
     } catch (error) {
       console.error('[ScanScreen] Barcode scan error:', error);
-      // Passer également au scan de lot en cas d'erreur
       setErrorMessage(t('scan.productNotPubliclyListed'));
-      setTimeout(() => {
-        router.push('/scan-lot' as any);
-      }, 1500);
+      if (accessibilityMode) {
+        setTimeout(() => router.push('/scan-lot' as any), 1500);
+      } else {
+        setBrandPromptVisible(true);
+      }
     }
   }, [brandText, t, router, accessibilityMode, speak]);
+
+  // Marque saisie à la main après un code-barres inconnu. Vide = l'utilisateur
+  // choisit de continuer sans : on ne le bloque pas, mais la vérification sera
+  // moins fiable (voir le texte de la modale).
+  const handleBrandPromptContinue = useCallback(
+    (brand: string) => {
+      const trimmed = brand.trim();
+      setBrandPromptVisible(false);
+      setPromptedBrand('');
+      const query = trimmed ? `?${new URLSearchParams({ brand: trimmed }).toString()}` : '';
+      router.push(`/scan-lot${query}` as any);
+    },
+    [router]
+  );
 
   const handleCapture = useCallback(async (uri: string | string[]) => {
     // Pas de capture de photo pour l'écran de scan de code-barres
@@ -464,6 +488,58 @@ export function ScanScreen() {
                 </View>
               </>
             )}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Code-barres inconnu des bases publiques. Auparavant l'app enchaînait
+          seule sur le scan de lot, SANS marque — or sans marque un lot court ne
+          matche rien et le mode « pas de numéro de lot » ne peut rien vérifier.
+          On laisse donc l'utilisateur la saisir. */}
+      <Modal
+        visible={brandPromptVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => handleBrandPromptContinue('')}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              {t('scan.brandPromptTitle')}
+            </Text>
+            <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
+              {t('scan.brandPromptMessage')}
+            </Text>
+
+            <BrandAutocomplete
+              value={promptedBrand}
+              onChangeText={setPromptedBrand}
+              placeholder={t('scanScreen.enterBrand')}
+              autoCapitalize="words"
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border }]}
+                onPress={() => handleBrandPromptContinue('')}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
+                  {t('scan.brandPromptSkip')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.modalButton,
+                  { backgroundColor: colors.accent, opacity: promptedBrand.trim() ? 1 : 0.5 }
+                ]}
+                disabled={!promptedBrand.trim()}
+                onPress={() => handleBrandPromptContinue(promptedBrand)}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.surface }]}>
+                  {t('scan.validate')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
