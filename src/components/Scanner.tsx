@@ -647,24 +647,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           </TouchableOpacity>
         )}
 
-        {/* Manual entry — labelled button centred at the BOTTOM (replaces the bare
-            pencil icon that overlaid the preview). */}
-        {onManualEntry && (
-          <View style={styles.manualEntryBar} pointerEvents="box-none">
-            <TouchableOpacity
-              style={[styles.manualEntryButtonLabeled, { backgroundColor: colors.accent, borderColor: 'rgba(255,255,255,0.9)' }]}
-              onPress={onManualEntry}
-              accessibilityRole="button"
-              accessibilityLabel={t('scan.manualEntry')}
-            >
-              <Ionicons name="create-outline" size={18} color={colors.onAccent} />
-              <Text style={[styles.manualEntryButtonLabeledText, { color: colors.onAccent }]}>
-                {t('scan.manualEntry')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
         {/* Restart button */}
         {onRestart && (
           <TouchableOpacity
@@ -730,6 +712,27 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         </View>
       </View>
 
+      {/* Saisie manuelle. Volontairement HORS du preview : à l'intérieur, il
+          suivait le débordement de celui-ci et se retrouvait sous le panneau
+          d'instructions — rendu après, donc au-dessus — d'où un bouton visible
+          mais intouchable sur iOS. Ici il est borné par le scanner et centré sur
+          la largeur de l'écran, pas sur celle du preview. */}
+      {onManualEntry && (
+        <View style={[styles.manualEntryBar, { bottom: showCapture ? 96 : 20 }]} pointerEvents="box-none">
+          <TouchableOpacity
+            style={[styles.manualEntryButtonLabeled, { backgroundColor: colors.accent, borderColor: 'rgba(255,255,255,0.9)' }]}
+            onPress={onManualEntry}
+            accessibilityRole="button"
+            accessibilityLabel={t('scan.manualEntry')}
+          >
+            <Ionicons name="create-outline" size={18} color={colors.onAccent} />
+            <Text style={[styles.manualEntryButtonLabeledText, { color: colors.onAccent }]}>
+              {t('scan.manualEntry')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {showCapture && (
         <View style={styles.controls}>
           <TouchableOpacity
@@ -753,7 +756,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    // iOS ne rogne PAS les enfants débordants (Android si). Le preview, dimensionné
+    // en `width: 100%` + ratio 3:4, dépassait donc le bas du scanner et allait
+    // recouvrir le panneau d'instructions — panneau qui, étant rendu APRÈS, passait
+    // par-dessus et rendait le bouton de saisie manuelle intouchable.
+    overflow: 'hidden'
   },
   // FENÊTRE 4:3 (portrait 3:4). PROUVÉ par la source expo-camera 17
   // (CameraPhotoCapture.swift : `AVMakeRect(aspectRatio: previewSize, …)` →
@@ -973,11 +981,12 @@ const styles = StyleSheet.create({
   },
   manualEntryBar: {
     position: 'absolute',
-    bottom: 20,
+    // `bottom` est fourni au rendu : il se décale au-dessus du déclencheur photo
+    // quand celui-ci est affiché, pour ne pas se superposer à lui.
     left: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 10
+    zIndex: 20
   },
   manualEntryButtonLabeled: {
     flexDirection: 'row',
