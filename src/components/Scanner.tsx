@@ -637,26 +637,6 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           </TouchableOpacity>
         )}
 
-        {/* Reload button */}
-        {onReload && (
-          <TouchableOpacity
-            style={[styles.reloadButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
-            onPress={onReload}
-          >
-            <Ionicons name="refresh" size={24} color={colors.surface} />
-          </TouchableOpacity>
-        )}
-
-        {/* Restart button */}
-        {onRestart && (
-          <TouchableOpacity
-            style={[styles.restartButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
-            onPress={onRestart}
-          >
-            <Ionicons name="refresh-circle" size={28} color={colors.surface} />
-          </TouchableOpacity>
-        )}
-
         {/* Skip button */}
         {onSkip && (
           <TouchableOpacity
@@ -712,11 +692,31 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
         </View>
       </View>
 
-      {/* Saisie manuelle. Volontairement HORS du preview : à l'intérieur, il
-          suivait le débordement de celui-ci et se retrouvait sous le panneau
-          d'instructions — rendu après, donc au-dessus — d'où un bouton visible
-          mais intouchable sur iOS. Ici il est borné par le scanner et centré sur
-          la largeur de l'écran, pas sur celle du preview. */}
+      {/* Commandes du bas, volontairement HORS du preview. À l'intérieur, elles
+          suivaient son débordement et se retrouvaient sous le panneau
+          d'instructions — rendu après, donc au-dessus — d'où des boutons visibles
+          mais intouchables sur iOS. Ici elles sont bornées par le scanner et
+          centrées sur la largeur de l'ÉCRAN, pas sur celle du preview.
+          (Le bouton « passer » reste, lui, dans le preview : il doit rester
+          invisible.) */}
+      {onReload && (
+        <TouchableOpacity
+          style={[styles.reloadButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
+          onPress={onReload}
+        >
+          <Ionicons name="refresh" size={24} color={colors.surface} />
+        </TouchableOpacity>
+      )}
+
+      {onRestart && (
+        <TouchableOpacity
+          style={[styles.restartButtonCamera, { backgroundColor: 'rgba(0,0,0,0.5)' }]}
+          onPress={onRestart}
+        >
+          <Ionicons name="refresh-circle" size={28} color={colors.surface} />
+        </TouchableOpacity>
+      )}
+
       {onManualEntry && (
         <View style={[styles.manualEntryBar, { bottom: showCapture ? 96 : 20 }]} pointerEvents="box-none">
           <TouchableOpacity
@@ -756,12 +756,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center',
-    // iOS ne rogne PAS les enfants débordants (Android si). Le preview, dimensionné
-    // en `width: 100%` + ratio 3:4, dépassait donc le bas du scanner et allait
-    // recouvrir le panneau d'instructions — panneau qui, étant rendu APRÈS, passait
-    // par-dessus et rendait le bouton de saisie manuelle intouchable.
-    overflow: 'hidden'
+    justifyContent: 'center'
   },
   // FENÊTRE 4:3 (portrait 3:4). PROUVÉ par la source expo-camera 17
   // (CameraPhotoCapture.swift : `AVMakeRect(aspectRatio: previewSize, …)` →
