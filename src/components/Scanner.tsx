@@ -637,18 +637,17 @@ export const Scanner = forwardRef<ScannerHandle, ScannerProps>(function Scanner(
           </TouchableOpacity>
         )}
 
-        {/* Skip button */}
-        {onSkip && (
-          <TouchableOpacity
-            style={[styles.skipButtonCamera, { backgroundColor: colors.accent }]}
-            onPress={onSkip}
-          >
-            <Text style={[styles.skipButtonText, { color: colors.surface }]}>{t('scanner.skip')}</Text>
-            <Ionicons name="play-skip-forward" size={18} color={colors.surface} />
-          </TouchableOpacity>
-        )}
+        {/* Bouton « passer » : PAS d'affichage, volontairement. Ancré au bas du
+            preview, il retombait dans la zone où celui-ci déborde — c'est-à-dire
+            pile sur l'encadré « ÉTAPE 1/2 », dont il masquait la consigne. Le
+            scan du code-barres n'est de toute façon pas une étape à sauter : la
+            marque qu'il donne est ce qui permet de rattacher un lot à un rappel.
+            La prop `onSkip` reste acceptée pour ne pas casser les appelants. */}
 
-        <View pointerEvents="none" style={styles.tipContainer}>
+        {/* `top` fixe à 80 : la bulle passait sur l'heure et la batterie. On la
+            place sous les boutons haut (retour / flash), eux-mêmes calés sur
+            l'encoche. */}
+        <View pointerEvents="none" style={[styles.tipContainer, { top: topInset + 52 }]}>
           <View style={styles.tipBubble}>
             <Ionicons name="information-circle-outline" size={16} color="#FFF" />
             <Text style={styles.tipText}>
@@ -1041,7 +1040,7 @@ const styles = StyleSheet.create({
   },
   tipContainer: {
     position: 'absolute',
-    top: 80,
+    // `top` est fourni au rendu (dépend de l'encoche).
     left: 0,
     right: 0,
     alignItems: 'center',
