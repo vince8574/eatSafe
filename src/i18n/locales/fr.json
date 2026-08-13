@@ -65,8 +65,8 @@
     "aiPrecision": "IA utilisée pour plus de précision",
     "productNotPubliclyListed": "Ce produit n'est pas référencé publiquement.\nScannez l'étiquette pour vérifier le numéro de lot et les rappels.",
     "brandPromptTitle": "Quelle est la marque ?",
-    "brandPromptMessage": "Ce code-barres n'est pas dans les bases publiques. Saisissez la marque imprimée sur l'emballage — les rappels se comparent par marque, sans elle la vérification est bien plus limitée.",
-    "brandPromptSkip": "Continuer sans",
+    "brandPromptMessage": "Ce code-barres n'est pas dans les bases publiques. Saisissez la marque imprimée sur l'emballage — les rappels se comparent par marque, la vérification ne peut pas aboutir sans elle.",
+    "brandPromptCancel": "Annuler",
     "errors": {
       "brandCaptureFailed": "La capture de la marque a échoué.",
       "scanFailed": "Le scan a échoué.",
@@ -130,6 +130,8 @@
     "title": "Historique",
     "fullTitle": "Historique complet",
     "subtitle": "Filtrez vos scans selon leur statut rappel.",
+    "editBrand": "Modifier la marque",
+    "editBrandMessage": "Les rappels se comparent par marque. La corriger ici relance immédiatement la vérification de ce produit.",
     "filters": {
       "all": "Tous",
       "recalled": "Rappelés",

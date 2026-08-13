@@ -335,7 +335,10 @@ export function ScanScreen() {
           style={[
             styles.instructions,
             {
-              backgroundColor: colors.accentSoft,
+              // Fond OPAQUE : `accentSoft` est translucide (alpha 0,15-0,2) et le
+              // preview, qui déborde jusque sous ce panneau, transparaissait
+              // derrière la consigne — texte sombre sur image, illisible.
+              backgroundColor: colors.surface,
               borderColor: colors.accent,
               shadowColor: colors.accent
             }
@@ -500,7 +503,11 @@ export function ScanScreen() {
         visible={brandPromptVisible}
         transparent
         animationType="fade"
-        onRequestClose={() => handleBrandPromptContinue('')}
+        onRequestClose={() => {
+          setBrandPromptVisible(false);
+          setPromptedBrand('');
+          resetFlow();
+        }}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
@@ -519,12 +526,20 @@ export function ScanScreen() {
             />
 
             <View style={styles.modalButtons}>
+              {/* Pas de « continuer sans » : sans marque, la vérification ne peut
+                  pas aboutir. La seule autre issue est d'ABANDONNER et de
+                  rescanner — on n'enferme pas l'utilisateur, mais on ne le laisse
+                  pas non plus avancer vers un contrôle voué à ne rien trouver. */}
               <TouchableOpacity
                 style={[styles.modalButton, { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border }]}
-                onPress={() => handleBrandPromptContinue('')}
+                onPress={() => {
+                  setBrandPromptVisible(false);
+                  setPromptedBrand('');
+                  resetFlow();
+                }}
               >
                 <Text style={[styles.modalButtonText, { color: colors.textPrimary }]}>
-                  {t('scan.brandPromptSkip')}
+                  {t('scan.brandPromptCancel')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity

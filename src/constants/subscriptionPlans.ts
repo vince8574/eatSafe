@@ -19,16 +19,20 @@ export interface SubscriptionPlan {
 
 export type BillingPeriod = 'monthly' | 'yearly';
 
-// Scan IA du lot offert d'office à l'installation (Android et iOS), avant tout
-// abonnement ou achat de pack. UN SEUL, à vie : c'est la ressource coûteuse
-// (~0,02-0,04 $/scan). Suivi côté Firestore (scansRemaining).
-export const FREE_SCANS_ON_INSTALL = 1;
+// Scans IA du lot offerts d'office à l'installation (Android et iOS), avant tout
+// abonnement ou achat de pack. Attribués UNE SEULE FOIS, à vie : le document
+// Firestore n'est créé qu'à la première ouverture du compte, jamais réécrit
+// ensuite. C'est la ressource coûteuse (~0,02-0,04 $/scan) → une fois épuisés,
+// la caméra IA se verrouille et l'écran d'abonnement est proposé (la saisie
+// manuelle, elle, reste gratuite).
+export const FREE_SCANS_ON_INSTALL = 10;
 
 // ─── Quotas MENSUELS du palier gratuit (suivis en local, cf. useUsageStore) ───
 // Scan de code-barres : 10 par mois, réinitialisés le 1er de chaque mois.
 export const FREE_BARCODE_MONTHLY_LIMIT = 10;
-// Saisie MANUELLE du lot : 9 le 1er mois (1 scan IA + 9 manuels = 10
-// vérifications), puis 10 par mois. Compteur indépendant du scan IA.
+// Saisie MANUELLE du lot : 9 le 1er mois, puis 10 par mois. Compteur totalement
+// indépendant du scan IA. (Le 9 datait de l'époque où l'installation n'offrait
+// qu'UN scan IA, pour arriver à 10 vérifications au total.)
 export const FREE_MANUAL_LOT_FIRST_MONTH = 9;
 export const FREE_MANUAL_LOT_MONTHLY = 10;
 

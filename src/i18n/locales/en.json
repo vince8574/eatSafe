@@ -65,8 +65,8 @@
     "aiPrecision": "AI used for better accuracy",
     "productNotPubliclyListed": "This product is not publicly listed.\nScan the label to check the lot number and recalls.",
     "brandPromptTitle": "Which brand is it?",
-    "brandPromptMessage": "This barcode isn't in the public databases. Type the brand printed on the package — recalls are matched by brand, so without it we can check far less.",
-    "brandPromptSkip": "Continue without",
+    "brandPromptMessage": "This barcode isn't in the public databases. Type the brand printed on the package — recalls are matched by brand, so the check can't work without it.",
+    "brandPromptCancel": "Cancel",
     "errors": {
       "brandCaptureFailed": "Brand capture failed.",
       "scanFailed": "Scan failed.",
@@ -130,6 +130,8 @@
     "title": "History",
     "fullTitle": "Full history",
     "subtitle": "Filter your scans by recall status.",
+    "editBrand": "Edit the brand",
+    "editBrandMessage": "Recalls are matched by brand. Correcting it here re-checks this product right away.",
     "filters": {
       "all": "All",
       "recalled": "Recalled",

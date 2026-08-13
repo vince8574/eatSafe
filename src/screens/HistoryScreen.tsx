@@ -13,6 +13,10 @@ import { enableExportForTesting } from '../services/subscriptionService';
 import { exportProducts, canExport as canExportFormat, ExportFormat } from '../services/exportService';
 import { Ionicons } from '@expo/vector-icons';
 import { cleanOldScans } from '../services/historyRetentionService';
+import { BrandAutocomplete } from '../components/BrandAutocomplete';
+import { usePreferencesStore } from '../stores/usePreferencesStore';
+import { fetchRecallsByCountry } from '../services/apiService';
+import { incrementBrandUsage } from '../services/customBrandsService';
 
 type Filter = 'all' | 'recalled' | 'safe' | 'unknown';
 
@@ -20,7 +24,13 @@ export function HistoryScreen() {
   const { colors } = useTheme();
   const { t, locale } = useI18n();
   const router = useRouter();
-  const { products } = useScannedProducts();
+  const { products, updateProduct, updateRecall } = useScannedProducts();
+  const country = usePreferencesStore((state) => state.country);
+  // Édition de la marque a posteriori : un code-barres inconnu, ou une marque mal
+  // lue, laissait un produit invérifiable dans l'historique sans aucun recours.
+  const [brandEditTarget, setBrandEditTarget] = useState<ScannedProduct | null>(null);
+  const [brandDraft, setBrandDraft] = useState('');
+  const [savingBrand, setSavingBrand] = useState(false);
   const { subscription, loading: subLoading } = useSubscription();
   const { filter: filterParam } = useLocalSearchParams<{ filter?: string }>();
   const initialFilter: Filter =
@@ -135,6 +145,32 @@ export function HistoryScreen() {
     });
   }, [filtered, exportFormats, regulatoryFormat, t]);
 
+  const handleSaveBrand = useCallback(async () => {
+    const target = brandEditTarget;
+    const brand = brandDraft.trim();
+    if (!target || !brand) return;
+
+    setSavingBrand(true);
+    try {
+      await updateProduct(target.id, { brand });
+      void Promise.resolve(incrementBrandUsage(brand)).catch(() => {});
+      // La marque est l'un des DEUX critères de rapprochement : la corriger sans
+      // relancer la vérification laisserait affiché un statut calculé avec la
+      // mauvaise marque — le rappel resterait invisible.
+      const recalls = await fetchRecallsByCountry(country);
+      await updateRecall({ ...target, brand }, recalls);
+      setBrandEditTarget(null);
+      setBrandDraft('');
+    } catch (error) {
+      Alert.alert(
+        t('common.error'),
+        error instanceof Error ? error.message : t('manualEntry.errors.checkFailed')
+      );
+    } finally {
+      setSavingBrand(false);
+    }
+  }, [brandEditTarget, brandDraft, updateProduct, updateRecall, country, t]);
+
   const renderItem = ({ item }: { item: ScannedProduct }) => {
     const scannedAt = formatDate(item.scannedAt);
 
@@ -168,6 +204,21 @@ export function HistoryScreen() {
           ) : null}
           <View style={styles.itemHeader}>
             <Text style={[styles.brand, { color: colors.textPrimary }]}>{item.brand}</Text>
+            {/* Corriger une marque non reconnue : sans elle, ou avec une marque
+                erronée, le produit reste invérifiable dans l'historique. */}
+            <TouchableOpacity
+              onPress={(event) => {
+                event.stopPropagation?.();
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setBrandEditTarget(item);
+                setBrandDraft(item.brand === t('common.unknown') ? '' : item.brand);
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityRole="button"
+              accessibilityLabel={t('history.editBrand')}
+            >
+              <Ionicons name="create-outline" size={18} color={colors.accent} />
+            </TouchableOpacity>
             <StatusTag status={item.recallStatus} label={statusLabels[item.recallStatus]} />
           </View>
           <Text style={[styles.dataDisclaimer, { color: colors.textSecondary }]}>
@@ -390,6 +441,59 @@ export function HistoryScreen() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        visible={!!brandEditTarget}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setBrandEditTarget(null)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              {t('history.editBrand')}
+            </Text>
+            <Text style={[styles.modalSubtitle, { color: colors.textSecondary }]}>
+              {t('history.editBrandMessage')}
+            </Text>
+
+            <BrandAutocomplete
+              value={brandDraft}
+              onChangeText={setBrandDraft}
+              placeholder={t('scanScreen.enterBrand')}
+              autoCapitalize="words"
+            />
+
+            <View style={styles.modalButtonsRow}>
+              <TouchableOpacity
+                style={[styles.cancelButton, { borderColor: colors.border }]}
+                onPress={() => setBrandEditTarget(null)}
+                disabled={savingBrand}
+              >
+                <Text style={[styles.cancelButtonText, { color: colors.textPrimary }]}>
+                  {t('common.cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.saveBrandButton,
+                  { backgroundColor: colors.accent, opacity: brandDraft.trim() && !savingBrand ? 1 : 0.5 }
+                ]}
+                onPress={handleSaveBrand}
+                disabled={!brandDraft.trim() || savingBrand}
+              >
+                {savingBrand ? (
+                  <ActivityIndicator color={colors.surface} />
+                ) : (
+                  <Text style={[styles.cancelButtonText, { color: colors.surface }]}>
+                    {t('scan.validate')}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </GradientBackground>
   );
 }
@@ -472,6 +576,8 @@ const styles = StyleSheet.create({
   },
   itemHeader: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     justifyContent: 'space-between',
     marginBottom: 6
   },
@@ -595,6 +701,18 @@ const styles = StyleSheet.create({
   formatLocked: {
     fontSize: 11,
     fontStyle: 'italic'
+  },
+  modalButtonsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 20
+  },
+  saveBrandButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   cancelButton: {
     paddingVertical: 14,

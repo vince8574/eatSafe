@@ -8,6 +8,8 @@
 
 import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../src/theme/themeContext';
 import { scheduleRecallNotification } from '../src/services/notificationService';
 import { TEST_RECALLS } from '../scripts/testNotification';
@@ -16,6 +18,7 @@ import { extractRecallReason } from '../src/utils/recallUtils';
 
 export default function TestNotificationsScreen() {
   const { colors } = useTheme();
+  const router = useRouter();
   const [selectedRecall, setSelectedRecall] = useState<number | null>(null);
   const [lastNotification, setLastNotification] = useState<string>('');
 
@@ -53,6 +56,16 @@ export default function TestNotificationsScreen() {
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         <View style={[styles.header, { backgroundColor: colors.surface }]}>
+          {/* Seul écran de l'app d'où l'on ne pouvait plus ressortir : ni bouton,
+              ni en-tête natif (headerShown est à false pour toute la pile). */}
+          <TouchableOpacity
+            style={styles.backRow}
+            onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)/home'))}
+            accessibilityRole="button"
+          >
+            <Ionicons name="arrow-back" size={22} color={colors.accent} />
+            <Text style={[styles.backLabel, { color: colors.accent }]}>Back</Text>
+          </TouchableOpacity>
           <Text style={[styles.title, { color: colors.textPrimary }]}>
             Test Notifications
           </Text>
@@ -157,6 +170,16 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 24,
     gap: 8
+  },
+  backRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 4
+  },
+  backLabel: {
+    fontSize: 15,
+    fontWeight: '700'
   },
   title: {
     fontSize: 28,
