@@ -21,6 +21,7 @@ function RootStack() {
         <Stack.Screen name="manual-entry" options={{ presentation: 'modal', title: t('manualEntry.title') }} />
         <Stack.Screen name="scan-lot" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="dietary-intro" options={{ headerShown: false }} />
         <Stack.Screen name="welcome" options={{ headerShown: false }} />
         <Stack.Screen name="notification-permissions" options={{ headerShown: false }} />
         <Stack.Screen name="welcome-daily" options={{ headerShown: false }} />

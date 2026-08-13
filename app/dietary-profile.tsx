@@ -13,7 +13,7 @@ import { useTheme } from '../src/theme/themeContext';
 import { useI18n } from '../src/i18n/I18nContext';
 import { GradientBackground } from '../src/components/GradientBackground';
 import { useDietaryProfile } from '../src/hooks/useDietaryProfile';
-import { useSubscriptionStatus } from '../src/hooks/useSubscriptionStatus';
+import { useDietaryFullAccess } from '../src/hooks/useDietaryFullAccess';
 import { HealthConsentModal } from '../src/components/HealthConsentModal';
 import type { DietaryPerson } from '../src/services/dietaryProfile';
 
@@ -30,7 +30,9 @@ export default function DietaryProfileScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const profile = useDietaryProfile();
-  const { isSubscribed } = useSubscriptionStatus();
+  // Accès complet = abonné OU scans offerts restants (cf. le hook) : la
+  // configuration familiale doit être visible pendant la découverte.
+  const isSubscribed = useDietaryFullAccess();
   // Consentement données de santé (art. 9). Requis avant toute saisie.
   const [consentVisible, setConsentVisible] = useState(false);
   const [consentThenAdd, setConsentThenAdd] = useState(false);

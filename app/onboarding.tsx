@@ -59,7 +59,10 @@ export default function OnboardingScreen() {
     }
 
     setHasSeenWelcome(false);
-    router.replace('/welcome');
+    // Étape régime AVANT l'accueil : sans elle, le profil n'était atteignable que
+    // depuis les Réglages, donc la détection d'allergènes restait éteinte pour
+    // quiconque n'y allait pas.
+    router.replace('/dietary-intro' as any);
   };
 
   return (

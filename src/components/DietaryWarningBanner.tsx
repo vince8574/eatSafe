@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/themeContext';
 import { useI18n } from '../i18n/I18nContext';
-import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
+import { useDietaryFullAccess } from '../hooks/useDietaryFullAccess';
 import { useDietaryProfileStore } from '../stores/useDietaryProfileStore';
 import type { DietaryCheckResult, DietaryWarning, PersonResult } from '../services/dietaryCheckService';
 
@@ -36,7 +36,8 @@ export function DietaryWarningBanner({
 }) {
   const { colors } = useTheme();
   const { t } = useI18n();
-  const { isSubscribed } = useSubscriptionStatus();
+  // Accès complet = abonné OU scans offerts encore disponibles (cf. le hook).
+  const isSubscribed = useDietaryFullAccess();
   const activePersonId = useDietaryProfileStore((s) => s.activePersonId);
   if (!result) return null;
 

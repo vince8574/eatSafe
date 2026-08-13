@@ -253,6 +253,18 @@
     "sr": "Српски",
     "me": "Crnogorski"
   },
+  "dietaryIntro": {
+    "title": "Allergies or foods to avoid?",
+    "subtitle": "Numeline can warn you when a scanned product doesn't suit someone in your household — before you buy it.",
+    "benefit1": "Get alerted on allergens and traces, on top of recalls.",
+    "benefit2": "Set up one profile per person — the whole family, not just you.",
+    "benefit3": "Stored on your phone only. You can delete it at any time.",
+    "configure": "Set up now",
+    "continue": "Continue",
+    "later": "Not now",
+    "addMore": "Add someone else",
+    "configured": "{{count}} profile(s) set up."
+  },
   "onboarding": {
     "title": "Welcome!",
     "disclaimer": "This app provides preventive alerts but does not guarantee product safety. You remain solely responsible in case of consuming a contaminated product.",
