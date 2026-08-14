@@ -1,5 +1,12 @@
 import firestore from '@react-native-firebase/firestore';
 import { getFirestore } from './firebaseService';
+import {
+  currentScanPeriodKey,
+  splitPools,
+  consumeFromPools,
+  renewMonthlyPool,
+  totalScansAvailable
+} from '../utils/scanPools';
 import { getCurrentUserId } from './authService';
 import { getCurrentOrganization } from './organizationService';
 import { SUBSCRIPTION_PLANS, SCAN_PACKS, FREE_SCANS_ON_INSTALL, getPlanById as getSubscriptionPlanById, isYearlyPlanId } from '../constants/subscriptionPlans';
@@ -25,7 +32,17 @@ export type Subscription = {
   status: SubscriptionStatus;
   expiresAt: number | null;
   scansIncluded: number;
+  // Réserve MENSUELLE de l'abonnement. Remise à `scansIncluded` à chaque
+  // changement de mois : ce qui n'est pas consommé est PERDU, pas reporté.
   scansRemaining: number;
+  // Réserve issue des PACKS achetés. Sans expiration, jamais remise à zéro, et
+  // consommée seulement une fois la réserve mensuelle épuisée. Ces deux réserves
+  // ne peuvent pas partager un compteur unique : on ne saurait plus, en fin de
+  // mois, ce qui relève de l'abonnement (périssable) ou du pack (acquis).
+  packCredits: number;
+  // Mois ('YYYY-MM') sur lequel porte `scansRemaining`, pour détecter le
+  // changement de période sans dépendre d'une tâche planifiée côté serveur.
+  scansPeriodKey?: string | null;
   historyRetentionDays: number | 'unlimited';
   exportEnabled: boolean;
   exportFormats: ('pdf' | 'csv' | 'xlsx')[];
@@ -53,6 +70,7 @@ export const PLANS = SUBSCRIPTION_PLANS.map(plan => ({
 }));
 
 export { SCAN_PACKS };
+export { currentScanPeriodKey, totalScansAvailable } from '../utils/scanPools';
 
 const COLLECTION = 'subscriptions';
 
@@ -91,6 +109,8 @@ function buildSubscriptionFromPlan(planId: string): Subscription {
     expiresAt: Date.now() + periodMs,
     scansIncluded: plan.scansIncluded,
     scansRemaining: plan.scansIncluded,
+    packCredits: 0, // les appelants réinjectent les packs existants
+    scansPeriodKey: currentScanPeriodKey(),
     historyRetentionDays: plan.historyRetentionDays,
     exportEnabled: plan.exportEnabled,
     exportFormats: plan.exportFormats,
@@ -116,6 +136,10 @@ export async function fetchSubscription(): Promise<Subscription> {
       // Scans gratuits offerts d'office à la première installation (Android + iOS)
       scansIncluded: FREE_SCANS_ON_INSTALL,
       scansRemaining: FREE_SCANS_ON_INSTALL,
+      packCredits: 0,
+      // Pas de clé de période : les scans offerts sont attribués UNE FOIS et ne
+      // doivent surtout pas être réattribués au changement de mois.
+      scansPeriodKey: null,
       historyRetentionDays: 0,
       exportEnabled: true,  // Activé pour les tests
       exportFormats: ['pdf', 'csv', 'xlsx'],
@@ -129,14 +153,45 @@ export async function fetchSubscription(): Promise<Subscription> {
   }
 
   const data = snap.data() as Subscription;
+  const pools = splitPools(data);
+  const status = data.status ?? 'none';
+  const period = currentScanPeriodKey();
+
+  // RENOUVELLEMENT MENSUEL de la réserve d'abonnement. Fait à la lecture plutôt
+  // que par une tâche planifiée : pas d'infrastructure supplémentaire, et le
+  // renouvellement est constaté au moment exact où l'utilisateur en a besoin.
+  // Réservé aux abonnements ACTIFS — sans cette condition, les scans offerts à
+  // l'installation seraient re-crédités tous les mois.
+  if (status === 'active' && data.scansPeriodKey !== period) {
+    // Les scans mensuels NON CONSOMMÉS sont perdus : on repart de l'inclus.
+    // Les crédits de packs, eux, ne sont pas touchés — ils n'expirent jamais.
+    Object.assign(pools, renewMonthlyPool(pools, data.scansIncluded ?? 0));
+    await docRef.update({
+      scansRemaining: pools.scansRemaining,
+      packCredits: pools.packCredits,
+      scansPeriodKey: period,
+      updatedAt: Date.now()
+    });
+    console.log(`[subscriptionService] réserve mensuelle renouvelée (${period})`);
+  } else if (data.packCredits === undefined || data.packCredits === null) {
+    // Migration du document : séparation des deux réserves, sans rien retirer.
+    await docRef.update({
+      scansRemaining: pools.scansRemaining,
+      packCredits: pools.packCredits,
+      updatedAt: Date.now()
+    });
+  }
+
   return {
     ...data,
     planId: data.planId ?? null,
     planName: data.planName ?? null,
-    status: data.status ?? 'none',
+    status,
     expiresAt: data.expiresAt ?? null,
     scansIncluded: data.scansIncluded ?? 0,
-    scansRemaining: data.scansRemaining ?? 0,
+    scansRemaining: pools.scansRemaining,
+    packCredits: pools.packCredits,
+    scansPeriodKey: status === 'active' ? period : (data.scansPeriodKey ?? null),
     historyRetentionDays: (data as any).historyRetentionDays ?? 0,
     exportEnabled: data.exportEnabled ?? true,  // Activé par défaut pour les tests
     exportFormats: data.exportFormats ?? ['pdf', 'csv', 'xlsx'],
@@ -153,15 +208,11 @@ export async function selectPlan(planId: string): Promise<Subscription> {
   const docRef = db.collection(COLLECTION).doc(scopeId);
   const payload = buildSubscriptionFromPlan(planId);
 
-  // Preserve extra credits from packs when switching plans
+  // Les crédits de packs SURVIVENT au changement de plan : ils ont été payés
+  // séparément et n'expirent pas.
   const snap = await docRef.get();
   if (snap.exists) {
-    const current = snap.data() as Subscription;
-    const oldIncluded = current.scansIncluded ?? 0;
-    const oldRemaining = current.scansRemaining ?? 0;
-    // Extra credits = scans remaining beyond what the old plan included
-    const extraCredits = Math.max(0, oldRemaining - oldIncluded);
-    payload.scansRemaining = payload.scansIncluded + extraCredits;
+    payload.packCredits = splitPools(snap.data() as Subscription).packCredits;
   }
 
   await docRef.set(payload, { merge: true });
@@ -181,9 +232,12 @@ export async function addScanPack(quantity: number): Promise<Subscription> {
       throw new Error('No subscription found');
     }
     const data = snap.data() as Subscription;
-    const nextRemaining = (data.scansRemaining ?? 0) + quantity;
+    // Un pack alimente la réserve PERMANENTE, jamais la réserve mensuelle : il
+    // doit survivre au renouvellement du mois comme au changement de plan.
+    const pools = splitPools(data);
     transaction.update(docRef, {
-      scansRemaining: nextRemaining,
+      scansRemaining: pools.scansRemaining,
+      packCredits: pools.packCredits + quantity,
       updatedAt: Date.now()
     });
   });
@@ -192,15 +246,36 @@ export async function addScanPack(quantity: number): Promise<Subscription> {
   return updated.data() as Subscription;
 }
 
+/**
+ * Consomme des scans : la réserve MENSUELLE d'abord, les packs ensuite.
+ *
+ * Cet ordre est celui qui sert l'utilisateur : les scans mensuels expirent en
+ * fin de mois, les packs non. Entamer les packs en premier reviendrait à lui
+ * faire perdre ce qu'il a payé pendant qu'il laisse périmer ce qui est inclus.
+ *
+ * En transaction, car deux scans simultanés lisant la même valeur pourraient
+ * sinon en consommer un seul.
+ */
 export async function decrementScanCounter(count: number = 1): Promise<void> {
   const db = getFirestore();
   const scopeId = await getSubscriptionScopeId();
   const docRef = db.collection(COLLECTION).doc(scopeId);
-  await docRef.update({
-    scansRemaining: firestore.FieldValue.increment(-count),
-    updatedAt: Date.now()
+
+  await db.runTransaction(async (transaction) => {
+    const snap = await transaction.get(docRef);
+    if (!snap.exists) return;
+    const pools = splitPools(snap.data() as Subscription);
+
+    const next = consumeFromPools(pools, count);
+    transaction.update(docRef, {
+      scansRemaining: next.scansRemaining,
+      packCredits: next.packCredits,
+      updatedAt: Date.now()
+    });
   });
 }
+
+
 
 export async function enableExportForTesting(): Promise<void> {
   const db = getFirestore();
@@ -352,14 +427,12 @@ async function activateSubscription(
     throw new Error(`Unknown plan: ${planId}`);
   }
 
-  // Preserve extra credits from packs when switching plans
-  let extraCredits = 0;
+  // Les crédits de packs survivent à l'achat d'un abonnement : ils ont été payés
+  // à part et n'expirent pas.
+  let packCredits = 0;
   const snap = await docRef.get();
   if (snap.exists) {
-    const current = snap.data() as Subscription;
-    const oldIncluded = current.scansIncluded ?? 0;
-    const oldRemaining = current.scansRemaining ?? 0;
-    extraCredits = Math.max(0, oldRemaining - oldIncluded);
+    packCredits = splitPools(snap.data() as Subscription).packCredits;
   }
 
   const isYearly = isYearlyPlanId(planId);
@@ -374,7 +447,9 @@ async function activateSubscription(
     // The store remains the source of truth for the real expiration.
     expiresAt: Date.now() + periodMs,
     scansIncluded: plan.scansIncluded,
-    scansRemaining: plan.scansIncluded + extraCredits,
+    scansRemaining: plan.scansIncluded,
+    packCredits,
+    scansPeriodKey: currentScanPeriodKey(),
     historyRetentionDays: plan.historyRetentionDays,
     exportEnabled: plan.exportEnabled,
     exportFormats: plan.exportFormats,

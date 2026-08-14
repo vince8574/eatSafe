@@ -13,6 +13,8 @@ import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
 import { GradientBackground } from '../components/GradientBackground';
 import { useUsageQuota } from '../hooks/useUsageQuota';
+import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
+import { totalScansAvailable, decrementScanCounter } from '../services/subscriptionService';
 import { extractBestByDate, findBestByRecalls } from '../utils/bestByDate';
 
 export function ManualEntryScreen() {
@@ -47,6 +49,10 @@ export function ManualEntryScreen() {
   // mensuel (9 le 1er mois puis 10/mois ; illimitée pour les abonnés) — sinon cet
   // écran offrirait un contournement gratuit et illimité de la vérification de lot.
   const { canManualLot, incrementManualLot } = useUsageQuota();
+  // La saisie manuelle interroge les MÊMES bases de rappels qu'un scan : elle
+  // consomme donc un scan de la réserve, et n'est pas disponible sans réserve.
+  const { subscription, loading: subLoading } = useSubscriptionStatus();
+  const hasScans = subLoading || totalScansAvailable(subscription) > 0;
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
@@ -68,7 +74,7 @@ export function ManualEntryScreen() {
       }
     }
 
-    if (!canManualLot) {
+    if (!hasScans || !canManualLot) {
       router.push('/subscription' as any);
       return;
     }
@@ -89,8 +95,13 @@ export function ManualEntryScreen() {
         lotNumber: parsedBestBy ? parsedBestBy.display : lotNumber.trim()
       });
 
-      // Produit créé = vérification consommée (le reste est best-effort).
+      // Produit créé = vérification consommée : le compteur local de lots
+      // manuels ET la réserve de scans, puisque c'est la même interrogation des
+      // bases de rappels qu'un scan.
       incrementManualLot();
+      void decrementScanCounter().catch((e) =>
+        console.warn('[ManualEntry] decrementScanCounter skipped', e)
+      );
 
       if (brand.trim()) {
         void Promise.resolve(incrementBrandUsage(brand.trim())).catch((e) =>

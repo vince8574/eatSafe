@@ -22,7 +22,7 @@ import { recallWarnsProduct } from '../utils/lotMatcher';
 import { extractBestByDate, findBestByRecalls, brandMatchesRecall } from '../utils/bestByDate';
 import { useSubscription } from '../hooks/useSubscription';
 import { useUsageQuota } from '../hooks/useUsageQuota';
-import { decrementScanCounter } from '../services/subscriptionService';
+import { decrementScanCounter, totalScansAvailable } from '../services/subscriptionService';
 import * as Notifications from 'expo-notifications';
 import { useVoiceGuide } from '../hooks/useVoiceGuide';
 import { useVoiceCommands } from '../hooks/useVoiceCommands';
@@ -131,7 +131,11 @@ export function ScanLotScreen() {
   // saisie manuelle (gratuite, illimitée) + proposition d'abonnement. Pendant le
   // chargement de l'abonnement on autorise (pour ne pas flasher le gate).
   const isSubscribed = (subscription?.status ?? 'none') === 'active';
-  const aiAllowed = subLoading || isSubscribed || (subscription?.scansRemaining ?? 0) > 0;
+  // Le quota s'applique AUSSI aux abonnés. Le `isSubscribed ||` qui figurait ici
+  // court-circuitait le compteur : un abonné n'était jamais bloqué, donc les
+  // paliers à 100, 500, 1 000, 1 500 et 2 000 scans mensuels ne différenciaient
+  // rien — le plan à 9,99 $ scannait autant que celui à 59,99 $.
+  const aiAllowed = subLoading || totalScansAvailable(subscription) > 0;
   const aiAllowedRef = useRef(aiAllowed);
   aiAllowedRef.current = aiAllowed;
   // Passe à true dès qu'une lecture IA sert pour CE scan → décrémente au confirm
@@ -590,9 +594,9 @@ export function ScanLotScreen() {
     // Allow empty brand (user skipped brand step) - will be set to "Unknown"
     const finalBrand = brand && brand.trim() ? brand.trim() : t('common.unknown');
 
-    // Chemin MANUEL (aucune lecture IA) → consomme un crédit de lot manuel.
+    // Chemin MANUEL : consomme un crédit de lot manuel ET un scan de la réserve.
     // Épuisé → écran d'abonnement. (Le chemin IA est bridé en amont par aiAllowed.)
-    if (!aiUsedThisScanRef.current && !canManualLot) {
+    if (!aiUsedThisScanRef.current && (totalScansAvailable(subscription) <= 0 || !canManualLot)) {
       setConfirmModalVisible(false);
       router.push('/subscription' as any);
       return;
@@ -723,13 +727,15 @@ export function ScanLotScreen() {
         });
       }
 
-      // Décompte sur le BON compteur : scan IA (Firestore) ou lot manuel (local).
-      // Non bloquant.
-      if (aiUsedThisScanRef.current) {
-        void decrementScanCounter().catch((e) =>
-          console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
-        );
-      } else {
+      // TOUTE vérification consomme un scan de la réserve, qu'elle vienne de la
+      // lecture IA ou d'une saisie manuelle : c'est la même interrogation des
+      // bases de rappels. Sans cela, le quota serait contournable en saisissant
+      // les lots à la main. Le compteur local de lots manuels reste tenu par
+      // ailleurs pour son propre plafond mensuel. Non bloquant.
+      void decrementScanCounter().catch((e) =>
+        console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
+      );
+      if (!aiUsedThisScanRef.current) {
         incrementManualLot();
       }
 
@@ -826,9 +832,11 @@ export function ScanLotScreen() {
   }, [router]);
 
   const handleManualEntry = useCallback(() => {
-    // Aucun scan IA consommé, mais un crédit de LOT MANUEL. Crédits épuisés →
-    // écran d'abonnement, sans ouvrir la saisie.
-    if (!canManualLot) {
+    // La saisie manuelle est une VÉRIFICATION comme une autre : elle interroge
+    // les mêmes bases de rappels et consomme donc un scan. Sans réserve
+    // disponible, elle n'est pas ouverte — sinon le quota ne voudrait rien dire,
+    // il suffirait de garder un scan pour vérifier indéfiniment à la main.
+    if (totalScansAvailable(subscription) <= 0 || !canManualLot) {
       router.push('/subscription' as any);
       return;
     }
@@ -836,7 +844,7 @@ export function ScanLotScreen() {
     setEditedLot('');
     setIsEditingLot(true);
     setConfirmModalVisible(true);
-  }, [canManualLot, router]);
+  }, [canManualLot, subscription, router]);
 
   useFocusEffect(
     useCallback(() => {
@@ -985,23 +993,25 @@ export function ScanLotScreen() {
           </TouchableOpacity>
           <View style={styles.gateCard}>
             <Ionicons name="sparkles" size={44} color={colors.accent} />
-            <Text style={styles.gateTitle}>{t('quota.gateTitle')}</Text>
-            <Text style={styles.gateSubtitle}>{t('quota.gateSubtitle')}</Text>
+            {/* Un ABONNÉ à quota épuisé n'a pas à se voir proposer de s'abonner :
+                il doit acheter un pack ou monter de palier. */}
+            <Text style={styles.gateTitle}>
+              {isSubscribed ? t('quota.gateTitleSubscriber') : t('quota.gateTitle')}
+            </Text>
+            <Text style={styles.gateSubtitle}>
+              {isSubscribed ? t('quota.gateSubtitleSubscriber') : t('quota.gateSubtitle')}
+            </Text>
+            {/* Plus de repli « saisie manuelle » ici : elle consomme désormais un
+                scan elle aussi, donc à réserve vide elle n'est pas disponible. */}
             <TouchableOpacity
               style={[styles.gateBtnPrimary, { backgroundColor: colors.accent }]}
-              onPress={handleManualEntry}
-              accessibilityRole="button"
-            >
-              <Ionicons name="create-outline" size={20} color={colors.onAccent} />
-              <Text style={[styles.gateBtnPrimaryText, { color: colors.onAccent }]}>{t('quota.gateManual')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.gateBtnSecondary}
               onPress={() => router.push('/subscription')}
               accessibilityRole="button"
             >
-              <Ionicons name="star" size={18} color="#fff" />
-              <Text style={styles.gateBtnSecondaryText}>{t('quota.gateSubscribe')}</Text>
+              <Ionicons name={isSubscribed ? 'add-circle' : 'star'} size={20} color={colors.onAccent} />
+              <Text style={[styles.gateBtnPrimaryText, { color: colors.onAccent }]}>
+                {isSubscribed ? t('quota.gateBuyPack') : t('quota.gateSubscribe')}
+              </Text>
             </TouchableOpacity>
           </View>
         </BlurView>
@@ -1021,6 +1031,9 @@ export function ScanLotScreen() {
             </Text>
             <Text style={[styles.scanCounterValue, { color: colors.accent }]}>
               {subscription.scansRemaining} / {subscription.scansIncluded}
+              {subscription.packCredits > 0
+                ? ` (+${subscription.packCredits} ${t('subscription.packCreditsShort')})`
+                : ''}
             </Text>
           </View>
         )}

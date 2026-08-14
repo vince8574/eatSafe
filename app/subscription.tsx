@@ -125,6 +125,18 @@ export default function SubscriptionScreen() {
               {subscription?.scansRemaining ?? 0} / {subscription?.scansIncluded ?? 0}
             </Text>
           </View>
+          {/* Les packs sont une réserve DISTINCTE : sans ligne dédiée, un
+              utilisateur les croirait perdus au renouvellement du mois. */}
+          {(subscription?.packCredits ?? 0) > 0 ? (
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>
+                {t('subscription.packCreditsLabel')}
+              </Text>
+              <Text style={[styles.value, { color: colors.textPrimary }]}>
+                {subscription?.packCredits ?? 0}
+              </Text>
+            </View>
+          ) : null}
           <View style={styles.row}>
             <Text style={[styles.label, { color: colors.textSecondary }]}>{t('subscription.history')}</Text>
             <Text style={[styles.value, { color: colors.textPrimary }]}>
