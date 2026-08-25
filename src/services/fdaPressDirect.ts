@@ -28,14 +28,27 @@ export type PressItem = {
 // Le flux bouge lentement ; on évite de le retélécharger à chaque scan.
 const FEED_TTL_MS = 30 * 60 * 1000;
 // Enrichissement (lecture des pages d'articles) : borné pour ne jamais retarder
-// un scan. Les pages sont lues EN PARALLÈLE — en séquentiel, 6 pages à 7 s de
-// timeout épuisaient le budget avant la moitié du flux, et un rappel réel
-// (Peter Rabbit, 20e item) n'était jamais enrichi : ni lot, ni date, donc
-// invisible pour l'app. Un flux compte ~20 items dont une douzaine
-// d'alimentaires : on les couvre tous, par vagues.
+// un scan. Un flux compte ~20 items dont une douzaine d'alimentaires : on les
+// couvre tous. La lecture strictement séquentielle épuisait le budget avant la
+// moitié du flux, et un rappel réel (Peter Rabbit, 20e item) n'était jamais
+// enrichi — ni lot, ni date, donc invisible pour l'app.
 const MAX_ENRICH_ITEMS = 14;
-const ENRICH_CONCURRENCY = 5;
-const ENRICH_BUDGET_MS = 12000;
+// Concurrence VOLONTAIREMENT BASSE. fda.gov est derrière Akamai, dont la
+// détection d'abus est déclenchée par le VOLUME depuis une même IP : constaté en
+// test, quelques dizaines de lectures suffisent à obtenir une redirection vers
+// /apology_objects/abuse-detection-apology.html. Or sur mobile, des milliers
+// d'abonnés partagent une même IP publique (CGNAT) : une concurrence élevée
+// multipliée par le nombre d'utilisateurs peut faire bloquer l'opérateur entier,
+// et l'app bascule alors sur le proxy — qui ne peut pas lire fda.gov depuis un
+// datacenter et renvoie des rappels sans lot ni date.
+//
+// Le coût de cette prudence est nul depuis que le cache d'articles est persisté
+// (v1.0.41) : ces lectures n'ont lieu qu'une fois, pas à chaque démarrage.
+const ENRICH_CONCURRENCY = 2;
+// Budget élargi en conséquence : moins de lectures simultanées, donc plus de
+// vagues. Il ne retarde de toute façon aucun scan — l'écran préchauffe le cache
+// dès son ouverture, pendant que l'utilisateur cadre son produit.
+const ENRICH_BUDGET_MS = 15000;
 const FEED_TIMEOUT_MS = 12000;
 const ARTICLE_TIMEOUT_MS = 7000;
 
