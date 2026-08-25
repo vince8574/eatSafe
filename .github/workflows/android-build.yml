@@ -13,6 +13,10 @@ on:
           - apk
   push:
     branches: [main]
+    # Étiquette « android-build-* » : relance un build APK+AAB à la demande,
+    # sans nouveau commit (parité avec le dépôt FR).
+    tags:
+      - 'android-build-*'
     paths-ignore:
       - '**.md'
       - '.gitignore'

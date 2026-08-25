@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    # Étiquette « ios-build-* » : relance un build à la demande, sans nouveau
+    # commit (parité avec le dépôt FR). Ex. : git tag ios-build-1.0.50
+    # Indispensable sans la CLI gh — et un commit vide ne déclencherait rien,
+    # `paths-ignore` n'activant le workflow que si un fichier a changé.
+    tags:
+      - 'ios-build-*'
     paths-ignore:
       - '**.md'
       - '.gitignore'
