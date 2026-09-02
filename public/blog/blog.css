@@ -197,3 +197,31 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
   display: block;
   background: var(--surface-alt);
 }
+
+/* Tableaux d'article : utilisés pour les décomptes chiffrés (ex. répartition
+   des motifs de rappel). `overflow-x` sur l'enveloppe évite qu'un tableau large
+   ne pousse toute la page en défilement horizontal sur mobile. */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 15px;
+}
+.article table th,
+.article table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+.article table th {
+  font-weight: 700;
+  border-bottom-width: 2px;
+}
+.article table td:last-child,
+.article table th:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+.article table tr:last-child td {
+  border-bottom: none;
+}
