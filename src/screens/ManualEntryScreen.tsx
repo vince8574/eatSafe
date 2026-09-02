@@ -13,8 +13,6 @@ import { incrementBrandUsage } from '../services/customBrandsService';
 import { scheduleRecallNotification } from '../services/notificationService';
 import { GradientBackground } from '../components/GradientBackground';
 import { useUsageQuota } from '../hooks/useUsageQuota';
-import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
-import { totalScansAvailable, decrementScanCounter } from '../services/subscriptionService';
 import { extractBestByDate, findBestByRecalls } from '../utils/bestByDate';
 
 export function ManualEntryScreen() {
@@ -45,14 +43,10 @@ export function ManualEntryScreen() {
     void fetchRecallsByCountry(country);
   }, [country]);
 
-  // La saisie manuelle du lot n'utilise pas d'IA, mais elle a son PROPRE quota
-  // mensuel (9 le 1er mois puis 10/mois ; illimitée pour les abonnés) — sinon cet
-  // écran offrirait un contournement gratuit et illimité de la vérification de lot.
-  const { canManualLot, incrementManualLot } = useUsageQuota();
-  // La saisie manuelle interroge les MÊMES bases de rappels qu'un scan : elle
-  // consomme donc un scan de la réserve, et n'est pas disponible sans réserve.
-  const { subscription, loading: subLoading } = useSubscriptionStatus();
-  const hasScans = subLoading || totalScansAvailable(subscription) > 0;
+  // La saisie manuelle du lot est GRATUITE ET ILLIMITÉE : elle n'appelle aucun
+  // modèle et n'interroge que des bases publiques. Le compteur n'est conservé
+  // qu'à titre informatif — plus aucun plafond ne s'y applique.
+  const { incrementManualLot } = useUsageQuota();
 
   const handleSave = async () => {
     if (!lotNumber.trim()) {
@@ -74,11 +68,6 @@ export function ManualEntryScreen() {
       }
     }
 
-    if (!hasScans || !canManualLot) {
-      router.push('/subscription' as any);
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       const finalBrand = brand.trim() || t('common.unknown');
@@ -95,13 +84,9 @@ export function ManualEntryScreen() {
         lotNumber: parsedBestBy ? parsedBestBy.display : lotNumber.trim()
       });
 
-      // Produit créé = vérification consommée : le compteur local de lots
-      // manuels ET la réserve de scans, puisque c'est la même interrogation des
-      // bases de rappels qu'un scan.
+      // La saisie manuelle est GRATUITE ET ILLIMITÉE : aucun scan consommé.
+      // Seul le compteur local est incrémenté, à titre informatif.
       incrementManualLot();
-      void decrementScanCounter().catch((e) =>
-        console.warn('[ManualEntry] decrementScanCounter skipped', e)
-      );
 
       if (brand.trim()) {
         void Promise.resolve(incrementBrandUsage(brand.trim())).catch((e) =>

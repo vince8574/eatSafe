@@ -12,9 +12,10 @@ import type { DietaryCheckResult, DietaryWarning, PersonResult } from '../servic
 // données Open Food Facts (coût IA nul). Le RAPPEL produit reste géré ailleurs
 // (il nécessite le numéro de lot, scanné à l'étape suivante).
 //
-// FREEMIUM : sans abonnement, seule la personne ACTIVE voit son résultat ; les
-// autres profils apparaissent verrouillés (« Visible with a subscription ») →
-// appui = écran d'abonnement. Les abonnés voient tous les profils.
+// PAYANT : la détection d'allergènes exige un abonnement ou des scans achetés.
+// Sans accès, TOUS les profils apparaissent verrouillés → appui = écran
+// d'abonnement. La vérification des RAPPELS, elle, reste gratuite et illimitée,
+// tout comme la saisie manuelle du numéro de lot.
 
 const TYPE_ORDER: Record<DietaryWarning['type'], number> = {
   celiac: 0,
@@ -36,8 +37,11 @@ export function DietaryWarningBanner({
 }) {
   const { colors } = useTheme();
   const { t } = useI18n();
-  // Accès complet = abonné OU scans offerts encore disponibles (cf. le hook).
-  const isSubscribed = useDietaryFullAccess();
+  // La détection d'allergènes est une fonction PAYANTE : elle exige un
+  // abonnement ou des scans achetés. Sans accès, aucun statut n'est révélé —
+  // pas même celui d'une personne — car c'est précisément ce qui est vendu.
+  // (La vérification des RAPPELS, elle, reste gratuite et illimitée.)
+  const hasAccess = useDietaryFullAccess();
   const activePersonId = useDietaryProfileStore((s) => s.activePersonId);
   if (!result) return null;
 
@@ -132,9 +136,9 @@ export function DietaryWarningBanner({
     </TouchableOpacity>
   );
 
-  // Sans abonnement, l'accent suit le statut de la personne ACTIVE (et non le
-  // statut agrégé, qui laisserait fuiter l'état des profils verrouillés).
-  const accentStatus = isSubscribed ? status : (active?.status ?? status);
+  // Sans accès, l'accent reste neutre : une bordure rouge trahirait le résultat
+  // que le bandeau est justement en train de masquer.
+  const accentStatus = hasAccess ? status : 'unknown';
   const accent =
     accentStatus === 'danger'
       ? colors.danger
@@ -146,14 +150,7 @@ export function DietaryWarningBanner({
 
   return (
     <View style={[styles.banner, { backgroundColor: colors.surfaceAlt, borderColor: accent }]}>
-      {isSubscribed ? (
-        perPerson.map(rowFor)
-      ) : (
-        <>
-          {active ? rowFor(active) : null}
-          {others.map(lockedRowFor)}
-        </>
-      )}
+      {hasAccess ? perPerson.map(rowFor) : perPerson.map(lockedRowFor)}
       {dataMissing ? (
         <Text style={[styles.hint, { color: colors.textSecondary }]}>{t('dietary.bannerDataMissing')}</Text>
       ) : null}

@@ -29,11 +29,12 @@ export function useUsageQuota() {
   // ─── Lot manuel : 9 le 1er mois (1 scan IA + 9 = 10), puis 10/mois ─────────
   const manualLotUsed = store.manualLotUsedThisMonth ?? 0;
   const isFirstMonth = (store.installMonthKey ?? currentMonthKey()) === currentMonthKey();
-  const manualLotLimit = unlimited
-    ? Infinity
-    : isFirstMonth
-      ? FREE_MANUAL_LOT_FIRST_MONTH
-      : FREE_MANUAL_LOT_MONTHLY;
+  // Saisie MANUELLE du lot : ILLIMITÉE pour tout le monde. Elle n'appelle aucun
+  // modèle et n'interroge que des bases publiques : elle ne coûte rien à
+  // servir. Seuls la lecture IA du lot et la détection d'allergènes relèvent de
+  // l'abonnement ou des packs. Le plafond mensuel qui existait ici privait de
+  // vérification des utilisateurs à qui elle ne coûtait rien.
+  const manualLotLimit = Infinity;
   const manualLotRemaining = unlimited ? Infinity : Math.max(0, manualLotLimit - manualLotUsed);
   const canManualLot = unlimited || manualLotRemaining > 0;
 

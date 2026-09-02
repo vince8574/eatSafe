@@ -594,14 +594,6 @@ export function ScanLotScreen() {
     // Allow empty brand (user skipped brand step) - will be set to "Unknown"
     const finalBrand = brand && brand.trim() ? brand.trim() : t('common.unknown');
 
-    // Chemin MANUEL : consomme un crédit de lot manuel ET un scan de la réserve.
-    // Épuisé → écran d'abonnement. (Le chemin IA est bridé en amont par aiAllowed.)
-    if (!aiUsedThisScanRef.current && (totalScansAvailable(subscription) <= 0 || !canManualLot)) {
-      setConfirmModalVisible(false);
-      router.push('/subscription' as any);
-      return;
-    }
-
     setIsFinalizing(true);
 
     try {
@@ -727,15 +719,15 @@ export function ScanLotScreen() {
         });
       }
 
-      // TOUTE vérification consomme un scan de la réserve, qu'elle vienne de la
-      // lecture IA ou d'une saisie manuelle : c'est la même interrogation des
-      // bases de rappels. Sans cela, le quota serait contournable en saisissant
-      // les lots à la main. Le compteur local de lots manuels reste tenu par
-      // ailleurs pour son propre plafond mensuel. Non bloquant.
-      void decrementScanCounter().catch((e) =>
-        console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
-      );
-      if (!aiUsedThisScanRef.current) {
+      // SEULE la lecture IA consomme un scan : c'est elle qui coûte (appel au
+      // modèle de vision). La saisie manuelle du lot est illimitée et gratuite
+      // — elle n'interroge que des bases publiques. Le compteur local de lots
+      // manuels reste tenu, à titre informatif seulement. Non bloquant.
+      if (aiUsedThisScanRef.current) {
+        void decrementScanCounter().catch((e) =>
+          console.warn('[ScanLotScreen] decrementScanCounter skipped', e)
+        );
+      } else {
         incrementManualLot();
       }
 
@@ -832,19 +824,14 @@ export function ScanLotScreen() {
   }, [router]);
 
   const handleManualEntry = useCallback(() => {
-    // La saisie manuelle est une VÉRIFICATION comme une autre : elle interroge
-    // les mêmes bases de rappels et consomme donc un scan. Sans réserve
-    // disponible, elle n'est pas ouverte — sinon le quota ne voudrait rien dire,
-    // il suffirait de garder un scan pour vérifier indéfiniment à la main.
-    if (totalScansAvailable(subscription) <= 0 || !canManualLot) {
-      router.push('/subscription' as any);
-      return;
-    }
+    // La saisie manuelle est GRATUITE ET ILLIMITÉE : elle ne consomme aucun
+    // scan et reste ouverte même réserve vide. Seules la lecture IA et la
+    // détection d'allergènes relèvent de l'abonnement.
     aiUsedThisScanRef.current = false;
     setEditedLot('');
     setIsEditingLot(true);
     setConfirmModalVisible(true);
-  }, [canManualLot, subscription, router]);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -1001,15 +988,23 @@ export function ScanLotScreen() {
             <Text style={styles.gateSubtitle}>
               {isSubscribed ? t('quota.gateSubtitleSubscriber') : t('quota.gateSubtitle')}
             </Text>
-            {/* Plus de repli « saisie manuelle » ici : elle consomme désormais un
-                scan elle aussi, donc à réserve vide elle n'est pas disponible. */}
+            {/* La saisie manuelle reste le repli GRATUIT quand la réserve de
+                scans IA est vide : elle n'a jamais été la ressource coûteuse. */}
             <TouchableOpacity
               style={[styles.gateBtnPrimary, { backgroundColor: colors.accent }]}
+              onPress={handleManualEntry}
+              accessibilityRole="button"
+            >
+              <Ionicons name="create-outline" size={20} color={colors.onAccent} />
+              <Text style={[styles.gateBtnPrimaryText, { color: colors.onAccent }]}>{t('quota.gateManual')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.gateBtnSecondary}
               onPress={() => router.push('/subscription')}
               accessibilityRole="button"
             >
-              <Ionicons name={isSubscribed ? 'add-circle' : 'star'} size={20} color={colors.onAccent} />
-              <Text style={[styles.gateBtnPrimaryText, { color: colors.onAccent }]}>
+              <Ionicons name={isSubscribed ? 'add-circle' : 'star'} size={18} color="#fff" />
+              <Text style={styles.gateBtnSecondaryText}>
                 {isSubscribed ? t('quota.gateBuyPack') : t('quota.gateSubscribe')}
               </Text>
             </TouchableOpacity>

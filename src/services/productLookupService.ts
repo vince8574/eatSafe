@@ -28,6 +28,19 @@ export interface ProductInfo {
 
 const OPEN_FOOD_FACTS_API = 'https://world.openfoodfacts.org/api/v2';
 
+// Champs demandés explicitement. SANS ce paramètre, l'API renvoie la fiche
+// ENTIÈRE : mesuré à 148 Ko pour du Nutella, 51 Ko pour une salade traiteur,
+// contre 3 à 5 Ko en ciblant les champs — un rapport de 7 à 43. Avec le délai
+// d'attente de 5 s ci-dessous, ce volume faisait échouer la recherche sur
+// connexion mobile, et le produit ressortait « marque non détectée » alors
+// qu'il est bien dans la base. C'est ce que faisait déjà la version française.
+const OFF_FIELDS = [
+  'product_name', 'product_name_en', 'product_name_fr', 'brands', 'categories',
+  'image_url', 'image_front_url', 'ingredients_text', 'ingredients_text_en',
+  'allergens_tags', 'traces_tags', 'ingredients_tags', 'ingredients_analysis_tags',
+  'nutriments', 'nutriscore_grade', 'nova_group'
+].join(',');
+
 /**
  * Récupère les informations produit depuis Open Food Facts (avec priorité USA)
  */
@@ -41,28 +54,21 @@ async function getProductFromOpenFoodFacts(barcode: string): Promise<ProductInfo
   try {
     console.log(`[OpenFoodFacts] Fetching product for barcode: ${barcode}`);
 
-    // Essayer avec le domaine US en priorité (timeout 5s)
-    const usResponse = await fetchWithTimeout(
-      `https://us.openfoodfacts.org/api/v2/product/${barcode}.json`
+    // Domaine MONDIAL directement. Vérifié en interrogeant us., fr. et world.
+    // sur des produits américains comme français : les trois renvoient
+    // exactement la même fiche. Les sous-domaines ne filtrent pas la recherche
+    // par code-barres, la base est commune — passer par `us.` n'apportait donc
+    // rien, et ajoutait un repli qui ne se déclenchait jamais (voir ci-dessous).
+    const response = await fetchWithTimeout(
+      `${OPEN_FOOD_FACTS_API}/product/${barcode}.json?fields=${OFF_FIELDS}`
     );
 
-    let data;
-
-    if (usResponse.ok) {
-      data = await usResponse.json();
-    } else {
-      // Fallback sur le domaine mondial (timeout 5s)
-      const worldResponse = await fetchWithTimeout(
-        `${OPEN_FOOD_FACTS_API}/product/${barcode}.json`
-      );
-
-      if (!worldResponse.ok) {
-        console.warn(`[OpenFoodFacts] API returned status ${worldResponse.status}`);
-        return null;
-      }
-
-      data = await worldResponse.json();
+    if (!response.ok) {
+      console.warn(`[OpenFoodFacts] API returned status ${response.status}`);
+      return null;
     }
+
+    const data = await response.json();
 
     if (data.status === 0 || !data.product) {
       console.log(`[OpenFoodFacts] Product not found for barcode: ${barcode}`);
