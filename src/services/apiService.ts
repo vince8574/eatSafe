@@ -310,7 +310,21 @@ export async function fetchFdaPressRecalls(): Promise<RecallRecord[]> {
   }
 
   if (!items) {
-    const response = await fetch(FDA_PRESS_ENDPOINT);
+    // Délai d'attente COURT et obligatoire. Mesuré le 4 septembre 2026 : le proxy
+    // met ~48 s à répondre 502, tous ses relais étant tombés (fda.gov 401 depuis
+    // un datacenter, google-news 503, r.jina.ai 403, codetabs et allorigins 522,
+    // corsproxy 403). Sans plafond, ces 48 s bloquaient TOUTE la récupération des
+    // rappels, puisque les trois sources sont attendues ensemble par
+    // Promise.allSettled — l'app paraissait figée à chaque scan dès que la
+    // lecture directe depuis l'appareil échouait.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 6000);
+    let response: Response;
+    try {
+      response = await fetch(FDA_PRESS_ENDPOINT, { signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
     if (!response.ok) {
       console.warn(`[FDA Press] proxy returned status ${response.status}`);
       return [];
