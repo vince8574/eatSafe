@@ -37,7 +37,8 @@
     // occupe toute la largeur sous la barre, le bouton reste donc en haut à
     // droite sans qu'on ait à réordonner quoi que ce soit.
     topbar.appendChild(btn);
-    topbar.classList.add('has-toggle');
+    // `has-toggle` n'est PAS posée ici : c'est measure(), plus bas, qui décide
+    // si ce menu a besoin d'être replié.
 
     function setOpen(open) {
       topbar.classList.toggle('nav-open', open);
@@ -67,11 +68,58 @@
       if (!topbar.contains(e.target)) setOpen(false);
     });
 
-    // Repasser en écran large avec le menu ouvert laissait la classe posée.
-    var wide = window.matchMedia('(min-width: 601px)');
-    var onWide = function (ev) { if (ev.matches) setOpen(false); };
-    if (wide.addEventListener) wide.addEventListener('change', onWide);
-    else if (wide.addListener) wide.addListener(onWide);
+    /**
+     * Le hamburger s'active quand le menu NE TIENT PAS, pas à une largeur
+     * arbitraire. Un seuil fixe ne pouvait pas convenir aux deux barres du
+     * site : l'accueil porte dix liens plus deux badges, qui débordent même
+     * en 1120 px — la largeur maximale du conteneur — tandis qu'un article
+     * n'en a que trois, qu'il serait absurde de cacher derrière un bouton.
+     *
+     * On mesure donc le retour à la ligne réel. La mesure se fait menu
+     * déplié : on retire les classes le temps de lire les positions, puis on
+     * les repose dans la même tâche, donc sans affichage intermédiaire.
+     */
+    function navWraps() {
+      var kids = nav.children;
+      if (kids.length < 2) return false;
+      var top = kids[0].offsetTop;
+      for (var i = 1; i < kids.length; i++) {
+        if (Math.abs(kids[i].offsetTop - top) > 2) return true;
+      }
+      return topbar.scrollWidth > topbar.clientWidth + 1;
+    }
+
+    function measure() {
+      // Sous 600 px, toujours replier : sur un téléphone, un menu déroulant
+      // vaut mieux qu'une liste qui pousse le contenu vers le bas, même
+      // lorsqu'elle tient techniquement sur une ligne.
+      var needed = window.innerWidth <= 600;
+
+      if (!needed) {
+        var wasToggle = topbar.classList.contains('has-toggle');
+        var wasOpen = topbar.classList.contains('nav-open');
+        topbar.classList.remove('has-toggle', 'nav-open');
+        needed = navWraps();
+        if (wasToggle) topbar.classList.add('has-toggle');
+        if (wasOpen) topbar.classList.add('nav-open');
+      }
+
+      topbar.classList.toggle('has-toggle', needed);
+      btn.hidden = !needed;
+      if (!needed) setOpen(false);
+    }
+
+    var timer;
+    window.addEventListener('resize', function () {
+      clearTimeout(timer);
+      timer = setTimeout(measure, 120);
+    });
+    // Les polices se chargent après coup et changent la largeur des liens :
+    // sans cette seconde mesure, la décision reposerait sur la police de repli.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measure).catch(function () {});
+    }
+    measure();
   }
 
   function init() {
