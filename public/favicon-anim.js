@@ -77,36 +77,10 @@
   } catch (e) { /* pas d'animation → favicon statique */ }
 })();
 
-/* Menu hamburger sur mobile : injecte un bouton dans chaque .topbar qui ouvre /
-   ferme la navigation (.nav). CSS géré dans blog.css et dans le style des pages
-   d'accueil. Dégradation silencieuse : sans JS, la nav reste visible. */
-(function () {
-  function init() {
-    var bars = document.querySelectorAll('.topbar');
-    for (var i = 0; i < bars.length; i++) {
-      (function (bar) {
-        var nav = bar.querySelector('.nav');
-        if (!nav || bar.querySelector('.nav-toggle')) return;
-        var btn = document.createElement('button');
-        btn.className = 'nav-toggle';
-        btn.type = 'button';
-        btn.setAttribute('aria-label', 'Menu');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.innerHTML = '<span></span><span></span><span></span>';
-        btn.addEventListener('click', function () {
-          var open = bar.classList.toggle('nav-open');
-          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-        nav.addEventListener('click', function (e) {
-          if (e.target && e.target.tagName === 'A') {
-            bar.classList.remove('nav-open');
-            btn.setAttribute('aria-expanded', 'false');
-          }
-        });
-        bar.appendChild(btn);
-      })(bars[i]);
-    }
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
+/* Le menu hamburger vivait ICI. Il a été déplacé dans /nav-toggle.js, qui gère
+   en plus la décision d'affichage (le menu ne se replie que s'il ne tient pas),
+   les attributs ARIA complets, la fermeture par Échap et par clic extérieur.
+   Les deux ne pouvaient pas coexister : ce fichier étant chargé en premier, il
+   injectait son bouton, et nav-toggle.js — qui abandonne si un bouton existe
+   déjà — ne s'exécutait jamais. Symptôme observé : bouton présent, mais aucun
+   effet au clic. Ne pas réintroduire de hamburger ici. */
