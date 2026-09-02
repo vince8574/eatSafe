@@ -89,6 +89,8 @@
       return topbar.scrollWidth > topbar.clientWidth + 1;
     }
 
+    var applied = null;
+
     function measure() {
       // Sous 600 px, toujours replier : sur un téléphone, un menu déroulant
       // vaut mieux qu'une liste qui pousse le contenu vers le bas, même
@@ -104,20 +106,40 @@
         if (wasOpen) topbar.classList.add('nav-open');
       }
 
+      // Garde-fou anti-boucle : replier le menu change la taille de la barre,
+      // ce que l'observateur ci-dessous détecte. Sans cette sortie, chaque
+      // décision en déclencherait une autre. On n'écrit donc dans le DOM que
+      // si le verdict a réellement changé.
+      if (needed === applied) return;
+      applied = needed;
+
       topbar.classList.toggle('has-toggle', needed);
       btn.hidden = !needed;
       if (!needed) setOpen(false);
     }
 
     var timer;
-    window.addEventListener('resize', function () {
+    function remeasure() {
       clearTimeout(timer);
-      timer = setTimeout(measure, 120);
-    });
-    // Les polices se chargent après coup et changent la largeur des liens :
-    // sans cette seconde mesure, la décision reposerait sur la police de repli.
+      timer = setTimeout(measure, 100);
+    }
+
+    window.addEventListener('resize', remeasure);
+    // La mise en page n'est pas définitive au DOMContentLoaded : les polices
+    // web arrivent après et élargissent les liens, les images de la barre
+    // aussi. Mesuré une seule fois à ce moment, le menu tenait encore sur une
+    // ligne et le hamburger restait masqué alors qu'il débordait ensuite —
+    // c'était le défaut constaté en production.
+    window.addEventListener('load', remeasure);
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(measure).catch(function () {});
+      document.fonts.ready.then(remeasure).catch(function () {});
+    }
+    // Filet le plus sûr : on observe la barre elle-même. Toute variation de
+    // taille, quelle qu'en soit la cause, relance la décision.
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(remeasure);
+      ro.observe(topbar);
+      if (topbar.parentNode) ro.observe(topbar.parentNode);
     }
     measure();
   }
