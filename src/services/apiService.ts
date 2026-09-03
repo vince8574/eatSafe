@@ -56,25 +56,43 @@ export function normalizeLotNumber(lot: string | undefined | null): string {
 // alors, et le repli partiel (≥8 caractères) ne rattrapait pas un lot de 7 →
 // rappel réel jamais détecté (cas Amy's Kitchen, vérifié sur données live).
 const LOT_TAIL_KEYWORDS =
-  /\b(?:BEST|BEFORE|EXP(?:IRES?|IRATION)?|USE|SELL|BY|DATE[SD]?|UPC|SKU|NET|WT|MFG|MANUFACTURED|PACKED|PRODUCED|UNTIL|THRU|THROUGH|AND|OR|WITH|ITEM|CASE|SIZE|PRINTED|STAMPED|BEARING|IDENTIFIED|RECALLED|PURCHASED|CONSUME|URGED|SHOULD|MAY|ARE|IS|WAS|WERE|NOT|TO|ON|IN|AT|FROM|THE|THIS|THESE)\b/i;
+  /\b(?:BEST|BEFORE|EXP(?:IRES?|IRATION)?|USE|SELL|BY|DATE[SD]?|UPC|SKU|NET|WT|MFG|MANUFACTURED|PACKED|PRODUCED|UNTIL|THRU|THROUGH|AND|OR|WITH|ITEM|CASE|SIZE|PRINTED|STAMPED|BEARING|IDENTIFIED|RECALLED|PURCHASED|CONSUME|URGED|SHOULD|MAY|ARE|IS|WAS|WERE|NOT|TO|ON|IN|AT|FROM|THE|THIS|THESE|JAN|FEB|MAR|APR|JUN|JUL|AUG|SEPT?|OCT|NOV|DEC)\b/i;
 
 // Préfixes de libellé capturés avec le lot : « Lot Code LB028ACP04 » donne
 // "Code LB028ACP04". Sans ce nettoyage, le lot normalisé devient CODELB028ACP04
 // et l'égalité exacte avec la saisie de l'utilisateur échoue.
-const LOT_LABEL_PREFIX = /^(?:code[sd]?|number[s]?|no\.?|#|num|batch|codes?\s+no\.?)\s*[:#.\-]?\s*/i;
+// La répétition (+) est indispensable : la FDA annonce parfois DEUX champs d'un
+// coup — « Lot, Best Before: 260201MA, 01FEB2027 » (riz jasmin Lundberg, rappel
+// H-0767-2026 en cours). LOT_TAIL_KEYWORDS coupait alors sur « Best » dès le
+// premier caractère, le lot ressortait VIDE, et ScanLotScreen écarte tout rappel
+// sans lot → le rappel devenait invisible au scan.
+// Chaque mot exige une frontière : les lots « ON123 » ou « CODE7 » sont préservés.
+const LOT_LEADING_LABELS =
+  /^(?:(?:codes?|numbers?|nos?|num|batch(?:es)?|lots?|pallet|customer|corresponding|visible|cases?|best|sell|use|before|by|thru|through|until|exp(?:ires?|iration)?|dates?|on|s)\b[\s:#.,\-]*)+/i;
 
 /** Coupe une capture au 1er mot « non-lot » (ex. "60D0924 BEST BEFORE" → "60D0924"). */
 function trimLotTail(raw: string): string {
-  const withoutPrefix = raw.replace(LOT_LABEL_PREFIX, '');
+  // .trim() AVANT : les libellés sont ancrés en ^, or le découpage sur virgule
+  // laisse un espace de tête (« , Lot: 0056 ») qui faisait échouer le nettoyage
+  // et publiait « Lot: 0056 » comme numéro de lot.
+  const withoutPrefix = raw.trim().replace(LOT_LEADING_LABELS, '');
   const m = LOT_TAIL_KEYWORDS.exec(withoutPrefix);
   return (m ? withoutPrefix.slice(0, m.index) : withoutPrefix).trim();
 }
+
+// Dates alphanumériques : « 01FEB2027 », « 1-FEB-27 », « FEB012027 », « FEB 01 2027 ».
+// Sans ce filtre, l'alternance lot/date de « Lot, Best Before: 260201MA, 01FEB2027 »
+// publiait 01FEB2027 comme numéro de lot. « 260201MA » ne contient aucun nom de
+// mois et reste donc bien reconnu comme un lot.
+const ALPHA_DATE_RE =
+  /^(?:\d{1,2}[\s\-\/.]*(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*[\s\-\/.]*\d{2,4}|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*[\s\-\/.]*\d{1,2}[\s\-\/.,]*\d{2,4})$/i;
 
 export function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
   if (!codeInfo) return [];
 
   const lotNumbers: string[] = [];
-  const isDate = (s: string) => /^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}$/.test(s);
+  const isDate = (s: string) =>
+    /^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}$/.test(s) || ALPHA_DATE_RE.test(s);
 
   const pushIfValid = (raw: string) => {
     const trimmed = trimLotTail(raw).replace(/[.,;:\s]+$/, '');
@@ -84,24 +102,38 @@ export function extractFdaLotNumbers(codeInfo: string | undefined): string[] {
     // Une année seule ("…date of January 28, 2027 printed on the jar" → "2027")
     // n'est pas un lot : c'est le reste d'une date coupée.
     if (/^(?:19|20)\d{2}$/.test(trimmed)) return;
+    // Un deux-points signale une capture composée qui a débordé sur le champ
+    // suivant (« 12/22/2027 Batch: 045832 ») : jamais un numéro de lot.
+    if (trimmed.includes(':')) return;
     if (trimmed && trimmed.length >= 3 && /\d/.test(trimmed) && !isDate(trimmed)) {
       lotNumbers.push(trimmed);
     }
   };
 
   // Pattern 1: Explicit "Lot/Lots" keywords — "Lot: XXXXX", "Lot #XXXXX", "Lots 12255, 22265"
-  const lotRegex = /\bLots?\s*[:#.=\-\s]*([A-Za-z0-9][A-Za-z0-9\s,\-\/]{0,80})/gi;
+  // La zone de libellé tolère : virgules et séparateurs (« Lot, Best Before: »),
+  // des mots de qualification (« Lot Codes », « Lot #s: »), une parenthèse
+  // (« Lot Codes (visible on cases) 510911R ») et une énumération (« Lot: a) 25008 »).
+  // Le « ; » est admis DANS la capture car la FDA enchaîne les paires lot/date
+  // sans répéter le mot « Lot » : « …260201MA, 01FEB2027; 260202MA, 02FEB2027 ».
+  const lotRegex =
+    /\bLots?\b[\s:#.=,&\-]*(?:(?:codes?|numbers?|nos?|#s?)[\s:#.=,\-]*)*(?:\([^)]{0,40}\)\s*)?(?:[a-z0-9][).]\s+)?([A-Za-z0-9][A-Za-z0-9\s,;\-\/:]{0,80})/gi;
   let match;
   while ((match = lotRegex.exec(codeInfo)) !== null) {
     // Split by comma/semicolon/" and " in case of "Lots 12255, 22265, 12415" or "Lot 1 and Lot 2"
-    const parts = match[1].split(/[,;]|\s+and\s+/i);
+    // Découpe aussi sur " / " : « 510911R / 511111R ». La barre oblique doit être
+    // ESPACÉE pour ne pas couper une date « 10/5/2025 » en trois morceaux.
+    const parts = match[1].split(/[,;]|\s+and\s+|\s+\/\s+/i);
     for (const part of parts) {
       pushIfValid(part);
     }
   }
 
   // Pattern 2: "Batch", "Code", "Item Code", "Product Code" keywords
-  const batchRegex = /\b(?:Batch(?:es)?|Code|Item\s+Code|Product\s+Code)\s*[:#.=\-\s]*([A-Za-z0-9][A-Za-z0-9\-\/\.]{2,24})/gi;
+  // « Batch Code 250527B » : sans le groupe de qualification, « Code » était
+  // capturé COMME valeur, puis vidé par trimLotTail → aucun lot extrait.
+  const batchRegex =
+    /\b(?:Batch(?:es)?|Code|Item\s+Code|Product\s+Code)\s*(?:codes?|numbers?|nos?|#)?\s*[:#.=\-\s]*([A-Za-z0-9][A-Za-z0-9\-\/\.]{2,24})/gi;
   while ((match = batchRegex.exec(codeInfo)) !== null) {
     pushIfValid(match[1]);
   }

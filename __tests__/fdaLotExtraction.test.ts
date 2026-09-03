@@ -232,3 +232,56 @@ describe('findBestByRecalls — marque obligatoire, date dans la fenêtre', () =
     expect(findBestByRecalls(recalls, 'Trader Joe’s', '2027-04')).toEqual([]);
   });
 });
+
+// Libellés composés relevés sur 998 fiches `code_info` réelles (openFDA, 2025-2026).
+// Sur les 495 qui annonçaient un lot, 205 ne produisaient AUCUNE extraction : le
+// rappel était alors écarté par ScanLotScreen, qui ignore tout rappel sans lot.
+describe('extractFdaLotNumbers — libellés composés observés sur données FDA réelles', () => {
+  // H-0767-2026 : riz jasmin blanc Lundberg Family Farms (Wehah Farms), rappel
+  // en cours. Le libellé annonce DEUX champs d'un coup puis alterne lot et date.
+  test('« Lot, Best Before: » alterne lots et dates', () => {
+    expect(
+      extractFdaLotNumbers('Lot, Best Before: 260201MA, 01FEB2027; 260202MA, 02FEB2027.')
+    ).toEqual(['260201MA', '260202MA']);
+  });
+
+  test('une date alphanumérique n’est jamais prise pour un lot', () => {
+    const lots = extractFdaLotNumbers('Lot, Best Before: 260201MA, 01FEB2027.');
+    expect(lots).toContain('260201MA');
+    expect(lots).not.toContain('01FEB2027');
+  });
+
+  test('« Lot Number: » suivi d’un deux-points est lu', () => {
+    expect(
+      extractFdaLotNumbers(
+        '1. Lot Number: X0924992, Expiration 10/5/2025, and Lot Number: X0925123, Expiration 10/6/2025.'
+      )
+    ).toEqual(['X0924992', 'X0925123']);
+  });
+
+  test('« Batch Code » ne prend pas « Code » pour la valeur', () => {
+    expect(
+      extractFdaLotNumbers('#450 Made on 5/27/2025 - Batch Code 250527B Sell by 2/21/2026')
+    ).toEqual(['250527B']);
+  });
+
+  test('énumération « a) » intercalée après le libellé', () => {
+    expect(extractFdaLotNumbers('Lot: a) 25008, 25020, 25027')).toEqual([
+      '25008',
+      '25020',
+      '25027'
+    ]);
+  });
+
+  test('« Lot #s: » au pluriel', () => {
+    expect(extractFdaLotNumbers('Pallet Lot #s: 112, 114, 115')).toEqual(['112', '114', '115']);
+  });
+
+  test('parenthèse intercalée, lots séparés par des barres obliques espacées', () => {
+    expect(
+      extractFdaLotNumbers(
+        'Corresponding Customer Lot Codes (visible on cases) 510911R / 511111R / 511211R'
+      )
+    ).toEqual(['510911R', '511111R', '511211R']);
+  });
+});
