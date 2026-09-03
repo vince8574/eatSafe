@@ -1,0 +1,55 @@
+Scan the lot number on your food and check it against official U.S. recalls.
+Track food product recalls and spot your allergens. Built for individuals and food-industry professionals.
+
+INDEPENDENT APP
+Numeline is independent. It is not affiliated with, endorsed by, or operated by the U.S. government, the FDA, the USDA, or any other public authority, and does not represent any government entity.
+
+DATA SOURCES
+Numeline aggregates public and open data:
+- Recalls: the FDA, including its recall press releases, and the USDA Food Safety and Inspection Service (FSIS) for meat, poultry, and egg products. Sources: fda.gov/safety/recalls-market-withdrawals-safety-alerts and fsis.usda.gov/recalls
+- Product details, ingredients, and allergens: the open Open Food Facts database. Source: world.openfoodfacts.org
+None of these sources is affiliated with or endorses Numeline.
+
+BROWSE RECALLS FOR FREE
+Browse food recalls published by the FDA and USDA. No scanning, no subscription required.
+
+SCAN YOUR PRODUCTS
+Scan a product's barcode, then photograph its lot or batch number: Numeline reads the code and checks, by brand and lot, whether it matches an official FDA or USDA recall. You can also type the lot yourself. Ideal for groceries, inventory, or incoming shipments.
+
+WHEN NO LOT NUMBER IS PUBLISHED
+Agencies sometimes announce a recall without publishing lot codes. Numeline then flags a possible recall when the brand and product type match, and shows what was published, such as "Best if Used By" dates, so you can check your item. It also monitors FDA press releases, often published before the enforcement database updates.
+
+ALLERGENS AND DIET
+Build a profile and every scan is compared against it:
+- The major allergens, including gluten, milk, eggs, peanuts, tree nuts, soybeans, fish, shellfish, sesame, mustard, and sulfites
+- Celiac mode for strict gluten avoidance, including traces
+- Foods to avoid: pork, seafood, beef, alcohol, gelatin
+- Vegetarian and vegan
+- Pregnancy mode: raw milk, deli meat, raw fish, meat and eggs, sprouts, high-mercury fish, liver, caffeine
+- Thousands of searchable ingredients, plus any food you add yourself
+- Thresholds for sugar, fat, saturated fat, and salt
+Useful for allergies, intolerances, diets, pregnancy, and diabetes. This information is declarative and may be incomplete. Always check the label.
+
+RECALL ALERTS
+Get notified if a product you already scanned is later recalled. Monitoring continues automatically, even when the app is closed.
+
+COMPLETE INFORMATION
+For each recall: brand, reason (listeria, salmonella, undeclared allergen, foreign object), affected lots, distributor, what to do, and a link to the official notice.
+
+FOR PROFESSIONALS
+For restaurants, food trucks, supermarkets, grocery stores, school cafeterias, catering, distributors, nursing homes, daycares, and healthcare facilities. Business plans add higher scan volumes, one-year history, team seats, and PDF, CSV, or XLSX exports.
+
+FOR INDIVIDUALS
+Check the products in your kitchen or cart. Hundreds of food recalls are issued in the United States every year.
+
+SECURE SIGN-IN
+Create your account in seconds with Google, Apple, or email. Your profile and history stay synced.
+
+FREE AND PREMIUM
+Checking recalls by hand is always free and unlimited: type a lot number as often as you need. Your first 10 AI scans are on us: that's the camera reading the lot code for you. Beyond that, AI scanning and allergen alerts come with a Premium plan, which includes a monthly scan allowance, or with one-time scan packs — pack scans never expire.
+Numeline is a reference tool and does not replace official communications from health authorities. If in doubt, check with the FDA or USDA.
+
+Download Numeline and never miss a recall.
+
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://numeline.com/privacy-policy.html
