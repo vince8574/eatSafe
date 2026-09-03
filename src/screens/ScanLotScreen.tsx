@@ -18,7 +18,7 @@ import { ImmediateRecallAlert } from '../components/ImmediateRecallAlert';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { saveLotPattern, validateLotAgainstBrandPatterns } from '../services/lotPatternService';
-import { recallWarnsProduct } from '../utils/lotMatcher';
+import { recallWarnsProduct, normalizeLotValue } from '../utils/lotMatcher';
 import { extractBestByDate, findBestByRecalls, brandMatchesRecall } from '../utils/bestByDate';
 import { useSubscription } from '../hooks/useSubscription';
 import { useUsageQuota } from '../hooks/useUsageQuota';
@@ -58,11 +58,6 @@ function detectLotLike(text: string): boolean {
   if (/(?:^|[^A-Z])L\d{3,15}[A-Z0-9]{0,10}(?:[^A-Z0-9]|$)/.test(cleaned)) return true;
   const tokens = cleaned.match(/[A-Z0-9\/]{4,24}/g) || [];
   return tokens.some((tok) => isReliableLot(tok));
-}
-
-function normalizeLotValue(lot: string) {
-  // Also strip "/" for recall COMPARISON (4100/01473 -> 410001473). Display keeps it.
-  return lot.replace(/\s+/g, '').replace(/[-_.\/]/g, '').toUpperCase();
 }
 
 // Lot ACCEPTABLE pour confirmer en mode accessibilité. isReliableLot exige

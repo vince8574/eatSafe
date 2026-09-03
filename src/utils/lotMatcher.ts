@@ -8,6 +8,16 @@ function normalizeLot(lot: string) {
     .toUpperCase();
 }
 
+// Normalisation utilisee pour COMPARER un lot saisi/scanne au lot publie par
+// l'agence. Plus agressive que normalizeLot ci-dessus : elle retire aussi le
+// point et la barre oblique (« 4100/01473 » -> « 410001473 »), car l'affichage
+// les conserve mais la comparaison ne doit pas en dependre.
+// Vivait dans ScanLotScreen ; deplacee ici pour etre testable sans monter tout
+// l'ecran, et pour qu'une copie ne puisse plus diverger de l'originale.
+export function normalizeLotValue(lot: string) {
+  return lot.replace(/\s+/g, '').replace(/[-_.\/]/g, '').toUpperCase();
+}
+
 // Un lot est DISTINCTIF s'il porte assez d'entropie pour identifier un rappel
 // SANS corroboration de marque. Un code court purement numérique (ex. "25041",
 // "00713", "16104") entre en collision avec des rappels US sans aucun rapport :
