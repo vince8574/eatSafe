@@ -58,7 +58,13 @@
       "Bash(git commit *)",
       "Bash(git merge *)",
       "Bash(git push *)",
-      "Bash(curl -s \"https://api.github.com/repos/vince8574/eatSafe/actions/runs?branch=main&per_page=4\")"
+      "Bash(curl -s \"https://api.github.com/repos/vince8574/eatSafe/actions/runs?branch=main&per_page=4\")",
+      "Read(//c/Users/vgail/Documents/projets/FR-eatSafe/**)",
+      "Bash(sed -n '/manualEntryButtonCamera: {/,/},/p' src/components/Scanner.tsx)",
+      "Bash(curl -s --compressed --max-time 20 \"https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/rappelconso-v2-gtin-espaces/records?select=categorie_produit&group_by=categorie_produit&limit=20\" -o rc.json)",
+      "Bash(node -e \"const j=require\\('./rc.json'\\);\\(j.results||[]\\).forEach\\(r=>console.log\\(' -',JSON.stringify\\(r.categorie_produit\\)\\)\\);\")",
+      "Bash(rm -f rc.json)",
+      "Bash(npx firebase-tools *)"
     ],
     "deny": [],
     "ask": []
