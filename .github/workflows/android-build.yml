@@ -90,13 +90,25 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # Auto-increment the Play versionCode (Unix timestamp, strictly increasing &
-      # unique — like the iOS buildNumber) and sync versionName from app.json, so
-      # uploads never hit "version code already used". Android ignores app.json
-      # (no prebuild here), so we patch android/app/build.gradle directly.
+      # versionCode = BASE + numero de run GitHub. Strictement croissant et unique,
+      # mais incremente de 1 par build au lieu de ~1 par seconde comme l'ancien
+      # timestamp Unix : le Play Console signalait chaque release comme "nettement
+      # superieure a la precedente", et a ce rythme la limite Android de
+      # 2 100 000 000 aurait ete atteinte vers 2036.
+      # BASE depasse le plus haut timestamp deja publie (~1 788 379 205), donc la
+      # suite reste croissante malgre le changement de methode -- indispensable,
+      # Google refusant tout versionCode inferieur a un code deja utilise.
+      # Marge restante : 2 100 000 000 - BASE = 300 000 000 builds.
+      # ATTENTION : si ce workflow est supprime puis recree, run_number repart a 1 ;
+      # il faudrait alors augmenter VERSION_CODE_BASE d'autant.
+      # versionName est synchronise depuis app.json (Android ignore app.json ici,
+      # faute de prebuild, donc on patche android/app/build.gradle directement).
       - name: Set Android version (auto versionCode + sync versionName)
+        env:
+          VERSION_CODE_BASE: "1800000000"
+          RUN_NUMBER: ${{ github.run_number }}
         run: |
-          VERSION_CODE=$(date -u +%s)
+          VERSION_CODE=$((VERSION_CODE_BASE + RUN_NUMBER))
           VERSION_NAME=$(node -e "console.log(require('./app.json').expo.version)")
           echo "Android versionCode=$VERSION_CODE versionName=$VERSION_NAME"
           sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" android/app/build.gradle
