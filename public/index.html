@@ -565,6 +565,46 @@
         padding: 16px 16px 40px;
       }
     }
+
+    /* Bandeau presse. Mention FACTUELLE d'un passage média : ni logo de la
+       chaîne, ni formulation laissant croire à une recommandation de KTLA ou
+       de son journaliste — nommer l'émission et l'invité est légitime, se
+       prévaloir de leur caution ne le serait pas.
+       Quand le segment sera diffusé : passer .press-card en <a href="...">,
+       remplacer le libellé « Bientôt » et ajouter la date de diffusion. */
+    .press-strip { margin-top: 26px; }
+    .press-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 16px;
+      padding: 16px 20px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      background: var(--surface-alt);
+    }
+    .press-flag {
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 1.6px;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .press-text {
+      margin: 0;
+      flex: 1 1 420px;
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    .press-text strong { color: var(--ink); font-weight: 600; }
+    .press-note { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+    @media (max-width: 640px) {
+      .press-card { padding: 14px 16px; }
+      .press-text { font-size: 14px; }
+    }
   </style>
 </head>
 <body>
@@ -631,6 +671,18 @@
         <div class="caption">Feature graphic used for the store listing.</div>
       </div>
     </main>
+
+    <div class="press-strip fade-up" style="--delay: 0.16s;">
+      <div class="press-card">
+        <span class="press-flag">Coming soon</span>
+        <p class="press-text">
+          Numeline&rsquo;s founder sat down with <strong>Rich DeMuro</strong> for <strong>Rich on Tech</strong>,
+          filmed at the KTLA 5 studios in Hollywood, Los Angeles.
+          <span class="press-note">The segment has not aired yet. We will link it here once it is online.</span>
+        </p>
+      </div>
+    </div>
+
 
     <section id="demo" class="section fade-up" style="--delay: 0.18s;">
       <h2>Numeline in action</h2>
