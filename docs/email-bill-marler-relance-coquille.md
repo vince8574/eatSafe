@@ -1,5 +1,12 @@
 # Courriel — Bill Marler : relance courte sur les champs des fiches FDA
 
+> ## ⚠️ CADUC — ne pas envoyer
+>
+> Ecrit en supposant un silence de sa part. Il a repondu favorablement le 5 septembre
+> (« love to see it - perhaps we could chat next week »), ce qui annule toute la premisse :
+> ce n'est plus une relance mais une reponse a une demande. Voir `email-bill-marler-reponse.md`.
+
+
 **Expéditeur :** vincent@numeline.com
 **Rédigé le :** samedi 5 septembre 2026
 **Envoi prévu :** ⚠️ **mardi 8 septembre**, pas lundi 7
