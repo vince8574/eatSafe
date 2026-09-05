@@ -1,5 +1,13 @@
 # Courriel — Bill Marler (Marler Clark / Food Safety News)
 
+> ## ⚠️ REMPLACÉ — ne pas envoyer
+>
+> Voir `email-bill-marler-recall-data-quality.md`, qui porte sur l'exploitabilité des fiches
+> FDA. Cet angle-là est original ; l'écart confirmés/probables ci-dessous, Marler le connaît
+> par cœur. Un seul courriel doit partir. Ce document est conservé comme matière : son
+> contenu est repris en une ligne, en offre secondaire, dans le message retenu.
+
+
 **Expéditeur :** vincent@numeline.com
 **Version :** 2 — révisée le 2026-09-05
 
