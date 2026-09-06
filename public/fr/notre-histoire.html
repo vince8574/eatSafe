@@ -18,8 +18,10 @@
   <meta property="og:title" content="De la cuisine à Numeline : rendre les rappels alimentaires enfin simples" />
   <meta property="og:description" content="Pourquoi est-ce aussi compliqué de savoir si le produit que l'on a entre les mains est réellement concerné par un rappel ? De cette question est née Numeline." />
   <meta property="og:url" content="https://numeline.com/fr/notre-histoire" />
+  <meta property="og:image" content="https://numeline.com/blog/img/vincent-gaillard.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="De la cuisine à Numeline : rendre les rappels alimentaires enfin simples" />
+  <meta name="twitter:image" content="https://numeline.com/blog/img/vincent-gaillard.jpg" />
   <meta name="twitter:description" content="Née en cuisine, face aux rappels de produits. Notre histoire, et l'espace presse de Numeline." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,20 +40,30 @@
       line-height: 1.45;
       font-style: italic;
     }
-    /* Tableau de faits pour la presse : lisible et copiable tel quel. */
-    .facts { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    /* Tableau de faits pour la presse : lisible et copiable tel quel.
+       table-layout:fixed + overflow-wrap empechent un jeton insecable (URL,
+       adresse e-mail, numero SIRET) d'elargir le tableau au-dela du conteneur.
+       Le nowrap sur les en-tetes a ete retire : c'etait lui qui faisait deborder. */
+    .facts { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 18px 0; }
     .facts th, .facts td {
       text-align: left; vertical-align: top;
       padding: 9px 12px 9px 0;
       border-bottom: 1px solid rgba(128, 128, 128, 0.22);
       font-size: 15px; line-height: 1.5;
+      overflow-wrap: break-word; word-break: break-word; hyphens: auto;
     }
-    .facts th { width: 34%; font-weight: 600; white-space: nowrap; }
-    @media (max-width: 560px) {
-      .facts th, .facts td { display: block; width: auto; border: 0; padding: 2px 0; }
-      .facts td { padding-bottom: 12px; border-bottom: 1px solid rgba(128, 128, 128, 0.22); }
+    .facts th { width: 32%; font-weight: 600; }
+    /* Empilement en dessous de 700px : a 2 colonnes les libelles devenaient
+       illisibles bien avant l'ancien seuil de 560px. */
+    @media (max-width: 700px) {
+      .facts, .facts tbody, .facts tr, .facts th, .facts td { display: block; width: auto; }
+      .facts th { padding: 0 0 2px; border: 0; color: var(--accent, #0bae86); }
+      .facts td { padding: 0 0 14px; }
       .pull { font-size: 19px; padding-left: 16px; }
     }
+    /* Les URL de boutiques sont longues et insecables : autoriser la coupure. */
+    .presslinks { padding-left: 20px; }
+    .presslinks li { margin-bottom: 8px; overflow-wrap: anywhere; }
   </style>
 
   <script type="application/ld+json">
@@ -96,6 +108,11 @@
         <span class="tag">Presse</span>
         Par <strong>Vincent Gaillard</strong>, fondateur de Numeline
       </div>
+
+      <figure class="article-figure">
+        <img src="/blog/img/vincent-gaillard.jpg" alt="Vincent Gaillard en cuisine professionnelle, et aujourd&rsquo;hui devant son ordinateur" width="1200" height="960" />
+        <figcaption>Vincent Gaillard, fondateur de Numeline : hier en cuisine, aujourd&rsquo;hui derrière l&rsquo;application.</figcaption>
+      </figure>
 
       <p class="lead">Pendant des années, j&rsquo;ai travaillé dans la cuisine. Et pendant toutes ces années, j&rsquo;ai été confronté à une réalité très concrète du métier : les rappels de produits alimentaires.</p>
 
@@ -143,7 +160,7 @@
       </table>
 
       <h3>Liens</h3>
-      <ul>
+      <ul class="presslinks">
         <li>Site : <a href="https://numeline.com/fr/">numeline.com/fr</a> — version américaine : <a href="https://numeline.com/">numeline.com</a></li>
         <li>Blog et analyses de rappels : <a href="/fr/blog/">numeline.com/fr/blog</a></li>
         <li>App Store : <a href="https://apps.apple.com/fr/app/numelinefr/id6772080722" target="_blank" rel="noopener">NumelineFR</a> — Google Play : <a href="https://play.google.com/store/apps/details?id=com.numeline.app" target="_blank" rel="noopener">com.numeline.app</a></li>
