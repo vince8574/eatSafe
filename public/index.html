@@ -594,10 +594,27 @@
     }
     .press-text {
       margin: 0;
-      flex: 1 1 420px;
       color: var(--ink-soft);
       font-size: 15px;
       line-height: 1.55;
+    }
+    /* Le bandeau porte desormais les photos du tournage : texte a gauche,
+       planche de trois vignettes a droite, empilees sous 760px. */
+    .press-body { flex: 1 1 340px; min-width: 0; }
+    .press-shots { display: flex; gap: 8px; flex: 0 1 auto; }
+    .press-shots img {
+      height: 116px;
+      width: 87px;
+      object-fit: cover;
+      border-radius: 9px;
+      display: block;
+      background: var(--surface);
+    }
+    @media (max-width: 760px) {
+      /* Les trois vignettes se partagent la largeur : sans flex:1 1 0 elles
+         prenaient chacune 100% et debordaient hors de l'ecran. */
+      .press-shots { width: 100%; }
+      .press-shots img { flex: 1 1 0; min-width: 0; width: auto; height: auto; aspect-ratio: 3 / 4; }
     }
     .press-text strong { color: var(--ink); font-weight: 600; }
     .press-note { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
@@ -674,12 +691,19 @@
 
     <div class="press-strip fade-up" style="--delay: 0.16s;">
       <div class="press-card">
-        <span class="press-flag">Coming soon</span>
-        <p class="press-text">
-          Numeline&rsquo;s founder sat down with <strong>Rich DeMuro</strong> for <strong>Rich on Tech</strong>,
-          filmed at the KTLA 5 studios in Hollywood, Los Angeles.
-          <span class="press-note">The segment has not aired yet. We will link it here once it is online.</span>
-        </p>
+        <div class="press-body">
+          <span class="press-flag">Coming soon</span>
+          <p class="press-text">
+            Numeline&rsquo;s founder sat down with <strong>Rich DeMuro</strong> for <strong>Rich on Tech</strong>,
+            filmed at the KTLA 5 studios in Hollywood, Los Angeles.
+            <span class="press-note">Photographs from the recording. The segment has not aired yet &mdash; we will link it here once it is online.</span>
+          </p>
+        </div>
+        <div class="press-shots">
+          <img src="/blog/img/ktla-camion.jpg" alt="KTLA 5 Live broadcast truck outside the Hollywood studios" width="480" height="640" loading="lazy" />
+          <img src="/blog/img/ktla-plateau.jpg" alt="Numeline&rsquo;s founder on the Rich on Tech set at KTLA 5" width="480" height="640" loading="lazy" />
+          <img src="/blog/img/ktla-interview.jpg" alt="Numeline&rsquo;s founder showing a product to Rich DeMuro on set" width="480" height="640" loading="lazy" />
+        </div>
       </div>
     </div>
 
