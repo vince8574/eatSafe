@@ -123,15 +123,8 @@
 
     .redirect-msg { color: var(--muted); font-size: 13px; margin-top: 16px; }
 
-    /* Le QR sert surtout aux visiteurs sur ordinateur et aux supports imprimes :
-       inutile de l'afficher sur un telephone, qui est deja sur la bonne page. */
-    .qr { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
-    .qr img { width: 168px; height: 168px; display: block; margin: 0 auto 10px; }
-    .qr p { margin: 0; font-size: 13px; }
-    @media (max-width: 560px) { .qr { display: none; } }
-
     .footer {
-      margin-top: 28px;
+      margin-top: 32px;
       padding-top: 20px;
       border-top: 1px solid var(--line);
       color: var(--muted);
@@ -160,11 +153,6 @@
     </div>
 
     <div id="redirect-msg" class="redirect-msg" style="display:none">Redirection vers votre boutique…</div>
-
-    <div class="qr">
-      <img src="/fr/qr-numeline-fr.png" alt="QR code vers la page de téléchargement de Numeline" width="168" height="168" />
-      <p>Scannez ce code avec votre téléphone</p>
-    </div>
 
     <div class="footer">
       <a href="/fr/">← Retour à numeline.com/fr</a>
