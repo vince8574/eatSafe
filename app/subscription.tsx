@@ -7,6 +7,7 @@ import { useI18n } from '../src/i18n/I18nContext';
 import { useSubscription } from '../src/hooks/useSubscription';
 import { GradientBackground } from '../src/components/GradientBackground';
 import type { BillingPeriod } from '../src/constants/subscriptionPlans';
+import { SHOW_SCAN_PACKS } from '../src/constants/subscriptionPlans';
 
 export default function SubscriptionScreen() {
   const { colors } = useTheme();
@@ -313,43 +314,49 @@ export default function SubscriptionScreen() {
           })}
         </View>
 
-        <View style={[styles.card, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.scanPacksTitle')}</Text>
-          <Text style={[styles.helper, { color: colors.textSecondary }]}>
-            {t('subscription.scanPacksHelper')}
-          </Text>
-          <View style={styles.packs}>
-            {packs.map((pack) => {
-              const isPending = pendingPackId === pack.id;
-              const disabled = loading || purchasing;
-              return (
-                <TouchableOpacity
-                  key={pack.id}
-                  style={[
-                    styles.packButton,
-                    {
-                      backgroundColor: colors.surfaceAlt,
-                      borderColor: colors.accent,
-                      opacity: disabled && !isPending ? 0.5 : 1
-                    }
-                  ]}
-                  onPress={() => handleBuyPack(pack.id, pack.quantity)}
-                  disabled={disabled}
-                >
-                  {isPending ? (
-                    <ActivityIndicator color={colors.accent} size="small" />
-                  ) : (
-                    <>
-                      <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
-                      <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
-                      <Text style={[styles.packPrice, { color: colors.accent }]}>{pack.price}</Text>
-                    </>
-                  )}
-                </TouchableOpacity>
-              );
-            })}
+        {/* Packs de scans masques de l'interface (SHOW_SCAN_PACKS). Les achats
+            anterieurs, leur solde et la restauration restent operants. */}
+        {SHOW_SCAN_PACKS ? (
+          <>
+          <View style={[styles.card, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('subscription.scanPacksTitle')}</Text>
+            <Text style={[styles.helper, { color: colors.textSecondary }]}>
+              {t('subscription.scanPacksHelper')}
+            </Text>
+            <View style={styles.packs}>
+              {packs.map((pack) => {
+                const isPending = pendingPackId === pack.id;
+                const disabled = loading || purchasing;
+                return (
+                  <TouchableOpacity
+                    key={pack.id}
+                    style={[
+                      styles.packButton,
+                      {
+                        backgroundColor: colors.surfaceAlt,
+                        borderColor: colors.accent,
+                        opacity: disabled && !isPending ? 0.5 : 1
+                      }
+                    ]}
+                    onPress={() => handleBuyPack(pack.id, pack.quantity)}
+                    disabled={disabled}
+                  >
+                    {isPending ? (
+                      <ActivityIndicator color={colors.accent} size="small" />
+                    ) : (
+                      <>
+                        <Text style={[styles.packText, { color: colors.textPrimary }]}>{t(pack.labelKey)}</Text>
+                        <Text style={[styles.packSub, { color: colors.textSecondary }]}>+{pack.quantity} scans</Text>
+                        <Text style={[styles.packPrice, { color: colors.accent }]}>{pack.price}</Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
-        </View>
+          </>
+        ) : null}
 
         {/*
           Apple guideline 3.1.1: subscription apps MUST expose a "Restore

@@ -976,7 +976,7 @@ export function ScanLotScreen() {
           <View style={styles.gateCard}>
             <Ionicons name="sparkles" size={44} color={colors.accent} />
             {/* Un ABONNÉ à quota épuisé n'a pas à se voir proposer de s'abonner :
-                il doit acheter un pack ou monter de palier. */}
+                il doit monter de palier : les packs ne sont plus proposes a la vente. */}
             <Text style={styles.gateTitle}>
               {isSubscribed ? t('quota.gateTitleSubscriber') : t('quota.gateTitle')}
             </Text>
@@ -998,9 +998,9 @@ export function ScanLotScreen() {
               onPress={() => router.push('/subscription')}
               accessibilityRole="button"
             >
-              <Ionicons name={isSubscribed ? 'add-circle' : 'star'} size={18} color="#fff" />
+              <Ionicons name={isSubscribed ? 'arrow-up-circle' : 'star'} size={18} color="#fff" />
               <Text style={styles.gateBtnSecondaryText}>
-                {isSubscribed ? t('quota.gateBuyPack') : t('quota.gateSubscribe')}
+                {isSubscribed ? t('quota.gateUpgrade') : t('quota.gateSubscribe')}
               </Text>
             </TouchableOpacity>
           </View>

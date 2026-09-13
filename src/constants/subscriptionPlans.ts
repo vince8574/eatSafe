@@ -170,6 +170,13 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
 // Nouvelle grille du 22/07/2026 — les IDs pack_small/medium/large/xlarge
 // (100/500/1000/2500 scans) sont abandonnés : quantités ET prix changent, on
 // crée de NOUVEAUX produits plutôt que de changer le sens des anciens SKUs.
+// Affichage des packs de scans dans l'ecran d'abonnement.
+// Mis a false : les packs ne sont plus proposes a la vente dans l'interface.
+// La logique d'achat, la comptabilisation des credits et la restauration
+// restent intactes -- un utilisateur ayant deja achete un pack conserve et
+// voit son solde. Repasser a true suffit a les reafficher.
+export const SHOW_SCAN_PACKS = false;
+
 export const SCAN_PACKS: ScanPack[] = [
   {
     id: 'pack_10',
