@@ -45,9 +45,14 @@ jobs:
       - name: Free disk space
         run: |
           echo "Before:"; df -h /
+          # Outils volumineux qu'un build Android ne touche jamais. Le SDK/NDK
+          # Android, Java et Node sont evidemment conserves.
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup \
             /opt/hostedtoolcache/CodeQL /usr/share/swift \
-            /usr/local/share/powershell || true
+            /usr/local/share/powershell \
+            /usr/local/lib/heroku /opt/az /usr/share/miniconda \
+            /usr/local/share/boost /usr/lib/google-cloud-sdk \
+            /usr/local/graalvm /usr/local/share/chromium || true
           sudo docker image prune --all --force || true
           echo "After:"; df -h /
 
@@ -118,17 +123,23 @@ jobs:
         if: ${{ github.event_name == 'push' || github.event.inputs.build_type == 'aab' }}
         working-directory: android
         run: |
-          ./gradlew bundleRelease \
+          ./gradlew bundleRelease --stacktrace \
             -PRELEASE_STORE_FILE=release.keystore \
             -PRELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }} \
             -PRELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }} \
             -PRELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}
 
+      # L'APK est construit APRES l'AAB : si la place manque, c'est ici qu'elle
+      # manque. On la mesure avant, pour que l'echec soit interpretable.
+      - name: Disk space before APK
+        if: ${{ github.event_name == 'push' || github.event.inputs.build_type == 'apk' }}
+        run: df -h /
+
       - name: Build APK
         if: ${{ github.event_name == 'push' || github.event.inputs.build_type == 'apk' }}
         working-directory: android
         run: |
-          ./gradlew assembleRelease \
+          ./gradlew assembleRelease --stacktrace \
             -PRELEASE_STORE_FILE=release.keystore \
             -PRELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }} \
             -PRELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }} \
