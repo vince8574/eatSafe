@@ -73,11 +73,11 @@ export function RecallAlert({ recall, reason }: RecallAlertProps) {
 
       {recall.link && (
         <TouchableOpacity
-          style={[styles.linkButton, { backgroundColor: colors.surface, borderColor: 'rgba(255,255,255,0.55)' }]}
+          style={styles.linkButton}
           onPress={() => Linking.openURL(recall.link!)}
         >
-          <Ionicons name="document-text" size={18} color="#FFFFFF" />
-          <Text style={[styles.linkText, { color: "#FFFFFF" }]}>
+          <Ionicons name="document-text" size={18} color="#000000" />
+          <Text style={styles.linkText}>
             {t('recallAlert.viewOfficialNotice')}
           </Text>
         </TouchableOpacity>
@@ -208,7 +208,13 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.5
   },
+  // Couleurs EN DUR, volontairement hors du theme : `colors.surface`
+  // vaut #FFFFFF dans la palette claire, ce qui rendait ce bouton
+  // blanc sur blanc. Le dore ressort sur le rouge de la carte dans
+  // les deux modes, et le texte noir y donne ~9,8:1 de contraste.
   linkButton: {
+    backgroundColor: '#D4AF37',
+    borderColor: '#A8862A',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -220,7 +226,8 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 16,
-    fontWeight: '700'
+    fontWeight: '700',
+    color: '#000000'
   },
   footer: {
     paddingTop: 8,
